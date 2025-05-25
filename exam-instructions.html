@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Instructions - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .next-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .section-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary-color);
+        }
+        .marking-scheme {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .marking-scheme img {
+            max-width: 100%;
+            margin-top: 10px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+        }
+        .not-visited {
+            background-color: #f5f5f5;
+        }
+        .not-answered {
+            background-color: #ff5252;
+        }
+        .answered {
+            background-color: #4caf50;
+        }
+        .marked {
+            background-color: #ff9800;
+        }
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff9c4;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
+            <h2 id="exam-title">PrepSharp - Exam Instructions</h2>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Exam Instructions</h1>
+            
+            <div id="exam-overview">
+                <h2>General Instructions</h2>
+                <p id="question-count">This paper contains <strong>30</strong> questions.</p>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-icon not-visited"></div>
+                        <span>Not Visited</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon not-answered"></div>
+                        <span>Not Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon answered"></div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon marked"></div>
+                        <span>Marked for Review</span>
+                    </div>
+                </div>
+                
+                <p>Use the navigation panel on the left to move between questions.</p>
+                <p>Click the "Next" button at the bottom of the page to proceed to the next question.</p>
+            </div>
+            
+            <div id="sections-container">
+                <!-- Section information will be loaded here -->
+            </div>
+            
+            <div class="note">
+                <h3>Important Notes:</h3>
+                <ul id="notes-list">
+                    <li>For Single Correct Option (SCQ) questions, you can select only one option. Selecting another option will deselect the previous one.</li>
+                    <li>For Multiple Correct Option (MCQ) questions, you need to click the "Clear" button to reset your selection.</li>
+                    <li>For Integer and Numerical questions, please use the on-screen keyboard provided.</li>
+                </ul>
+            </div>
+            
+            <div class="next-btn-container">
+                <button id="start-exam" class="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get exam data
+        const examData = JSON.parse(localStorage.getItem('currentTakingExam'));
+        if (!examData) {
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Update exam title
+        const examTitles = {
+            'jee-advanced': 'JEE Advanced',
+            'jee-main': 'JEE Main',
+            'neet': 'NEET',
+            'bitsat': 'BITSAT'
+        };
+        
+        let examTitle = examTitles[examData.type] || examData.type;
+        if (examData.type === 'jee-advanced' && examData.paperNumber) {
+            examTitle += ` Paper ${examData.paperNumber}`;
+        }
+        
+        document.getElementById('exam-title').textContent = `PrepSharp - ${examTitle} ${examData.year}`;
+        document.getElementById('question-count').innerHTML = `This paper contains <strong>${examData.totalQuestions}</strong> questions.`;
+        
+        // Load section information
+        const sectionsContainer = document.getElementById('sections-container');
+        
+        if (examData.type === 'jee-advanced' && examData.subjectSections) {
+            // For JEE Advanced, show sections for each subject
+            examData.subjects.forEach(subject => {
+                const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                const sections = examData.subjectSections[subject];
+                
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'section-info';
+                
+                let subjectContent = `<h3>${subjectName}</h3>`;
+                
+                sections.forEach(section => {
+                    subjectContent += `
+                        <div>
+                            <h4>${section.name}</h4>
+                            <p>This section contains ${section.questionCount} questions of type: ${getQuestionTypeText(section.questionType)}</p>
+                    `;
+                    
+                    // Add marking scheme image if available
+                    if (section.markingSchemeImage) {
+                        subjectContent += `
+                            <div class="marking-scheme">
+                                <h4>Marking Scheme:</h4>
+                                <img src="${section.markingSchemeImage}" alt="Marking Scheme">
+                            </div>
+                        `;
+                    }
+                    
+                    subjectContent += `</div>`;
+                });
+                
+                subjectDiv.innerHTML = subjectContent;
+                sectionsContainer.appendChild(subjectDiv);
+            });
+        } else {
+            // For other exam types, show general information
+            const generalDiv = document.createElement('div');
+            generalDiv.className = 'section-info';
+            generalDiv.innerHTML = `
+                <h3>Exam Pattern</h3>
+                <p>This exam contains questions from the following subjects:</p>
+                <ul>
+                    ${examData.subjects.map(subject => 
+                        `<li>${subject.charAt(0).toUpperCase() + subject.slice(1)}: ${examData.subjectDetails[subject].questionCount} questions</li>`
+                    ).join('')}
+                </ul>
+            `;
+            sectionsContainer.appendChild(generalDiv);
+        }
+        
+        // Helper function to get readable question type
+        function getQuestionTypeText(type) {
+            const types = {
+                'scq': 'Single Correct Option',
+                'mcq': 'Multiple Correct Options',
+                'integer': 'Integer Type',
+                'numerical': 'Numerical Type (with range)'
+            };
+            return types[type] || type;
+        }
+        
+        // Start exam button
+        document.getElementById('start-exam').addEventListener('click', function() {
+            window.location.href = 'exam.html';
+        });
+    </script>
+</body>
+</html>

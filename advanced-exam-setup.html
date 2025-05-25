@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced Setup - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .section-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .marking-scheme {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        .image-container {
+            margin-top: 10px;
+            position: relative;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 200px;
+        }
+        .image-container .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .upload-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - JEE Advanced Setup</h2>
+        <button id="back-btn" class="btn">Back</button>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>JEE Advanced Paper Structure</h1>
+            <p>This setup will apply to Physics, Chemistry, and Mathematics</p>
+            
+            <div class="form-group">
+                <label for="num-sections">Number of Sections per Subject</label>
+                <input type="number" id="num-sections" min="1" value="2" required>
+            </div>
+            
+            <div id="sections-container"></div>
+            
+            <div class="form-group">
+                <label>Questions Distribution</label>
+                <div id="questions-distribution">
+                    <p>Physics: <span id="physics-count">0</span> questions</p>
+                    <p>Chemistry: <span id="chemistry-count">0</span> questions</p>
+                    <p>Mathematics: <span id="mathematics-count">0</span> questions</p>
+                    <p>Total: <span id="total-count">0</span> / <span id="required-count">0</span> questions</p>
+                </div>
+            </div>
+            
+            <button id="start-adding-questions" class="btn">Start Adding Questions</button>
+        </div>
+    </div>
+
+    <script src="html2canvas.min.js"></script>
+    <script src="screen-capture.js"></script>
+    <script>
+        // Check if exam data exists
+        const examData = JSON.parse(localStorage.getItem('currentExam'));
+        if (!examData) {
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Set subjects to Physics, Chemistry, and Mathematics for JEE Advanced
+        examData.subjects = ['physics', 'chemistry', 'mathematics'];
+        
+        // Initialize subject sections if not already present
+        if (!examData.subjectSections) {
+            examData.subjectSections = {};
+        }
+        
+        // Display required question count
+        document.getElementById('required-count').textContent = examData.totalQuestions;
+        
+        // Generate section inputs
+        const numSectionsInput = document.getElementById('num-sections');
+        numSectionsInput.addEventListener('change', () => {
+            generateSectionInputs(parseInt(numSectionsInput.value));
+        });
+        
+        // Generate initial section inputs
+        generateSectionInputs(parseInt(numSectionsInput.value));
+        
+        function generateSectionInputs(numSections) {
+            const sectionsContainer = document.getElementById('sections-container');
+            sectionsContainer.innerHTML = '';
+            
+            for (let i = 1; i <= numSections; i++) {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section-container';
+                
+                const romanNumeral = toRoman(i);
+                
+                sectionDiv.innerHTML = `
+                    <div class="section-header">
+                        <h3>Section ${romanNumeral}</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="section-${i}-questions">Number of Questions per Subject</label>
+                        <input type="number" id="section-${i}-questions" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="section-${i}-type">Question Type</label>
+                        <select id="section-${i}-type" required>
+                            <option value="scq">Single Correct Option (SCQ)</option>
+                            <option value="mcq">Multiple Correct Options (MCQ)</option>
+                            <option value="integer">Integer Type</option>
+                            <option value="numerical">Numerical Type (with range)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marking Scheme</label>
+                        <div class="marking-scheme" id="section-${i}-marking">
+                            <div id="section-${i}-marking-details">
+                                <p><strong>SCQ Marking:</strong> +3 for correct answer, -1 for incorrect answer, 0 for unanswered</p>
+                            </div>
+                            <button id="section-${i}-screenshot-btn" class="upload-btn">Take Screenshot of Marking Scheme</button>
+                            <div id="section-${i}-image-container" class="image-container" style="display: none;">
+                                <img id="section-${i}-image" src="" alt="Marking Scheme Image">
+                                <button class="remove-btn" id="section-${i}-remove-image">×</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                sectionsContainer.appendChild(sectionDiv);
+                
+                // Add event listener for question type change
+                const typeSelect = sectionDiv.querySelector(`#section-${i}-type`);
+                typeSelect.addEventListener('change', () => {
+                    updateMarkingScheme(i, typeSelect.value);
+                });
+                
+                // Add event listener for question count change
+                const questionsInput = sectionDiv.querySelector(`#section-${i}-questions`);
+                questionsInput.addEventListener('input', updateQuestionCounts);
+                
+                // Add event listener for screenshot button
+                const screenshotBtn = sectionDiv.querySelector(`#section-${i}-screenshot-btn`);
+                const imageContainer = sectionDiv.querySelector(`#section-${i}-image-container`);
+                const image = sectionDiv.querySelector(`#section-${i}-image`);
+                const removeBtn = sectionDiv.querySelector(`#section-${i}-remove-image`);
+                
+                screenshotBtn.addEventListener('click', () => {
+                    ScreenCapture.init(function(imageData) {
+                        image.src = imageData;
+                        imageContainer.style.display = 'block';
+                    });
+                });
+                
+                removeBtn.addEventListener('click', () => {
+                    image.src = '';
+                    imageContainer.style.display = 'none';
+                });
+            }
+            
+            // Update question counts
+            updateQuestionCounts();
+        }
+        
+        function updateMarkingScheme(sectionIndex, questionType) {
+            const markingDetails = document.getElementById(`section-${sectionIndex}-marking-details`);
+            
+            switch (questionType) {
+                case 'scq':
+                    markingDetails.innerHTML = `
+                        <p><strong>SCQ Marking:</strong> +3 for correct answer, -1 for incorrect answer, 0 for unanswered</p>
+                    `;
+                    break;
+                case 'mcq':
+                    markingDetails.innerHTML = `
+                        <p><strong>MCQ Marking:</strong></p>
+                        <ul style="margin: 5px 0 5px 20px; padding: 0;">
+                            <li>All correct options and no wrong options: +4</li>
+                            <li>Some correct options and no wrong options: +1 to +3 (based on number correct)</li>
+                            <li>Any wrong option selected: -2</li>
+                            <li>Unanswered: 0</li>
+                        </ul>
+                    `;
+                    break;
+                case 'integer':
+                    markingDetails.innerHTML = `
+                        <p><strong>Integer Marking:</strong> +3 for correct answer, 0 for incorrect answer or unanswered</p>
+                    `;
+                    break;
+                case 'numerical':
+                    markingDetails.innerHTML = `
+                        <p><strong>Numerical Marking:</strong> +3 for answer within range, 0 for incorrect answer or unanswered</p>
+                    `;
+                    break;
+            }
+        }
+        
+        function updateQuestionCounts() {
+            const numSections = parseInt(document.getElementById('num-sections').value);
+            let questionsPerSubject = 0;
+            
+            for (let i = 1; i <= numSections; i++) {
+                const questionsInput = document.getElementById(`section-${i}-questions`);
+                const count = parseInt(questionsInput.value) || 0;
+                questionsPerSubject += count;
+            }
+            
+            const totalQuestions = questionsPerSubject * 3; // 3 subjects
+            
+            document.getElementById('physics-count').textContent = questionsPerSubject;
+            document.getElementById('chemistry-count').textContent = questionsPerSubject;
+            document.getElementById('mathematics-count').textContent = questionsPerSubject;
+            document.getElementById('total-count').textContent = totalQuestions;
+            
+            // Highlight if total doesn't match required
+            const totalCountElement = document.getElementById('total-count');
+            if (totalQuestions !== examData.totalQuestions) {
+                totalCountElement.style.color = 'red';
+            } else {
+                totalCountElement.style.color = 'green';
+            }
+        }
+        
+        // Convert number to Roman numeral
+        function toRoman(num) {
+            const romanNumerals = {
+                1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V',
+                6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X'
+            };
+            return romanNumerals[num] || num.toString();
+        }
+        
+        document.getElementById('start-adding-questions').addEventListener('click', function() {
+            // Validate and collect section data
+            const numSections = parseInt(document.getElementById('num-sections').value);
+            if (isNaN(numSections) || numSections < 1) {
+                alert('Please enter a valid number of sections');
+                return;
+            }
+            
+            // Calculate total questions
+            let questionsPerSubject = 0;
+            const sections = [];
+            
+            for (let i = 1; i <= numSections; i++) {
+                const questionCount = parseInt(document.getElementById(`section-${i}-questions`).value);
+                if (isNaN(questionCount) || questionCount < 1) {
+                    alert(`Please enter a valid number of questions for Section ${toRoman(i)}`);
+                    return;
+                }
+                
+                const questionType = document.getElementById(`section-${i}-type`).value;
+                const markingSchemeImage = document.getElementById(`section-${i}-image`).src;
+                
+                sections.push({
+                    name: `Section ${toRoman(i)}`,
+                    questionCount: questionCount,
+                    questionType: questionType,
+                    markingSchemeImage: markingSchemeImage || null
+                });
+                
+                questionsPerSubject += questionCount;
+            }
+            
+            const totalQuestions = questionsPerSubject * 3; // 3 subjects
+            
+            if (totalQuestions !== examData.totalQuestions) {
+                alert(`Total questions (${totalQuestions}) must equal the total exam questions (${examData.totalQuestions})`);
+                return;
+            }
+            
+            // Apply the same section structure to all subjects
+            examData.subjects.forEach(subject => {
+                examData.subjectSections[subject] = JSON.parse(JSON.stringify(sections));
+                
+                // Store the total question count for the subject
+                if (!examData.subjectDetails) {
+                    examData.subjectDetails = {};
+                }
+                examData.subjectDetails[subject] = {
+                    questionCount: questionsPerSubject
+                };
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
+            // Initialize question counter
+            localStorage.setItem('currentQuestionIndex', '0');
+            localStorage.setItem('currentSubject', examData.subjects[0]);
+            localStorage.setItem('currentSection', '0');
+            
+            // Redirect to add questions page
+            window.location.href = 'add-question-advanced.html';
+        });
+        
+        document.getElementById('back-btn').addEventListener('click', function() {
+            window.location.href = 'add-exam.html';
+        });
+    </script>
+</body>
+</html>

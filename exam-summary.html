@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Summary - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .exam-info {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .exam-info p {
+            margin: 5px 0;
+        }
+        .subject-summary {
+            margin-bottom: 20px;
+        }
+        .question-list {
+            margin-top: 20px;
+        }
+        .question-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .question-item h4 {
+            margin: 0 0 5px 0;
+        }
+        .question-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
+            <h2>PrepSharp - Exam Summary</h2>
+        </div>
+        <div>
+            <button id="continue-btn" class="btn secondary">Continue Editing</button>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Exam Paper Summary</h1>
+            
+            <div class="exam-info" id="exam-info">
+                <!-- Exam info will be loaded here -->
+            </div>
+            
+            <h2>Subject Breakdown</h2>
+            <div id="subject-breakdown">
+                <!-- Subject breakdown will be loaded here -->
+            </div>
+            
+            <h2>Questions Overview</h2>
+            <div id="questions-overview">
+                <!-- Questions overview will be loaded here -->
+            </div>
+            
+            <div class="action-buttons">
+                <button id="back-btn" class="btn secondary">Back to Editing</button>
+                <button id="save-exam" class="btn">Save Exam Paper</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if exam data exists
+        const examData = JSON.parse(localStorage.getItem('currentExam'));
+        if (!examData) {
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Load exam info
+        const examInfo = document.getElementById('exam-info');
+        const examTitles = {
+            'jee-advanced': 'JEE Advanced',
+            'jee-main': 'JEE Main',
+            'neet': 'NEET',
+            'bitsat': 'BITSAT'
+        };
+        
+        let examTitle = examTitles[examData.type] || examData.type;
+        if (examData.type === 'jee-advanced' && examData.paperNumber) {
+            examTitle += ` Paper ${examData.paperNumber}`;
+        }
+        
+        examInfo.innerHTML = `
+            <h3>${examTitle} ${examData.year}</h3>
+            <p><strong>Total Questions:</strong> ${examData.totalQuestions}</p>
+            <p><strong>Subjects:</strong> ${examData.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</p>
+        `;
+        
+        // Load subject breakdown
+        const subjectBreakdown = document.getElementById('subject-breakdown');
+        subjectBreakdown.innerHTML = '';
+        
+        examData.subjects.forEach(subject => {
+            const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+            const questionCount = examData.subjectDetails[subject].questionCount;
+            
+            const subjectDiv = document.createElement('div');
+            subjectDiv.className = 'subject-summary';
+            subjectDiv.innerHTML = `
+                <h3>${subjectName}</h3>
+                <p>Number of Questions: ${questionCount}</p>
+            `;
+            
+            subjectBreakdown.appendChild(subjectDiv);
+        });
+        
+        // Load questions overview
+        const questionsOverview = document.getElementById('questions-overview');
+        questionsOverview.innerHTML = '';
+        
+        // Count question types
+        const questionTypes = {
+            'scq': 0,
+            'mcq': 0,
+            'integer': 0,
+            'numerical': 0
+        };
+        
+        // Count completed questions
+        let completedQuestions = 0;
+        
+        if (examData.questions) {
+            examData.questions.forEach(question => {
+                if (question) {
+                    questionTypes[question.type] = (questionTypes[question.type] || 0) + 1;
+                    completedQuestions++;
+                }
+            });
+        }
+        
+        // Display question type counts
+        const questionTypesDiv = document.createElement('div');
+        questionTypesDiv.innerHTML = `
+            <p><strong>Completed Questions:</strong> ${completedQuestions} of ${examData.totalQuestions}</p>
+            <p><strong>Single Correct Option (SCQ):</strong> ${questionTypes.scq || 0}</p>
+            <p><strong>Multiple Correct Options (MCQ):</strong> ${questionTypes.mcq || 0}</p>
+            <p><strong>Integer Type Questions:</strong> ${questionTypes.integer || 0}</p>
+            <p><strong>Numerical Type Questions:</strong> ${questionTypes.numerical || 0}</p>
+        `;
+        
+        questionsOverview.appendChild(questionTypesDiv);
+        
+        // Event listeners
+        document.getElementById('continue-btn').addEventListener('click', function() {
+            if (examData.type === 'jee-advanced') {
+                window.location.href = 'add-question-advanced.html';
+            } else {
+                window.location.href = 'add-question.html';
+            }
+        });
+        
+        document.getElementById('back-btn').addEventListener('click', function() {
+            if (examData.type === 'jee-advanced') {
+                window.location.href = 'add-question-advanced.html';
+            } else {
+                window.location.href = 'add-question.html';
+            }
+        });
+        
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        document.getElementById('save-exam').addEventListener('click', function() {
+            // Check if all questions are completed
+            if (completedQuestions < examData.totalQuestions) {
+                if (!confirm(`Only ${completedQuestions} of ${examData.totalQuestions} questions have been added. Do you want to save anyway?`)) {
+                    return;
+                }
+            }
+            
+            // Add timestamp for sorting
+            examData.createdAt = new Date().toISOString();
+            
+            // Save exam to localStorage
+            const examId = `${examData.type}-${examData.year}${examData.paperNumber ? '-p' + examData.paperNumber : ''}-${Date.now()}`;
+            
+            // Get existing exams or create new object
+            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
+            
+            // Add new exam
+            exams[examId] = examData;
+            
+            // Save back to localStorage
+            localStorage.setItem('exams', JSON.stringify(exams));
+            
+            // Clear current exam data
+            localStorage.removeItem('currentExam');
+            localStorage.removeItem('currentQuestionIndex');
+            localStorage.removeItem('currentSubject');
+            if (examData.type === 'jee-advanced') {
+                localStorage.removeItem('currentSection');
+            }
+            
+            alert('Exam paper saved successfully! It is now available in the test section.');
+            
+            // Redirect to the exam list page for this exam type
+            window.location.href = `exam-list.html?type=${examData.type}`;
+        });
+    </script>
+</body>
+</html>

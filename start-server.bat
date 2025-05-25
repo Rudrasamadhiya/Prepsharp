@@ -1,0 +1,3 @@
+@echo off
+echo Starting OTP verification server...
+node server.js
