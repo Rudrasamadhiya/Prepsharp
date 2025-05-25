@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Setup - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h1, h2 { color: var(--primary-color); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        .message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        .verified-badge {
+            display: inline-block;
+            background-color: #4caf50;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div id="success-message" class="message success"></div>
+            <div id="error-message" class="message error"></div>
+            
+            <h1>Complete Your Profile</h1>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Mobile Number <span id="phone-verified" class="verified-badge" style="display:none">Verified</span></label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="stream">Stream</label>
+                    <select id="stream" name="stream" required>
+                        <option value="">Select your stream</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="medical">Medical</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="arts">Arts</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="class">Class</label>
+                    <select id="class" name="class" required>
+                        <option value="">Select your class</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                        <option value="dropper">Dropper</option>
+                        <option value="college">College</option>
+                        <option value="phd">PhD</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="referral">How did you hear about us?</label>
+                    <select id="referral" name="referral">
+                        <option value="">Select an option</option>
+                        <option value="friend">Friend</option>
+                        <option value="social">Social Media</option>
+                        <option value="search">Search Engine</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn primary">Complete Setup</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Show success message
+        function showSuccess(message) {
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            
+            // Hide error if showing
+            document.getElementById('error-message').style.display = 'none';
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            
+            // Hide success if showing
+            document.getElementById('success-message').style.display = 'none';
+        }
+        
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+        
+        // Pre-fill form with user data
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser'));
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Pre-fill name if available
+                if (user.name && user.name !== 'Demo User') {
+                    document.getElementById('fullName').value = user.name;
+                }
+                
+                // Pre-fill and handle phone
+                if (user.phone) {
+                    const phoneInput = document.getElementById('phone');
+                    phoneInput.value = user.phone;
+                    
+                    // If phone is verified, show badge and disable field
+                    if (user.phoneVerified) {
+                        document.getElementById('phone-verified').style.display = 'inline-block';
+                        phoneInput.readOnly = true;
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading user data:', e);
+                showError('Error loading your profile. Please try logging in again.');
+            }
+        });
+        
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser'));
+                
+                // Add profile information
+                user.fullName = document.getElementById('fullName').value;
+                user.phone = document.getElementById('phone').value;
+                user.stream = document.getElementById('stream').value;
+                user.class = document.getElementById('class').value;
+                user.referral = document.getElementById('referral').value;
+                user.profileComplete = true;
+                
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+            } catch (e) {
+                console.error('Error saving profile:', e);
+                showError('Error saving your profile. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

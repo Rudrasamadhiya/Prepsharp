@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Result - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .result-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .result-title {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        .score-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .detail-item {
+            background-color: var(--background-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .question-analysis {
+            margin-top: 30px;
+        }
+        .question-item {
+            background-color: var(--background-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .question-number {
+            font-weight: bold;
+        }
+        .question-status {
+            font-weight: bold;
+        }
+        .status-correct {
+            color: var(--success-color);
+        }
+        .status-incorrect {
+            color: var(--error-color);
+        }
+        .status-unattempted {
+            color: #666;
+        }
+        .question-text {
+            margin-bottom: 15px;
+        }
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .option-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .option-correct {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-color: var(--success-color);
+        }
+        .option-selected {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-color: var(--error-color);
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid var(--primary-color);
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">PS</div>
+            <h2>PrepSharp</h2>
+        </div>
+        <button id="dashboard-btn" class="btn">Dashboard</button>
+    </header>
+    
+    <div class="container">
+        <div class="result-card">
+            <div class="result-header">
+                <h1 class="result-title" id="exam-title">JEE Advanced 2023 Result</h1>
+                <div class="score-display" id="score-display">75/120</div>
+            </div>
+            
+            <div class="result-details">
+                <div class="detail-item">
+                    <div class="detail-label">Score</div>
+                    <div class="detail-value" id="score">75</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Total Marks</div>
+                    <div class="detail-value" id="total-marks">120</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Percentage</div>
+                    <div class="detail-value" id="percentage">62.5%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Time Taken</div>
+                    <div class="detail-value" id="time-taken">02:15:30</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Correct Answers</div>
+                    <div class="detail-value" id="correct-answers">20</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Incorrect Answers</div>
+                    <div class="detail-value" id="incorrect-answers">5</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Unattempted</div>
+                    <div class="detail-value" id="unattempted">5</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value" id="exam-date">Oct 15, 2023</div>
+                </div>
+            </div>
+            
+            <h2>Question Analysis</h2>
+            <div class="question-analysis" id="question-analysis">
+                <!-- Question analysis will be loaded here -->
+            </div>
+            
+            <div class="action-buttons">
+                <button id="back-to-dashboard" class="btn">Back to Dashboard</button>
+                <button id="try-again" class="btn">Try Another Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+        
+        // Get result ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const resultId = urlParams.get('resultId');
+        
+        // Get user data
+        const user = JSON.parse(currentUser);
+        
+        // Find the exam result
+        const examResult = user.examResults.find(result => result.id === resultId);
+        
+        if (!examResult) {
+            alert('Result not found');
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Update result details
+        document.getElementById('exam-title').textContent = `${examResult.examTitle} Result`;
+        document.getElementById('score-display').textContent = `${examResult.score}/${examResult.maxScore}`;
+        document.getElementById('score').textContent = examResult.score;
+        document.getElementById('total-marks').textContent = examResult.maxScore;
+        document.getElementById('percentage').textContent = `${Math.round((examResult.score / examResult.maxScore) * 100)}%`;
+        
+        // Format time taken
+        const hours = Math.floor(examResult.timeTaken / 3600);
+        const minutes = Math.floor((examResult.timeTaken % 3600) / 60);
+        const seconds = examResult.timeTaken % 60;
+        document.getElementById('time-taken').textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Calculate statistics
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let unattempted = 0;
+        
+        // Generate sample questions (since we don't have the actual questions stored)
+        const questions = [];
+        for (let i = 1; i <= examResult.answers.length; i++) {
+            questions.push({
+                id: i,
+                text: `This is a sample question ${i} for ${examResult.examTitle}. What is the correct answer?`,
+                options: [
+                    `Option A for question ${i}`,
+                    `Option B for question ${i}`,
+                    `Option C for question ${i}`,
+                    `Option D for question ${i}`
+                ],
+                correctAnswer: Math.floor(Math.random() * 4),
+                explanation: `This is the explanation for question ${i}. The correct answer is option ${String.fromCharCode(65 + Math.floor(Math.random() * 4))}.`
+            });
+        }
+        
+        // Count statistics
+        examResult.answers.forEach((answer, index) => {
+            if (answer === null) {
+                unattempted++;
+            } else if (answer === questions[index].correctAnswer) {
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+        });
+        
+        document.getElementById('correct-answers').textContent = correctAnswers;
+        document.getElementById('incorrect-answers').textContent = incorrectAnswers;
+        document.getElementById('unattempted').textContent = unattempted;
+        
+        // Format date
+        const examDate = new Date(examResult.date);
+        document.getElementById('exam-date').textContent = examDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        // Load question analysis
+        const questionAnalysis = document.getElementById('question-analysis');
+        
+        // Show first 5 questions for brevity (in a real app, you might paginate or show all)
+        for (let i = 0; i < 5; i++) {
+            const question = questions[i];
+            const userAnswer = examResult.answers[i];
+            
+            let status = '';
+            let statusClass = '';
+            
+            if (userAnswer === null) {
+                status = 'Not Attempted';
+                statusClass = 'status-unattempted';
+            } else if (userAnswer === question.correctAnswer) {
+                status = 'Correct (+4)';
+                statusClass = 'status-correct';
+            } else {
+                status = 'Incorrect (-1)';
+                statusClass = 'status-incorrect';
+            }
+            
+            const questionItem = document.createElement('div');
+            questionItem.className = 'question-item';
+            
+            questionItem.innerHTML = `
+                <div class="question-header">
+                    <div class="question-number">Question ${i + 1}</div>
+                    <div class="question-status ${statusClass}">${status}</div>
+                </div>
+                <div class="question-text">${question.text}</div>
+                <ul class="options-list">
+                    ${question.options.map((option, index) => `
+                        <li class="option-item ${index === question.correctAnswer ? 'option-correct' : ''} ${index === userAnswer && index !== question.correctAnswer ? 'option-selected' : ''}">
+                            ${String.fromCharCode(65 + index)}. ${option}
+                            ${index === question.correctAnswer ? ' ✓' : ''}
+                            ${index === userAnswer && index !== question.correctAnswer ? ' ✗' : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+                <div class="explanation">
+                    <strong>Explanation:</strong> ${question.explanation}
+                </div>
+            `;
+            
+            questionAnalysis.appendChild(questionItem);
+        }
+        
+        // Add "Show More" button if there are more than 5 questions
+        if (questions.length > 5) {
+            const showMoreBtn

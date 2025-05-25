@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .btn.small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="checkbox"],
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .option-container input[type="text"] {
+            flex-grow: 1;
+        }
+        .hidden {
+            display: none;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .marking-info {
+            margin-top: 8px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            font-size: 14px;
+        }
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .image-container {
+            margin-top: 10px;
+            position: relative;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+        }
+        .image-container .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .upload-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - Add Question</h2>
+        <div>
+            <button id="summary-btn" class="btn secondary">View Summary</button>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            
+            <h2 id="question-counter">Question 1 of 30</h2>
+            <h3 id="current-subject">Physics</h3>
+            
+            <div class="form-group">
+                <label for="question-type">Question Type</label>
+                <select id="question-type" required>
+                    <option value="scq">Single Correct Option (SCQ) [+3, -1]</option>
+                    <option value="mcq">Multiple Correct Options (MCQ) [+4/partial/0]</option>
+                    <option value="integer">Integer Type (Numerical) [+3, 0]</option>
+                </select>
+                <div id="marking-info" class="marking-info"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="question-text">Question Text</label>
+                <textarea id="question-text" rows="4" required></textarea>
+                <button id="screenshot-question-btn" class="upload-btn">Take Screenshot</button>
+                <div id="question-image-container" class="image-container hidden">
+                    <img id="question-image" src="" alt="Question Image">
+                    <button class="remove-btn" id="remove-question-image">×</button>
+                </div>
+            </div>
+            
+            <div id="options-container" class="form-group">
+                <label>Options</label>
+                <div class="option-container" id="option-a">
+                    <input type="checkbox" id="correct-a" class="correct-option">
+                    <label for="correct-a" style="display:inline;">A.</label>
+                    <input type="text" id="option-text-a" placeholder="Option A">
+                </div>
+                <button id="screenshot-option-a-btn" class="upload-btn">Take Screenshot for Option A</button>
+                <div id="option-a-image-container" class="image-container hidden">
+                    <img id="option-a-image" src="" alt="Option A Image">
+                    <button class="remove-btn" data-option="a">×</button>
+                </div>
+                
+                <div class="option-container" id="option-b">
+                    <input type="checkbox" id="correct-b" class="correct-option">
+                    <label for="correct-b" style="display:inline;">B.</label>
+                    <input type="text" id="option-text-b" placeholder="Option B">
+                </div>
+                <button id="screenshot-option-b-btn" class="upload-btn">Take Screenshot for Option B</button>
+                <div id="option-b-image-container" class="image-container hidden">
+                    <img id="option-b-image" src="" alt="Option B Image">
+                    <button class="remove-btn" data-option="b">×</button>
+                </div>
+                
+                <div class="option-container" id="option-c">
+                    <input type="checkbox" id="correct-c" class="correct-option">
+                    <label for="correct-c" style="display:inline;">C.</label>
+                    <input type="text" id="option-text-c" placeholder="Option C">
+                </div>
+                <button id="screenshot-option-c-btn" class="upload-btn">Take Screenshot for Option C</button>
+                <div id="option-c-image-container" class="image-container hidden">
+                    <img id="option-c-image" src="" alt="Option C Image">
+                    <button class="remove-btn" data-option="c">×</button>
+                </div>
+                
+                <div class="option-container" id="option-d">
+                    <input type="checkbox" id="correct-d" class="correct-option">
+                    <label for="correct-d" style="display:inline;">D.</label>
+                    <input type="text" id="option-text-d" placeholder="Option D">
+                </div>
+                <button id="screenshot-option-d-btn" class="upload-btn">Take Screenshot for Option D</button>
+                <div id="option-d-image-container" class="image-container hidden">
+                    <img id="option-d-image" src="" alt="Option D Image">
+                    <button class="remove-btn" data-option="d">×</button>
+                </div>
+            </div>
+            
+            <div id="integer-answer" class="form-group hidden">
+                <label for="integer-value">Correct Answer (0-99)</label>
+                <input type="number" id="integer-value" min="0" max="99">
+            </div>
+            
+            <div class="form-group">
+                <label for="explanation">Explanation (Optional)</label>
+                <textarea id="explanation" rows="3"></textarea>
+                <button id="screenshot-explanation-btn" class="upload-btn">Take Screenshot</button>
+                <div id="explanation-image-container" class="image-container hidden">
+                    <img id="explanation-image" src="" alt="Explanation Image">
+                    <button class="remove-btn" id="remove-explanation-image">×</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button id="prev-question" class="btn secondary">Previous</button>
+                <button id="next-question" class="btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="html2canvas.min.js"></script>
+    <script src="screen-capture.js"></script>
+    
+    <!-- PDF Upload Button -->
+    <div id="pdf-upload-container" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
+        <button id="pdf-upload-global-btn" style="padding: 8px 16px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;">Upload PDF</button>
+    </div>
+    
+    <script>
+        // Add PDF upload button functionality
+        document.getElementById('pdf-upload-global-btn').addEventListener('click', function() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'application/pdf';
+            fileInput.style.display = 'none';
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Read the file
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Store PDF data
+                        ScreenCapture.pdfData = e.target.result;
+                        
+                        // Store in localStorage for persistence
+                        try {
+                            localStorage.setItem('prepsharp_pdf', ScreenCapture.pdfData);
+                            alert('PDF uploaded successfully! You can now take screenshots from it.');
+                        } catch (err) {
+                            console.warn('PDF too large to store in localStorage');
+                            alert('PDF uploaded successfully, but it\'s too large to save between sessions.');
+                        }
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(fileInput);
+            }, 1000);
+        });
+    </script>
+    <script>
+        // Check if exam data exists
+        const examData = JSON.parse(localStorage.getItem('currentExam'));
+        if (!examData) {
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Get current question index and subject
+        let currentQuestionIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+        let currentSubject = localStorage.getItem('currentSubject') || examData.subjects[0];
+        
+        // Initialize question counter
+        let questionCounter = 0;
+        let subjectQuestionCount = 0;
+        
+        // Calculate question counter
+        examData.subjects.forEach(subject => {
+            if (subject === currentSubject) {
+                subjectQuestionCount = examData.subjectDetails[subject].questionCount;
+            } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                questionCounter += examData.subjectDetails[subject].questionCount;
+            }
+        });
+        
+        // Add current question index to counter
+        questionCounter += currentQuestionIndex + 1;
+        
+        // Update UI
+        updateUI();
+        
+        // Event listeners for question type
+        document.getElementById('question-type').addEventListener('change', function() {
+            const questionType = this.value;
+            const optionsContainer = document.getElementById('options-container');
+            const integerAnswer = document.getElementById('integer-answer');
+            const markingInfo = document.getElementById('marking-info');
+            
+            // Hide all
+            optionsContainer.classList.add('hidden');
+            integerAnswer.classList.add('hidden');
+            markingInfo.innerHTML = '';
+            
+            // Show relevant inputs based on question type
+            if (questionType === 'scq' || questionType === 'mcq') {
+                optionsContainer.classList.remove('hidden');
+                
+                // For SCQ, only one option can be selected
+                if (questionType === 'scq') {
+                    document.querySelectorAll('.correct-option').forEach(checkbox => {
+                        checkbox.type = 'radio';
+                        checkbox.name = 'correct-option';
+                    });
+                    
+                    markingInfo.innerHTML = `
+                        <strong>SCQ Marking:</strong> +3 for correct answer, -1 for incorrect answer, 0 for unanswered
+                    `;
+                } else {
+                    document.querySelectorAll('.correct-option').forEach(checkbox => {
+                        checkbox.type = 'checkbox';
+                        checkbox.name = '';
+                    });
+                    
+                    markingInfo.innerHTML = `
+                        <strong>MCQ Marking:</strong>
+                        <ul style="margin: 5px 0 5px 20px; padding: 0;">
+                            <li>All correct options and no wrong options: +4</li>
+                            <li>Some correct options and no wrong options: +1 to +3 (based on number correct)</li>
+                            <li>Any wrong option selected: 0</li>
+                            <li>Unanswered: 0</li>
+                        </ul>
+                    `;
+                }
+            } else if (questionType === 'integer') {
+                integerAnswer.classList.remove('hidden');
+                
+                markingInfo.innerHTML = `
+                    <strong>Integer Marking:</strong> +3 for correct answer, 0 for incorrect answer or unanswered
+                `;
+            }
+        });
+        
+        // Event listeners for navigation
+        document.getElementById('next-question').addEventListener('click', function() {
+            if (saveCurrentQuestion()) {
+                // Move to next question
+                currentQuestionIndex++;
+                
+                // Check if we need to move to the next subject
+                if (currentQuestionIndex >= examData.subjectDetails[currentSubject].questionCount) {
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex < examData.subjects.length - 1) {
+                        currentSubject = examData.subjects[currentSubjectIndex + 1];
+                        currentQuestionIndex = 0;
+                    }
+                }
+                
+                // Check if we've reached the end
+                let totalQuestions = 0;
+                Object.values(examData.subjectDetails).forEach(subject => {
+                    totalQuestions += subject.questionCount;
+                });
+                
+                if (questionCounter >= totalQuestions) {
+                    // Save final data
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
+                    // Redirect to summary page
+                    window.location.href = 'exam-summary.html';
+                } else {
+                    // Save current position
+                    localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                    localStorage.setItem('currentSubject', currentSubject);
+                    
+                    // Update UI
+                    updateUI();
+                }
+            }
+        });
+        
+        document.getElementById('prev-question').addEventListener('click', function() {
+            if (currentQuestionIndex > 0 || examData.subjects.indexOf(currentSubject) > 0) {
+                // Save current question
+                saveCurrentQuestion();
+                
+                // Move to previous question
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                } else {
+                    // Move to previous subject
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex > 0) {
+                        currentSubject = examData.subjects[currentSubjectIndex - 1];
+                        currentQuestionIndex = examData.subjectDetails[currentSubject].questionCount - 1;
+                    }
+                }
+                
+                // Save current position
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                localStorage.setItem('currentSubject', currentSubject);
+                
+                // Update UI
+                updateUI();
+            }
+        });
+        
+        // Screenshot event listeners
+        document.getElementById('screenshot-question-btn').addEventListener('click', function() {
+            ScreenCapture.init(function(imageData) {
+                document.getElementById('question-image').src = imageData;
+                document.getElementById('question-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-question-image').addEventListener('click', function() {
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+        });
+        
+        document.getElementById('screenshot-explanation-btn').addEventListener('click', function() {
+            ScreenCapture.init(function(imageData) {
+                document.getElementById('explanation-image').src = imageData;
+                document.getElementById('explanation-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-explanation-image').addEventListener('click', function() {
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+        });
+        
+        // Option screenshot event listeners
+        ['a', 'b', 'c', 'd'].forEach(option => {
+            document.getElementById(`screenshot-option-${option}-btn`).addEventListener('click', function() {
+                ScreenCapture.init(function(imageData) {
+                    document.getElementById(`option-${option}-image`).src = imageData;
+                    document.getElementById(`option-${option}-image-container`).classList.remove('hidden');
+                });
+            });
+            
+            document.querySelector(`.remove-btn[data-option="${option}"]`).addEventListener('click', function() {
+                document.getElementById(`option-${option}-image`).src = '';
+                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
+            });
+        });
+        
+        document.getElementById('summary-btn').addEventListener('click', function() {
+            // Save current question
+            saveCurrentQuestion();
+            
+            // Save current position
+            localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+            localStorage.setItem('currentSubject', currentSubject);
+            
+            // Redirect to summary page
+            window.location.href = 'exam-summary.html';
+        });
+        
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        // Helper functions
+        function updateUI() {
+            // Calculate question number
+            let questionNumber = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionNumber += currentQuestionIndex + 1;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionNumber += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            // Update progress
+            const progress = (questionNumber / examData.totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update question counter
+            document.getElementById('question-counter').textContent = `Question ${questionNumber} of ${examData.totalQuestions}`;
+            
+            // Update subject
+            const subjectName = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+            document.getElementById('current-subject').textContent = subjectName;
+            
+            // Clear form
+            document.getElementById('question-text').value = '';
+            document.getElementById('explanation').value = '';
+            document.getElementById('integer-value').value = '';
+            
+            // Clear images
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+            
+            // Clear option images
+            ['a', 'b', 'c', 'd'].forEach(option => {
+                document.getElementById(`option-${option}-image`).src = '';
+                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.correct-option').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            document.querySelectorAll('#options-container input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            
+            // Reset question type and trigger change event
+            const questionTypeSelect = document.getElementById('question-type');
+            questionTypeSelect.value = 'scq';
+            const event = new Event('change');
+            questionTypeSelect.dispatchEvent(event);
+            
+            // Load existing question data if available
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            if (examData.questions[questionIndex]) {
+                const question = examData.questions[questionIndex];
+                
+                document.getElementById('question-text').value = question.text || '';
+                document.getElementById('question-type').value = question.type;
+                document.getElementById('explanation').value = question.explanation || '';
+                
+                // Load images if available
+                if (question.questionImage) {
+                    document.getElementById('question-image').src = question.questionImage;
+                    document.getElementById('question-image-container').classList.remove('hidden');
+                }
+                
+                if (question.explanationImage) {
+                    document.getElementById('explanation-image').src = question.explanationImage;
+                    document.getElementById('explanation-image-container').classList.remove('hidden');
+                }
+                
+                // Trigger change event to show correct inputs
+                questionTypeSelect.dispatchEvent(event);
+                
+                if (question.type === 'scq' || question.type === 'mcq') {
+                    question.options.forEach((option, index) => {
+                        const letter = String.fromCharCode(97 + index); // a, b, c, d
+                        document.getElementById(`option-text-${letter}`).value = option.text || '';
+                        document.getElementById(`correct-${letter}`).checked = option.correct;
+                        
+                        // Load option image if available
+                        if (option.image) {
+                            document.getElementById(`option-${letter}-image`).src = option.image;
+                            document.getElementById(`option-${letter}-image-container`).classList.remove('hidden');
+                        }
+                    });
+                } else if (question.type === 'integer') {
+                    document.getElementById('integer-value').value = question.answer;
+                }
+            }
+        }
+        
+        function saveCurrentQuestion() {
+            const questionType = document.getElementById('question-type').value;
+            const questionText = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation').value;
+            const questionImage = document.getElementById('question-image').src;
+            const explanationImage = document.getElementById('explanation-image').src;
+            
+            if (!questionText && !questionImage) {
+                alert('Please enter question text or add an image');
+                return false;
+            }
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            const question = {
+                id: questionIndex + 1,
+                type: questionType,
+                text: questionText,
+                subject: currentSubject,
+                explanation: explanation,
+                questionImage: questionImage || null,
+                explanationImage: explanationImage || null
+            };
+            
+            if (questionType === 'scq' || questionType === 'mcq') {
+                const options = [];
+                let hasCorrectOption = false;
+                
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(97 + i); // a, b, c, d
+                    const optionText = document.getElementById(`option-text-${letter}`).value;
+                    const isCorrect = document.getElementById(`correct-${letter}`).checked;
+                    const optionImage = document.getElementById(`option-${letter}-image`).src;
+                    
+                    if (!optionText && !optionImage) {
+                        alert(`Please enter text or add an image for option ${letter.toUpperCase()}`);
+                        return false;
+                    }
+                    
+                    if (isCorrect) {
+                        hasCorrectOption = true;
+                    }
+                    
+                    options.push({
+                        text: optionText,
+                        correct: isCorrect,
+                        image: optionImage || null
+                    });
+                }
+                
+                if (!hasCorrectOption) {
+                    alert('Please select at least one correct option');
+                    return false;
+                }
+                
+                question.options = options;
+                
+                // Add marking scheme for MCQ
+                if (questionType === 'mcq') {
+                    // Count correct options
+                    const totalCorrectOptions = options.filter(option => option.correct).length;
+                    
+                    question.markingScheme = {
+                        fullMarks: 4,
+                        partialMarking: true,
+                        partialMarks: Math.min(totalCorrectOptions, 3) // Maximum 3 for partial marking
+                    };
+                } else {
+                    question.markingScheme = {
+                        correctMarks: 3,
+                        incorrectMarks: -1,
+                        unansweredMarks: 0
+                    };
+                }
+                
+            } else if (questionType === 'integer') {
+                const answer = document.getElementById('integer-value').value;
+                
+                if (!answer || isNaN(parseInt(answer)) || parseInt(answer) < 0 || parseInt(answer) > 99) {
+                    alert('Please enter a valid integer between 0 and 99');
+                    return false;
+                }
+                
+                question.answer = parseInt(answer);
+                question.markingScheme = {
+                    correctMarks: 3,
+                    incorrectMarks: 0,
+                    unansweredMarks: 0
+                };
+            }
+            
+            // Save question
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Ensure array is large enough
+            while (examData.questions.length <= questionIndex) {
+                examData.questions.push(null);
+            }
+            
+            examData.questions[questionIndex] = question;
+            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepSharp - Exam</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .numeric-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+        .numeric-key {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .numeric-key:hover {
+            background-color: #e0e0e0;
+        }
+        .numeric-key.wide {
+            grid-column: span 2;
+        }
+        .numerical-input {
+            text-align: center;
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 200px;
+        }
+        .numerical-range {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="exam-container">
+            <header class="exam-header">
+                <h1 id="exam-title">Exam Title</h1>
+                <div class="exam-controls">
+                    <div class="timer" id="timer">03:00:00</div>
+                    <button id="screenshot-btn" class="btn secondary">Take Screenshot</button>
+                    <button id="submit-exam" class="btn primary">Submit Exam</button>
+                </div>
+            </header>
+            
+            <div class="exam-content">
+                <div class="question-navigator">
+                    <div class="question-numbers" id="question-numbers">
+                        <!-- Question numbers will be added dynamically -->
+                    </div>
+                </div>
+                
+                <div class="question-area">
+                    <div id="question-container">
+                        <!-- Question content will be added dynamically -->
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button id="prev-btn" class="btn secondary">Previous</button>
+                        <button id="next-btn" class="btn primary">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="html2canvas.min.js"></script>
+    <script src="screen-capture.js"></script>
+    <script src="numeric-keyboard.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Add support for numerical and integer questions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Original app.js will handle most functionality
+            // This script adds support for the new question types
+            
+            const originalRenderQuestion = window.renderQuestion;
+            if (originalRenderQuestion) {
+                window.renderQuestion = function(question) {
+                    const questionContainer = document.getElementById('question-container');
+                    
+                    // Clear previous content
+                    questionContainer.innerHTML = '';
+                    
+                    // Add question text/image
+                    const questionText = document.createElement('div');
+                    questionText.className = 'question-text';
+                    
+                    if (question.questionImage) {
+                        const img = document.createElement('img');
+                        img.src = question.questionImage;
+                        img.alt = 'Question Image';
+                        img.className = 'question-image';
+                        questionText.appendChild(img);
+                    }
+                    
+                    if (question.text) {
+                        const text = document.createElement('p');
+                        text.textContent = question.text;
+                        questionText.appendChild(text);
+                    }
+                    
+                    questionContainer.appendChild(questionText);
+                    
+                    // Add section name if available
+                    if (question.section) {
+                        const sectionName = document.createElement('div');
+                        sectionName.className = 'section-name';
+                        sectionName.textContent = `${question.subject.charAt(0).toUpperCase() + question.subject.slice(1)} - ${question.section}`;
+                        questionContainer.appendChild(sectionName);
+                    }
+                    
+                    // Render based on question type
+                    if (question.type === 'scq' || question.type === 'mcq') {
+                        renderOptions(question, questionContainer);
+                    } else if (question.type === 'integer') {
+                        renderIntegerInput(question, questionContainer);
+                    } else if (question.type === 'numerical') {
+                        renderNumericalInput(question, questionContainer);
+                    }
+                };
+            }
+            
+            // Render options for SCQ/MCQ
+            function renderOptions(question, container) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const input = document.createElement('input');
+                    input.type = question.type === 'scq' ? 'radio' : 'checkbox';
+                    input.name = 'answer';
+                    input.id = `option-${index}`;
+                    input.value = index;
+                    
+                    // Check if this option was previously selected
+                    if (question.userAnswer && 
+                        ((Array.isArray(question.userAnswer) && question.userAnswer.includes(index)) || 
+                         question.userAnswer === index)) {
+                        input.checked = true;
+                    }
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `option-${index}`;
+                    
+                    const optionLetter = document.createElement('span');
+                    optionLetter.className = 'option-letter';
+                    optionLetter.textContent = String.fromCharCode(65 + index) + '. ';
+                    label.appendChild(optionLetter);
+                    
+                    if (option.image) {
+                        const img = document.createElement('img');
+                        img.src = option.image;
+                        img.alt = `Option ${String.fromCharCode(65 + index)} Image`;
+                        img.className = 'option-image';
+                        label.appendChild(img);
+                    }
+                    
+                    if (option.text) {
+                        const text = document.createElement('span');
+                        text.textContent = option.text;
+                        label.appendChild(text);
+                    }
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsContainer.appendChild(optionDiv);
+                    
+                    // Add event listener to save answer
+                    input.addEventListener('change', function() {
+                        saveAnswer(question);
+                    });
+                });
+                
+                container.appendChild(optionsContainer);
+            }
+            
+            // Render integer input
+            function renderIntegerInput(question, container) {
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'integer-container';
+                
+                const label = document.createElement('label');
+                label.textContent = 'Enter your answer (integer):';
+                label.htmlFor = 'integer-answer';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = 'integer-answer';
+                input.className = 'numerical-input';
+                input.min = '0';
+                input.step = '1';
+                input.placeholder = 'Enter integer';
+                
+                // Set previous answer if available
+                if (question.userAnswer !== undefined) {
+                    input.value = question.userAnswer;
+                }
+                
+                // Add numeric keyboard
+                const keyboard = document.createElement('div');
+                keyboard.className = 'numeric-keyboard';
+                
+                for (let i = 1; i <= 9; i++) {
+                    addNumericKey(keyboard, i.toString(), input);
+                }
+                
+                addNumericKey(keyboard, '0', input);
+                addNumericKey(keyboard, 'Clear', input, true);
+                
+                inputContainer.appendChild(label);
+                inputContainer.appendChild(input);
+                inputContainer.appendChild(keyboard);
+                container.appendChild(inputContainer);
+                
+                // Add event listener to save answer
+                input.addEventListener('input', function() {
+                    question.userAnswer = parseInt(this.value);
+                    saveExamState();
+                });
+                
+                // Focus input when clicking on container
+                inputContainer.addEventListener('click', function() {
+                    input.focus();
+                });
+            }
+            
+            // Render numerical input with range
+            function renderNumericalInput(question, container) {
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'numerical-container';
+                
+                const label = document.createElement('label');
+                label.textContent = 'Enter your answer (numerical):';
+                label.htmlFor = 'numerical-answer';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = 'numerical-answer';
+                input.className = 'numerical-input';
+                input.step = '0.01';
+                input.placeholder = 'Enter value';
+                
+                // Set previous answer if available
+                if (question.userAnswer !== undefined) {
+                    input.value = question.userAnswer;
+                }
+                
+                // Show range if available
+                if (question.minValue !== undefined && question.maxValue !== undefined) {
+                    const rangeInfo = document.createElement('div');
+                    rangeInfo.className = 'numerical-range';
+                    rangeInfo.textContent = `Acceptable range: ${question.minValue} to ${question.maxValue}`;
+                    inputContainer.appendChild(rangeInfo);
+                }
+                
+                // Add numeric keyboard
+                const keyboard = document.createElement('div');
+                keyboard.className = 'numeric-keyboard';
+                
+                for (let i = 1; i <= 9; i++) {
+                    addNumericKey(keyboard, i.toString(), input);
+                }
+                
+                addNumericKey(keyboard, '0', input);
+                addNumericKey(keyboard, '.', input);
+                addNumericKey(keyboard, '⌫', input);
+                
+                inputContainer.appendChild(label);
+                inputContainer.appendChild(input);
+                inputContainer.appendChild(keyboard);
+                container.appendChild(inputContainer);
+                
+                // Add event listener to save answer
+                input.addEventListener('input', function() {
+                    question.userAnswer = parseFloat(this.value);
+                    saveExamState();
+                });
+                
+                // Focus input when clicking on container
+                inputContainer.addEventListener('click', function() {
+                    input.focus();
+                });
+            }
+            
+            // Helper function to add numeric key
+            function addNumericKey(keyboard, value, input, isWide) {
+                const key = document.createElement('div');
+                key.className = 'numeric-key';
+                if (isWide) key.className += ' wide';
+                key.textContent = value;
+                
+                key.addEventListener('click', function() {
+                    if (value === 'Clear') {
+                        input.value = '';
+                    } else if (value === '⌫') {
+                        input.value = input.value.slice(0, -1);
+                    } else if (value === '.') {
+                        if (!input.value.includes('.')) {
+                            input.value += value;
+                        }
+                    } else {
+                        input.value += value;
+                    }
+                    
+                    // Trigger input event
+                    input.dispatchEvent(new Event('input'));
+                });
+                
+                keyboard.appendChild(key);
+            }
+            
+            // Save answer based on question type
+            function saveAnswer(question) {
+                if (question.type === 'scq') {
+                    const selectedOption = document.querySelector('input[name="answer"]:checked');
+                    question.userAnswer = selectedOption ? parseInt(selectedOption.value) : undefined;
+                } else if (question.type === 'mcq') {
+                    const selectedOptions = Array.from(document.querySelectorAll('input[name="answer"]:checked'))
+                        .map(input => parseInt(input.value));
+                    question.userAnswer = selectedOptions.length > 0 ? selectedOptions : undefined;
+                }
+                
+                saveExamState();
+            }
+            
+            // Save exam state to localStorage
+            function saveExamState() {
+                const examData = JSON.parse(localStorage.getItem('currentExam'));
+                localStorage.setItem('currentExam', JSON.stringify(examData));
+            }
+        });
+    </script>
+</body>
+</html>

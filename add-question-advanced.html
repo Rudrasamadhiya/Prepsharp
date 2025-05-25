@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question - JEE Advanced</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="checkbox"],
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .option-container input[type="text"] {
+            flex-grow: 1;
+        }
+        .hidden {
+            display: none;
+        }
+        .marking-info {
+            margin-top: 8px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            font-size: 14px;
+        }
+        .image-container {
+            margin-top: 10px;
+            position: relative;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+        }
+        .image-container .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .upload-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .numeric-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+        .numeric-key {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .numeric-key:hover {
+            background-color: #e0e0e0;
+        }
+        .numeric-key.wide {
+            grid-column: span 2;
+        }
+        .range-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .range-input input {
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - Add Question (JEE Advanced)</h2>
+        <div>
+            <button id="summary-btn" class="btn secondary">View Summary</button>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            
+            <h2 id="question-counter">Question 1 of 30</h2>
+            <h3 id="current-subject">Physics - Section I</h3>
+            
+            <div class="form-group">
+                <label for="question-text">Question Text</label>
+                <textarea id="question-text" rows="4" required></textarea>
+                <button id="screenshot-question-btn" class="upload-btn">Take Screenshot</button>
+                <div id="question-image-container" class="image-container hidden">
+                    <img id="question-image" src="" alt="Question Image">
+                    <button class="remove-btn" id="remove-question-image">×</button>
+                </div>
+            </div>
+            
+            <!-- SCQ/MCQ Options -->
+            <div id="options-container" class="form-group">
+                <label>Options</label>
+                <div class="option-container" id="option-a">
+                    <input type="checkbox" id="correct-a" class="correct-option">
+                    <label for="correct-a" style="display:inline;">A.</label>
+                    <input type="text" id="option-text-a" placeholder="Option A">
+                </div>
+                <button id="screenshot-option-a-btn" class="upload-btn">Take Screenshot for Option A</button>
+                <div id="option-a-image-container" class="image-container hidden">
+                    <img id="option-a-image" src="" alt="Option A Image">
+                    <button class="remove-btn" data-option="a">×</button>
+                </div>
+                
+                <div class="option-container" id="option-b">
+                    <input type="checkbox" id="correct-b" class="correct-option">
+                    <label for="correct-b" style="display:inline;">B.</label>
+                    <input type="text" id="option-text-b" placeholder="Option B">
+                </div>
+                <button id="screenshot-option-b-btn" class="upload-btn">Take Screenshot for Option B</button>
+                <div id="option-b-image-container" class="image-container hidden">
+                    <img id="option-b-image" src="" alt="Option B Image">
+                    <button class="remove-btn" data-option="b">×</button>
+                </div>
+                
+                <div class="option-container" id="option-c">
+                    <input type="checkbox" id="correct-c" class="correct-option">
+                    <label for="correct-c" style="display:inline;">C.</label>
+                    <input type="text" id="option-text-c" placeholder="Option C">
+                </div>
+                <button id="screenshot-option-c-btn" class="upload-btn">Take Screenshot for Option C</button>
+                <div id="option-c-image-container" class="image-container hidden">
+                    <img id="option-c-image" src="" alt="Option C Image">
+                    <button class="remove-btn" data-option="c">×</button>
+                </div>
+                
+                <div class="option-container" id="option-d">
+                    <input type="checkbox" id="correct-d" class="correct-option">
+                    <label for="correct-d" style="display:inline;">D.</label>
+                    <input type="text" id="option-text-d" placeholder="Option D">
+                </div>
+                <button id="screenshot-option-d-btn" class="upload-btn">Take Screenshot for Option D</button>
+                <div id="option-d-image-container" class="image-container hidden">
+                    <img id="option-d-image" src="" alt="Option D Image">
+                    <button class="remove-btn" data-option="d">×</button>
+                </div>
+            </div>
+            
+            <!-- Integer Answer -->
+            <div id="integer-answer" class="form-group hidden">
+                <label for="integer-value">Correct Answer (Integer)</label>
+                <input type="number" id="integer-value" min="0" max="99">
+                <div class="numeric-keyboard">
+                    <div class="numeric-key">1</div>
+                    <div class="numeric-key">2</div>
+                    <div class="numeric-key">3</div>
+                    <div class="numeric-key">4</div>
+                    <div class="numeric-key">5</div>
+                    <div class="numeric-key">6</div>
+                    <div class="numeric-key">7</div>
+                    <div class="numeric-key">8</div>
+                    <div class="numeric-key">9</div>
+                    <div class="numeric-key">0</div>
+                    <div class="numeric-key wide">Clear</div>
+                </div>
+            </div>
+            
+            <!-- Numerical Answer with Range -->
+            <div id="numerical-answer" class="form-group hidden">
+                <label for="numerical-range">Correct Answer Range (with 2 decimal places)</label>
+                <div class="range-input">
+                    <input type="number" id="numerical-min" step="0.01" placeholder="Min value (e.g. 1.67)">
+                    <span>to</span>
+                    <input type="number" id="numerical-max" step="0.01" placeholder="Max value (e.g. 1.87)">
+                </div>
+                <div class="numeric-keyboard">
+                    <div class="numeric-key">1</div>
+                    <div class="numeric-key">2</div>
+                    <div class="numeric-key">3</div>
+                    <div class="numeric-key">4</div>
+                    <div class="numeric-key">5</div>
+                    <div class="numeric-key">6</div>
+                    <div class="numeric-key">7</div>
+                    <div class="numeric-key">8</div>
+                    <div class="numeric-key">9</div>
+                    <div class="numeric-key">0</div>
+                    <div class="numeric-key">.</div>
+                    <div class="numeric-key">⌫</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="explanation">Explanation (Optional)</label>
+                <textarea id="explanation" rows="3"></textarea>
+                <button id="screenshot-explanation-btn" class="upload-btn">Take Screenshot</button>
+                <div id="explanation-image-container" class="image-container hidden">
+                    <img id="explanation-image" src="" alt="Explanation Image">
+                    <button class="remove-btn" id="remove-explanation-image">×</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button id="prev-question" class="btn secondary">Previous</button>
+                <button id="next-question" class="btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="html2canvas.min.js"></script>
+    <script src="screen-capture.js"></script>
+    <script>
+        // Check if exam data exists
+        const examData = JSON.parse(localStorage.getItem('currentExam'));
+        if (!examData) {
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Get current question index, subject and section
+        let currentQuestionIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+        let currentSubject = localStorage.getItem('currentSubject') || examData.subjects[0];
+        let currentSectionIndex = parseInt(localStorage.getItem('currentSection') || '0');
+        
+        // Initialize question counter
+        let questionCounter = 0;
+        let totalQuestions = 0;
+        
+        // Calculate question counter and get current section
+        let currentSection = null;
+        if (examData.subjectSections && examData.subjectSections[currentSubject]) {
+            currentSection = examData.subjectSections[currentSubject][currentSectionIndex];
+            
+            // Calculate question counter
+            for (let i = 0; i < examData.subjects.length; i++) {
+                const subject = examData.subjects[i];
+                
+                if (subject === currentSubject) {
+                    // Count questions in previous sections of current subject
+                    for (let j = 0; j < currentSectionIndex; j++) {
+                        questionCounter += examData.subjectSections[subject][j].questionCount;
+                    }
+                    // Add current question index
+                    questionCounter += currentQuestionIndex + 1;
+                    break;
+                } else {
+                    // Add all questions from previous subjects
+                    for (let j = 0; j < examData.subjectSections[subject].length; j++) {
+                        questionCounter += examData.subjectSections[subject][j].questionCount;
+                    }
+                }
+            }
+            
+            // Calculate total questions
+            totalQuestions = examData.totalQuestions;
+        }
+        
+        // Update UI
+        updateUI();
+        
+        // Event listeners for numeric keyboard
+        document.querySelectorAll('.numeric-keyboard .numeric-key').forEach(key => {
+            key.addEventListener('click', function() {
+                const value = this.textContent;
+                const activeInput = document.activeElement;
+                
+                // Check if an input is focused
+                if (activeInput && (activeInput.id === 'integer-value' || 
+                                   activeInput.id === 'numerical-min' || 
+                                   activeInput.id === 'numerical-max')) {
+                    
+                    if (value === 'Clear') {
+                        activeInput.value = '';
+                    } else if (value === '⌫') {
+                        activeInput.value = activeInput.value.slice(0, -1);
+                    } else {
+                        // For decimal point, check if it already exists
+                        if (value === '.' && activeInput.value.includes('.')) {
+                            return;
+                        }
+                        activeInput.value += value;
+                    }
+                } else {
+                    // If no input is focused, focus the appropriate one
+                    if (document.getElementById('integer-answer').classList.contains('hidden')) {
+                        document.getElementById('numerical-min').focus();
+                    } else {
+                        document.getElementById('integer-value').focus();
+                    }
+                }
+            });
+        });
+        
+        // Helper functions
+        function updateUI() {
+            // Update progress bar
+            const progress = (questionCounter / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update question counter
+            document.getElementById('question-counter').textContent = `Question ${questionCounter} of ${totalQuestions}`;
+            
+            // Update subject and section
+            const subjectName = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+            document.getElementById('current-subject').textContent = `${subjectName} - ${currentSection.name}`;
+            
+            // Clear form
+            document.getElementById('question-text').value = '';
+            document.getElementById('explanation').value = '';
+            document.getElementById('integer-value').value = '';
+            document.getElementById('numerical-min').value = '';
+            document.getElementById('numerical-max').value = '';
+            
+            // Clear images
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+            
+            // Clear option images
+            ['a', 'b', 'c', 'd'].forEach(option => {
+                document.getElementById(`option-${option}-image`).src = '';
+                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.correct-option').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            document.querySelectorAll('#options-container input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            
+            // Show/hide appropriate answer type based on section
+            const questionType = currentSection.questionType;
+            document.getElementById('options-container').classList.add('hidden');
+            document.getElementById('integer-answer').classList.add('hidden');
+            document.getElementById('numerical-answer').classList.add('hidden');
+            
+            if (questionType === 'scq' || questionType === 'mcq') {
+                document.getElementById('options-container').classList.remove('hidden');
+                
+                // For SCQ, only one option can be selected
+                if (questionType === 'scq') {
+                    document.querySelectorAll('.correct-option').forEach(checkbox => {
+                        checkbox.type = 'radio';
+                        checkbox.name = 'correct-option';
+                    });
+                } else {
+                    document.querySelectorAll('.correct-option').forEach(checkbox => {
+                        checkbox.type = 'checkbox';
+                        checkbox.name = '';
+                    });
+                }
+            } else if (questionType === 'integer') {
+                document.getElementById('integer-answer').classList.remove('hidden');
+            } else if (questionType === 'numerical') {
+                document.getElementById('numerical-answer').classList.remove('hidden');
+            }
+            
+            // Load existing question data if available
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Find the question index in the questions array
+            const questionIndex = getGlobalQuestionIndex();
+            
+            if (examData.questions[questionIndex]) {
+                const question = examData.questions[questionIndex];
+                
+                document.getElementById('question-text').value = question.text || '';
+                document.getElementById('explanation').value = question.explanation || '';
+                
+                // Load images if available
+                if (question.questionImage) {
+                    document.getElementById('question-image').src = question.questionImage;
+                    document.getElementById('question-image-container').classList.remove('hidden');
+                }
+                
+                if (question.explanationImage) {
+                    document.getElementById('explanation-image').src = question.explanationImage;
+                    document.getElementById('explanation-image-container').classList.remove('hidden');
+                }
+                
+                if (questionType === 'scq' || questionType === 'mcq') {
+                    question.options.forEach((option, index) => {
+                        const letter = String.fromCharCode(97 + index); // a, b, c, d
+                        document.getElementById(`option-text-${letter}`).value = option.text || '';
+                        document.getElementById(`correct-${letter}`).checked = option.correct;
+                        
+                        // Load option image if available
+                        if (option.image) {
+                            document.getElementById(`option-${letter}-image`).src = option.image;
+                            document.getElementById(`option-${letter}-image-container`).classList.remove('hidden');
+                        }
+                    });
+                } else if (questionType === 'integer') {
+                    document.getElementById('integer-value').value = question.answer || '';
+                } else if (questionType === 'numerical') {
+                    document.getElementById('numerical-min').value = question.minValue || '';
+                    document.getElementById('numerical-max').value = question.maxValue || '';
+                }
+            }
+        }
+        
+        function getGlobalQuestionIndex() {
+            let index = 0;
+            
+            for (let i = 0; i < examData.subjects.length; i++) {
+                const subject = examData.subjects[i];
+                
+                if (subject === currentSubject) {
+                    // Count questions in previous sections of current subject
+                    for (let j = 0; j < currentSectionIndex; j++) {
+                        index += examData.subjectSections[subject][j].questionCount;
+                    }
+                    // Add current question index
+                    index += currentQuestionIndex;
+                    break;
+                } else {
+                    // Add all questions from previous subjects
+                    for (let j = 0; j < examData.subjectSections[subject].length; j++) {
+                        index += examData.subjectSections[subject][j].questionCount;
+                    }
+                }
+            }
+            
+            return index;
+        }
+        
+        function saveCurrentQuestion() {
+            const questionText = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation').value;
+            const questionImage = document.getElementById('question-image').src;
+            const explanationImage = document.getElementById('explanation-image').src;
+            const questionType = currentSection.questionType;
+            
+            if (!questionText && !questionImage) {
+                alert('Please enter question text or add an image');
+                return false;
+            }
+            
+            // Find the question index in the questions array
+            const questionIndex = getGlobalQuestionIndex();
+            
+            const question = {
+                id: questionIndex + 1,
+                type: questionType,
+                text: questionText,
+                subject: currentSubject,
+                section: currentSection.name,
+                explanation: explanation,
+                questionImage: questionImage || null,
+                explanationImage: explanationImage || null
+            };
+            
+            if (questionType === 'scq' || questionType === 'mcq') {
+                const options = [];
+                let hasCorrectOption = false;
+                
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(97 + i); // a, b, c, d
+                    const optionText = document.getElementById(`option-text-${letter}`).value;
+                    const isCorrect = document.getElementById(`correct-${letter}`).checked;
+                    const optionImage = document.getElementById(`option-${letter}-image`).src;
+                    
+                    if (!optionText && !optionImage) {
+                        alert(`Please enter text or add an image for option ${letter.toUpperCase()}`);
+                        return false;
+                    }
+                    
+                    if (isCorrect) {
+                        hasCorrectOption = true;
+                    }
+                    
+                    options.push({
+                        text: optionText,
+                        correct: isCorrect,
+                        image: optionImage || null
+                    });
+                }
+                
+                if (!hasCorrectOption) {
+                    alert('Please select at least one correct option');
+                    return false;
+                }
+                
+                question.options = options;
+                
+            } else if (questionType === 'integer') {
+                const answer = document.getElementById('integer-value').value;
+                
+                if (!answer || isNaN(parseInt(answer))) {
+                    alert('Please enter a valid integer');
+                    return false;
+                }
+                
+                question.answer = parseInt(answer);
+                
+            } else if (questionType === 'numerical') {
+                const minValue = document.getElementById('numerical-min').value;
+                const maxValue = document.getElementById('numerical-max').value;
+                
+                if (!minValue || !maxValue || isNaN(parseFloat(minValue)) || isNaN(parseFloat(maxValue))) {
+                    alert('Please enter valid minimum and maximum values');
+                    return false;
+                }
+                
+                if (parseFloat(minValue) > parseFloat(maxValue)) {
+                    alert('Minimum value cannot be greater than maximum value');
+                    return false;
+                }
+                
+                question.minValue = parseFloat(minValue);
+                question.maxValue = parseFloat(maxValue);
+            }
+            
+            // Save question
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Ensure array is large enough
+            while (examData.questions.length <= questionIndex) {
+                examData.questions.push(null);
+            }
+            
+            examData.questions[questionIndex] = question;
+            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
+            return true;
+        }
+        
+        // Navigation event listeners
+        document.getElementById('next-question').addEventListener('click', function() {
+            if (saveCurrentQuestion()) {
+                // Move to next question
+                currentQuestionIndex++;
+                
+                // Check if we need to move to the next section or subject
+                if (currentQuestionIndex >= currentSection.questionCount) {
+                    currentQuestionIndex = 0;
+                    currentSectionIndex++;
+                    
+                    // Check if we need to move to the next subject
+                    if (currentSectionIndex >= examData.subjectSections[currentSubject].length) {
+                        currentSectionIndex = 0;
+                        const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                        
+                        if (currentSubjectIndex < examData.subjects.length - 1) {
+                            currentSubject = examData.subjects[currentSubjectIndex + 1];
+                        } else {
+                            // We've reached the end of all subjects
+                            // Save final data
+                            localStorage.setItem('currentExam', JSON.stringify(examData));
+                            
+                            // Redirect to summary page
+                            window.location.href = 'exam-summary.html';
+                            return;
+                        }
+                    }
+                }
+                
+                // Save current position
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                localStorage.setItem('currentSubject', currentSubject);
+                localStorage.setItem('currentSection', currentSectionIndex.toString());
+                
+                // Update UI
+                currentSection = examData.subjectSections[currentSubject][currentSectionIndex];
+                updateUI();
+            }
+        });
+        
+        document.getElementById('prev-question').addEventListener('click', function() {
+            // Save current question
+            saveCurrentQuestion();
+            
+            // Move to previous question
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+            } else {
+                // Move to previous section or subject
+                if (currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                    currentSection = examData.subjectSections[currentSubject][currentSectionIndex];
+                    currentQuestionIndex = currentSection.questionCount - 1;
+                } else {
+                    // Move to previous subject
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex > 0) {
+                        currentSubject = examData.subjects[currentSubjectIndex - 1];
+                        currentSectionIndex = examData.subjectSections[currentSubject].length - 1;
+                        currentSection = examData.subjectSections[currentSubject][currentSectionIndex];
+                        currentQuestionIndex = currentSection.questionCount - 1;
+                    }
+                }
+            }
+            
+            // Save current position
+            localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+            localStorage.setItem('currentSubject', currentSubject);
+            localStorage.setItem('currentSection', currentSectionIndex.toString());
+            
+            // Update UI
+            updateUI();
+        });
+        
+        // Screenshot event listeners
+        document.getElementById('screenshot-question-btn').addEventListener('click', function() {
+            ScreenCapture.init(function(imageData) {
+                document.getElementById('question-image').src = imageData;
+                document.getElementById('question-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-question-image').addEventListener('click', function() {
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+        });
+        
+        document.getElementById('screenshot-explanation-btn').addEventListener('click', function() {
+            ScreenCapture.init(function(imageData) {
+                document.getElementById('explanation-image').src = imageData;
+                document.getElementById('explanation-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-explanation-image').addEventListener('click', function() {
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+        });
+        
+        // Option screenshot event listeners
+        ['a', 'b', 'c', 'd'].forEach(option => {
+            document.getElementById(`screenshot-option-${option}-btn`).addEventListener('click', function() {
+                ScreenCapture.init(function(imageData) {
+                    document.getElementById(`option-${option}-image`).src = imageData;
+                    document.getElementById(`option-${option}-image-container`).classList.remove('hidden');
+                });
+            });
+            
+            document.querySelector(`.remove-btn[data-option="${option}"]`).addEventListener('click', function() {
+                document.getElementById(`option-${option}-image`).src = '';
+                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
+            });
+        });
+        
+        document.getElementById('summary-btn').addEventListener('click', function() {
+            // Save current question
+            saveCurrentQuestion();
+            
+            // Save current position
+            localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+            localStorage.setItem('currentSubject', currentSubject);
+            localStorage.setItem('currentSection', currentSectionIndex.toString());
+            
+            // Redirect to summary page
+            window.location.href = 'exam-summary.html';
+        });
+        
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

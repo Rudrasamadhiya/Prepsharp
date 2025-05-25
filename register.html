@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        h1 { color: var(--primary-color); font-size: 32px; }
+        h2 { color: var(--primary-color); margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .btn.secondary { background-color: var(--secondary-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">PS</div>
+            <h1>PrepSharp</h1>
+        </div>
+        <div class="card">
+            <h2>Create Account</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Mobile Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+91 XXXXXXXXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                
+                <button type="submit" class="btn primary">Register</button>
+            </form>
+            
+            <div style="margin-top:20px; text-align:center">
+                <button id="login-btn" class="btn" style="background:none; color:var(--primary-color)">Already have an account? Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load registered users from localStorage
+        function getRegisteredUsers() {
+            const users = localStorage.getItem('registeredUsers');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Save registered users to localStorage
+        function saveRegisteredUser(user) {
+            const users = getRegisteredUsers();
+            users.push(user);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+        }
+        
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Basic validation
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Check if email already exists
+            const users = getRegisteredUsers();
+            if (users.some(user => user.email === email)) {
+                alert('Email already registered. Please login instead.');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                userId: email,
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                password: password,
+                loginMethod: 'password',
+                registrationDate: new Date().toISOString()
+            };
+            
+            // Save user
+            saveRegisteredUser(newUser);
+            
+            // Set as current user
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            // Redirect to profile setup
+            window.location.href = 'profile-setup.html';
+        });
+        
+        document.getElementById('login-btn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

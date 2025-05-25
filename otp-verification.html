@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hidden {
+            display: none;
+        }
+        .message {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OTP Verification</h1>
+        
+        <div id="phone-form">
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number (with country code):</label>
+                <input type="tel" id="phoneNumber" placeholder="+1234567890" required>
+            </div>
+            <button id="sendOtp">Send OTP</button>
+            <div id="sendMessage" class="message hidden"></div>
+        </div>
+        
+        <div id="otp-form" class="hidden">
+            <div class="form-group">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" placeholder="6-digit OTP" required>
+            </div>
+            <button id="verifyOtp">Verify OTP</button>
+            <div id="verifyMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneForm = document.getElementById('phone-form');
+            const otpForm = document.getElementById('otp-form');
+            const sendOtpBtn = document.getElementById('sendOtp');
+            const verifyOtpBtn = document.getElementById('verifyOtp');
+            const phoneNumberInput = document.getElementById('phoneNumber');
+            const otpInput = document.getElementById('otp');
+            const sendMessage = document.getElementById('sendMessage');
+            const verifyMessage = document.getElementById('verifyMessage');
+            
+            // Send OTP
+            sendOtpBtn.addEventListener('click', async function() {
+                const phoneNumber = phoneNumberInput.value.trim();
+                if (!phoneNumber) {
+                    showMessage(sendMessage, 'Please enter a valid phone number', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/send-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phoneNumber })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(sendMessage, data.message, 'success');
+                        phoneForm.classList.add('hidden');
+                        otpForm.classList.remove('hidden');
+                    } else {
+                        showMessage(sendMessage, data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage(sendMessage, 'Failed to send OTP. Please try again.', 'error');
+                }
+            });
+            
+            // Verify OTP
+            verifyOtpBtn.addEventListener('click', async function() {
+                const phoneNumber = phoneNumberInput.value.trim();
+                const otp = otpInput.value.trim();
+                
+                if (!otp) {
+                    showMessage(verifyMessage, 'Please enter the OTP', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/verify-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phoneNumber, otp })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(verifyMessage, data.message, 'success');
+                        // Redirect or show success page after successful verification
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    } else {
+                        showMessage(verifyMessage, data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage(verifyMessage, 'Failed to verify OTP. Please try again.', 'error');
+                }
+            });
+            
+            function showMessage(element, message, type) {
+                element.textContent = message;
+                element.className = `message ${type}`;
+                element.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

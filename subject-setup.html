@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Setup - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - Subject Setup</h2>
+        <button id="back-btn" class="btn">Back</button>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Subject Details</h1>
+            <div id="subject-details"></div>
+            <button id="start-adding-questions" class="btn">Start Adding Questions</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if exam data exists
+        const examData = JSON.parse(localStorage.getItem('currentExam'));
+        if (!examData) {
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Generate subject details form
+        const subjectDetails = document.getElementById('subject-details');
+        
+        examData.subjects.forEach(subject => {
+            const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+            
+            const subjectDiv = document.createElement('div');
+            subjectDiv.className = 'form-group';
+            subjectDiv.innerHTML = `
+                <h3>${subjectName}</h3>
+                <div class="form-group">
+                    <label for="${subject}-questions">Number of Questions</label>
+                    <input type="number" id="${subject}-questions" min="1" required>
+                </div>
+            `;
+            
+            subjectDetails.appendChild(subjectDiv);
+        });
+        
+        document.getElementById('start-adding-questions').addEventListener('click', function() {
+            // Validate subject details
+            let totalSubjectQuestions = 0;
+            const subjectDetails = {};
+            
+            examData.subjects.forEach(subject => {
+                const questionCount = parseInt(document.getElementById(`${subject}-questions`).value);
+                if (isNaN(questionCount) || questionCount <= 0) {
+                    alert(`Please enter a valid number of questions for ${subject}`);
+                    return;
+                }
+                
+                subjectDetails[subject] = {
+                    questionCount: questionCount
+                };
+                
+                totalSubjectQuestions += questionCount;
+            });
+            
+            if (totalSubjectQuestions !== examData.totalQuestions) {
+                alert(`Total questions from all subjects (${totalSubjectQuestions}) must equal the total exam questions (${examData.totalQuestions})`);
+                return;
+            }
+            
+            // Save subject details
+            examData.subjectDetails = subjectDetails;
+            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
+            // Initialize question counter
+            localStorage.setItem('currentQuestionIndex', '0');
+            localStorage.setItem('currentSubject', examData.subjects[0]);
+            
+            // Redirect to add questions page
+            window.location.href = 'add-question.html';
+        });
+        
+        document.getElementById('back-btn').addEventListener('click', function() {
+            window.location.href = 'add-exam.html';
+        });
+    </script>
+</body>
+</html>
