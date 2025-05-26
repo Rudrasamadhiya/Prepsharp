@@ -200,6 +200,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
@@ -220,6 +221,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
+=======
+    <script>
+>>>>>>> 57de8a4 (commit)
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -227,9 +231,12 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
             
+<<<<<<< HEAD
             // Clear previous error messages
             errorMessage.style.display = 'none';
             
+=======
+>>>>>>> 57de8a4 (commit)
             // Validate inputs
             if (!email || !password) {
                 errorMessage.textContent = 'Email and password are required';
@@ -237,6 +244,7 @@
                 return;
             }
             
+<<<<<<< HEAD
             // Show loading state
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
@@ -279,6 +287,38 @@
                     errorMessage.style.display = 'block';
                     console.error('Error:', error);
                 });
+=======
+            // Send login data to server
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Login successful
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Login failed
+                    errorMessage.textContent = data.message || 'Invalid email or password';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.style.display = 'block';
+            });
+>>>>>>> 57de8a4 (commit)
         });
     </script>
 </body>
