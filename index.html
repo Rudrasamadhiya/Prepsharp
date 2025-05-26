@@ -191,9 +191,8 @@
             </form>
             
             <div class="register-link">
-    Don't have an account? <a href="https://rudrasamadhiya.github.io/Prepsharp/register.html">Register</a>
-</div>
-
+                Don't have an account? <a href="register.html">Register</a>
+            </div>
             
             <div class="admin-link">
                 <a href="admin-login.html">Admin Access</a>
@@ -201,14 +200,11 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
         
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
             authDomain: "prepsharp-c91fd.firebaseapp.com",
@@ -231,6 +227,9 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
             
+            // Clear previous error messages
+            errorMessage.style.display = 'none';
+            
             // Validate inputs
             if (!email || !password) {
                 errorMessage.textContent = 'Email and password are required';
@@ -238,46 +237,47 @@
                 return;
             }
             
-            // Sign in with email and password
+            // Show loading state
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Logging in...';
+            
+            // Sign in
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in 
+                    // User signed in successfully
                     const user = userCredential.user;
                     
                     // Get user data from Firestore
-                    const userRef = db.collection('users').doc(user.uid);
-                    userRef.get().then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            
-                            // Save user to localStorage
-                            localStorage.setItem('currentUser', JSON.stringify({
-                                uid: user.uid,
-                                name: userData.name,
-                                email: userData.email,
-                                mobile: userData.mobile,
-                                profileComplete: true
-                            }));
-                            
-                            // Redirect to dashboard
-                            window.location.href = 'dashboard.html';
-                        } else {
-                            // User document doesn't exist
-                            localStorage.setItem('currentUser', JSON.stringify({
-                                uid: user.uid,
-                                email: user.email,
-                                profileComplete: false
-                            }));
-                            
-                            // Redirect to profile setup
-                            window.location.href = 'profile-setup.html';
-                        }
-                    });
+                    return getDoc(doc(db, 'users', user.uid));
+                })
+                .then((docSnap) => {
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        
+                        // Save user to localStorage
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            uid: auth.currentUser.uid,
+                            name: userData.name,
+                            email: userData.email,
+                            mobile: userData.mobile
+                        }));
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        throw new Error('User data not found');
+                    }
                 })
                 .catch((error) => {
-                    console.error('Login error:', error);
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Login';
+                    
+                    // Show error message
                     errorMessage.textContent = 'Invalid email or password';
                     errorMessage.style.display = 'block';
+                    console.error('Error:', error);
                 });
         });
     </script>
