@@ -90,6 +90,16 @@
         h1, h2, h3 {
             color: var(--primary-color);
         }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -99,8 +109,8 @@
             <h2>PrepSharp Admin</h2>
         </div>
         <div class="user-menu">
-            <span class="user-name">Admin</span>
-            <button class="logout-btn" onclick="location.href='admin-login.html'">Logout</button>
+            <span class="user-name" id="admin-name">Admin</span>
+            <button class="logout-btn" id="logout-btn">Logout</button>
         </div>
     </div>
     
@@ -117,6 +127,12 @@
                 <p>Create new exams and tests</p>
             </div>
             
+            <div class="dashboard-card" onclick="location.href='add-question.html'">
+                <div class="card-icon">❓</div>
+                <h3>Add Questions</h3>
+                <p>Create and manage questions</p>
+            </div>
+            
             <div class="dashboard-card" onclick="location.href='exam-list.html'">
                 <div class="card-icon">📋</div>
                 <h3>Manage Exams</h3>
@@ -129,10 +145,10 @@
                 <p>View and export registered users</p>
             </div>
             
-            <div class="dashboard-card" onclick="location.href='recent-papers.html'">
-                <div class="card-icon">🔄</div>
-                <h3>Recently Added Papers</h3>
-                <p>View recently added exam papers</p>
+            <div class="dashboard-card" onclick="location.href='result.html'">
+                <div class="card-icon">📊</div>
+                <h3>Results</h3>
+                <p>View student performance</p>
             </div>
             
             <div class="dashboard-card" onclick="location.href='index.html'">
@@ -142,19 +158,47 @@
             </div>
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirect to login if not logged in
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Display admin name
+            document.getElementById('admin-name').textContent = user.email || 'Admin';
+        });
+        
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            signOut(auth).then(() => {
+                // Sign-out successful
+                window.location.href = 'admin-login.html';
+            }).catch((error) => {
+                // An error happened
+                console.error('Logout error:', error);
+            });
+        });
+    </script>
 </body>
-    <script>
-    // Check if admin is logged in
-    window.addEventListener('load', function() {
-        if (localStorage.getItem('adminLoggedIn') !== 'true') {
-            window.location.href = 'admin-login.html';
-        }
-    });
-    
-    // Update logout button
-    document.querySelector('.logout-btn').addEventListener('click', function() {
-        localStorage.removeItem('adminLoggedIn');
-        window.location.href = 'admin-login.html';
-    });
-</script>
 </html>
