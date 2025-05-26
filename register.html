@@ -245,16 +245,43 @@
                 return;
             }
             
-            try {
-                // Check if mobile number already exists
-                const mobileQuery = query(collection(db, "users"), where("mobile", "==", mobile));
-                const mobileSnapshot = await getDocs(mobileQuery);
-                
-                if (!mobileSnapshot.empty) {
-                    errorMessage.textContent = 'Mobile number already registered';
-                    errorMessage.style.display = 'block';
-                    return;
-                }
+           // Replace the mobile check code with this simpler version
+try {
+    // Create user with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    // Add user data to Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+        name: name,
+        email: email,
+        mobile: mobile,
+        registrationDate: new Date().toISOString()
+    });
+    
+    // Save user to localStorage
+    localStorage.setItem('currentUser', JSON.stringify({
+        uid: user.uid,
+        name: name,
+        email: email,
+        mobile: mobile,
+        profileComplete: true
+    }));
+    
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+} catch (error) {
+    console.error('Registration error:', error);
+    
+    if (error.code === 'auth/email-already-in-use') {
+        errorMessage.textContent = 'Email already registered';
+    } else {
+        errorMessage.textContent = 'Registration failed: ' + error.message;
+    }
+    
+    errorMessage.style.display = 'block';
+}
+
                 
                 // Create user with email and password
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
