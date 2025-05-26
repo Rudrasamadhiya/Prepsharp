@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - PrepSharp</title>
+    <title>PrepSharp - Register</title>
     <style>
         :root {
             --primary-color: #1976d2;
@@ -16,157 +16,244 @@
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
-        .card {
+        .login-card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 30px;
+            width: 100%;
+            max-width: 400px;
         }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .logo {
-            width: 80px;
-            height: 80px;
+        .banner {
+            flex: 1;
             background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-right: 15px;
+            align-items: center;
+            color: white;
+            padding: 20px;
         }
-        h1 { color: var(--primary-color); font-size: 32px; }
-        h2 { color: var(--primary-color); margin-bottom: 20px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+        .banner h1, .banner h2 {
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
         .btn {
-            padding: 12px 24px;
+            width: 100%;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 10px;
         }
-        .btn.primary { background-color: var(--primary-color); color: white; }
-        .btn.secondary { background-color: var(--secondary-color); color: white; }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .error-message {
+            color: #f44336;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .banner {
+                padding: 40px 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-container">
-            <div class="logo">PS</div>
-            <h1>PrepSharp</h1>
+    <div class="banner">
+        <div class="logo">
+            <img src="logo for index.png" alt="PrepSharp Logo" style="max-width: 200px;">
         </div>
-        <div class="card">
-            <h2>Create Account</h2>
+        <h1>Prepare Smarter</h1>
+        <h2>Ace Your Entrance Exams</h2>
+    </div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Create Account</h1>
+            <p style="text-align: center;">Join PrepSharp to start your preparation</p>
+            
             <form id="register-form">
                 <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" required>
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="phone">Mobile Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+91 XXXXXXXXXX">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" placeholder="Create a password" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
                 </div>
                 
-                <button type="submit" class="btn primary">Register</button>
+                <button type="submit" class="btn">Register</button>
+                
+                <div id="error-message" class="error-message"></div>
             </form>
             
-            <div style="margin-top:20px; text-align:center">
-                <button id="login-btn" class="btn" style="background:none; color:var(--primary-color)">Already have an account? Login</button>
+            <div class="register-link">
+                Already have an account? <a href="index.html">Login</a>
             </div>
         </div>
     </div>
 
-    <script>
-        // Load registered users from localStorage
-        function getRegisteredUsers() {
-            const users = localStorage.getItem('registeredUsers');
-            return users ? JSON.parse(users) : [];
-        }
-
-        // Save registered users to localStorage
-        function saveRegisteredUser(user) {
-            const users = getRegisteredUsers();
-            users.push(user);
-            localStorage.setItem('registeredUsers', JSON.stringify(users));
-        }
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
         
-        document.getElementById('register-form').addEventListener('submit', function(e) {
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorMessage = document.getElementById('error-message');
             
-            // Basic validation
+            // Validate inputs
+            if (!name || !email || !mobile || !password || !confirmPassword) {
+                errorMessage.textContent = 'All fields are required';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
             if (password !== confirmPassword) {
-                alert('Passwords do not match');
+                errorMessage.textContent = 'Passwords do not match';
+                errorMessage.style.display = 'block';
                 return;
             }
             
-            // Check if email already exists
-            const users = getRegisteredUsers();
-            if (users.some(user => user.email === email)) {
-                alert('Email already registered. Please login instead.');
-                return;
+            try {
+                // Check if mobile number already exists
+                const mobileQuery = await db.collection('users').where('mobile', '==', mobile).get();
+                if (!mobileQuery.empty) {
+                    errorMessage.textContent = 'Mobile number already registered';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Add user data to Firestore
+                await setDoc(doc(db, 'users', user.uid), {
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    registrationDate: new Date().toISOString()
+                });
+                
+                // Save user to localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    profileComplete: true
+                }));
+                
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage.textContent = 'Email already registered';
+                } else {
+                    errorMessage.textContent = 'Registration failed: ' + error.message;
+                }
+                
+                errorMessage.style.display = 'block';
             }
-            
-            // Create new user
-            const newUser = {
-                userId: email,
-                fullName: fullName,
-                email: email,
-                phone: phone,
-                password: password,
-                loginMethod: 'password',
-                registrationDate: new Date().toISOString()
-            };
-            
-            // Save user
-            saveRegisteredUser(newUser);
-            
-            // Set as current user
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            
-            // Redirect to profile setup
-            window.location.href = 'profile-setup.html';
-        });
-        
-        document.getElementById('login-btn').addEventListener('click', function() {
-            window.location.href = 'index.html';
         });
     </script>
 </body>
