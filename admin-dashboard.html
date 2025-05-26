@@ -143,4 +143,18 @@
         </div>
     </div>
 </body>
+    <script>
+    // Check if admin is logged in
+    window.addEventListener('load', function() {
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+    });
+    
+    // Update logout button
+    document.querySelector('.logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('adminLoggedIn');
+        window.location.href = 'admin-login.html';
+    });
+</script>
 </html>
