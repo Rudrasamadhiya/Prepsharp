@@ -61,7 +61,7 @@
             margin-bottom: 5px;
             font-weight: 500;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -94,6 +94,8 @@
             margin-top: 10px;
             text-align: center;
             display: none;
+            padding: 8px;
+            border-radius: 4px;
         }
         .logo {
             font-size: 48px;
@@ -172,24 +174,24 @@
             <h1>Welcome Back</h1>
             <p style="text-align: center;">Log in to continue your preparation</p>
             
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter your username">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password">
-            </div>
-            
-            <button id="login-btn" class="btn">Login</button>
-            
-            <div id="error-message" class="error-message">
-                Invalid username or password
-            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Login</button>
+                
+                <div id="error-message" class="error-message"></div>
+            </form>
             
             <div class="register-link">
-                Don't have an account? <a href="#">Register</a>
+                Don't have an account? <a href="register.html">Register</a>
             </div>
             
             <div class="admin-link">
@@ -198,30 +200,84 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('login-btn').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Simple validation
-            if (!username || !password) {
-                document.getElementById('error-message').style.display = 'block';
-                document.getElementById('error-message').textContent = 'Please enter both username and password';
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            // Validate inputs
+            if (!email || !password) {
+                errorMessage.textContent = 'Email and password are required';
+                errorMessage.style.display = 'block';
                 return;
             }
             
-            // For demo purposes, accept any non-empty username/password
-            // In a real app, you would validate against a database
-            const user = {
-                name: username,
-                profileComplete: false
-            };
-            
-            // Save user to localStorage
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            // Redirect to profile setup if first login, otherwise dashboard
-            window.location.href = 'profile-setup.html';
+            // Sign in with email and password
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    
+                    // Get user data from Firestore
+                    const userRef = db.collection('users').doc(user.uid);
+                    userRef.get().then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            
+                            // Save user to localStorage
+                            localStorage.setItem('currentUser', JSON.stringify({
+                                uid: user.uid,
+                                name: userData.name,
+                                email: userData.email,
+                                mobile: userData.mobile,
+                                profileComplete: true
+                            }));
+                            
+                            // Redirect to dashboard
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            // User document doesn't exist
+                            localStorage.setItem('currentUser', JSON.stringify({
+                                uid: user.uid,
+                                email: user.email,
+                                profileComplete: false
+                            }));
+                            
+                            // Redirect to profile setup
+                            window.location.href = 'profile-setup.html';
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    errorMessage.textContent = 'Invalid email or password';
+                    errorMessage.style.display = 'block';
+                });
         });
     </script>
 </body>
