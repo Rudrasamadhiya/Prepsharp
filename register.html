@@ -102,25 +102,6 @@
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .features {
-            margin-top: 40px;
-        }
-        .feature {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 20px;
-        }
         
         /* Responsive design */
         @media (max-width: 768px) {
@@ -140,21 +121,6 @@
         </div>
         <h1>Prepare Smarter</h1>
         <h2>Ace Your Entrance Exams</h2>
-        
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">📝</div>
-                <div>Practice with past year papers</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📊</div>
-                <div>Track your performance</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🎯</div>
-                <div>Focus on your weak areas</div>
-            </div>
-        </div>
     </div>
     
     <div class="login-container">
@@ -199,26 +165,7 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
+    <script>
         document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -228,9 +175,6 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
             const errorMessage = document.getElementById('error-message');
-            
-            // Clear previous error messages
-            errorMessage.style.display = 'none';
             
             // Validate inputs
             if (!name || !email || !mobile || !password || !confirmPassword) {
@@ -245,60 +189,44 @@
                 return;
             }
             
-            // Show loading state
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Registering...';
-            
-            // Create user
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // User created successfully
-                    const user = userCredential.user;
-                    
-                    // Add user data to Firestore
-                    return setDoc(doc(db, 'users', user.uid), {
-                        name: name,
-                        email: email,
-                        mobile: mobile,
-                        registrationDate: new Date().toISOString()
-                    });
+            // Send registration data to server
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    mobile,
+                    password
                 })
-                .then(() => {
-                    // Save user to localStorage
-                    const user = auth.currentUser;
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Registration successful
                     localStorage.setItem('currentUser', JSON.stringify({
-                        uid: user.uid,
-                        name: name,
-                        email: email,
-                        mobile: mobile
+                        id: data.user.id,
+                        name: data.user.name,
+                        email: data.user.email,
+                        mobile: data.user.mobile,
+                        profileComplete: false
                     }));
                     
-                    // Show success message
-                    errorMessage.textContent = 'Registration successful! Redirecting...';
-                    errorMessage.style.color = '#155724';
-                    errorMessage.style.backgroundColor = '#d4edda';
+                    // Redirect to profile setup
+                    window.location.href = 'profile-setup.html';
+                } else {
+                    // Registration failed
+                    errorMessage.textContent = data.message || 'Registration failed';
                     errorMessage.style.display = 'block';
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                })
-                .catch((error) => {
-                    // Reset button state
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Register';
-                    
-                    // Show error message
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorMessage.textContent = 'Email already registered';
-                    } else {
-                        errorMessage.textContent = 'Registration failed: ' + error.message;
-                    }
-                    errorMessage.style.display = 'block';
-                    console.error('Error:', error);
-                });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.style.display = 'block';
+            });
         });
     </script>
 </body>
