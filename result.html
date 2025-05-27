@@ -242,32 +242,72 @@
         // Get user data
         const user = JSON.parse(currentUser);
         
-        // Find the exam result
-        const examResult = user.examResults.find(result => result.id === resultId);
-        
-        if (!examResult) {
-            alert('Result not found');
-            window.location.href = 'dashboard.html';
+        // Function to load result data
+        function loadResultData() {
+            // First try to get result from server
+            fetch(`/api/results/${resultId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.result) {
+                        displayResult(data.result);
+                    } else {
+                        // Fallback to localStorage
+                        loadFromLocalStorage();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching result:', error);
+                    // Fallback to localStorage
+                    loadFromLocalStorage();
+                });
         }
         
-        // Update result details
-        document.getElementById('exam-title').textContent = `${examResult.examTitle} Result`;
-        document.getElementById('score-display').textContent = `${examResult.score}/${examResult.maxScore}`;
-        document.getElementById('score').textContent = examResult.score;
-        document.getElementById('total-marks').textContent = examResult.maxScore;
-        document.getElementById('percentage').textContent = `${Math.round((examResult.score / examResult.maxScore) * 100)}%`;
+        // Fallback to load from localStorage
+        function loadFromLocalStorage() {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            const currentUserData = users[user.userId];
+            
+            if (!currentUserData || !currentUserData.examResults) {
+                alert('Result not found');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            const examResult = currentUserData.examResults.find(result => result.id === resultId);
+            
+            if (!examResult) {
+                alert('Result not found');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            displayResult(examResult);
+        }
         
-        // Format time taken
-        const hours = Math.floor(examResult.timeTaken / 3600);
-        const minutes = Math.floor((examResult.timeTaken % 3600) / 60);
-        const seconds = examResult.timeTaken % 60;
-        document.getElementById('time-taken').textContent = 
-            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        // Start loading the result
+        loadResultData();
         
-        // Calculate statistics
-        let correctAnswers = 0;
-        let incorrectAnswers = 0;
-        let unattempted = 0;
+        // Function to display result data
+        function displayResult(examResult) {
+            // Update result details
+            document.getElementById('exam-title').textContent = `${examResult.examTitle} Result`;
+            document.getElementById('score-display').textContent = `${examResult.score}/${examResult.maxScore || examResult.totalQuestions}`;
+            document.getElementById('score').textContent = examResult.score;
+            document.getElementById('total-marks').textContent = examResult.maxScore || examResult.totalQuestions;
+            document.getElementById('percentage').textContent = `${Math.round((examResult.score / (examResult.maxScore || examResult.totalQuestions)) * 100)}%`;
+            
+            // Format time taken
+            const timeTaken = examResult.timeTaken || 0;
+            const hours = Math.floor(timeTaken / 3600);
+            const minutes = Math.floor((timeTaken % 3600) / 60);
+            const seconds = timeTaken % 60;
+            document.getElementById('time-taken').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Calculate statistics
+            let correctAnswers = 0;
+            let incorrectAnswers = 0;
+            let unattempted = 0;
         
         // Generate sample questions (since we don't have the actual questions stored)
         const questions = [];
