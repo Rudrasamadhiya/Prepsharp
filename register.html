@@ -332,14 +332,15 @@
                 if (data.success) {
                     // Registration successful
                     localStorage.setItem('currentUser', JSON.stringify({
-                        name,
-                        email,
-                        mobile,
-                        profileComplete: true
+                        id: data.user.id,
+                        name: data.user.name,
+                        email: data.user.email,
+                        mobile: data.user.mobile,
+                        profileComplete: false
                     }));
                     
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
+                    // Redirect to profile setup
+                    window.location.href = 'profile-setup.html';
                 } else {
                     // Registration failed
                     errorMessage.textContent = data.message || 'Registration failed';
