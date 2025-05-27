@@ -166,68 +166,126 @@
     </div>
 
     <script>
-        document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const mobile = document.getElementById('mobile').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const errorMessage = document.getElementById('error-message');
-            
-            // Validate inputs
-            if (!name || !email || !mobile || !password || !confirmPassword) {
-                errorMessage.textContent = 'All fields are required';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                errorMessage.textContent = 'Passwords do not match';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            // Send registration data to server
-            fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    mobile,
-                    password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Registration successful
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        id: data.user.id,
-                        name: data.user.name,
-                        email: data.user.email,
-                        mobile: data.user.mobile,
-                        profileComplete: false
-                    }));
-                    
-                    // Redirect to profile setup
-                    window.location.href = 'profile-setup.html';
-                } else {
-                    // Registration failed
-                    errorMessage.textContent = data.message || 'Registration failed';
-                    errorMessage.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                errorMessage.textContent = 'An error occurred. Please try again.';
-                errorMessage.style.display = 'block';
-            });
-        });
+        const express = require('express');
+const path = require('path');
+const app = express();
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname)));
+
+// Simple in-memory storage
+const users = [];
+
+// Registration endpoint
+app.post('/api/register', (req, res) => {
+  const { name, email, mobile, password } = req.body;
+  
+  // Create user
+  const user = { 
+    id: Date.now().toString(),
+    name, 
+    email, 
+    mobile, 
+    password,
+    profileComplete: false
+  };
+  
+  users.push(user);
+  
+  res.json({ 
+    success: true, 
+    message: 'Registration successful',
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      profileComplete: false
+    }
+  });
+});
+
+// Profile setup endpoint
+app.post('/api/profile-setup', (req, res) => {
+  const { userId, fullName, phone, stream, className, referral } = req.body;
+  
+  // Find user
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    user.name = fullName || user.name;
+    user.mobile = phone || user.mobile;
+    user.stream = stream;
+    user.class = className;
+    user.referral = referral;
+    user.profileComplete = true;
+    
+    res.json({ 
+      success: true, 
+      message: 'Profile setup completed',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        stream: user.stream,
+        class: user.class,
+        profileComplete: true
+      }
+    });
+  } else {
+    res.json({ 
+      success: true, 
+      message: 'Profile setup completed',
+      user: {
+        id: userId,
+        name: fullName,
+        mobile: phone,
+        stream: stream,
+        class: className,
+        profileComplete: true
+      }
+    });
+  }
+});
+
+// Get user data endpoint
+app.get('/api/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    res.json({ 
+      success: true, 
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        stream: user.stream,
+        class: user.class,
+        profileComplete: user.profileComplete
+      }
+    });
+  } else {
+    res.json({ 
+      success: true, 
+      user: {
+        id: userId,
+        profileComplete: true
+      }
+    });
+  }
+});
+
+// Serve static files
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, req.path));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
     </script>
 </body>
 </html>
