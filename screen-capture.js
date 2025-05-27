@@ -201,36 +201,35 @@ const ScreenCapture = {
     // Capture button event
     captureBtn.addEventListener('click', () => {
       try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Get selection dimensions
+        // Simple direct capture method
         const selLeft = parseInt(selectionBox.style.left);
         const selTop = parseInt(selectionBox.style.top);
         const selWidth = parseInt(selectionBox.style.width);
         const selHeight = parseInt(selectionBox.style.height);
         
-        // Create temporary canvas for the iframe content
-        html2canvas(iframeDoc.body, {
-          backgroundColor: null,
-          scale: 2 // Higher quality
-        }).then(iframeCanvas => {
-          // Set canvas size to selection size
-          canvas.width = selWidth;
-          canvas.height = selHeight;
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        canvas.width = selWidth;
+        canvas.height = selHeight;
+        
+        // Get the iframe document
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // Use html2canvas to capture the iframe content
+        html2canvas(iframeDoc.body).then(iframeCanvas => {
+          // Draw the selected portion to our canvas
+          const ctx = canvas.getContext('2d');
           
           // Calculate scroll position
-          const scrollX = iframe.contentWindow.scrollX || iframeDoc.documentElement.scrollLeft;
-          const scrollY = iframe.contentWindow.scrollY || iframeDoc.documentElement.scrollTop;
+          const scrollX = iframe.contentWindow.scrollX || iframeDoc.documentElement.scrollLeft || 0;
+          const scrollY = iframe.contentWindow.scrollY || iframeDoc.documentElement.scrollTop || 0;
           
-          // Draw the selected portion to our canvas
           ctx.drawImage(
-            iframeCanvas, 
-            selLeft + scrollX, selTop + scrollY, // Source x, y
-            selWidth, selHeight, // Source width, height
-            0, 0, // Destination x, y
-            selWidth, selHeight // Destination width, height
+            iframeCanvas,
+            selLeft + scrollX, selTop + scrollY,
+            selWidth, selHeight,
+            0, 0,
+            selWidth, selHeight
           );
           
           // Get the image data
@@ -240,7 +239,12 @@ const ScreenCapture = {
           document.body.removeChild(container);
           
           // Call callback with image data
-          callback(imageDataUrl);
+          if (typeof callback === 'function') {
+            callback(imageDataUrl);
+          } else {
+            console.error('Callback is not a function:', callback);
+            alert('Error: Callback is not a function');
+          }
         }).catch(err => {
           console.error('Capture failed:', err);
           alert('Failed to capture the selected area. Please try again.');
