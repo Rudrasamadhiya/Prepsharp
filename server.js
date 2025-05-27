@@ -1,111 +1,23 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const twilio = require('twilio');
 const path = require('path');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/prepsharp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+// In-memory user storage for testing
+const users = [];
+let userId = 1000;
 
-// Define User Schema
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  mobile: { type: String, required: true },
-  password: { type: String, required: true },
-  profileComplete: { type: Boolean, default: false },
-  stream: String,
-  class: String,
-  referral: String,
-  createdAt: { type: Date, default: Date.now }
-});
-
-const User = mongoose.model('User', userSchema);
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
-const otpStore = new Map();
-
-function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-app.post('/api/send-otp', async (req, res) => {
-  const { phoneNumber } = req.body;
-  const otp = generateOTP();
-  
-  try {
-    // For testing purposes, log the OTP instead of sending SMS
-    console.log(`OTP for ${phoneNumber}: ${otp}`);
-    
-    // Uncomment this to use actual Twilio SMS
-    /*
-    await client.messages.create({
-      body: `Your PrepSharp verification code is: ${otp}`,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: phoneNumber
-    });
-    */
-    
-    otpStore.set(phoneNumber, {
-      otp,
-      expiry: Date.now() + 5 * 60 * 1000
-    });
-    
-    res.json({ success: true, message: 'OTP sent successfully' });
-  } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ success: false, message: 'Failed to send OTP' });
-  }
-});
-
-app.post('/api/verify-otp', (req, res) => {
-  const { phoneNumber, otp } = req.body;
-  const storedData = otpStore.get(phoneNumber);
-  
-  if (!storedData) {
-    return res.status(400).json({ success: false, message: 'No OTP found' });
-  }
-  
-  if (storedData.expiry < Date.now()) {
-    otpStore.delete(phoneNumber);
-    return res.status(400).json({ success: false, message: 'OTP expired' });
-  }
-  
-  if (storedData.otp !== otp) {
-    return res.status(400).json({ success: false, message: 'Invalid OTP' });
-  }
-  
-  otpStore.delete(phoneNumber);
-  res.json({ 
-    success: true, 
-    message: 'OTP verified successfully',
-    user: { phoneNumber, verified: true }
-  });
-});
-
-// User registration endpoint
-app.post('/api/register', async (req, res) => {
+// Registration endpoint
+app.post('/api/register', (req, res) => {
   try {
     const { name, email, mobile, password } = req.body;
     
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = users.find(user => user.email === email);
     if (existingUser) {
       return res.status(400).json({ 
         success: false, 
@@ -113,28 +25,25 @@ app.post('/api/register', async (req, res) => {
       });
     }
     
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    
     // Create new user
-    const user = new User({
+    const newUser = {
+      id: (userId++).toString(),
       name,
       email,
       mobile,
-      password: hashedPassword,
+      password,
       profileComplete: false
-    });
+    };
     
-    await user.save();
+    users.push(newUser);
     
     // Return user data without password
     const userData = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile,
-      profileComplete: user.profileComplete
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      mobile: newUser.mobile,
+      profileComplete: newUser.profileComplete
     };
     
     res.json({ 
@@ -152,12 +61,12 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Profile setup endpoint
-app.post('/api/profile-setup', async (req, res) => {
+app.post('/api/profile-setup', (req, res) => {
   try {
     const { userId, fullName, phone, stream, className, referral } = req.body;
     
-    // Find and update user
-    const user = await User.findById(userId);
+    // Find user
+    const user = users.find(u => u.id === userId);
     if (!user) {
       return res.status(404).json({ 
         success: false, 
@@ -173,11 +82,9 @@ app.post('/api/profile-setup', async (req, res) => {
     user.referral = referral;
     user.profileComplete = true;
     
-    await user.save();
-    
     // Return updated user data
     const userData = {
-      id: user._id,
+      id: user.id,
       name: user.name,
       email: user.email,
       mobile: user.mobile,
@@ -201,22 +108,13 @@ app.post('/api/profile-setup', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', (req, res) => {
   try {
     const { email, password } = req.body;
     
     // Find user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid email or password' 
-      });
-    }
-    
-    // Verify password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    const user = users.find(u => u.email === email);
+    if (!user || user.password !== password) {
       return res.status(400).json({ 
         success: false, 
         message: 'Invalid email or password' 
@@ -225,7 +123,7 @@ app.post('/api/login', async (req, res) => {
     
     // Return user data without password
     const userData = {
-      id: user._id,
+      id: user.id,
       name: user.name,
       email: user.email,
       mobile: user.mobile,
@@ -249,10 +147,10 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Get user data endpoint
-app.get('/api/user/:id', async (req, res) => {
+app.get('/api/user/:id', (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById(userId);
+    const user = users.find(u => u.id === userId);
     
     if (!user) {
       return res.status(404).json({ 
@@ -263,7 +161,7 @@ app.get('/api/user/:id', async (req, res) => {
     
     // Return user data without password
     const userData = {
-      id: user._id,
+      id: user.id,
       name: user.name,
       email: user.email,
       mobile: user.mobile,
