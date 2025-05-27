@@ -2,19 +2,28 @@
 const ScreenCapture = {
   pdfFile: null,
   pdfUrl: null,
+  pdfData: null,
   
   init: function(callback) {
+    // Check if we have stored PDF data
+    const storedPdfData = localStorage.getItem('prepsharp_pdf');
+    if (storedPdfData) {
+      this.pdfData = storedPdfData;
+      this.pdfUrl = storedPdfData;
+      this.captureFromPDF(callback);
+      return;
+    }
+    
     // Check if we have a stored PDF URL
     const storedPdfUrl = localStorage.getItem('prepsharp_pdf_url');
     if (storedPdfUrl) {
       this.pdfUrl = storedPdfUrl;
+      this.captureFromPDF(callback);
+      return;
     }
     
-    if (!this.pdfUrl) {
-      this.uploadPDF(callback);
-    } else {
-      this.captureFromPDF(callback);
-    }
+    // No PDF available, ask user to upload
+    alert("Please upload a PDF first using the 'Upload PDF' button in the top right corner.");
   },
   
   uploadPDF: function(callback) {
@@ -103,7 +112,8 @@ const ScreenCapture = {
     pasteArea.style.borderTop = '1px solid #ddd';
     
     const pasteInstructions = document.createElement('p');
-    pasteInstructions.textContent = 'After taking a screenshot, press Ctrl+V here to paste it';
+    pasteInstructions.innerHTML = '<strong>Step 1:</strong> Use Win+Shift+S to capture a portion of the PDF<br>' +
+                                '<strong>Step 2:</strong> Press Ctrl+V below to paste your screenshot';
     pasteInstructions.style.margin = '0 0 10px 0';
     
     const pasteBox = document.createElement('div');
@@ -114,11 +124,53 @@ const ScreenCapture = {
     pasteBox.style.display = 'flex';
     pasteBox.style.alignItems = 'center';
     pasteBox.style.justifyContent = 'center';
-    pasteBox.textContent = 'Paste screenshot here (Ctrl+V)';
+    pasteBox.innerHTML = '<strong>Paste screenshot here (Ctrl+V)</strong>';
     pasteBox.style.cursor = 'pointer';
+    
+    // Add screenshot button for mobile/alternative method
+    const screenshotBtn = document.createElement('button');
+    screenshotBtn.textContent = 'Take Screenshot Now';
+    screenshotBtn.style.marginTop = '10px';
+    screenshotBtn.style.padding = '8px 16px';
+    screenshotBtn.style.backgroundColor = '#4caf50';
+    screenshotBtn.style.color = 'white';
+    screenshotBtn.style.border = 'none';
+    screenshotBtn.style.borderRadius = '4px';
+    screenshotBtn.style.cursor = 'pointer';
+    
+    screenshotBtn.onclick = () => {
+      try {
+        // Try to use html2canvas to capture the iframe content
+        if (typeof html2canvas !== 'undefined') {
+          // Show loading indicator
+          pasteBox.innerHTML = '<strong>Capturing screenshot...</strong>';
+          pasteBox.style.color = '#1976d2';
+          
+          html2canvas(iframe.contentDocument.body).then(canvas => {
+            const imageDataUrl = canvas.toDataURL('image/png');
+            
+            // Remove container
+            document.body.removeChild(container);
+            
+            // Call callback with image data
+            callback(imageDataUrl);
+          }).catch(err => {
+            console.error('Screenshot capture failed:', err);
+            pasteBox.innerHTML = '<strong>Screenshot failed. Try using Win+Shift+S instead.</strong>';
+            pasteBox.style.color = 'red';
+          });
+        } else {
+          alert('Automatic screenshot not available. Please use Win+Shift+S and paste.');
+        }
+      } catch (err) {
+        console.error('Screenshot error:', err);
+        alert('Could not take screenshot automatically. Please use Win+Shift+S and paste.');
+      }
+    };
     
     pasteArea.appendChild(pasteInstructions);
     pasteArea.appendChild(pasteBox);
+    pasteArea.appendChild(screenshotBtn);
     
     content.appendChild(iframe);
     content.appendChild(pasteArea);
@@ -142,13 +194,41 @@ const ScreenCapture = {
     };
     
     // Handle paste events
-    pasteBox.addEventListener('paste', (e) => {
-      e.preventDefault();
-      
+    document.addEventListener('paste', function pasteHandler(e) {
       const items = e.clipboardData.items;
       
       for (let i = 0; i < items.length; i++) {
         if (items[i].type.indexOf('image') !== -1) {
+          e.preventDefault();
+          const blob = items[i].getAsFile();
+          const reader = new FileReader();
+          
+          reader.onload = (e) => {
+            const imageDataUrl = e.target.result;
+            
+            // Remove container
+            document.body.removeChild(container);
+            document.removeEventListener('paste', pasteHandler);
+            
+            // Call callback with image data
+            callback(imageDataUrl);
+          };
+          
+          reader.readAsDataURL(blob);
+          return;
+        }
+      }
+    });
+    
+    pasteBox.addEventListener('paste', (e) => {
+      e.preventDefault();
+      
+      const items = e.clipboardData.items;
+      let foundImage = false;
+      
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          foundImage = true;
           const blob = items[i].getAsFile();
           const reader = new FileReader();
           
@@ -167,14 +247,16 @@ const ScreenCapture = {
         }
       }
       
-      // No image found in clipboard
-      pasteBox.textContent = 'No image found in clipboard. Try copying an image first.';
-      pasteBox.style.color = 'red';
-      
-      setTimeout(() => {
-        pasteBox.textContent = 'Paste screenshot here (Ctrl+V)';
-        pasteBox.style.color = 'inherit';
-      }, 2000);
+      if (!foundImage) {
+        // No image found in clipboard
+        pasteBox.innerHTML = '<strong>No image found in clipboard. Try copying an image first.</strong>';
+        pasteBox.style.color = 'red';
+        
+        setTimeout(() => {
+          pasteBox.innerHTML = '<strong>Paste screenshot here (Ctrl+V)</strong>';
+          pasteBox.style.color = 'inherit';
+        }, 2000);
+      }
     });
     
     // Close on ESC key
