@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple PDF Capture</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        button { padding: 10px; margin: 5px; background: #4caf50; color: white; border: none; cursor: pointer; }
+        .image-container { border: 1px solid #ddd; padding: 10px; margin-top: 10px; display: none; }
+        img { max-width: 100%; }
+    </style>
+</head>
+<body>
+    <h1>Simple PDF Capture</h1>
+    
+    <button id="upload-btn">Upload PDF</button>
+    <div id="status"></div>
+    
+    <h2>Question</h2>
+    <button id="capture-question">Capture for Question</button>
+    <div id="question-container" class="image-container">
+        <img id="question-image" src="">
+    </div>
+    
+    <h2>Option A</h2>
+    <button id="capture-option-a">Capture for Option A</button>
+    <div id="option-a-container" class="image-container">
+        <img id="option-a-image" src="">
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        // Variables
+        let pdfUrl = null;
+        
+        // Upload button
+        document.getElementById('upload-btn').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/pdf';
+            
+            input.onchange = function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    pdfUrl = URL.createObjectURL(file);
+                    document.getElementById('status').textContent = 'PDF loaded: ' + file.name;
+                    document.getElementById('status').style.color = 'green';
+                }
+            };
+            
+            input.click();
+        });
+        
+        // Capture function
+        function captureFromPDF(targetImageId, targetContainerId) {
+            if (!pdfUrl) {
+                alert('Please upload a PDF first');
+                return;
+            }
+            
+            // Create viewer
+            const viewer = document.createElement('div');
+            viewer.style.position = 'fixed';
+            viewer.style.top = '0';
+            viewer.style.left = '0';
+            viewer.style.width = '100%';
+            viewer.style.height = '100%';
+            viewer.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            viewer.style.zIndex = '9999';
+            viewer.style.display = 'flex';
+            viewer.style.flexDirection = 'column';
+            
+            // Create header
+            const header = document.createElement('div');
+            header.style.padding = '10px';
+            header.style.backgroundColor = '#1976d2';
+            header.style.color = 'white';
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            
+            const title = document.createElement('h3');
+            title.textContent = 'Click on PDF to capture';
+            title.style.margin = '0';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '×';
+            closeBtn.style.background = 'none';
+            closeBtn.style.border = 'none';
+            closeBtn.style.color = 'white';
+            closeBtn.style.fontSize = '24px';
+            closeBtn.style.cursor = 'pointer';
+            
+            header.appendChild(title);
+            header.appendChild(closeBtn);
+            
+            // Create iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = pdfUrl;
+            iframe.style.flex = '1';
+            iframe.style.border = 'none';
+            
+            // Create click overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.cursor = 'pointer';
+            
+            // Add elements
+            viewer.appendChild(header);
+            viewer.appendChild(iframe);
+            viewer.appendChild(overlay);
+            document.body.appendChild(viewer);
+            
+            // Close button
+            closeBtn.onclick = function() {
+                document.body.removeChild(viewer);
+            };
+            
+            // Wait for iframe to load
+            iframe.onload = function() {
+                // Click to capture
+                overlay.onclick = function() {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    html2canvas(iframeDoc.body).then(function(canvas) {
+                        // Get image data
+                        const imageData = canvas.toDataURL('image/png');
+                        
+                        // Set image
+                        document.getElementById(targetImageId).src = imageData;
+                        document.getElementById(targetContainerId).style.display = 'block';
+                        
+                        // Close viewer
+                        document.body.removeChild(viewer);
+                    });
+                };
+            };
+        }
+        
+        // Capture buttons
+        document.getElementById('capture-question').addEventListener('click', function() {
+            captureFromPDF('question-image', 'question-container');
+        });
+        
+        document.getElementById('capture-option-a').addEventListener('click', function() {
+            captureFromPDF('option-a-image', 'option-a-container');
+        });
+    </script>
+</body>
+</html>
