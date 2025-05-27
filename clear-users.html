@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear User Data - PrepSharp</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            color: #212121;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #1976d2;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: #1976d2;
+            color: white;
+            margin-top: 20px;
+        }
+        .btn.danger {
+            background-color: #f44336;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clear User Data</h1>
+        <p>This will delete all registered student login data from the system.</p>
+        
+        <button id="clear-btn" class="btn danger">Delete All Student Login Data</button>
+        
+        <div id="result" class="result success">
+            All student login data has been deleted successfully.
+        </div>
+        
+        <a href="index.html" class="btn">Return to Login Page</a>
+    </div>
+
+    <script>
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            // Clear all user data from localStorage
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('users');
+            
+            // Show success message
+            document.getElementById('result').style.display = 'block';
+            
+            // Disable the button
+            this.disabled = true;
+            this.textContent = 'Data Deleted';
+        });
+    </script>
+</body>
+</html>
