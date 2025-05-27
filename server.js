@@ -11,16 +11,23 @@ const USERS_DB_PATH = path.join(__dirname, 'db', 'users.json');
 const RESULTS_DB_PATH = path.join(__dirname, 'db', 'results.json');
 
 // Create db directory if it doesn't exist
-if (!fs.existsSync(path.join(__dirname, 'db'))) {
-  fs.mkdirSync(path.join(__dirname, 'db'));
-}
+try {
+  if (!fs.existsSync(path.join(__dirname, 'db'))) {
+    fs.mkdirSync(path.join(__dirname, 'db'), { recursive: true });
+    console.log('Created db directory');
+  }
 
-// Initialize database files if they don't exist
-if (!fs.existsSync(USERS_DB_PATH)) {
-  fs.writeFileSync(USERS_DB_PATH, JSON.stringify({}));
-}
-if (!fs.existsSync(RESULTS_DB_PATH)) {
-  fs.writeFileSync(RESULTS_DB_PATH, JSON.stringify([]));
+  // Initialize database files if they don't exist
+  if (!fs.existsSync(USERS_DB_PATH)) {
+    fs.writeFileSync(USERS_DB_PATH, JSON.stringify({}));
+    console.log('Created users.json file');
+  }
+  if (!fs.existsSync(RESULTS_DB_PATH)) {
+    fs.writeFileSync(RESULTS_DB_PATH, JSON.stringify([]));
+    console.log('Created results.json file');
+  }
+} catch (error) {
+  console.error('Error creating database files:', error);
 }
 
 // Helper functions for database operations
