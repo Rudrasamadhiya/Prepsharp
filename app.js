@@ -167,39 +167,103 @@ class PrepSharpApp {
     // Load user results
     loadResults() {
         const resultsList = document.getElementById('results-list');
+        resultsList.innerHTML = '<p>Loading results...</p>';
         
-        // In a real app, this would fetch from a server
-        // For demo purposes, we'll use localStorage
-        const users = JSON.parse(localStorage.getItem('users') || '{}');
-        const user = users[this.currentUser.userId];
-        
-        if (!user || !user.examResults || user.examResults.length === 0) {
-            resultsList.innerHTML = '<p>No exam results yet.</p>';
-            return;
-        }
-        
-        resultsList.innerHTML = '';
-        user.examResults.forEach(result => {
-            const resultItem = document.createElement('div');
-            resultItem.className = 'exam-item';
-            resultItem.innerHTML = `
-                <div>
-                    <h3>${result.examTitle}</h3>
-                    <p>Score: ${result.score}/${result.totalQuestions}</p>
-                </div>
-                <button class="btn secondary view-result" data-result-id="${result.id}">View Details</button>
-            `;
-            resultsList.appendChild(resultItem);
-        });
-        
-        // Add event listeners to view result buttons
-        const viewResultButtons = document.querySelectorAll('.view-result');
-        viewResultButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const resultId = event.target.getAttribute('data-result-id');
-                this.viewResult(resultId);
+        // Fetch results from server
+        fetch(`/api/results/user/${this.currentUser.userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.results && data.results.length > 0) {
+                    resultsList.innerHTML = '';
+                    data.results.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'exam-item';
+                        resultItem.innerHTML = `
+                            <div>
+                                <h3>${result.examTitle}</h3>
+                                <p>Score: ${result.score}/${result.totalQuestions}</p>
+                            </div>
+                            <button class="btn secondary view-result" data-result-id="${result.id}">View Details</button>
+                        `;
+                        resultsList.appendChild(resultItem);
+                    });
+                    
+                    // Add event listeners to view result buttons
+                    const viewResultButtons = document.querySelectorAll('.view-result');
+                    viewResultButtons.forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const resultId = event.target.getAttribute('data-result-id');
+                            window.location.href = `result.html?resultId=${resultId}`;
+                        });
+                    });
+                } else {
+                    // Fallback to localStorage if no results from server
+                    const users = JSON.parse(localStorage.getItem('users') || '{}');
+                    const user = users[this.currentUser.userId];
+                    
+                    if (!user || !user.examResults || user.examResults.length === 0) {
+                        resultsList.innerHTML = '<p>No exam results yet.</p>';
+                        return;
+                    }
+                    
+                    resultsList.innerHTML = '';
+                    user.examResults.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'exam-item';
+                        resultItem.innerHTML = `
+                            <div>
+                                <h3>${result.examTitle}</h3>
+                                <p>Score: ${result.score}/${result.totalQuestions}</p>
+                            </div>
+                            <button class="btn secondary view-result" data-result-id="${result.id}">View Details</button>
+                        `;
+                        resultsList.appendChild(resultItem);
+                    });
+                    
+                    // Add event listeners to view result buttons
+                    const viewResultButtons = document.querySelectorAll('.view-result');
+                    viewResultButtons.forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const resultId = event.target.getAttribute('data-result-id');
+                            window.location.href = `result.html?resultId=${resultId}`;
+                        });
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching results:', error);
+                // Fallback to localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                const user = users[this.currentUser.userId];
+                
+                if (!user || !user.examResults || user.examResults.length === 0) {
+                    resultsList.innerHTML = '<p>No exam results yet.</p>';
+                    return;
+                }
+                
+                resultsList.innerHTML = '';
+                user.examResults.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'exam-item';
+                    resultItem.innerHTML = `
+                        <div>
+                            <h3>${result.examTitle}</h3>
+                            <p>Score: ${result.score}/${result.totalQuestions}</p>
+                        </div>
+                        <button class="btn secondary view-result" data-result-id="${result.id}">View Details</button>
+                    `;
+                    resultsList.appendChild(resultItem);
+                });
+                
+                // Add event listeners to view result buttons
+                const viewResultButtons = document.querySelectorAll('.view-result');
+                viewResultButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const resultId = event.target.getAttribute('data-result-id');
+                        window.location.href = `result.html?resultId=${resultId}`;
+                    });
+                });
             });
-        });
     }
     
     // Start an exam
@@ -400,29 +464,55 @@ class PrepSharpApp {
             }
         });
         
-        // Save result
+        // Create result object
         const resultId = Date.now().toString();
         const result = {
             id: resultId,
+            userId: this.currentUser.userId,
             examId: this.currentExam.id,
             examTitle: this.currentExam.title,
             score: score,
+            maxScore: this.currentExam.questions.length,
             totalQuestions: this.currentExam.questions.length,
             answers: this.userAnswers,
+            timeTaken: 3 * 60 * 60 - this.timeRemaining,
             date: new Date().toISOString()
         };
         
-        // In a real app, this would send data to a server
-        // For demo purposes, we'll use localStorage
-        const users = JSON.parse(localStorage.getItem('users') || '{}');
-        if (!users[this.currentUser.userId].examResults) {
-            users[this.currentUser.userId].examResults = [];
-        }
-        users[this.currentUser.userId].examResults.push(result);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Show result screen
-        this.showResult(resultId);
+        // Save to server database
+        fetch('/api/results', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(result)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Result saved to database:', data.resultId);
+                
+                // Also save to localStorage for backward compatibility
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (!users[this.currentUser.userId].examResults) {
+                    users[this.currentUser.userId].examResults = [];
+                }
+                users[this.currentUser.userId].examResults.push(result);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Redirect to result page
+                window.location.href = `result.html?resultId=${resultId}`;
+            } else {
+                console.error('Failed to save result to database');
+                // Fallback to local storage only
+                this.showResult(resultId);
+            }
+        })
+        .catch(error => {
+            console.error('Error saving result:', error);
+            // Fallback to local storage only
+            this.showResult(resultId);
+        });
     }
     
     // Show result screen
