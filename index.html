@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepSharp - Login</title>
+    <meta name="description" content="PrepSharp is the ultimate exam preparation platform for JEE, NEET and other competitive exams. Practice with past papers and improve your scores with PrepSharp's personalized learning approach.">
+    <title>PrepSharp - Smart Exam Preparation Platform</title>
     <style>
         :root {
             --primary-color: #1976d2;
@@ -150,29 +151,29 @@
         <div class="logo">
             <img src="logo for index.png" alt="PrepSharp Logo" style="max-width: 200px;">
         </div>
-        <h1>Prepare Smarter</h1>
+        <h1>PrepSharp - Prepare Smarter</h1>
         <h2>Ace Your Entrance Exams</h2>
         
         <div class="features">
             <div class="feature">
                 <div class="feature-icon">📝</div>
-                <div>Practice with past year papers</div>
+                <div>Practice with PrepSharp's past year papers</div>
             </div>
             <div class="feature">
                 <div class="feature-icon">📊</div>
-                <div>Track your performance</div>
+                <div>Track your performance with PrepSharp</div>
             </div>
             <div class="feature">
                 <div class="feature-icon">🎯</div>
-                <div>Focus on your weak areas</div>
+                <div>Focus on your weak areas with PrepSharp</div>
             </div>
         </div>
     </div>
     
     <div class="login-container">
         <div class="login-card">
-            <h1>Welcome Back</h1>
-            <p style="text-align: center;">Log in to continue your preparation</p>
+            <h1>Welcome to PrepSharp</h1>
+            <p style="text-align: center;">PrepSharp helps you prepare smarter for your entrance exams. Log in to continue your preparation journey.</p>
             
             <form id="login-form">
                 <div class="form-group">
@@ -185,13 +186,13 @@
                     <input type="password" id="password" placeholder="Enter your password" required>
                 </div>
                 
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn">Login to PrepSharp</button>
                 
                 <div id="error-message" class="error-message"></div>
             </form>
             
             <div class="register-link">
-                Don't have an account? <a href="register.html">Register</a>
+                Don't have an account? <a href="register.html">Register with PrepSharp</a>
             </div>
             
             <div class="admin-link">
@@ -200,30 +201,7 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-=======
     <script>
->>>>>>> 57de8a4 (commit)
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -231,12 +209,6 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
             
-<<<<<<< HEAD
-            // Clear previous error messages
-            errorMessage.style.display = 'none';
-            
-=======
->>>>>>> 57de8a4 (commit)
             // Validate inputs
             if (!email || !password) {
                 errorMessage.textContent = 'Email and password are required';
@@ -244,50 +216,6 @@
                 return;
             }
             
-<<<<<<< HEAD
-            // Show loading state
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Logging in...';
-            
-            // Sign in
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // User signed in successfully
-                    const user = userCredential.user;
-                    
-                    // Get user data from Firestore
-                    return getDoc(doc(db, 'users', user.uid));
-                })
-                .then((docSnap) => {
-                    if (docSnap.exists()) {
-                        const userData = docSnap.data();
-                        
-                        // Save user to localStorage
-                        localStorage.setItem('currentUser', JSON.stringify({
-                            uid: auth.currentUser.uid,
-                            name: userData.name,
-                            email: userData.email,
-                            mobile: userData.mobile
-                        }));
-                        
-                        // Redirect to dashboard
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        throw new Error('User data not found');
-                    }
-                })
-                .catch((error) => {
-                    // Reset button state
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Login';
-                    
-                    // Show error message
-                    errorMessage.textContent = 'Invalid email or password';
-                    errorMessage.style.display = 'block';
-                    console.error('Error:', error);
-                });
-=======
             // Send login data to server
             fetch('/api/login', {
                 method: 'POST',
@@ -318,7 +246,6 @@
                 errorMessage.textContent = 'An error occurred. Please try again.';
                 errorMessage.style.display = 'block';
             });
->>>>>>> 57de8a4 (commit)
         });
     </script>
 </body>
