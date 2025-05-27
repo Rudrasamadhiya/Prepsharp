@@ -4,22 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrepSharp - Admin Dashboard</title>
-    <!-- Add this script at the very top of your admin-dashboard.html body -->
-<script>
-    // Check admin login status
-    if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
-        window.location.href = 'admin-login.html';
-    }
-</script>
-
-<!-- Add this to your logout button -->
-<script>
-    document.getElementById('logout-btn').addEventListener('click', function() {
-        sessionStorage.removeItem('adminLoggedIn');
-        window.location.href = 'admin-login.html';
-    });
-</script>
-
     <style>
         :root {
             --primary-color: #1976d2;
@@ -167,6 +151,13 @@
     </style>
 </head>
 <body>
+    <script>
+        // Check if admin is logged in
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+    </script>
+
     <div class="header">
         <div class="logo">
             <img src="logo for index.png" alt="PrepSharp Logo">
@@ -189,15 +180,15 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div>Total Students</div>
-                    <div class="stat-number" id="total-students">0</div>
+                    <div class="stat-number" id="total-students">42</div>
                 </div>
                 <div class="stat-card">
                     <div>Total Exams</div>
-                    <div class="stat-number" id="total-exams">0</div>
+                    <div class="stat-number" id="total-exams">15</div>
                 </div>
                 <div class="stat-card">
                     <div>Total Attempts</div>
-                    <div class="stat-number" id="total-attempts">0</div>
+                    <div class="stat-number" id="total-attempts">136</div>
                 </div>
             </div>
         </div>
@@ -206,7 +197,24 @@
             <h2>Paper Attempts</h2>
             <ul class="paper-list" id="paper-list">
                 <li class="paper-item">
-                    <span class="paper-title">Loading papers...</span>
+                    <span class="paper-title">JEE Main 2023 Paper 1</span>
+                    <span class="paper-stats">45 attempts</span>
+                </li>
+                <li class="paper-item">
+                    <span class="paper-title">NEET 2023 Paper</span>
+                    <span class="paper-stats">32 attempts</span>
+                </li>
+                <li class="paper-item">
+                    <span class="paper-title">JEE Advanced 2023</span>
+                    <span class="paper-stats">28 attempts</span>
+                </li>
+                <li class="paper-item">
+                    <span class="paper-title">GATE CSE 2023</span>
+                    <span class="paper-stats">19 attempts</span>
+                </li>
+                <li class="paper-item">
+                    <span class="paper-title">UPSC Prelims 2023</span>
+                    <span class="paper-stats">12 attempts</span>
                 </li>
             </ul>
         </div>
@@ -244,111 +252,11 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        // Load dashboard data
-        async function loadDashboardData() {
-            try {
-                // Get total students
-                const usersSnapshot = await getDocs(collection(db, "users"));
-                document.getElementById('total-students').textContent = usersSnapshot.size;
-                
-                // Get total exams (assuming you have an "exams" collection)
-                try {
-                    const examsSnapshot = await getDocs(collection(db, "exams"));
-                    document.getElementById('total-exams').textContent = examsSnapshot.size;
-                } catch (e) {
-                    document.getElementById('total-exams').textContent = '0';
-                }
-                
-                // Get total attempts (assuming you have an "attempts" collection)
-                try {
-                    const attemptsSnapshot = await getDocs(collection(db, "attempts"));
-                    document.getElementById('total-attempts').textContent = attemptsSnapshot.size;
-                } catch (e) {
-                    document.getElementById('total-attempts').textContent = '0';
-                }
-                
-                // Load paper attempts
-                try {
-                    // This is a placeholder - adjust based on your actual data structure
-                    const papersList = document.getElementById('paper-list');
-                    papersList.innerHTML = '';
-                    
-                    // Example data - replace with actual data from your database
-                    const paperData = [
-                        { name: "JEE Main 2023 Paper 1", attempts: 45 },
-                        { name: "NEET 2023 Paper", attempts: 32 },
-                        { name: "JEE Advanced 2023", attempts: 28 },
-                        { name: "GATE CSE 2023", attempts: 19 },
-                        { name: "UPSC Prelims 2023", attempts: 12 }
-                    ];
-                    
-                    if (paperData.length === 0) {
-                        papersList.innerHTML = '<li class="paper-item"><span>No papers available</span></li>';
-                    } else {
-                        paperData.forEach(paper => {
-                            const li = document.createElement('li');
-                            li.className = 'paper-item';
-                            li.innerHTML = `
-                                <span class="paper-title">${paper.name}</span>
-                                <span class="paper-stats">${paper.attempts} attempts</span>
-                            `;
-                            papersList.appendChild(li);
-                        });
-                    }
-                } catch (e) {
-                    document.getElementById('paper-list').innerHTML = 
-                        '<li class="paper-item"><span>Error loading papers</span></li>';
-                }
-                
-            } catch (error) {
-                console.error("Error loading dashboard data:", error);
-            }
-        }
-        
-        // Check if user is logged in
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Redirect to login if not logged in
-                window.location.href = 'admin-login.html';
-                return;
-            }
-            
-            // Display admin name
-            document.getElementById('admin-name').textContent = user.email || 'Admin';
-            
-            // Load dashboard data
-            loadDashboardData();
-        });
-        
+    <script>
         // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', function() {
-            signOut(auth).then(() => {
-                // Sign-out successful
-                window.location.href = 'admin-login.html';
-            }).catch((error) => {
-                // An error happened
-                console.error('Logout error:', error);
-            });
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
         });
     </script>
 </body>
