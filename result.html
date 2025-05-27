@@ -359,4 +359,80 @@
         
         // Add "Show More" button if there are more than 5 questions
         if (questions.length > 5) {
-            const showMoreBtn
+            const showMoreBtn = document.createElement('button');
+            showMoreBtn.className = 'btn';
+            showMoreBtn.textContent = 'Show More Questions';
+            showMoreBtn.style.marginTop = '20px';
+            showMoreBtn.style.width = '100%';
+            
+            showMoreBtn.addEventListener('click', function() {
+                const currentCount = questionAnalysis.querySelectorAll('.question-item').length;
+                const nextBatch = Math.min(currentCount + 5, questions.length);
+                
+                for (let i = currentCount; i < nextBatch; i++) {
+                    const question = questions[i];
+                    const userAnswer = examResult.answers[i];
+                    
+                    let status = '';
+                    let statusClass = '';
+                    
+                    if (userAnswer === null) {
+                        status = 'Not Attempted';
+                        statusClass = 'status-unattempted';
+                    } else if (userAnswer === question.correctAnswer) {
+                        status = 'Correct (+4)';
+                        statusClass = 'status-correct';
+                    } else {
+                        status = 'Incorrect (-1)';
+                        statusClass = 'status-incorrect';
+                    }
+                    
+                    const questionItem = document.createElement('div');
+                    questionItem.className = 'question-item';
+                    
+                    questionItem.innerHTML = `
+                        <div class="question-header">
+                            <div class="question-number">Question ${i + 1}</div>
+                            <div class="question-status ${statusClass}">${status}</div>
+                        </div>
+                        <div class="question-text">${question.text}</div>
+                        <ul class="options-list">
+                            ${question.options.map((option, index) => `
+                                <li class="option-item ${index === question.correctAnswer ? 'option-correct' : ''} ${index === userAnswer && index !== question.correctAnswer ? 'option-selected' : ''}">
+                                    ${String.fromCharCode(65 + index)}. ${option}
+                                    ${index === question.correctAnswer ? ' ✓' : ''}
+                                    ${index === userAnswer && index !== question.correctAnswer ? ' ✗' : ''}
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <div class="explanation">
+                            <strong>Explanation:</strong> ${question.explanation}
+                        </div>
+                    `;
+                    
+                    questionAnalysis.appendChild(questionItem);
+                }
+                
+                if (nextBatch >= questions.length) {
+                    showMoreBtn.remove();
+                }
+            });
+            
+            questionAnalysis.appendChild(showMoreBtn);
+        }
+        
+        // Add event listeners for navigation buttons
+        document.getElementById('back-to-dashboard').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+        
+        document.getElementById('try-again').addEventListener('click', function() {
+            window.location.href = 'exam-list.html';
+        });
+        
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
