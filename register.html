@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepSharp - Register</title>
+    <meta name="description" content="Register for PrepSharp - the ultimate exam preparation platform for JEE, NEET and other competitive exams.">
+    <title>Register - PrepSharp</title>
     <style>
         :root {
             --primary-color: #1976d2;
@@ -21,14 +22,14 @@
             display: flex;
             min-height: 100vh;
         }
-        .login-container {
+        .register-container {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .login-card {
+        .register-card {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -81,11 +82,11 @@
             color: white;
             margin-top: 10px;
         }
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 20px;
         }
-        .register-link a {
+        .login-link a {
             color: var(--primary-color);
             text-decoration: none;
         }
@@ -102,25 +103,6 @@
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .features {
-            margin-top: 40px;
-        }
-        .feature {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 20px;
-        }
         
         /* Responsive design */
         @media (max-width: 768px) {
@@ -136,31 +118,16 @@
 <body>
     <div class="banner">
         <div class="logo">
-            <img src="logo for index.png" alt="PrepSharp Logo" style="max-width: 200px;">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 200px;">
         </div>
-        <h1>Prepare Smarter</h1>
-        <h2>Ace Your Entrance Exams</h2>
-        
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">📝</div>
-                <div>Practice with past year papers</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📊</div>
-                <div>Track your performance</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🎯</div>
-                <div>Focus on your weak areas</div>
-            </div>
-        </div>
+        <h1>PrepSharp - Prepare Smarter</h1>
+        <h2>Join Our Exam Preparation Platform</h2>
     </div>
     
-    <div class="login-container">
-        <div class="login-card">
-            <h1>Create Account</h1>
-            <p style="text-align: center;">Join PrepSharp to start your preparation</p>
+    <div class="register-container">
+        <div class="register-card">
+            <h1>Create Your PrepSharp Account</h1>
+            <p style="text-align: center;">Join thousands of students preparing for competitive exams with PrepSharp.</p>
             
             <form id="register-form">
                 <div class="form-group">
@@ -188,37 +155,18 @@
                     <input type="password" id="confirm-password" placeholder="Confirm your password" required>
                 </div>
                 
-                <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn">Register with PrepSharp</button>
                 
                 <div id="error-message" class="error-message"></div>
             </form>
             
-            <div class="register-link">
-                Already have an account? <a href="index.html">Login</a>
+            <div class="login-link">
+                Already have an account? <a href="index.html">Login to PrepSharp</a>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
+    <script>
         document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -250,55 +198,28 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Registering...';
             
-            // Create user
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // User created successfully
-                    const user = userCredential.user;
-                    
-                    // Add user data to Firestore
-                    return setDoc(doc(db, 'users', user.uid), {
-                        name: name,
-                        email: email,
-                        mobile: mobile,
-                        registrationDate: new Date().toISOString()
-                    });
-                })
-                .then(() => {
-                    // Save user to localStorage
-                    const user = auth.currentUser;
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        uid: user.uid,
-                        name: name,
-                        email: email,
-                        mobile: mobile
-                    }));
-                    
-                    // Show success message
-                    errorMessage.textContent = 'Registration successful! Redirecting...';
-                    errorMessage.style.color = '#155724';
-                    errorMessage.style.backgroundColor = '#d4edda';
-                    errorMessage.style.display = 'block';
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                })
-                .catch((error) => {
-                    // Reset button state
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Register';
-                    
-                    // Show error message
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorMessage.textContent = 'Email already registered';
-                    } else {
-                        errorMessage.textContent = 'Registration failed: ' + error.message;
-                    }
-                    errorMessage.style.display = 'block';
-                    console.error('Error:', error);
-                });
+            // GitHub Pages doesn't support server-side code, so we'll use localStorage directly
+            try {
+                // Store user in localStorage
+                const user = {
+                    id: Date.now().toString(),
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    profileComplete: false
+                };
+                
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Redirect to profile setup
+                window.location.href = 'profile-setup.html';
+            } catch (error) {
+                console.error('Error:', error);
+                submitButton.disabled = false;
+                submitButton.textContent = 'Register with PrepSharp';
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.style.display = 'block';
+            }
         });
     </script>
 </body>
