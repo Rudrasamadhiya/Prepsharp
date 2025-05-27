@@ -72,13 +72,8 @@ const ScreenCapture = {
     header.style.alignItems = 'center';
     
     const title = document.createElement('h3');
-    title.textContent = 'Take Screenshot from PDF';
+    title.textContent = 'Select Area from PDF';
     title.style.margin = '0';
-    
-    const instructions = document.createElement('span');
-    instructions.textContent = 'Use your system screenshot tool (Win+Shift+S) to capture, then paste with Ctrl+V';
-    instructions.style.fontSize = '14px';
-    instructions.style.marginLeft = '20px';
     
     const closeBtn = document.createElement('button');
     closeBtn.textContent = '×';
@@ -89,7 +84,6 @@ const ScreenCapture = {
     closeBtn.style.cursor = 'pointer';
     
     header.appendChild(title);
-    header.appendChild(instructions);
     header.appendChild(closeBtn);
     
     // Create content area
@@ -97,167 +91,179 @@ const ScreenCapture = {
     content.style.flex = '1';
     content.style.display = 'flex';
     content.style.flexDirection = 'column';
+    content.style.position = 'relative';
     
     // Create iframe to display PDF
     const iframe = document.createElement('iframe');
     iframe.src = this.pdfUrl;
     iframe.style.flex = '1';
     iframe.style.border = 'none';
+    iframe.id = 'pdf-iframe';
     
-    // Create paste area
-    const pasteArea = document.createElement('div');
-    pasteArea.style.padding = '15px';
-    pasteArea.style.backgroundColor = '#f5f5f5';
-    pasteArea.style.textAlign = 'center';
-    pasteArea.style.borderTop = '1px solid #ddd';
+    // Create selection area
+    const selectionArea = document.createElement('div');
+    selectionArea.style.position = 'absolute';
+    selectionArea.style.top = '0';
+    selectionArea.style.left = '0';
+    selectionArea.style.right = '0';
+    selectionArea.style.bottom = '0';
+    selectionArea.style.cursor = 'crosshair';
     
-    const pasteInstructions = document.createElement('p');
-    pasteInstructions.innerHTML = '<strong>Step 1:</strong> Use Win+Shift+S to capture a portion of the PDF<br>' +
-                                '<strong>Step 2:</strong> Press Ctrl+V below to paste your screenshot';
-    pasteInstructions.style.margin = '0 0 10px 0';
+    // Create selection box
+    const selectionBox = document.createElement('div');
+    selectionBox.style.position = 'absolute';
+    selectionBox.style.border = '2px dashed #4caf50';
+    selectionBox.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+    selectionBox.style.display = 'none';
     
-    const pasteBox = document.createElement('div');
-    pasteBox.style.width = '100%';
-    pasteBox.style.height = '100px';
-    pasteBox.style.border = '2px dashed #ccc';
-    pasteBox.style.backgroundColor = '#fff';
-    pasteBox.style.display = 'flex';
-    pasteBox.style.alignItems = 'center';
-    pasteBox.style.justifyContent = 'center';
-    pasteBox.innerHTML = '<strong>Paste screenshot here (Ctrl+V)</strong>';
-    pasteBox.style.cursor = 'pointer';
+    // Create capture button
+    const captureBtn = document.createElement('button');
+    captureBtn.textContent = 'Capture Selected Area';
+    captureBtn.style.position = 'absolute';
+    captureBtn.style.bottom = '20px';
+    captureBtn.style.right = '20px';
+    captureBtn.style.padding = '10px 20px';
+    captureBtn.style.backgroundColor = '#4caf50';
+    captureBtn.style.color = 'white';
+    captureBtn.style.border = 'none';
+    captureBtn.style.borderRadius = '4px';
+    captureBtn.style.cursor = 'pointer';
+    captureBtn.style.display = 'none';
     
-    // Add screenshot button for mobile/alternative method
-    const screenshotBtn = document.createElement('button');
-    screenshotBtn.textContent = 'Take Screenshot Now';
-    screenshotBtn.style.marginTop = '10px';
-    screenshotBtn.style.padding = '8px 16px';
-    screenshotBtn.style.backgroundColor = '#4caf50';
-    screenshotBtn.style.color = 'white';
-    screenshotBtn.style.border = 'none';
-    screenshotBtn.style.borderRadius = '4px';
-    screenshotBtn.style.cursor = 'pointer';
+    // Add instructions
+    const instructions = document.createElement('div');
+    instructions.style.position = 'absolute';
+    instructions.style.top = '10px';
+    instructions.style.left = '10px';
+    instructions.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    instructions.style.color = 'white';
+    instructions.style.padding = '10px';
+    instructions.style.borderRadius = '4px';
+    instructions.style.fontSize = '14px';
+    instructions.innerHTML = '<strong>Click and drag</strong> to select an area of the PDF';
     
-    screenshotBtn.onclick = () => {
-      try {
-        // Try to use html2canvas to capture the iframe content
-        if (typeof html2canvas !== 'undefined') {
-          // Show loading indicator
-          pasteBox.innerHTML = '<strong>Capturing screenshot...</strong>';
-          pasteBox.style.color = '#1976d2';
-          
-          html2canvas(iframe.contentDocument.body).then(canvas => {
-            const imageDataUrl = canvas.toDataURL('image/png');
-            
-            // Remove container
-            document.body.removeChild(container);
-            
-            // Call callback with image data
-            callback(imageDataUrl);
-          }).catch(err => {
-            console.error('Screenshot capture failed:', err);
-            pasteBox.innerHTML = '<strong>Screenshot failed. Try using Win+Shift+S instead.</strong>';
-            pasteBox.style.color = 'red';
-          });
-        } else {
-          alert('Automatic screenshot not available. Please use Win+Shift+S and paste.');
-        }
-      } catch (err) {
-        console.error('Screenshot error:', err);
-        alert('Could not take screenshot automatically. Please use Win+Shift+S and paste.');
-      }
-    };
-    
-    pasteArea.appendChild(pasteInstructions);
-    pasteArea.appendChild(pasteBox);
-    pasteArea.appendChild(screenshotBtn);
+    selectionArea.appendChild(selectionBox);
+    selectionArea.appendChild(captureBtn);
+    selectionArea.appendChild(instructions);
     
     content.appendChild(iframe);
-    content.appendChild(pasteArea);
+    content.appendChild(selectionArea);
     
     // Add elements to container
     container.appendChild(header);
     container.appendChild(content);
     document.body.appendChild(container);
     
+    // Variables for selection
+    let isSelecting = false;
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    
+    // Selection events
+    selectionArea.addEventListener('mousedown', (e) => {
+      isSelecting = true;
+      startX = e.clientX - selectionArea.getBoundingClientRect().left;
+      startY = e.clientY - selectionArea.getBoundingClientRect().top;
+      
+      selectionBox.style.left = startX + 'px';
+      selectionBox.style.top = startY + 'px';
+      selectionBox.style.width = '0';
+      selectionBox.style.height = '0';
+      selectionBox.style.display = 'block';
+      
+      captureBtn.style.display = 'none';
+    });
+    
+    selectionArea.addEventListener('mousemove', (e) => {
+      if (!isSelecting) return;
+      
+      endX = e.clientX - selectionArea.getBoundingClientRect().left;
+      endY = e.clientY - selectionArea.getBoundingClientRect().top;
+      
+      const width = Math.abs(endX - startX);
+      const height = Math.abs(endY - startY);
+      
+      selectionBox.style.left = Math.min(startX, endX) + 'px';
+      selectionBox.style.top = Math.min(startY, endY) + 'px';
+      selectionBox.style.width = width + 'px';
+      selectionBox.style.height = height + 'px';
+    });
+    
+    selectionArea.addEventListener('mouseup', () => {
+      if (!isSelecting) return;
+      isSelecting = false;
+      
+      const width = Math.abs(endX - startX);
+      const height = Math.abs(endY - startY);
+      
+      if (width > 10 && height > 10) {
+        captureBtn.style.display = 'block';
+        captureBtn.style.left = (Math.min(startX, endX) + width - captureBtn.offsetWidth) + 'px';
+        captureBtn.style.top = (Math.min(startY, endY) + height + 10) + 'px';
+      } else {
+        selectionBox.style.display = 'none';
+      }
+    });
+    
+    // Capture button event
+    captureBtn.addEventListener('click', () => {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Get selection dimensions
+        const selLeft = parseInt(selectionBox.style.left);
+        const selTop = parseInt(selectionBox.style.top);
+        const selWidth = parseInt(selectionBox.style.width);
+        const selHeight = parseInt(selectionBox.style.height);
+        
+        // Create temporary canvas for the iframe content
+        html2canvas(iframeDoc.body, {
+          backgroundColor: null,
+          scale: 2 // Higher quality
+        }).then(iframeCanvas => {
+          // Set canvas size to selection size
+          canvas.width = selWidth;
+          canvas.height = selHeight;
+          
+          // Calculate scroll position
+          const scrollX = iframe.contentWindow.scrollX || iframeDoc.documentElement.scrollLeft;
+          const scrollY = iframe.contentWindow.scrollY || iframeDoc.documentElement.scrollTop;
+          
+          // Draw the selected portion to our canvas
+          ctx.drawImage(
+            iframeCanvas, 
+            selLeft + scrollX, selTop + scrollY, // Source x, y
+            selWidth, selHeight, // Source width, height
+            0, 0, // Destination x, y
+            selWidth, selHeight // Destination width, height
+          );
+          
+          // Get the image data
+          const imageDataUrl = canvas.toDataURL('image/png');
+          
+          // Remove container
+          document.body.removeChild(container);
+          
+          // Call callback with image data
+          callback(imageDataUrl);
+        }).catch(err => {
+          console.error('Capture failed:', err);
+          alert('Failed to capture the selected area. Please try again.');
+        });
+      } catch (err) {
+        console.error('Capture error:', err);
+        alert('An error occurred while capturing. Please try again.');
+      }
+    });
+    
     // Close button event
     closeBtn.onclick = () => {
       document.body.removeChild(container);
     };
-    
-    // Make paste area focusable
-    pasteBox.tabIndex = 0;
-    
-    // Focus paste area when clicked
-    pasteBox.onclick = () => {
-      pasteBox.focus();
-    };
-    
-    // Handle paste events
-    document.addEventListener('paste', function pasteHandler(e) {
-      const items = e.clipboardData.items;
-      
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          e.preventDefault();
-          const blob = items[i].getAsFile();
-          const reader = new FileReader();
-          
-          reader.onload = (e) => {
-            const imageDataUrl = e.target.result;
-            
-            // Remove container
-            document.body.removeChild(container);
-            document.removeEventListener('paste', pasteHandler);
-            
-            // Call callback with image data
-            callback(imageDataUrl);
-          };
-          
-          reader.readAsDataURL(blob);
-          return;
-        }
-      }
-    });
-    
-    pasteBox.addEventListener('paste', (e) => {
-      e.preventDefault();
-      
-      const items = e.clipboardData.items;
-      let foundImage = false;
-      
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          foundImage = true;
-          const blob = items[i].getAsFile();
-          const reader = new FileReader();
-          
-          reader.onload = (e) => {
-            const imageDataUrl = e.target.result;
-            
-            // Remove container
-            document.body.removeChild(container);
-            
-            // Call callback with image data
-            callback(imageDataUrl);
-          };
-          
-          reader.readAsDataURL(blob);
-          return;
-        }
-      }
-      
-      if (!foundImage) {
-        // No image found in clipboard
-        pasteBox.innerHTML = '<strong>No image found in clipboard. Try copying an image first.</strong>';
-        pasteBox.style.color = 'red';
-        
-        setTimeout(() => {
-          pasteBox.innerHTML = '<strong>Paste screenshot here (Ctrl+V)</strong>';
-          pasteBox.style.color = 'inherit';
-        }, 2000);
-      }
-    });
     
     // Close on ESC key
     document.addEventListener('keydown', function escHandler(e) {
@@ -266,5 +272,13 @@ const ScreenCapture = {
         document.removeEventListener('keydown', escHandler);
       }
     });
+    
+    // Wait for iframe to load
+    iframe.onload = () => {
+      // Add a small delay to ensure PDF is rendered
+      setTimeout(() => {
+        instructions.style.opacity = '1';
+      }, 500);
+    };
   }
 };
