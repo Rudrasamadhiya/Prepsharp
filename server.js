@@ -248,6 +248,43 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Get user data endpoint
+app.get('/api/user/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+    
+    // Return user data without password
+    const userData = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      stream: user.stream,
+      class: user.class,
+      profileComplete: user.profileComplete
+    };
+    
+    res.json({ 
+      success: true, 
+      user: userData
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error while fetching user data' 
+    });
+  }
+});
+
 // Serve index.html at the root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

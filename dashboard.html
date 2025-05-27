@@ -172,20 +172,44 @@
                 return;
             }
             
-            // Display user name
-            document.getElementById('user-name').textContent = `Welcome, ${currentUser.name}`;
+            // Update user name
+            document.getElementById('user-name').textContent = `Welcome, ${user.fullName || user.name}`;
             
-            // Logout functionality
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                signOut(auth).then(() => {
-                    // Sign-out successful
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
-                }).catch((error) => {
-                    // An error happened
-                    console.error('Logout error:', error);
-                });
-            });
+            // Show exams based on user's stream
+            const engineeringExams = document.getElementById('engineering-exams');
+            const medicalExams = document.getElementById('medical-exams');
+            const streamInfo = document.getElementById('stream-info');
+            
+            if (user.stream === 'engineering') {
+                engineeringExams.style.display = 'grid';
+                medicalExams.style.display = 'none';
+                streamInfo.textContent = 'Showing Engineering entrance exams';
+            } else if (user.stream === 'medical') {
+                engineeringExams.style.display = 'none';
+                medicalExams.style.display = 'grid';
+                streamInfo.textContent = 'Showing Medical entrance exams';
+            } else {
+                // For other streams or if stream not specified, show all exams
+                engineeringExams.style.display = 'grid';
+                medicalExams.style.display = 'grid';
+                streamInfo.textContent = 'Showing all available exams';
+            }
+        }
+        
+        // Add admin login link (small and discreet at bottom of page)
+        const container = document.querySelector('.container');
+        const adminLink = document.createElement('div');
+        adminLink.style.textAlign = 'center';
+        adminLink.style.marginTop = '50px';
+        adminLink.style.fontSize = '12px';
+        adminLink.style.color = '#999';
+        adminLink.innerHTML = '<a href="admin-login.html" style="color: #999; text-decoration: none;">Admin Access</a>';
+        container.appendChild(adminLink);
+        
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
         });
     </script>
 </body>
