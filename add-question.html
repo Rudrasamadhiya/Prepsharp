@@ -294,29 +294,25 @@
                     // Read the file
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        // Store PDF data
+                        // Store PDF data in memory only
                         ScreenCapture.pdfData = e.target.result;
-                        ScreenCapture.pdfUrl = e.target.result;
+                        ScreenCapture.pdfUrl = URL.createObjectURL(file);
                         
-                        // Store in localStorage for persistence
-                        try {
-                            localStorage.setItem('prepsharp_pdf', ScreenCapture.pdfData);
-                            localStorage.setItem('prepsharp_pdf_url', ScreenCapture.pdfUrl);
-                            
-                            // Update status
-                            statusEl.textContent = 'PDF loaded successfully!';
-                            statusEl.style.color = '#4caf50';
-                            
-                            // Update button
-                            document.getElementById('pdf-upload-global-btn').textContent = 'Change PDF';
-                            
-                            alert('PDF uploaded successfully! You can now take screenshots from it.');
-                        } catch (err) {
-                            console.warn('PDF too large to store in localStorage');
-                            statusEl.textContent = 'PDF loaded (too large to save)';
-                            statusEl.style.color = '#ff9800';
-                            alert('PDF uploaded successfully, but it\'s too large to save between sessions.');
-                        }
+                        // Update status
+                        statusEl.textContent = 'PDF loaded successfully!';
+                        statusEl.style.color = '#4caf50';
+                        
+                        // Update button
+                        document.getElementById('pdf-upload-global-btn').textContent = 'Change PDF';
+                        
+                        // Store just the filename in localStorage
+                        localStorage.setItem('prepsharp_pdf_name', file.name);
+                        
+                        // Set session flag
+                        sessionStorage.setItem('prepsharp_pdf_loaded', 'true');
+                        
+                        alert('PDF uploaded successfully! You can now take screenshots from it.');
+                    };
                     };
                     
                     reader.readAsDataURL(file);
@@ -332,14 +328,20 @@
             }, 1000);
         });
         
-        // Check if PDF is already loaded
+        // Check if PDF is already loaded in this session
         window.addEventListener('DOMContentLoaded', function() {
-            const storedPdf = localStorage.getItem('prepsharp_pdf') || localStorage.getItem('prepsharp_pdf_url');
-            if (storedPdf) {
+            const pdfLoadedThisSession = sessionStorage.getItem('prepsharp_pdf_loaded');
+            const pdfName = localStorage.getItem('prepsharp_pdf_name');
+            
+            if (pdfLoadedThisSession === 'true') {
                 const statusEl = document.getElementById('pdf-status');
-                statusEl.textContent = 'PDF already loaded';
+                statusEl.textContent = pdfName ? `PDF loaded: ${pdfName}` : 'PDF loaded for this session';
                 statusEl.style.color = '#4caf50';
                 document.getElementById('pdf-upload-global-btn').textContent = 'Change PDF';
+            } else if (pdfName) {
+                const statusEl = document.getElementById('pdf-status');
+                statusEl.textContent = `Please reload PDF: ${pdfName}`;
+                statusEl.style.color = '#ff9800';
             }
         });
     </script>
