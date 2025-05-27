@@ -262,10 +262,17 @@
     <script src="html2canvas.min.js"></script>
     <script src="screen-capture.js"></script>
     
+    <!-- Add required libraries for PDF rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // Set worker path for PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+    </script>
+    
     <!-- PDF Upload Button -->
-    <div id="pdf-upload-container" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
-        <button id="pdf-upload-global-btn" style="padding: 8px 16px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Upload PDF First</button>
-        <div id="pdf-status" style="text-align: center; margin-top: 5px; font-size: 12px; color: #666;"></div>
+    <div id="pdf-upload-container" style="position: fixed; top: 70px; right: 20px; z-index: 999; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); border: 2px solid #4caf50;">
+        <button id="pdf-upload-global-btn" style="padding: 10px 20px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%;">UPLOAD PDF FIRST</button>
+        <div id="pdf-status" style="text-align: center; margin-top: 8px; font-size: 14px; color: #666; font-weight: bold;"></div>
     </div>
     
     <script>
