@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple PDF Screenshot</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        button { padding: 10px; margin: 5px; background: #4caf50; color: white; border: none; cursor: pointer; }
+        #pdf-viewer { width: 100%; height: 500px; border: 1px solid #ddd; margin-top: 10px; }
+        #result-image { max-width: 100%; margin-top: 20px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Simple PDF Screenshot Tool</h1>
+    
+    <button id="upload-btn">Upload PDF</button>
+    <button id="capture-btn" disabled>Take Screenshot</button>
+    
+    <div id="pdf-viewer"></div>
+    
+    <h3>Result:</h3>
+    <img id="result-image" src="" alt="No screenshot taken yet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // Set PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        
+        // Variables
+        let pdfUrl = null;
+        
+        // Elements
+        const uploadBtn = document.getElementById('upload-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const resultImage = document.getElementById('result-image');
+        
+        // Upload PDF
+        uploadBtn.addEventListener('click', function() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'application/pdf';
+            
+            fileInput.onchange = function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    pdfUrl = URL.createObjectURL(file);
+                    
+                    // Create iframe to display PDF
+                    const iframe = document.createElement('iframe');
+                    iframe.src = pdfUrl;
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.border = 'none';
+                    
+                    // Clear viewer and add iframe
+                    pdfViewer.innerHTML = '';
+                    pdfViewer.appendChild(iframe);
+                    
+                    // Enable capture button
+                    captureBtn.disabled = false;
+                }
+            };
+            
+            fileInput.click();
+        });
+        
+        // Capture screenshot
+        captureBtn.addEventListener('click', function() {
+            const iframe = pdfViewer.querySelector('iframe');
+            if (!iframe) return;
+            
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                html2canvas(iframeDoc.body).then(canvas => {
+                    // Get image data
+                    const imageData = canvas.toDataURL('image/png');
+                    
+                    // Display result
+                    resultImage.src = imageData;
+                }).catch(err => {
+                    console.error('Capture failed:', err);
+                    alert('Failed to capture screenshot: ' + err.message);
+                });
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Error accessing iframe content: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>
