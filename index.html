@@ -209,12 +209,20 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
             
+            // Clear previous error messages
+            errorMessage.style.display = 'none';
+            
             // Validate inputs
             if (!email || !password) {
                 errorMessage.textContent = 'Email and password are required';
                 errorMessage.style.display = 'block';
                 return;
             }
+            
+            // Show loading state
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Logging in...';
             
             // Send login data to server
             fetch('/api/login', {
@@ -237,12 +245,16 @@
                     window.location.href = 'dashboard.html';
                 } else {
                     // Login failed
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Login to PrepSharp';
                     errorMessage.textContent = data.message || 'Invalid email or password';
                     errorMessage.style.display = 'block';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                submitButton.disabled = false;
+                submitButton.textContent = 'Login to PrepSharp';
                 errorMessage.textContent = 'An error occurred. Please try again.';
                 errorMessage.style.display = 'block';
             });
