@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrepSharp - Admin Dashboard</title>
+    <!-- Add this script at the very top of your admin-dashboard.html body -->
+<script>
+    // Check admin login status
+    if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'admin-login.html';
+    }
+</script>
+
+<!-- Add this to your logout button -->
+<script>
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        sessionStorage.removeItem('adminLoggedIn');
+        window.location.href = 'admin-login.html';
+    });
+</script>
+
     <style>
         :root {
             --primary-color: #1976d2;
