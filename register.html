@@ -102,7 +102,6 @@
             font-weight: bold;
             margin-bottom: 20px;
         }
-<<<<<<< HEAD
         .features {
             margin-top: 40px;
         }
@@ -122,8 +121,6 @@
             margin-right: 15px;
             font-size: 20px;
         }
-=======
->>>>>>> 57de8a4 (commit)
         
         /* Responsive design */
         @media (max-width: 768px) {
@@ -143,7 +140,6 @@
         </div>
         <h1>Prepare Smarter</h1>
         <h2>Ace Your Entrance Exams</h2>
-<<<<<<< HEAD
         
         <div class="features">
             <div class="feature">
@@ -159,8 +155,6 @@
                 <div>Focus on your weak areas</div>
             </div>
         </div>
-=======
->>>>>>> 57de8a4 (commit)
     </div>
     
     <div class="login-container">
@@ -205,7 +199,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
@@ -226,9 +219,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-=======
-    <script>
->>>>>>> 57de8a4 (commit)
         document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -239,12 +229,9 @@
             const confirmPassword = document.getElementById('confirm-password').value;
             const errorMessage = document.getElementById('error-message');
             
-<<<<<<< HEAD
             // Clear previous error messages
             errorMessage.style.display = 'none';
             
-=======
->>>>>>> 57de8a4 (commit)
             // Validate inputs
             if (!name || !email || !mobile || !password || !confirmPassword) {
                 errorMessage.textContent = 'All fields are required';
@@ -258,7 +245,6 @@
                 return;
             }
             
-<<<<<<< HEAD
             // Show loading state
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
@@ -313,46 +299,6 @@
                     errorMessage.style.display = 'block';
                     console.error('Error:', error);
                 });
-=======
-            // Send registration data to server
-            fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    mobile,
-                    password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Registration successful
-                    localStorage.setItem('currentUser', JSON.stringify({
-                        id: data.user.id,
-                        name: data.user.name,
-                        email: data.user.email,
-                        mobile: data.user.mobile,
-                        profileComplete: false
-                    }));
-                    
-                    // Redirect to profile setup
-                    window.location.href = 'profile-setup.html';
-                } else {
-                    // Registration failed
-                    errorMessage.textContent = data.message || 'Registration failed';
-                    errorMessage.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                errorMessage.textContent = 'An error occurred. Please try again.';
-                errorMessage.style.display = 'block';
-            });
->>>>>>> 57de8a4 (commit)
         });
     </script>
 </body>

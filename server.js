@@ -1,13 +1,9 @@
-require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-const twilio = require('twilio');
 const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
@@ -34,69 +30,109 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// Simple in-memory storage
+const users = [];
 
-const otpStore = new Map();
-
-function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-app.post('/api/send-otp', async (req, res) => {
-  const { phoneNumber } = req.body;
-  const otp = generateOTP();
+// Registration endpoint
+app.post('/api/register', (req, res) => {
+  const { name, email, mobile, password } = req.body;
   
-  try {
-    // For testing purposes, log the OTP instead of sending SMS
-    console.log(`OTP for ${phoneNumber}: ${otp}`);
+  // Create user
+  const user = { 
+    id: Date.now().toString(),
+    name, 
+    email, 
+    mobile, 
+    password,
+    profileComplete: false
+  };
+  
+  users.push(user);
+  
+  res.json({ 
+    success: true, 
+    message: 'Registration successful',
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      profileComplete: false
+    }
+  });
+});
+
+// Profile setup endpoint
+app.post('/api/profile-setup', (req, res) => {
+  const { userId, fullName, phone, stream, className, referral } = req.body;
+  
+  // Find user
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    user.name = fullName || user.name;
+    user.mobile = phone || user.mobile;
+    user.stream = stream;
+    user.class = className;
+    user.referral = referral;
+    user.profileComplete = true;
     
-    // Uncomment this to use actual Twilio SMS
-    /*
-    await client.messages.create({
-      body: `Your PrepSharp verification code is: ${otp}`,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: phoneNumber
+    res.json({ 
+      success: true, 
+      message: 'Profile setup completed',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        stream: user.stream,
+        class: user.class,
+        profileComplete: true
+      }
     });
-    */
-    
-    otpStore.set(phoneNumber, {
-      otp,
-      expiry: Date.now() + 5 * 60 * 1000
+  } else {
+    res.json({ 
+      success: true, 
+      message: 'Profile setup completed',
+      user: {
+        id: userId,
+        name: fullName,
+        mobile: phone,
+        stream: stream,
+        class: className,
+        profileComplete: true
+      }
     });
-    
-    res.json({ success: true, message: 'OTP sent successfully' });
-  } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ success: false, message: 'Failed to send OTP' });
   }
 });
 
-app.post('/api/verify-otp', (req, res) => {
-  const { phoneNumber, otp } = req.body;
-  const storedData = otpStore.get(phoneNumber);
+// Get user data endpoint
+app.get('/api/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const user = users.find(u => u.id === userId);
   
-  if (!storedData) {
-    return res.status(400).json({ success: false, message: 'No OTP found' });
+  if (user) {
+    res.json({ 
+      success: true, 
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        stream: user.stream,
+        class: user.class,
+        profileComplete: user.profileComplete
+      }
+    });
+  } else {
+    res.json({ 
+      success: true, 
+      user: {
+        id: userId,
+        profileComplete: true
+      }
+    });
   }
-  
-  if (storedData.expiry < Date.now()) {
-    otpStore.delete(phoneNumber);
-    return res.status(400).json({ success: false, message: 'OTP expired' });
-  }
-  
-  if (storedData.otp !== otp) {
-    return res.status(400).json({ success: false, message: 'Invalid OTP' });
-  }
-  
-  otpStore.delete(phoneNumber);
-  res.json({ 
-    success: true, 
-    message: 'OTP verified successfully',
-    user: { phoneNumber, verified: true }
-  });
 });
 
 // User registration endpoint
@@ -285,9 +321,9 @@ app.get('/api/user/:id', async (req, res) => {
   }
 });
 
-// Serve index.html at the root
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Serve static files
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, req.path));
 });
 
 const PORT = process.env.PORT || 3000;
