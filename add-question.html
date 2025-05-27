@@ -271,9 +271,61 @@
     
     <!-- PDF Upload Button -->
     <div id="pdf-upload-container" style="position: fixed; top: 70px; right: 20px; z-index: 999; background-color: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); border: 2px solid #4caf50;">
-        <button id="pdf-upload-global-btn" style="padding: 10px 20px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%;">UPLOAD PDF FIRST</button>
+        <button onclick="uploadPdf()" style="padding: 10px 20px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%;">UPLOAD PDF FIRST</button>
         <div id="pdf-status" style="text-align: center; margin-top: 8px; font-size: 14px; color: #666; font-weight: bold;"></div>
     </div>
+    
+    <script>
+    function uploadPdf() {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'application/pdf';
+        fileInput.style.display = 'none';
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Show loading status
+                const statusEl = document.getElementById('pdf-status');
+                statusEl.textContent = 'Loading PDF...';
+                statusEl.style.color = '#1976d2';
+                
+                // Read the file
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    // Store PDF data in memory only
+                    ScreenCapture.pdfData = e.target.result;
+                    ScreenCapture.pdfUrl = URL.createObjectURL(file);
+                    
+                    // Update status
+                    statusEl.textContent = 'PDF loaded successfully!';
+                    statusEl.style.color = '#4caf50';
+                    
+                    // Update button
+                    document.querySelector('#pdf-upload-container button').textContent = 'Change PDF';
+                    
+                    // Store just the filename in localStorage
+                    localStorage.setItem('prepsharp_pdf_name', file.name);
+                    
+                    // Set session flag
+                    sessionStorage.setItem('prepsharp_pdf_loaded', 'true');
+                    
+                    alert('PDF uploaded successfully! You can now take screenshots from it.');
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        
+        // Clean up
+        setTimeout(() => {
+            document.body.removeChild(fileInput);
+        }, 1000);
+    }
+    </script>
     
     <script>
         // Add PDF upload button functionality
