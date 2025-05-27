@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Working PDF Screenshot Solution</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .btn { 
+            padding: 10px 15px; 
+            background: #4caf50; 
+            color: white; 
+            border: none; 
+            cursor: pointer;
+            margin: 5px;
+        }
+        .image-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            display: none;
+        }
+        .image-container img {
+            max-width: 100%;
+        }
+        h2 { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Working PDF Screenshot Solution</h1>
+        <p>This page demonstrates a working solution for capturing screenshots from PDFs.</p>
+        
+        <button id="upload-pdf" class="btn">Upload PDF</button>
+        <span id="pdf-status"></span>
+        
+        <h2>Question</h2>
+        <button id="capture-question" class="btn">Capture for Question</button>
+        <div id="question-image-container" class="image-container">
+            <img id="question-image" src="" alt="Question Image">
+        </div>
+        
+        <h2>Option A</h2>
+        <button id="capture-option-a" class="btn">Capture for Option A</button>
+        <div id="option-a-image-container" class="image-container">
+            <img id="option-a-image" src="" alt="Option A Image">
+        </div>
+        
+        <h2>Explanation</h2>
+        <button id="capture-explanation" class="btn">Capture for Explanation</button>
+        <div id="explanation-image-container" class="image-container">
+            <img id="explanation-image" src="" alt="Explanation Image">
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        // Variables
+        let pdfUrl = null;
+        
+        // Elements
+        const uploadBtn = document.getElementById('upload-pdf');
+        const pdfStatus = document.getElementById('pdf-status');
+        
+        // Upload PDF
+        uploadBtn.addEventListener('click', function() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'application/pdf';
+            
+            fileInput.onchange = function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    pdfUrl = URL.createObjectURL(file);
+                    pdfStatus.textContent = 'PDF loaded: ' + file.name;
+                    pdfStatus.style.color = 'green';
+                }
+            };
+            
+            fileInput.click();
+        });
+        
+        // Capture function
+        function captureFromPDF(targetImageId, targetContainerId) {
+            if (!pdfUrl) {
+                alert('Please upload a PDF first');
+                return;
+            }
+            
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.flexDirection = 'column';
+            
+            // Create header
+            const header = document.createElement('div');
+            header.style.padding = '10px';
+            header.style.backgroundColor = '#1976d2';
+            header.style.color = 'white';
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            
+            const title = document.createElement('h3');
+            title.textContent = 'PDF Viewer';
+            title.style.margin = '0';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '×';
+            closeBtn.style.background = 'none';
+            closeBtn.style.border = 'none';
+            closeBtn.style.color = 'white';
+            closeBtn.style.fontSize = '24px';
+            closeBtn.style.cursor = 'pointer';
+            
+            header.appendChild(title);
+            header.appendChild(closeBtn);
+            
+            // Create content
+            const content = document.createElement('div');
+            content.style.flex = '1';
+            content.style.display = 'flex';
+            content.style.flexDirection = 'column';
+            
+            // Create iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = pdfUrl;
+            iframe.style.flex = '1';
+            iframe.style.border = 'none';
+            
+            // Create footer
+            const footer = document.createElement('div');
+            footer.style.padding = '10px';
+            footer.style.backgroundColor = '#f5f5f5';
+            footer.style.display = 'flex';
+            footer.style.justifyContent = 'center';
+            
+            const captureBtn = document.createElement('button');
+            captureBtn.textContent = 'Capture Current View';
+            captureBtn.style.padding = '10px 20px';
+            captureBtn.style.backgroundColor = '#4caf50';
+            captureBtn.style.color = 'white';
+            captureBtn.style.border = 'none';
+            captureBtn.style.borderRadius = '4px';
+            captureBtn.style.cursor = 'pointer';
+            
+            footer.appendChild(captureBtn);
+            
+            // Add elements to overlay
+            content.appendChild(iframe);
+            overlay.appendChild(header);
+            overlay.appendChild(content);
+            overlay.appendChild(footer);
+            document.body.appendChild(overlay);
+            
+            // Close button handler
+            closeBtn.onclick = function() {
+                document.body.removeChild(overlay);
+            };
+            
+            // Capture button handler
+            captureBtn.onclick = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    html2canvas(iframeDoc.body).then(canvas => {
+                        // Get image data
+                        const imageData = canvas.toDataURL('image/png');
+                        
+                        // Set image source
+                        document.getElementById(targetImageId).src = imageData;
+                        
+                        // Show image container
+                        document.getElementById(targetContainerId).style.display = 'block';
+                        
+                        // Close overlay
+                        document.body.removeChild(overlay);
+                    }).catch(err => {
+                        console.error('Capture failed:', err);
+                        alert('Failed to capture screenshot: ' + err.message);
+                    });
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('Error accessing iframe content: ' + err.message);
+                }
+            };
+        }
+        
+        // Add event listeners to capture buttons
+        document.getElementById('capture-question').addEventListener('click', function() {
+            captureFromPDF('question-image', 'question-image-container');
+        });
+        
+        document.getElementById('capture-option-a').addEventListener('click', function() {
+            captureFromPDF('option-a-image', 'option-a-image-container');
+        });
+        
+        document.getElementById('capture-explanation').addEventListener('click', function() {
+            captureFromPDF('explanation-image', 'explanation-image-container');
+        });
+    </script>
+</body>
+</html>
