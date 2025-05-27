@@ -5,25 +5,16 @@ const ScreenCapture = {
   pdfData: null,
   
   init: function(callback) {
-    // Check if we have stored PDF data
-    const storedPdfData = localStorage.getItem('prepsharp_pdf');
-    if (storedPdfData) {
-      this.pdfData = storedPdfData;
-      this.pdfUrl = storedPdfData;
-      this.captureFromPDF(callback);
-      return;
-    }
+    // Check if PDF is loaded in this session
+    const pdfLoadedThisSession = sessionStorage.getItem('prepsharp_pdf_loaded');
     
-    // Check if we have a stored PDF URL
-    const storedPdfUrl = localStorage.getItem('prepsharp_pdf_url');
-    if (storedPdfUrl) {
-      this.pdfUrl = storedPdfUrl;
+    if (pdfLoadedThisSession === 'true' && (this.pdfUrl || this.pdfData)) {
       this.captureFromPDF(callback);
       return;
     }
     
     // No PDF available, ask user to upload
-    alert("Please upload a PDF first using the 'Upload PDF' button in the top right corner.");
+    alert("Please upload a PDF first using the 'UPLOAD PDF FIRST' button on the right side of the page.");
   },
   
   uploadPDF: function(callback) {
