@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Screenshot Capture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .image-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            min-height: 200px;
+        }
+        img {
+            max-width: 100%;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Debug Screenshot Capture</h1>
+        <p>This page helps debug the screenshot capture functionality.</p>
+        
+        <button id="upload-pdf">Upload PDF</button>
+        <div id="pdf-status" style="margin-top: 10px;"></div>
+        
+        <button id="take-screenshot">Take Screenshot</button>
+        
+        <div class="image-container">
+            <h3>Captured Image:</h3>
+            <img id="captured-image" src="" alt="No image captured yet">
+        </div>
+    </div>
+    
+    <script src="html2canvas.min.js"></script>
+    
+    <script>
+        // Simple PDF Screenshot Utility for debugging
+        const DebugCapture = {
+            pdfUrl: null,
+            
+            init: function() {
+                document.getElementById('upload-pdf').addEventListener('click', () => {
+                    this.uploadPDF();
+                });
+                
+                document.getElementById('take-screenshot').addEventListener('click', () => {
+                    if (this.pdfUrl) {
+                        this.captureFromPDF();
+                    } else {
+                        alert("Please upload a PDF first");
+                    }
+                });
+            },
+            
+            uploadPDF: function() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'application/pdf';
+                
+                fileInput.onchange = (e) => {
+                    if (e.target.files.length > 0) {
+                        const file = e.target.files[0];
+                        this.pdfUrl = URL.createObjectURL(file);
+                        document.getElementById('pdf-status').textContent = `PDF loaded: ${file.name}`;
+                    }
+                };
+                
+                fileInput.click();
+            },
+            
+            captureFromPDF: function() {
+                // Create screen capture UI
+                const container = document.createElement('div');
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100%';
+                container.style.height = '100%';
+                container.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                container.style.zIndex = '9999';
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                
+                // Create header
+                const header = document.createElement('div');
+                header.style.padding = '10px';
+                header.style.backgroundColor = '#1976d2';
+                header.style.color = 'white';
+                header.style.display = 'flex';
+                header.style.justifyContent = 'space-between';
+                header.style.alignItems = 'center';
+                
+                const title = document.createElement('h3');
+                title.textContent = 'Select Area from PDF';
+                title.style.margin = '0';
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = '×';
+                closeBtn.style.background = 'none';
+                closeBtn.style.border = 'none';
+                closeBtn.style.color = 'white';
+                closeBtn.style.fontSize = '24px';
+                closeBtn.style.cursor = 'pointer';
+                
+                header.appendChild(title);
+                header.appendChild(closeBtn);
+                
+                // Create content area
+                const content = document.createElement('div');
+                content.style.flex = '1';
+                content.style.display = 'flex';
+                content.style.flexDirection = 'column';
+                content.style.position = 'relative';
+                
+                // Create iframe to display PDF
+                const iframe = document.createElement('iframe');
+                iframe.src = this.pdfUrl;
+                iframe.style.flex = '1';
+                iframe.style.border = 'none';
+                
+                // Create selection area
+                const selectionArea = document.createElement('div');
+                selectionArea.style.position = 'absolute';
+                selectionArea.style.top = '0';
+                selectionArea.style.left = '0';
+                selectionArea.style.right = '0';
+                selectionArea.style.bottom = '0';
+                selectionArea.style.cursor = 'crosshair';
+                
+                // Create selection box
+                const selectionBox = document.createElement('div');
+                selectionBox.style.position = 'absolute';
+                selectionBox.style.border = '2px dashed #4caf50';
+                selectionBox.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+                selectionBox.style.display = 'none';
+                
+                // Create capture button
+                const captureBtn = document.createElement('button');
+                captureBtn.textContent = 'Capture Selected Area';
+                captureBtn.style.position = 'absolute';
+                captureBtn.style.bottom = '20px';
+                captureBtn.style.right = '20px';
+                captureBtn.style.padding = '10px 20px';
+                captureBtn.style.backgroundColor = '#4caf50';
+                captureBtn.style.color = 'white';
+                captureBtn.style.border = 'none';
+                captureBtn.style.borderRadius = '4px';
+                captureBtn.style.cursor = 'pointer';
+                captureBtn.style.display = 'none';
+                
+                selectionArea.appendChild(selectionBox);
+                selectionArea.appendChild(captureBtn);
+                
+                content.appendChild(iframe);
+                content.appendChild(selectionArea);
+                
+                // Add elements to container
+                container.appendChild(header);
+                container.appendChild(content);
+                document.body.appendChild(container);
+                
+                // Variables for selection
+                let isSelecting = false;
+                let startX = 0;
+                let startY = 0;
+                let endX = 0;
+                let endY = 0;
+                
+                // Selection events
+                selectionArea.addEventListener('mousedown', (e) => {
+                    isSelecting = true;
+                    startX = e.clientX - selectionArea.getBoundingClientRect().left;
+                    startY = e.clientY - selectionArea.getBoundingClientRect().top;
+                    
+                    selectionBox.style.left = startX + 'px';
+                    selectionBox.style.top = startY + 'px';
+                    selectionBox.style.width = '0';
+                    selectionBox.style.height = '0';
+                    selectionBox.style.display = 'block';
+                    
+                    captureBtn.style.display = 'none';
+                });
+                
+                selectionArea.addEventListener('mousemove', (e) => {
+                    if (!isSelecting) return;
+                    
+                    endX = e.clientX - selectionArea.getBoundingClientRect().left;
+                    endY = e.clientY - selectionArea.getBoundingClientRect().top;
+                    
+                    const width = Math.abs(endX - startX);
+                    const height = Math.abs(endY - startY);
+                    
+                    selectionBox.style.left = Math.min(startX, endX) + 'px';
+                    selectionBox.style.top = Math.min(startY, endY) + 'px';
+                    selectionBox.style.width = width + 'px';
+                    selectionBox.style.height = height + 'px';
+                });
+                
+                selectionArea.addEventListener('mouseup', () => {
+                    if (!isSelecting) return;
+                    isSelecting = false;
+                    
+                    const width = Math.abs(endX - startX);
+                    const height = Math.abs(endY - startY);
+                    
+                    if (width > 10 && height > 10) {
+                        captureBtn.style.display = 'block';
+                        captureBtn.style.left = (Math.min(startX, endX) + width - captureBtn.offsetWidth) + 'px';
+                        captureBtn.style.top = (Math.min(startY, endY) + height + 10) + 'px';
+                    } else {
+                        selectionBox.style.display = 'none';
+                    }
+                });
+                
+                // Capture button event
+                captureBtn.addEventListener('click', () => {
+                    try {
+                        // Simple direct capture method
+                        const selLeft = parseInt(selectionBox.style.left);
+                        const selTop = parseInt(selectionBox.style.top);
+                        const selWidth = parseInt(selectionBox.style.width);
+                        const selHeight = parseInt(selectionBox.style.height);
+                        
+                        // Create a canvas element
+                        const canvas = document.createElement('canvas');
+                        canvas.width = selWidth;
+                        canvas.height = selHeight;
+                        
+                        // Get the iframe document
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        
+                        // Use html2canvas to capture the iframe content
+                        html2canvas(iframeDoc.body).then(iframeCanvas => {
+                            // Draw the selected portion to our canvas
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(
+                                iframeCanvas,
+                                selLeft, selTop,
+                                selWidth, selHeight,
+                                0, 0,
+                                selWidth, selHeight
+                            );
+                            
+                            // Get the image data
+                            const imageDataUrl = canvas.toDataURL('image/png');
+                            
+                            // Display the captured image
+                            document.getElementById('captured-image').src = imageDataUrl;
+                            
+                            // Remove container
+                            document.body.removeChild(container);
+                        });
+                    } catch (err) {
+                        console.error('Capture error:', err);
+                        alert('Error capturing: ' + err.message);
+                    }
+                });
+                
+                // Close button event
+                closeBtn.onclick = () => {
+                    document.body.removeChild(container);
+                };
+            }
+        };
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            DebugCapture.init();
+        });
+    </script>
+</body>
+</html>
