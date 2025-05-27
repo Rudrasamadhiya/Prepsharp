@@ -213,6 +213,18 @@
                 <h3>Student View</h3>
                 <p>View the student interface</p>
             </div>
+            
+            <div class="dashboard-card" onclick="location.href='admin-dashboard-editor.html'">
+                <div class="card-icon">✏️</div>
+                <h3>Edit User Dashboard</h3>
+                <p>Customize the user dashboard layout</p>
+            </div>
+            
+            <div class="dashboard-card" id="edit-dashboard-btn">
+                <div class="card-icon">✏️</div>
+                <h3>Edit User Dashboard</h3>
+                <p>Customize the user dashboard layout</p>
+            </div>
         </div>
     </div>
     
@@ -237,6 +249,33 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    
+    <!-- Dashboard Editor Modal -->
+    <div id="dashboardEditorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('dashboardEditorModal').style.display='none'">&times;</span>
+            <h2>Edit User Dashboard</h2>
+            <p>Customize the user dashboard layout and features:</p>
+            
+            <div style="margin-bottom: 20px;">
+                <h3>Add New Exam Category</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="new-category-name" placeholder="Category Name" style="flex: 1; padding: 8px;">
+                    <input type="text" id="new-category-icon" placeholder="Icon (emoji)" style="width: 100px; padding: 8px;">
+                </div>
+                <button id="add-category-btn" class="btn">Add Category</button>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h3>Current Categories</h3>
+                <div id="category-list" style="margin-top: 10px;">
+                    Loading categories...
+                </div>
+            </div>
+            
+            <button id="save-dashboard-btn" class="btn" style="background-color: #4caf50;">Save Changes</button>
         </div>
     </div>
 
