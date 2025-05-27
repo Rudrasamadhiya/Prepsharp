@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PrepSharp is the ultimate exam preparation platform for JEE, NEET and other competitive exams. Practice with past papers and improve your scores with PrepSharp's personalized learning approach.">
+    <title>PrepSharp - Smart Exam Preparation Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .banner {
+            flex: 1;
+            background-color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+        .banner h1, .banner h2 {
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 10px;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .error-message {
+            color: #f44336;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .features {
+            margin-top: 40px;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .banner {
+                padding: 40px 20px;
+            }
+        }
+        
+        /* Admin link */
+        .admin-link {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+        }
+        .admin-link a {
+            color: #999;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="logo">
+            <img src="logo for index.png" alt="PrepSharp Logo" style="max-width: 200px;">
+        </div>
+        <h1>PrepSharp - Prepare Smarter</h1>
+        <h2>Ace Your Entrance Exams</h2>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📝</div>
+                <div>Practice with PrepSharp's past year papers</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div>Track your performance with PrepSharp</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <div>Focus on your weak areas with PrepSharp</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Welcome to PrepSharp</h1>
+            <p style="text-align: center;">PrepSharp helps you prepare smarter for your entrance exams. Log in to continue your preparation journey.</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Login to PrepSharp</button>
+                
+                <div id="error-message" class="error-message"></div>
+            </form>
+            
+            <div class="register-link">
+                Don't have an account? <a href="register.html">Register with PrepSharp</a>
+            </div>
+            
+            <div class="admin-link">
+                <a href="admin-login.html">Admin Access</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            // Store user in localStorage (demo mode)
+            const user = {
+                id: '12345',
+                name: 'Test User',
+                email: email,
+                mobile: '1234567890',
+                stream: 'engineering',
+                profileComplete: true
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
