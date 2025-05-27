@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Editor - PrepSharp Admin</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn.success {
+            background-color: #4caf50;
+        }
+        .btn.danger {
+            background-color: #f44336;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .category-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .exam-item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            background-color: white;
+        }
+        .preview-title {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .preview-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .preview-card-header {
+            background-color: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+        }
+        .preview-card-body {
+            padding: 15px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo">
+            <h2>PrepSharp Admin</h2>
+        </div>
+        <div>
+            <button class="btn" onclick="location.href='admin-dashboard.html'">Back to Dashboard</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Dashboard Editor</h1>
+            <p>Customize the user dashboard layout and exam categories.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Dashboard Settings</h2>
+            
+            <div class="form-group">
+                <label for="welcome-message">Welcome Message</label>
+                <textarea id="welcome-message" rows="3">Welcome to PrepSharp! Select an exam category below to start practicing with past year papers.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="dashboard-theme">Dashboard Theme</label>
+                <select id="dashboard-theme">
+                    <option value="default">Default Blue</option>
+                    <option value="green">Green</option>
+                    <option value="purple">Purple</option>
+                    <option value="orange">Orange</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="category-header">
+                <h2>Exam Categories</h2>
+                <button id="add-category-btn" class="btn">Add New Category</button>
+            </div>
+            
+            <div id="categories-container">
+                <!-- Engineering Category -->
+                <div class="category-container" data-category-id="engineering-exams">
+                    <div class="category-header">
+                        <h3>Engineering Exams</h3>
+                        <button class="btn danger delete-category-btn">Delete</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="category-name" value="Engineering Exams">
+                    </div>
+                    
+                    <h4>Exams in this category:</h4>
+                    <div class="exams-container">
+                        <!-- JEE Advanced -->
+                        <div class="exam-item">
+                            <div class="exam-header">
+                                <h4>JEE Advanced</h4>
+                                <button class="btn danger delete-exam-btn">Delete</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Title</label>
+                                <input type="text" class="exam-title" value="JEE Advanced">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="exam-description" value="IIT entrance examination">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon Text</label>
+                                <input type="text" class="exam-icon" value="JEE Advanced">
+                            </div>
+                            <div class="form-group">
+                                <label>Link</label>
+                                <input type="text" class="exam-link" value="exam-list.html?type=jee-advanced">
+                            </div>
+                        </div>
+                        
+                        <!-- JEE Main -->
+                        <div class="exam-item">
+                            <div class="exam-header">
+                                <h4>JEE Main</h4>
+                                <button class="btn danger delete-exam-btn">Delete</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Title</label>
+                                <input type="text" class="exam-title" value="JEE Main">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="exam-description" value="Engineering entrance examination">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon Text</label>
+                                <input type="text" class="exam-icon" value="JEE Main">
+                            </div>
+                            <div class="form-group">
+                                <label>Link</label>
+                                <input type="text" class="exam-link" value="exam-list.html?type=jee-main">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn add-exam-btn">Add Exam</button>
+                </div>
+                
+                <!-- Medical Category -->
+                <div class="category-container" data-category-id="medical-exams">
+                    <div class="category-header">
+                        <h3>Medical Exams</h3>
+                        <button class="btn danger delete-category-btn">Delete</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="category-name" value="Medical Exams">
+                    </div>
+                    
+                    <h4>Exams in this category:</h4>
+                    <div class="exams-container">
+                        <!-- NEET -->
+                        <div class="exam-item">
+                            <div class="exam-header">
+                                <h4>NEET</h4>
+                                <button class="btn danger delete-exam-btn">Delete</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Title</label>
+                                <input type="text" class="exam-title" value="NEET">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="exam-description" value="Medical entrance examination">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon Text</label>
+                                <input type="text" class="exam-icon" value="NEET">
+                            </div>
+                            <div class="form-group">
+                                <label>Link</label>
+                                <input type="text" class="exam-link" value="exam-list.html?type=neet">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn add-exam-btn">Add Exam</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Preview</h2>
+            <div class="preview">
+                <h3 class="preview-title">Exam Categories</h3>
+                <div id="preview-container">
+                    <!-- Preview will be generated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn" onclick="location.href='admin-dashboard.html'">Cancel</button>
+            <button id="save-btn" class="btn success">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Add event listeners when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add new category button
+            document.getElementById('add-category-btn').addEventListener('click', addNewCategory);
+            
+            // Add exam buttons
+            document.querySelectorAll('.add-exam-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const categoryContainer = this.closest('.category-container');
+                    addNewExam(categoryContainer);
+                });
+            });
+            
+            // Delete category buttons
+            document.querySelectorAll('.delete-category-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const categoryContainer = this.closest('.category-container');
+                    if (confirm('Are you sure you want to delete this category?')) {
+                        categoryContainer.remove();
+                        updatePreview();
+                    }
+                });
+            });
+            
+            // Delete exam buttons
+            document.querySelectorAll('.delete-exam-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const examItem = this.closest('.exam-item');
+                    if (confirm('Are you sure you want to delete this exam?')) {
+                        examItem.remove();
+                        updatePreview();
+                    }
+                });
+            });
+            
+            // Save button
+            document.getElementById('save-btn').addEventListener('click', saveChanges);
+            
+            // Initialize preview
+            updatePreview();
+            
+            // Add input change listeners for live preview
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+        });
+        
+        // Add a new category
+        function addNewCategory() {
+            const categoriesContainer = document.getElementById('categories-container');
+            const categoryId = 'category-' + Date.now();
+            
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'category-container';
+            categoryDiv.dataset.categoryId = categoryId;
+            
+            categoryDiv.innerHTML = `
+                <div class="category-header">
+                    <h3>New Category</h3>
+                    <button class="btn danger delete-category-btn">Delete</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" class="category-name" value="New Category">
+                </div>
+                
+                <h4>Exams in this category:</h4>
+                <div class="exams-container">
+                    <!-- No exams yet -->
+                </div>
+                
+                <button class="btn add-exam-btn">Add Exam</button>
+            `;
+            
+            categoriesContainer.appendChild(categoryDiv);
+            
+            // Add event listeners to new elements
+            categoryDiv.querySelector('.delete-category-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this category?')) {
+                    categoryDiv.remove();
+                    updatePreview();
+                }
+            });
+            
+            categoryDiv.querySelector('.add-exam-btn').addEventListener('click', function() {
+                addNewExam(categoryDiv);
+            });
+            
+            // Add input change listeners
+            categoryDiv.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+            
+            updatePreview();
+        }
+        
+        // Add a new exam to a category
+        function addNewExam(categoryContainer) {
+            const examsContainer = categoryContainer.querySelector('.exams-container');
+            
+            const examDiv = document.createElement('div');
+            examDiv.className = 'exam-item';
+            
+            examDiv.innerHTML = `
+                <div class="exam-header">
+                    <h4>New Exam</h4>
+                    <button class="btn danger delete-exam-btn">Delete</button>
+                </div>
+                <div class="form-group">
+                    <label>Exam Title</label>
+                    <input type="text" class="exam-title" value="New Exam">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="exam-description" value="Exam description">
+                </div>
+                <div class="form-group">
+                    <label>Icon Text</label>
+                    <input type="text" class="exam-icon" value="EXAM">
+                </div>
+                <div class="form-group">
+                    <label>Link</label>
+                    <input type="text" class="exam-link" value="exam-list.html?type=new-exam">
+                </div>
+            `;
+            
+            examsContainer.appendChild(examDiv);
+            
+            // Add event listeners to new elements
+            examDiv.querySelector('.delete-exam-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this exam?')) {
+                    examDiv.remove();
+                    updatePreview();
+                }
+            });
+            
+            // Add input change listeners
+            examDiv.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+            
+            updatePreview();
+        }
+        
+        // Update the preview section
+        function updatePreview() {
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+            
+            // Get all categories
+            const categories = document.querySelectorAll('.category-container');
+            
+            categories.forEach(category => {
+                const categoryName = category.querySelector('.category-name').value;
+                const categoryId = category.dataset.categoryId;
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.innerHTML = `<h4>${categoryName}</h4>`;
+                
+                const previewGrid = document.createElement('div');
+                previewGrid.className = 'preview-grid';
+                
+                // Get all exams in this category
+                const exams = category.querySelectorAll('.exam-item');
+                
+                exams.forEach(exam => {
+                    const title = exam.querySelector('.exam-title').value;
+                    const description = exam.querySelector('.exam-description').value;
+                    const icon = exam.querySelector('.exam-icon').value;
+                    
+                    const examCard = document.createElement('div');
+                    examCard.className = 'preview-card';
+                    examCard.innerHTML = `
+                        <div class="preview-card-header">
+                            <div style="font-size: 18px; font-weight: bold;">${icon}</div>
+                        </div>
+                        <div class="preview-card-body">
+                            <h4>${title}</h4>
+                            <p>${description}</p>
+                        </div>
+                    `;
+                    
+                    previewGrid.appendChild(examCard);
+                });
+                
+                categoryDiv.appendChild(previewGrid);
+                previewContainer.appendChild(categoryDiv);
+            });
+        }
+        
+        // Save changes to the dashboard
+        function saveChanges() {
+            // Collect all data
+            const dashboardData = {
+                welcomeMessage: document.getElementById('welcome-message').value,
+                theme: document.getElementById('dashboard-theme').value,
+                categories: []
+            };
+            
+            // Get all categories
+            const categories = document.querySelectorAll('.category-container');
+            
+            categories.forEach(category => {
+                const categoryData = {
+                    id: category.dataset.categoryId,
+                    name: category.querySelector('.category-name').value,
+                    exams: []
+                };
+                
+                // Get all exams in this category
+                const exams = category.querySelectorAll('.exam-item');
+                
+                exams.forEach(exam => {
+                    categoryData.exams.push({
+                        title: exam.querySelector('.exam-title').value,
+                        description: exam.querySelector('.exam-description').value,
+                        icon: exam.querySelector('.exam-icon').value,
+                        link: exam.querySelector('.exam-link').value
+                    });
+                });
+                
+                dashboardData.categories.push(categoryData);
+            });
+            
+            // Save to localStorage for now (in a real app, this would be sent to the server)
+            localStorage.setItem('dashboardConfig', JSON.stringify(dashboardData));
+            
+            // Update the dashboard.html file
+            updateDashboardFile(dashboardData);
+            
+            alert('Dashboard changes saved successfully!');
+        }
+        
+        // Update the dashboard.html file
+        function updateDashboardFile(dashboardData) {
+            // In a real implementation, this would send the data to the server
+            // to update the dashboard.html file
+            
+            // For now, we'll just simulate success
+            console.log('Dashboard data to save:', dashboardData);
+            
+            // Send to server
+            fetch('/api/update-dashboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dashboardData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Dashboard updated successfully');
+                } else {
+                    console.error('Error updating dashboard:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
