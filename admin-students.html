@@ -117,13 +117,15 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Mobile</th>
+                    <th>Stream</th>
+                    <th>Class</th>
                     <th>Registration Date</th>
                 </tr>
             </thead>
             <tbody id="students-data">
                 <!-- Student data will be loaded here -->
                 <tr>
-                    <td colspan="4" style="text-align: center;">Loading...</td>
+                    <td colspan="6" style="text-align: center;">Loading...</td>
                 </tr>
             </tbody>
         </table>
@@ -131,51 +133,40 @@
         <a href="admin-dashboard.html" class="back-link">← Back to Admin Dashboard</a>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    <script>
+        // Check if admin is logged in
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
         
         // Store all students data
         let studentsData = [];
         
         // Load students data
-        async function loadStudents() {
+        function loadStudents() {
             try {
-                const querySnapshot = await getDocs(collection(db, "users"));
+                // For demo purposes, we'll load from localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
                 const tbody = document.getElementById('students-data');
                 tbody.innerHTML = '';
                 
                 studentsData = [];
                 
-                if (querySnapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No students registered yet</td></tr>';
+                if (Object.keys(users).length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No students registered yet</td></tr>';
                     return;
                 }
                 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
+                for (const userId in users) {
+                    const data = users[userId];
                     const registrationDate = data.registrationDate ? new Date(data.registrationDate).toLocaleString() : 'N/A';
                     
                     studentsData.push({
                         name: data.name || 'N/A',
                         email: data.email || 'N/A',
-                        mobile: data.mobile || 'N/A',
+                        mobile: data.mobile || data.phone || 'N/A',
+                        stream: data.stream || 'N/A',
+                        class: data.class || 'N/A',
                         registrationDate: registrationDate
                     });
                     
@@ -183,15 +174,47 @@
                     row.innerHTML = `
                         <td>${data.name || 'N/A'}</td>
                         <td>${data.email || 'N/A'}</td>
-                        <td>${data.mobile || 'N/A'}</td>
+                        <td>${data.mobile || data.phone || 'N/A'}</td>
+                        <td>${data.stream || 'N/A'}</td>
+                        <td>${data.class || 'N/A'}</td>
                         <td>${registrationDate}</td>
                     `;
                     tbody.appendChild(row);
-                });
+                }
+                
+                // Also check currentUser in localStorage for demo purposes
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                if (currentUser && currentUser.email) {
+                    // Check if this user is already in the list
+                    const existingUser = studentsData.find(user => user.email === currentUser.email);
+                    if (!existingUser) {
+                        const registrationDate = currentUser.registrationDate ? new Date(currentUser.registrationDate).toLocaleString() : 'N/A';
+                        
+                        studentsData.push({
+                            name: currentUser.name || currentUser.fullName || 'N/A',
+                            email: currentUser.email || 'N/A',
+                            mobile: currentUser.mobile || currentUser.phone || 'N/A',
+                            stream: currentUser.stream || 'N/A',
+                            class: currentUser.class || 'N/A',
+                            registrationDate: registrationDate
+                        });
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${currentUser.name || currentUser.fullName || 'N/A'}</td>
+                            <td>${currentUser.email || 'N/A'}</td>
+                            <td>${currentUser.mobile || currentUser.phone || 'N/A'}</td>
+                            <td>${currentUser.stream || 'N/A'}</td>
+                            <td>${currentUser.class || 'N/A'}</td>
+                            <td>${registrationDate}</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                }
             } catch (error) {
                 console.error("Error loading students:", error);
                 document.getElementById('students-data').innerHTML = 
-                    `<tr><td colspan="4" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
+                    `<tr><td colspan="6" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
             }
         }
         
@@ -218,23 +241,12 @@
         
         // Logout
         document.getElementById('logout-btn').addEventListener('click', function() {
-            signOut(auth).then(() => {
-                window.location.href = 'admin-login.html';
-            }).catch((error) => {
-                console.error('Logout error:', error);
-            });
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
         });
         
-        // Check if user is authenticated
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, load data
-                loadStudents();
-            } else {
-                // User is signed out, redirect to login
-                window.location.href = 'admin-login.html';
-            }
-        });
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadStudents);
     </script>
 </body>
 </html>
