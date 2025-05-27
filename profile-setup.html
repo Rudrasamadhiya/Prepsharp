@@ -189,19 +189,62 @@
             
             try {
                 const user = JSON.parse(localStorage.getItem('currentUser'));
+                if (!user || !user.id) {
+                    showError('User session not found. Please login again.');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
                 
-                // Add profile information
-                user.fullName = document.getElementById('fullName').value;
-                user.phone = document.getElementById('phone').value;
-                user.stream = document.getElementById('stream').value;
-                user.class = document.getElementById('class').value;
-                user.referral = document.getElementById('referral').value;
-                user.profileComplete = true;
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const stream = document.getElementById('stream').value;
+                const className = document.getElementById('class').value;
+                const referral = document.getElementById('referral').value;
                 
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
+                // Send profile data to server
+                fetch('/api/profile-setup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        fullName,
+                        phone,
+                        stream,
+                        className,
+                        referral
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update local storage with new user data
+                        user.name = data.user.name;
+                        user.mobile = data.user.mobile;
+                        user.stream = data.user.stream;
+                        user.class = data.user.class;
+                        user.profileComplete = true;
+                        
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        
+                        // Show success message briefly before redirecting
+                        showSuccess('Profile setup complete!');
+                        
+                        // Redirect to dashboard
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showError(data.message || 'Failed to save profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('An error occurred. Please try again.');
+                });
             } catch (e) {
                 console.error('Error saving profile:', e);
                 showError('Error saving your profile. Please try again.');
