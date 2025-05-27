@@ -145,6 +145,49 @@
     </div>
 
     <script>
+        // Load custom exam types from dashboard config
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboardConfig = localStorage.getItem('dashboardConfig');
+            if (dashboardConfig) {
+                try {
+                    const config = JSON.parse(dashboardConfig);
+                    const examTypeSelect = document.getElementById('exam-type');
+                    
+                    // Add custom exam types from dashboard configuration
+                    if (config.categories) {
+                        config.categories.forEach(category => {
+                            category.exams.forEach(exam => {
+                                // Extract exam type from link (e.g., exam-list.html?type=new-exam)
+                                const linkMatch = exam.link.match(/type=([^&]+)/);
+                                if (linkMatch && linkMatch[1]) {
+                                    const examType = linkMatch[1];
+                                    
+                                    // Check if this exam type already exists in the select
+                                    let exists = false;
+                                    for (let i = 0; i < examTypeSelect.options.length; i++) {
+                                        if (examTypeSelect.options[i].value === examType) {
+                                            exists = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Add if it doesn't exist
+                                    if (!exists) {
+                                        const option = document.createElement('option');
+                                        option.value = examType;
+                                        option.textContent = exam.title;
+                                        examTypeSelect.appendChild(option);
+                                    }
+                                }
+                            });
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading custom exam types:', error);
+                }
+            }
+        });
+        
         // Event listeners
         document.getElementById('exam-type').addEventListener('change', function() {
             const paperNumberContainer = document.getElementById('paper-number-container');
@@ -199,7 +242,12 @@
         
         document.getElementById('dashboard-btn').addEventListener('click', function() {
             if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
-                window.location.href = 'dashboard.html';
+                // Check if user is admin
+                if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             }
         });
     </script>
