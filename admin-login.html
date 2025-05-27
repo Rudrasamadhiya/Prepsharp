@@ -106,20 +106,32 @@
     </div>
 
     <script>
+        // Check if already logged in
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            window.location.href = 'admin-dashboard.html';
+        }
+        
         document.getElementById('login-btn').addEventListener('click', function() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Check admin credentials
-            if (username === 'admin' && password === 'QWmnb@226') {
+            // Check admin credentials (username: admin, password: admin123)
+            if (username === 'admin' && password === 'admin123') {
                 // Set admin session
-                localStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem('adminLoggedIn', 'true');
                 
                 // Redirect to admin dashboard
                 window.location.href = 'admin-dashboard.html';
             } else {
                 // Show error message
                 document.getElementById('error-message').style.display = 'block';
+            }
+        });
+        
+        // Also allow pressing Enter to login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('login-btn').click();
             }
         });
     </script>
