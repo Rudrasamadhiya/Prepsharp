@@ -163,4 +163,82 @@
                 }
                 
                 // Pre-fill name if available
-                if (user.name && user.name !==
+                if (user.name) {
+                    document.getElementById('fullName').value = user.name;
+                }
+                
+                // Pre-fill phone if available
+                if (user.mobile) {
+                    document.getElementById('phone').value = user.mobile;
+                }
+            } catch (e) {
+                console.error('Error loading user data:', e);
+            }
+        });
+        
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser'));
+                
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const stream = document.getElementById('stream').value;
+                const className = document.getElementById('class').value;
+                const referral = document.getElementById('referral').value;
+                
+                // Send profile data to server
+                fetch('/api/profile-setup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        fullName,
+                        phone,
+                        stream,
+                        className,
+                        referral
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update local storage
+                        const updatedUser = {
+                            id: data.user.id,
+                            name: data.user.name || fullName,
+                            email: user.email,
+                            mobile: data.user.mobile || phone,
+                            stream: data.user.stream || stream,
+                            class: data.user.class || className,
+                            profileComplete: true
+                        };
+                        
+                        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                        
+                        // Show success message briefly
+                        showSuccess('Profile setup complete!');
+                        
+                        // Redirect to dashboard
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showError(data.message || 'Failed to save profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('An error occurred. Please try again.');
+                });
+            } catch (e) {
+                console.error('Error saving profile:', e);
+                showError('Error saving your profile. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
