@@ -264,7 +264,8 @@
     
     <!-- PDF Upload Button -->
     <div id="pdf-upload-container" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
-        <button id="pdf-upload-global-btn" style="padding: 8px 16px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;">Upload PDF</button>
+        <button id="pdf-upload-global-btn" style="padding: 8px 16px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Upload PDF First</button>
+        <div id="pdf-status" style="text-align: center; margin-top: 5px; font-size: 12px; color: #666;"></div>
     </div>
     
     <script>
@@ -278,18 +279,35 @@
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
+                    // Show loading status
+                    const statusEl = document.getElementById('pdf-status');
+                    statusEl.textContent = 'Loading PDF...';
+                    statusEl.style.color = '#1976d2';
+                    
                     // Read the file
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         // Store PDF data
                         ScreenCapture.pdfData = e.target.result;
+                        ScreenCapture.pdfUrl = e.target.result;
                         
                         // Store in localStorage for persistence
                         try {
                             localStorage.setItem('prepsharp_pdf', ScreenCapture.pdfData);
+                            localStorage.setItem('prepsharp_pdf_url', ScreenCapture.pdfUrl);
+                            
+                            // Update status
+                            statusEl.textContent = 'PDF loaded successfully!';
+                            statusEl.style.color = '#4caf50';
+                            
+                            // Update button
+                            document.getElementById('pdf-upload-global-btn').textContent = 'Change PDF';
+                            
                             alert('PDF uploaded successfully! You can now take screenshots from it.');
                         } catch (err) {
                             console.warn('PDF too large to store in localStorage');
+                            statusEl.textContent = 'PDF loaded (too large to save)';
+                            statusEl.style.color = '#ff9800';
                             alert('PDF uploaded successfully, but it\'s too large to save between sessions.');
                         }
                     };
@@ -305,6 +323,17 @@
             setTimeout(() => {
                 document.body.removeChild(fileInput);
             }, 1000);
+        });
+        
+        // Check if PDF is already loaded
+        window.addEventListener('DOMContentLoaded', function() {
+            const storedPdf = localStorage.getItem('prepsharp_pdf') || localStorage.getItem('prepsharp_pdf_url');
+            if (storedPdf) {
+                const statusEl = document.getElementById('pdf-status');
+                statusEl.textContent = 'PDF already loaded';
+                statusEl.style.color = '#4caf50';
+                document.getElementById('pdf-upload-global-btn').textContent = 'Change PDF';
+            }
         });
     </script>
     <script>
