@@ -250,10 +250,7 @@
         });
         
         // Refresh data
-        document.getElementById('refresh-data').addEventListener('click', function() {
-            checkForNewRegistrations();
-            loadStudents();
-        });
+        document.getElementById('refresh-data').addEventListener('click', loadStudents);
         
         // Logout
         document.getElementById('logout-btn').addEventListener('click', function() {
