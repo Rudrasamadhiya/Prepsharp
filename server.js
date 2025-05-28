@@ -495,6 +495,41 @@ app.post('/api/send-otp', async (req, res) => {
   }
 });
 
+// Send OTP endpoint
+app.post('/api/send-otp', async (req, res) => {
+  const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email is required'
+    });
+  }
+  
+  try {
+    // Generate and send OTP
+    const result = await sendOTP(email);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'OTP sent successfully'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email'
+      });
+    }
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while sending OTP'
+    });
+  }
+});
+
 // Verify OTP endpoint
 app.post('/api/verify-otp', (req, res) => {
   const { email, otp, isLogin } = req.body;
