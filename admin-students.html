@@ -288,7 +288,10 @@
         });
         
         // Refresh data
-        document.getElementById('refresh-data').addEventListener('click', loadStudents);
+        document.getElementById('refresh-data').addEventListener('click', function() {
+            checkForNewRegistrations();
+            loadStudents();
+        });
         
         // Logout
         document.getElementById('logout-btn').addEventListener('click', function() {
@@ -296,8 +299,58 @@
             window.location.href = 'admin-login.html';
         });
         
+        // Add new user to the list
+        function addNewUser(userData) {
+            // Get existing users or create empty object
+            let users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            // Generate unique ID if not provided
+            const userId = userData.id || 'user_' + Date.now();
+            
+            // Add user to users object
+            users[userId] = {
+                name: userData.name || userData.fullName || 'New User',
+                email: userData.email || '',
+                mobile: userData.mobile || userData.phone || '',
+                stream: userData.stream || 'Engineering',
+                class: userData.class || '12th',
+                createdAt: Date.now()
+            };
+            
+            // Save back to localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Reload the student list
+            loadStudents();
+        }
+        
+        // Check for new registrations
+        function checkForNewRegistrations() {
+            // Get current user
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // If there's a current user with email
+            if (currentUser && currentUser.email) {
+                // Get existing users
+                let users = JSON.parse(localStorage.getItem('users') || '{}');
+                
+                // Check if this user is already in the list
+                const existingUser = Object.values(users).find(user => 
+                    user.email && user.email.toLowerCase() === currentUser.email.toLowerCase()
+                );
+                
+                // If not in list, add them
+                if (!existingUser) {
+                    addNewUser(currentUser);
+                }
+            }
+        }
+        
         // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadStudents);
+        document.addEventListener('DOMContentLoaded', function() {
+            checkForNewRegistrations();
+            loadStudents();
+        });
     </script>
 </body>
 </html>
