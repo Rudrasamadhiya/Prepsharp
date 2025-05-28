@@ -1,5 +1,8 @@
 // Simple paste handler for screenshots
 document.addEventListener('DOMContentLoaded', function() {
+  // Check if PDF has been uploaded
+  let pdfUploaded = localStorage.getItem('pdfUploaded') === 'true';
+  
   // Add paste functionality to all screenshot buttons
   document.querySelectorAll('.upload-btn').forEach(function(btn) {
     if (!btn.textContent.includes('(Ctrl+V)')) {
@@ -7,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     btn.onclick = function() {
+      if (!pdfUploaded) {
+        alert('Please upload a PDF first using the \'UPLOAD PDF\' button in the header.');
+        return;
+      }
+      
       alert('Press Ctrl+V to paste your screenshot');
       
       function handlePaste(e) {
