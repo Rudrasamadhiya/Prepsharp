@@ -376,16 +376,38 @@
                 };
             });
             
-            // Save to localStorage
-            localStorage.setItem('currentExam', JSON.stringify(examData));
-            
-            // Initialize question counter
-            localStorage.setItem('currentQuestionIndex', '0');
-            localStorage.setItem('currentSubject', examData.subjects[0]);
-            localStorage.setItem('currentSection', '0');
-            
-            // Redirect to add questions page
-            window.location.href = 'add-question-advanced.html';
+            // Update the paper in the database
+            fetch(`/api/papers/${examData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    subjectSections: examData.subjectSections,
+                    subjectDetails: examData.subjectDetails
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Save updated exam data to localStorage
+                    localStorage.setItem('currentExam', JSON.stringify(data.paper));
+                    
+                    // Initialize question counter
+                    localStorage.setItem('currentQuestionIndex', '0');
+                    localStorage.setItem('currentSubject', examData.subjects[0]);
+                    localStorage.setItem('currentSection', '0');
+                    
+                    // Redirect to add questions page
+                    window.location.href = 'add-question-advanced.html';
+                } else {
+                    alert('Error updating paper: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update paper. Please try again.');
+            });
         });
         
         document.getElementById('back-btn').addEventListener('click', function() {
