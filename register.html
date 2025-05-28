@@ -6,12 +6,23 @@
     <meta name="description" content="Register for PrepSharp - the ultimate exam preparation platform for JEE, NEET and other competitive exams.">
     <title>Register - PrepSharp</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Responsive override for this page if needed */
+        @media (max-width: 900px) {
+            .banner {
+                display: none;
+            }
+            .register-flex {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="register-flex">
         <div class="banner">
             <div class="logo">
-                <img src="logo for index (1).png" alt="PrepSharp Logo">
+                <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px;">
             </div>
             <h1>PrepSharp - Prepare Smarter</h1>
             <h2>Join the PrepSharp Community</h2>
@@ -45,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label for="mobile">Mobile Number</label>
-                        <input type="text" id="mobile" placeholder="Enter your mobile number" required>
+                        <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -74,7 +85,8 @@
             const confirmPassword = document.getElementById('confirm-password').value;
             const errorMessage = document.getElementById('error-message');
             errorMessage.style.display = 'none';
-            if (!name || !email || !mobile || !password) {
+
+            if (!name || !email || !mobile || !password || !confirmPassword) {
                 errorMessage.textContent = 'All fields are required';
                 errorMessage.style.display = 'block';
                 return;
@@ -84,21 +96,19 @@
                 errorMessage.style.display = 'block';
                 return;
             }
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Registering...';
-            setTimeout(() => {
-                const mockUser = {
-                    id: Date.now().toString(),
-                    name: name,
-                    email: email,
-                    mobile: mobile,
-                    stream: '',
-                    profileComplete: false
-                };
-                localStorage.setItem('currentUser', JSON.stringify(mockUser));
-                window.location.href = 'profile-setup.html';
-            }, 1000);
+
+            // Save to localStorage (simulate database for demo)
+            const mockUser = {
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                mobile: mobile,
+                stream: '',
+                profileComplete: false
+            };
+            localStorage.setItem('currentUser', JSON.stringify(mockUser));
+            // Redirect to profile setup or dashboard
+            window.location.href = 'profile-setup.html';
         });
     </script>
 </body>
