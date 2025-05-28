@@ -290,8 +290,9 @@
         </div>
     </div>
 
-    <!-- PDF upload and screenshot functionality -->
-    <script src="screenshot-helper.js"></script>
+    <!-- Direct screenshot functionality -->
+    <script src="html2canvas.min.js"></script>
+    <script src="direct-capture.js"></script>
     </script>
     <script>
         // Check if exam data exists
@@ -395,7 +396,17 @@
                     totalQuestions += subject.questionCount;
                 });
                 
-                if (questionCounter >= totalQuestions) {
+                // Calculate the actual total questions completed
+                let completedQuestionCount = 0;
+                examData.subjects.forEach(subject => {
+                    if (subject === currentSubject) {
+                        completedQuestionCount += currentQuestionIndex + 1;
+                    } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                        completedQuestionCount += examData.subjectDetails[subject].questionCount;
+                    }
+                });
+                
+                if (completedQuestionCount >= totalQuestions) {
                     // Save final data
                     localStorage.setItem('currentExam', JSON.stringify(examData));
                     
