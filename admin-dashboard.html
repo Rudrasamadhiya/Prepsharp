@@ -363,6 +363,11 @@
             }
         });
         
+        // Dashboard Editor functionality
+        document.getElementById('edit-dashboard-btn').addEventListener('click', function() {
+            document.getElementById('dashboardEditorModal').style.display = 'block';
+        });
+        
         // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', function() {
             sessionStorage.removeItem('adminLoggedIn');
