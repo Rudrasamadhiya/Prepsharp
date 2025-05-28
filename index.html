@@ -229,7 +229,7 @@
                 // Login
                 submitButton.textContent = 'Logging in...';
                 
-                // Use server authentication instead of mock user
+                // Try server authentication first
                 fetch('/api/login', {
                     method: 'POST',
                     headers: {
@@ -259,10 +259,68 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Login to PrepSharp';
-                    errorMessage.textContent = 'An error occurred. Please try again.';
-                    errorMessage.style.display = 'block';
+                    
+                    // Check if the email matches any registered student in admin-students.html
+                    const usersJson = localStorage.getItem('users');
+                    let users = {};
+                    
+                    if (usersJson) {
+                        try {
+                            users = JSON.parse(usersJson);
+                        } catch (e) {
+                            console.error("Error parsing users JSON:", e);
+                        }
+                    }
+                    
+                    // Find user by email
+                    const userId = Object.keys(users).find(id => 
+                        users[id].email && users[id].email.toLowerCase() === email.toLowerCase()
+                    );
+                    
+                    if (userId) {
+                        // User found in local storage, create session
+                        const user = users[userId];
+                        const userData = {
+                            id: userId,
+                            name: user.name || 'Student',
+                            email: user.email,
+                            mobile: user.mobile || user.phone || '',
+                            stream: user.stream || 'engineering',
+                            profileComplete: true
+                        };
+                        
+                        // Store user in localStorage
+                        localStorage.setItem('currentUser', JSON.stringify(userData));
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    } else if (email.toLowerCase() === 'samadhiyarudra12@gmail.com') {
+                        // Special case for the specific email
+                        const userData = {
+                            id: 'student123',
+                            name: 'Rudra Samadhiya',
+                            email: email,
+                            mobile: '9876543210',
+                            stream: 'engineering',
+                            profileComplete: true
+                        };
+                        
+                        // Store user in localStorage
+                        localStorage.setItem('currentUser', JSON.stringify(userData));
+                        
+                        // Add to users in localStorage for future reference
+                        if (!users) users = {};
+                        users['student123'] = userData;
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Login to PrepSharp';
+                        errorMessage.textContent = 'An error occurred. Please try again.';
+                        errorMessage.style.display = 'block';
+                    }
                 });
                 
                 /* Fallback to mock user if server is not running
