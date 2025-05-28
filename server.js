@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { sendOTP, verifyOTP } = require('./otp-service');
 const app = express();
 
 app.use(express.json());
@@ -30,6 +31,13 @@ try {
   if (!fs.existsSync(PAPERS_DB_PATH)) {
     fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify([]));
     console.log('Created papers.json file');
+  }
+  
+  // Create temp-users.json for storing unverified users
+  const TEMP_USERS_PATH = path.join(__dirname, 'db', 'temp-users.json');
+  if (!fs.existsSync(TEMP_USERS_PATH)) {
+    fs.writeFileSync(TEMP_USERS_PATH, JSON.stringify({}));
+    console.log('Created temp-users.json file');
   }
 } catch (error) {
   console.error('Error creating database files:', error);
@@ -79,22 +87,45 @@ app.post('/api/login', (req, res) => {
   });
 });
 
-// Registration endpoint - always returns success
-app.post('/api/register', (req, res) => {
+// Registration endpoint - sends OTP for verification
+app.post('/api/register', async (req, res) => {
   const { name, email, mobile } = req.body;
   
-  // Always return success
-  res.json({ 
-    success: true, 
-    message: 'Registration successful',
-    user: {
-      id: '12345',
-      name: name,
-      email: email,
-      mobile: mobile,
-      profileComplete: false
+  try {
+    // Generate and send OTP
+    const result = await sendOTP(email);
+    
+    if (result.success) {
+      // Store user data temporarily (should use database in production)
+      const tempUsers = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'temp-users.json'), 'utf8') || '{}');
+      
+      tempUsers[email] = {
+        name,
+        email,
+        mobile,
+        createdAt: Date.now()
+      };
+      
+      fs.writeFileSync(path.join(__dirname, 'db', 'temp-users.json'), JSON.stringify(tempUsers, null, 2));
+      
+      res.json({ 
+        success: true, 
+        message: 'OTP sent to your email',
+        email: email
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to send verification email'
+      });
     }
-  });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred during registration'
+    });
+  }
 });
 
 // Profile setup endpoint - always returns success
@@ -323,6 +354,128 @@ app.post('/api/papers/:paperId/questions', (req, res) => {
 // Serve static files
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, req.path));
+});
+
+// Verify OTP endpoint
+app.post('/api/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  
+  if (!email || !otp) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email and OTP are required'
+    });
+  }
+  
+  // Verify OTP
+  const result = verifyOTP(email, otp);
+  
+  if (result.success) {
+    try {
+      // Get temp user data
+      const tempUsersPath = path.join(__dirname, 'db', 'temp-users.json');
+      const tempUsers = JSON.parse(fs.readFileSync(tempUsersPath, 'utf8') || '{}');
+      
+      if (!tempUsers[email]) {
+        return res.status(400).json({
+          success: false,
+          message: 'User registration data not found'
+        });
+      }
+      
+      // Move user from temp to permanent storage
+      const users = getUsers();
+      const userId = Date.now().toString();
+      
+      users[userId] = {
+        id: userId,
+        name: tempUsers[email].name,
+        email: email,
+        mobile: tempUsers[email].mobile,
+        verified: true,
+        profileComplete: false,
+        createdAt: Date.now()
+      };
+      
+      // Save user
+      saveUsers(users);
+      
+      // Remove from temp storage
+      delete tempUsers[email];
+      fs.writeFileSync(tempUsersPath, JSON.stringify(tempUsers, null, 2));
+      
+      // Return success with user data
+      res.json({
+        success: true,
+        message: 'Email verified successfully',
+        redirectUrl: 'profile-setup.html',
+        user: {
+          id: userId,
+          name: users[userId].name,
+          email: users[userId].email,
+          mobile: users[userId].mobile,
+          profileComplete: false
+        }
+      });
+    } catch (error) {
+      console.error('Error during verification:', error);
+      res.status(500).json({
+        success: false,
+        message: 'An error occurred during verification'
+      });
+    }
+  } else {
+    res.status(400).json({
+      success: false,
+      message: result.message
+    });
+  }
+});
+
+// Resend OTP endpoint
+app.post('/api/resend-otp', async (req, res) => {
+  const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email is required'
+    });
+  }
+  
+  try {
+    // Check if user exists in temp storage
+    const tempUsersPath = path.join(__dirname, 'db', 'temp-users.json');
+    const tempUsers = JSON.parse(fs.readFileSync(tempUsersPath, 'utf8') || '{}');
+    
+    if (!tempUsers[email]) {
+      return res.status(400).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    // Generate and send new OTP
+    const result = await sendOTP(email);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'OTP resent successfully'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email'
+      });
+    }
+  } catch (error) {
+    console.error('Error resending OTP:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while resending OTP'
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
