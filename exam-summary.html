@@ -243,13 +243,30 @@
             const examId = `${examData.type}-${examData.year}${examData.paperNumber ? '-p' + examData.paperNumber : ''}-${Date.now()}`;
             
             // Get existing exams or create new object
-            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
+            let exams = {};
+            try {
+                const existingExams = localStorage.getItem('exams');
+                if (existingExams) {
+                    exams = JSON.parse(existingExams);
+                }
+            } catch (error) {
+                console.error('Error parsing exams from localStorage:', error);
+                exams = {};
+            }
             
             // Add new exam
             exams[examId] = examData;
             
             // Save back to localStorage
-            localStorage.setItem('exams', JSON.stringify(exams));
+            try {
+                localStorage.setItem('exams', JSON.stringify(exams));
+                console.log('Exam saved successfully with ID:', examId);
+                console.log('Current exams in storage:', Object.keys(exams).length);
+            } catch (error) {
+                console.error('Error saving exams to localStorage:', error);
+                alert('Error saving exam. Please try again.');
+                return;
+            }
             
             // Clear current exam data
             localStorage.removeItem('currentExam');
