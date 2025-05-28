@@ -224,29 +224,36 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Logging in...';
             
-            // GitHub Pages doesn't support server-side code, so we'll use localStorage directly
-            try {
-                // Store user in localStorage
-                const user = {
-                    id: '12345',
-                    name: 'Test User',
-                    email: email,
-                    mobile: '1234567890',
-                    stream: 'engineering',
-                    profileComplete: true
-                };
-                
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-            } catch (error) {
+            // Send login request to server
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store user in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Login to PrepSharp';
+                    errorMessage.textContent = data.message || 'Invalid email or password';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 submitButton.disabled = false;
                 submitButton.textContent = 'Login to PrepSharp';
                 errorMessage.textContent = 'An error occurred. Please try again.';
                 errorMessage.style.display = 'block';
-            }
+            });
         });
     </script>
 </body>
