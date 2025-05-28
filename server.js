@@ -275,6 +275,23 @@ app.get('/api/user/:id', (req, res) => {
   });
 });
 
+// Get all users endpoint
+app.get('/api/users', (req, res) => {
+  try {
+    const users = getUsers();
+    res.json({
+      success: true,
+      users: users
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch users'
+    });
+  }
+});
+
 // Save exam result endpoint
 app.post('/api/results', (req, res) => {
   const result = req.body;
