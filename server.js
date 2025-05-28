@@ -189,6 +189,62 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Check if email exists endpoint
+app.get('/api/check-email', (req, res) => {
+  const email = req.query.email;
+  
+  if (!email) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Email parameter is required'
+    });
+  }
+  
+  try {
+    const users = getUsers();
+    const exists = Object.values(users).some(user => user.email === email);
+    
+    res.json({
+      success: true,
+      exists: exists
+    });
+  } catch (error) {
+    console.error('Error checking email:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred while checking email'
+    });
+  }
+});
+
+// Check if mobile exists endpoint
+app.get('/api/check-mobile', (req, res) => {
+  const mobile = req.query.mobile;
+  
+  if (!mobile) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Mobile parameter is required'
+    });
+  }
+  
+  try {
+    const users = getUsers();
+    const exists = Object.values(users).some(user => user.mobile === mobile);
+    
+    res.json({
+      success: true,
+      exists: exists
+    });
+  } catch (error) {
+    console.error('Error checking mobile:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred while checking mobile'
+    });
+  }
+});
+
 // Registration endpoint - direct registration without OTP
 app.post('/api/register', async (req, res) => {
   const { name, email, mobile, password } = req.body;
@@ -196,12 +252,22 @@ app.post('/api/register', async (req, res) => {
   try {
     // Check if user already exists
     const users = getUsers();
-    const existingUser = Object.values(users).find(user => user.email === email);
+    const existingEmail = Object.values(users).find(user => user.email === email);
     
-    if (existingUser) {
+    if (existingEmail) {
       return res.status(400).json({ 
         success: false, 
         message: 'Email already registered'
+      });
+    }
+    
+    // Check if mobile already exists
+    const existingMobile = Object.values(users).find(user => user.mobile === mobile);
+    
+    if (existingMobile) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Mobile number already registered'
       });
     }
     
