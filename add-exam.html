@@ -395,7 +395,12 @@
                 },
                 body: JSON.stringify(examData)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Store the paper data including the generated ID and name
@@ -416,12 +421,40 @@
                         window.location.href = 'subject-setup.html';
                     }
                 } else {
-                    alert('Error creating paper: ' + data.message);
+                    console.error('API Error:', data.message);
+                    alert('Error creating paper: ' + (data.message || 'Unknown error'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to create paper. Please try again.');
+                
+                // Fallback for server connection issues
+                if (error.message === "Failed to fetch" || error.message.includes("NetworkError")) {
+                    // Create a local paper object with a temporary ID
+                    const tempPaper = {
+                        ...examData,
+                        id: 'temp_' + Date.now(),
+                        name: `${examType.toUpperCase()} ${examYear}`,
+                        createdAt: new Date().toISOString(),
+                        questions: []
+                    };
+                    
+                    // Store it locally
+                    localStorage.setItem('currentExam', JSON.stringify(tempPaper));
+                    
+                    // Proceed with the flow
+                    if (examType === 'jee-advanced') {
+                        window.location.href = 'advanced-exam-setup.html';
+                    } else if (examType === 'jee-main' || examType === 'neet') {
+                        localStorage.setItem('currentQuestionIndex', '0');
+                        localStorage.setItem('currentSubject', examData.subjects[0]);
+                        window.location.href = 'add-question.html';
+                    } else {
+                        window.location.href = 'subject-setup.html';
+                    }
+                } else {
+                    alert('Failed to create paper. Please try again. Error: ' + error.message);
+                }
             });
             
             // This code is now handled in the fetch promise
