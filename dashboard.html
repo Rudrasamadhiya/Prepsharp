@@ -320,12 +320,7 @@
             const sidebarOverlay = document.getElementById('sidebar-overlay');
             const logoContainer = document.getElementById('logo-container');
             
-            // Toggle sidebar when clicking on logo
-            logoContainer.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            });
+            // Logo container click handler removed - now only hamburger icon toggles sidebar
             
             // Close sidebar when clicking outside
             sidebarOverlay.addEventListener('click', function() {
