@@ -56,11 +56,21 @@ try {
 
 // Helper functions for database operations
 function getUsers() {
-  return JSON.parse(fs.readFileSync(USERS_DB_PATH));
+  try {
+    const data = fs.readFileSync(USERS_DB_PATH, 'utf8');
+    return data ? JSON.parse(data) : {};
+  } catch (error) {
+    console.error('Error reading users database:', error);
+    return {};
+  }
 }
 
 function saveUsers(users) {
-  fs.writeFileSync(USERS_DB_PATH, JSON.stringify(users, null, 2));
+  try {
+    fs.writeFileSync(USERS_DB_PATH, JSON.stringify(users, null, 2));
+  } catch (error) {
+    console.error('Error saving users database:', error);
+  }
 }
 
 function getResults() {
