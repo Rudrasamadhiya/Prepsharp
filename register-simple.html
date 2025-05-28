@@ -19,6 +19,20 @@
       color: red;
       margin-top: 10px;
     }
+    /* Fix for mobile number input styling */
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    input[type="tel"]:focus {
+      border-color: #1976d2;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+    }
   </style>
 </head>
 <body>
