@@ -5,163 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Register for PrepSharp - the ultimate exam preparation platform for JEE, NEET and other competitive exams.">
     <title>Register - PrepSharp</title>
-    <style>
-        :root {
-            --primary-color: #1976d2;
-            --secondary-color: #42a5f5;
-            --background-color: #f5f5f5;
-            --text-color: #212121;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-        .register-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .register-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-        }
-        .banner {
-            flex: 1;
-            background-color: var(--primary-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: var(--primary-color);
-            text-align: center;
-        }
-        .banner h1, .banner h2 {
-            color: white;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            background-color: var(--primary-color);
-            color: white;
-            margin-top: 10px;
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .login-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        .error-message {
-            color: #f44336;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        .logo {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            .banner {
-                padding: 40px 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="banner">
-        <div class="logo">
-            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 200px;">
+    <div style="display: flex; min-height: 100vh;">
+        <div class="banner" style="flex: 1;">
+            <div class="logo">
+                <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 200px;">
+            </div>
+            <h1>PrepSharp - Prepare Smarter</h1>
+            <h2>Join the PrepSharp Community</h2>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <div>Practice with past year papers</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div>Track your performance</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <div>Focus on your weak areas</div>
+                </div>
+            </div>
         </div>
-        <h1>PrepSharp - Prepare Smarter</h1>
-        <h2>Join Our Exam Preparation Platform</h2>
-    </div>
-    
-    <div class="register-container">
-        <div class="register-card">
-            <h1>Create Your PrepSharp Account</h1>
-            <p style="text-align: center;">Join thousands of students preparing for competitive exams with PrepSharp.</p>
-            
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" placeholder="Enter your full name" required>
+        
+        <div class="login-container">
+            <div class="login-card">
+                <h1>Create Your Account</h1>
+                <p style="text-align: center;">Join PrepSharp to start your preparation journey for competitive exams.</p>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="text" id="mobile" placeholder="Enter your mobile number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Create a password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Register with PrepSharp</button>
+                    
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                </form>
+                
+                <div class="register-link">
+                    Already have an account? <a href="index.html">Login to PrepSharp</a>
                 </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email address" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Create a password" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
-                </div>
-                
-                <button type="submit" class="btn">Register with PrepSharp</button>
-                
-                <div id="error-message" class="error-message"></div>
-            </form>
-            
-            <div class="login-link">
-                Already have an account? <a href="index.html">Login to PrepSharp</a>
             </div>
         </div>
     </div>
@@ -181,7 +90,7 @@
             errorMessage.style.display = 'none';
             
             // Validate inputs
-            if (!name || !email || !mobile || !password || !confirmPassword) {
+            if (!name || !email || !mobile || !password) {
                 errorMessage.textContent = 'All fields are required';
                 errorMessage.style.display = 'block';
                 return;
@@ -198,28 +107,33 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Registering...';
             
-            // GitHub Pages doesn't support server-side code, so we'll use localStorage directly
-            try {
-                // Store user in localStorage
-                const user = {
-                    id: Date.now().toString(),
-                    name: name,
-                    email: email,
-                    mobile: mobile,
-                    profileComplete: false
-                };
-                
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Redirect to profile setup
-                window.location.href = 'profile-setup.html';
-            } catch (error) {
+            // Send registration request to server
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, mobile, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to OTP verification page
+                    window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
+                } else {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Register with PrepSharp';
+                    errorMessage.textContent = data.message || 'Registration failed';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 submitButton.disabled = false;
                 submitButton.textContent = 'Register with PrepSharp';
                 errorMessage.textContent = 'An error occurred. Please try again.';
                 errorMessage.style.display = 'block';
-            }
+            });
         });
     </script>
 </body>
