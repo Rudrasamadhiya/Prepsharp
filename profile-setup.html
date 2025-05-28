@@ -67,6 +67,31 @@
             border-radius: 10px;
             margin-left: 10px;
         }
+        .stream-selection {
+            margin-top: 20px;
+        }
+        .stream-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stream-option:hover {
+            border-color: var(--secondary-color);
+        }
+        .stream-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(25, 118, 210, 0.05);
+        }
+        .stream-option h3 {
+            margin-top: 0;
+        }
+        .stream-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +101,8 @@
             <div id="error-message" class="message error"></div>
             
             <h1>Complete Your Profile</h1>
+            <p>Please provide your details to personalize your PrepSharp experience.</p>
+            
             <form id="profile-form">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
@@ -87,15 +114,20 @@
                     <input type="tel" id="phone" name="phone" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="stream">Stream</label>
-                    <select id="stream" name="stream" required>
-                        <option value="">Select your stream</option>
-                        <option value="engineering">Engineering</option>
-                        <option value="medical">Medical</option>
-                        <option value="commerce">Commerce</option>
-                        <option value="arts">Arts</option>
-                    </select>
+                <div class="form-group stream-selection">
+                    <label>Select Your Stream</label>
+                    
+                    <div class="stream-option" data-stream="engineering" onclick="selectStream(this, 'engineering')">
+                        <h3>🔧 Engineering</h3>
+                        <p>Prepare for JEE Main, JEE Advanced, BITSAT and other engineering entrance exams</p>
+                    </div>
+                    
+                    <div class="stream-option" data-stream="medical" onclick="selectStream(this, 'medical')">
+                        <h3>⚕️ Medical</h3>
+                        <p>Prepare for NEET, AIIMS and other medical entrance exams</p>
+                    </div>
+                    
+                    <input type="hidden" id="stream" name="stream" required>
                 </div>
                 
                 <div class="form-group">
@@ -106,7 +138,6 @@
                         <option value="12">Class 12</option>
                         <option value="dropper">Dropper</option>
                         <option value="college">College</option>
-                        <option value="phd">PhD</option>
                     </select>
                 </div>
                 
@@ -147,6 +178,20 @@
             document.getElementById('success-message').style.display = 'none';
         }
         
+        // Stream selection
+        function selectStream(element, stream) {
+            // Remove selected class from all options
+            document.querySelectorAll('.stream-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Set hidden input value
+            document.getElementById('stream').value = stream;
+        }
+        
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) {
@@ -171,6 +216,19 @@
                 if (user.mobile) {
                     document.getElementById('phone').value = user.mobile;
                 }
+                
+                // Pre-select stream if available
+                if (user.stream) {
+                    const streamOption = document.querySelector(`.stream-option[data-stream="${user.stream}"]`);
+                    if (streamOption) {
+                        selectStream(streamOption, user.stream);
+                    }
+                }
+                
+                // Pre-select class if available
+                if (user.class) {
+                    document.getElementById('class').value = user.class;
+                }
             } catch (e) {
                 console.error('Error loading user data:', e);
             }
@@ -179,21 +237,33 @@
         document.getElementById('profile-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Validate stream selection
+            const selectedStream = document.getElementById('stream').value;
+            if (!selectedStream) {
+                showError('Please select your stream');
+                return;
+            }
+            
             try {
                 const user = JSON.parse(localStorage.getItem('currentUser'));
                 
                 // Add profile information
-                user.fullName = document.getElementById('fullName').value;
-                user.phone = document.getElementById('phone').value;
-                user.stream = document.getElementById('stream').value;
+                user.name = document.getElementById('fullName').value;
+                user.mobile = document.getElementById('phone').value;
+                user.stream = selectedStream;
                 user.class = document.getElementById('class').value;
                 user.referral = document.getElementById('referral').value;
                 user.profileComplete = true;
                 
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
+                // Show success message briefly before redirecting
+                showSuccess('Profile setup complete! Redirecting to dashboard...');
+                
+                // Redirect to dashboard after a short delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
             } catch (e) {
                 console.error('Error saving profile:', e);
                 showError('Error saving your profile. Please try again.');
