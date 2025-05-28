@@ -3,163 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification</title>
+    <title>Email Verification - PrepSharp</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .container {
-            max-width: 500px;
+        .otp-container {
+            max-width: 400px;
             margin: 50px auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
         }
-        .form-group {
-            margin-bottom: 15px;
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            font-size: 24px;
+            text-align: center;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
+        .timer {
+            margin-top: 20px;
+            color: #666;
+        }
+        .resend-btn {
+            background: none;
             border: none;
-            border-radius: 4px;
+            color: var(--primary-color);
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .hidden {
-            display: none;
-        }
-        .message {
-            padding: 10px;
+            text-decoration: underline;
             margin-top: 10px;
-            border-radius: 4px;
+            font-size: 14px;
         }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
+        .resend-btn:disabled {
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>OTP Verification</h1>
+    <div class="otp-container card">
+        <div class="logo-container">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 150px;">
+        </div>
+        <h2>Email Verification</h2>
+        <p>We've sent a verification code to <span id="user-email">your email</span></p>
         
-        <div id="phone-form">
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number (with country code):</label>
-                <input type="tel" id="phoneNumber" placeholder="+1234567890" required>
-            </div>
-            <button id="sendOtp">Send OTP</button>
-            <div id="sendMessage" class="message hidden"></div>
+        <div class="otp-inputs">
+            <input type="text" class="otp-input" maxlength="1" autofocus>
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
         </div>
         
-        <div id="otp-form" class="hidden">
-            <div class="form-group">
-                <label for="otp">Enter OTP:</label>
-                <input type="text" id="otp" placeholder="6-digit OTP" required>
-            </div>
-            <button id="verifyOtp">Verify OTP</button>
-            <div id="verifyMessage" class="message hidden"></div>
+        <div class="timer">Code expires in <span id="countdown">10:00</span></div>
+        
+        <button id="verify-btn" class="btn primary">Verify</button>
+        
+        <div>
+            <button id="resend-btn" class="resend-btn" disabled>Resend code</button>
         </div>
+        
+        <div id="error-message" class="error-message" style="display: none;"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const phoneForm = document.getElementById('phone-form');
-            const otpForm = document.getElementById('otp-form');
-            const sendOtpBtn = document.getElementById('sendOtp');
-            const verifyOtpBtn = document.getElementById('verifyOtp');
-            const phoneNumberInput = document.getElementById('phoneNumber');
-            const otpInput = document.getElementById('otp');
-            const sendMessage = document.getElementById('sendMessage');
-            const verifyMessage = document.getElementById('verifyMessage');
+            // Get email from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
             
-            // Send OTP
-            sendOtpBtn.addEventListener('click', async function() {
-                const phoneNumber = phoneNumberInput.value.trim();
-                if (!phoneNumber) {
-                    showMessage(sendMessage, 'Please enter a valid phone number', 'error');
+            if (email) {
+                document.getElementById('user-email').textContent = email;
+            }
+            
+            // OTP input handling
+            const inputs = document.querySelectorAll('.otp-input');
+            
+            inputs.forEach((input, index) => {
+                // Auto-focus next input
+                input.addEventListener('input', function() {
+                    if (this.value.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // Countdown timer
+            let timeLeft = 10 * 60; // 10 minutes in seconds
+            const countdownEl = document.getElementById('countdown');
+            const resendBtn = document.getElementById('resend-btn');
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    countdownEl.textContent = '0:00';
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+            
+            // Verify button click
+            document.getElementById('verify-btn').addEventListener('click', function() {
+                const otp = Array.from(inputs).map(input => input.value).join('');
+                
+                if (otp.length !== 6) {
+                    showError('Please enter all 6 digits');
                     return;
                 }
                 
-                try {
-                    const response = await fetch('/api/send-otp', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ phoneNumber })
-                    });
-                    
-                    const data = await response.json();
-                    
+                // Show loading state
+                this.disabled = true;
+                this.textContent = 'Verifying...';
+                
+                // Send verification request to server
+                fetch('/api/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, otp })
+                })
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
-                        showMessage(sendMessage, data.message, 'success');
-                        phoneForm.classList.add('hidden');
-                        otpForm.classList.remove('hidden');
+                        // Redirect to profile setup or dashboard
+                        window.location.href = data.redirectUrl || 'profile-setup.html';
                     } else {
-                        showMessage(sendMessage, data.message, 'error');
+                        showError(data.message || 'Invalid verification code');
+                        this.disabled = false;
+                        this.textContent = 'Verify';
                     }
-                } catch (error) {
-                    showMessage(sendMessage, 'Failed to send OTP. Please try again.', 'error');
-                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('An error occurred. Please try again.');
+                    this.disabled = false;
+                    this.textContent = 'Verify';
+                });
             });
             
-            // Verify OTP
-            verifyOtpBtn.addEventListener('click', async function() {
-                const phoneNumber = phoneNumberInput.value.trim();
-                const otp = otpInput.value.trim();
+            // Resend button click
+            resendBtn.addEventListener('click', function() {
+                this.disabled = true;
+                this.textContent = 'Sending...';
                 
-                if (!otp) {
-                    showMessage(verifyMessage, 'Please enter the OTP', 'error');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/api/verify-otp', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ phoneNumber, otp })
-                    });
-                    
-                    const data = await response.json();
-                    
+                // Request new OTP
+                fetch('/api/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                })
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
-                        showMessage(verifyMessage, data.message, 'success');
-                        // Redirect or show success page after successful verification
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
+                        // Reset timer
+                        timeLeft = 10 * 60;
+                        this.textContent = 'Resend code';
+                        
+                        // Clear inputs
+                        inputs.forEach(input => input.value = '');
+                        inputs[0].focus();
                     } else {
-                        showMessage(verifyMessage, data.message, 'error');
+                        this.disabled = false;
+                        showError(data.message || 'Failed to resend code');
                     }
-                } catch (error) {
-                    showMessage(verifyMessage, 'Failed to verify OTP. Please try again.', 'error');
-                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.disabled = false;
+                    this.textContent = 'Resend code';
+                    showError('An error occurred. Please try again.');
+                });
             });
             
-            function showMessage(element, message, type) {
-                element.textContent = message;
-                element.className = `message ${type}`;
-                element.classList.remove('hidden');
+            function showError(message) {
+                const errorEl = document.getElementById('error-message');
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                
+                setTimeout(() => {
+                    errorEl.style.display = 'none';
+                }, 5000);
             }
         });
     </script>
