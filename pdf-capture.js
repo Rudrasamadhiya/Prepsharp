@@ -16,6 +16,7 @@ const PDFCapture = {
                 
                 // Store PDF URL
                 localStorage.setItem('pdfUrl', url);
+                localStorage.setItem('pdfOpened', 'true');
                 
                 // Open PDF in a new window
                 PDFCapture.pdfWindow = window.open(url, 'pdfWindow', 'width=800,height=600');
@@ -40,18 +41,31 @@ const PDFCapture = {
         // Store callback
         this.currentCallback = callback;
         
-        // Focus PDF window
-        if (this.pdfWindow && !this.pdfWindow.closed) {
-            this.pdfWindow.focus();
-            
-            // Show instructions
-            alert('Use Win+Shift+S to capture a screenshot from the PDF, then press Ctrl+V to paste it here.');
-            
-            // Set up paste event listener
-            document.addEventListener('paste', this.handlePaste);
-        } else {
+        // Check if PDF is opened
+        if (localStorage.getItem('pdfOpened') !== 'true') {
             alert('Please open a PDF first');
+            return;
         }
+        
+        // Try to focus PDF window or open a new one if closed
+        if (!this.pdfWindow || this.pdfWindow.closed) {
+            const pdfUrl = localStorage.getItem('pdfUrl');
+            if (pdfUrl) {
+                this.pdfWindow = window.open(pdfUrl, 'pdfWindow', 'width=800,height=600');
+            } else {
+                alert('PDF not found. Please open a PDF first.');
+                return;
+            }
+        }
+        
+        // Focus PDF window
+        this.pdfWindow.focus();
+        
+        // Show instructions
+        alert('Use Win+Shift+S to capture a screenshot from the PDF, then press Ctrl+V to paste it here.');
+        
+        // Set up paste event listener
+        document.addEventListener('paste', this.handlePaste);
     },
     
     // Handle paste event
