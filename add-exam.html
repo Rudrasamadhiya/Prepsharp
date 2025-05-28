@@ -262,61 +262,42 @@
             const jeeMainDetails = document.getElementById('jee-main-details');
             const subjectsContainer = document.getElementById('subjects-container');
             
-            // Hide both containers first
+            // Hide containers first
             paperNumberContainer.style.display = 'none';
             jeeMainDetails.style.display = 'none';
-            subjectsContainer.style.display = 'block';
             
             // Reset all checkboxes
             document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
                 checkbox.checked = false;
-                checkbox.disabled = false;
             });
             
-            // Show appropriate container based on exam type
+            // Show/hide subjects container based on exam type
             if (this.value === 'jee-advanced') {
                 paperNumberContainer.style.display = 'block';
+                subjectsContainer.style.display = 'none';
                 
                 // Auto-select Physics, Chemistry, Mathematics for JEE Advanced
                 document.getElementById('physics').checked = true;
                 document.getElementById('chemistry').checked = true;
                 document.getElementById('mathematics').checked = true;
-                document.getElementById('biology').checked = false;
-                
-                // Disable subject checkboxes for JEE Advanced
-                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.disabled = true;
-                });
-                
-                subjectsContainer.style.display = 'none';
             } else if (this.value === 'jee-main') {
                 jeeMainDetails.style.display = 'block';
+                subjectsContainer.style.display = 'none';
                 
                 // Auto-select Physics, Chemistry, Mathematics for JEE Main
                 document.getElementById('physics').checked = true;
                 document.getElementById('chemistry').checked = true;
                 document.getElementById('mathematics').checked = true;
-                document.getElementById('biology').checked = false;
-                
-                // Disable subject checkboxes for JEE Main
-                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.disabled = true;
-                });
-                
-                subjectsContainer.style.display = 'none';
             } else if (this.value === 'neet') {
+                subjectsContainer.style.display = 'none';
+                
                 // Auto-select Physics, Chemistry, Biology for NEET
                 document.getElementById('physics').checked = true;
                 document.getElementById('chemistry').checked = true;
-                document.getElementById('mathematics').checked = false;
                 document.getElementById('biology').checked = true;
-                
-                // Disable subject checkboxes for NEET
-                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.disabled = true;
-                });
-                
-                subjectsContainer.style.display = 'none';
+            } else {
+                // For other exam types, show subject selection
+                subjectsContainer.style.display = 'block';
             }
         });
         
@@ -331,15 +312,25 @@
                 return;
             }
             
-            // Get selected subjects
-            const subjects = [];
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                subjects.push(checkbox.value);
-            });
+            // Get selected subjects or set default subjects based on exam type
+            let subjects = [];
             
-            if (subjects.length === 0) {
-                alert('Please select at least one subject');
-                return;
+            if (examType === 'jee-advanced') {
+                subjects = ['physics', 'chemistry', 'mathematics'];
+            } else if (examType === 'jee-main') {
+                subjects = ['physics', 'chemistry', 'mathematics'];
+            } else if (examType === 'neet') {
+                subjects = ['physics', 'chemistry', 'biology'];
+            } else {
+                // For other exam types, get selected subjects
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    subjects.push(checkbox.value);
+                });
+                
+                if (subjects.length === 0) {
+                    alert('Please select at least one subject');
+                    return;
+                }
             }
             
             // Save exam data to localStorage
@@ -368,6 +359,31 @@
                 examData.shift = examShift;
             }
             
+            // For JEE Main, set equal distribution of questions
+            if (examType === 'jee-main') {
+                const questionsPerSubject = Math.floor(totalQuestions / 3);
+                examData.subjectDetails = {
+                    physics: { questionCount: questionsPerSubject },
+                    chemistry: { questionCount: questionsPerSubject },
+                    mathematics: { questionCount: questionsPerSubject }
+                };
+            }
+            
+            // For NEET, set specific distribution (Physics: 45, Chemistry: 45, Biology: 90)
+            if (examType === 'neet') {
+                examData.subjectDetails = {
+                    physics: { questionCount: 45 },
+                    chemistry: { questionCount: 45 },
+                    biology: { questionCount: 90 }
+                };
+                
+                // Verify total questions is 180 for NEET
+                if (totalQuestions !== 180) {
+                    alert('NEET exam must have exactly 180 questions (45 Physics, 45 Chemistry, 90 Biology)');
+                    return;
+                }
+            }
+            
             // Create paper in database via API
             fetch('/api/papers', {
                 method: 'POST',
@@ -385,6 +401,14 @@
                     // Redirect to appropriate setup page based on exam type
                     if (examType === 'jee-advanced') {
                         window.location.href = 'advanced-exam-setup.html';
+                    } else if (examType === 'jee-main' || examType === 'neet') {
+                        // Skip subject-setup.html for JEE Main and NEET
+                        // Initialize question counter
+                        localStorage.setItem('currentQuestionIndex', '0');
+                        localStorage.setItem('currentSubject', examData.subjects[0]);
+                        
+                        // Go directly to add questions page
+                        window.location.href = 'add-question.html';
                     } else {
                         window.location.href = 'subject-setup.html';
                     }
