@@ -206,17 +206,57 @@
         return;
       }
       
-      // Create user and redirect
-      const user = {
-        id: Date.now().toString(),
-        name,
-        email,
-        mobile,
-        stream: '',
-        profileComplete: false
-      };
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      window.location.href = 'profile-setup.html';
+      // Show loading state
+      const submitButton = document.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Registering...';
+      
+      // Send data to server
+      fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, mobile, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Create local user and redirect
+          const user = {
+            id: data.user ? data.user.id : Date.now().toString(),
+            name,
+            email,
+            mobile,
+            stream: '',
+            profileComplete: false
+          };
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          window.location.href = 'profile-setup.html';
+        } else {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Register with PrepSharp';
+          errorMessage.textContent = data.message || 'Registration failed';
+          errorMessage.style.display = 'block';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        // Fallback to local storage if server is unavailable
+        submitButton.disabled = false;
+        submitButton.textContent = 'Register with PrepSharp';
+        
+        const user = {
+          id: Date.now().toString(),
+          name,
+          email,
+          mobile,
+          stream: '',
+          profileComplete: false
+        };
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        window.location.href = 'profile-setup.html';
+      });
     });
   </script>
 </body>
