@@ -188,7 +188,7 @@
                 <input type="number" id="total-questions" min="1" required>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" id="subjects-container">
                 <label>Subjects Included</label>
                 <div>
                     <input type="checkbox" id="physics" value="physics">
@@ -260,16 +260,63 @@
         document.getElementById('exam-type').addEventListener('change', function() {
             const paperNumberContainer = document.getElementById('paper-number-container');
             const jeeMainDetails = document.getElementById('jee-main-details');
+            const subjectsContainer = document.getElementById('subjects-container');
             
             // Hide both containers first
             paperNumberContainer.style.display = 'none';
             jeeMainDetails.style.display = 'none';
+            subjectsContainer.style.display = 'block';
+            
+            // Reset all checkboxes
+            document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.disabled = false;
+            });
             
             // Show appropriate container based on exam type
             if (this.value === 'jee-advanced') {
                 paperNumberContainer.style.display = 'block';
+                
+                // Auto-select Physics, Chemistry, Mathematics for JEE Advanced
+                document.getElementById('physics').checked = true;
+                document.getElementById('chemistry').checked = true;
+                document.getElementById('mathematics').checked = true;
+                document.getElementById('biology').checked = false;
+                
+                // Disable subject checkboxes for JEE Advanced
+                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.disabled = true;
+                });
+                
+                subjectsContainer.style.display = 'none';
             } else if (this.value === 'jee-main') {
                 jeeMainDetails.style.display = 'block';
+                
+                // Auto-select Physics, Chemistry, Mathematics for JEE Main
+                document.getElementById('physics').checked = true;
+                document.getElementById('chemistry').checked = true;
+                document.getElementById('mathematics').checked = true;
+                document.getElementById('biology').checked = false;
+                
+                // Disable subject checkboxes for JEE Main
+                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.disabled = true;
+                });
+                
+                subjectsContainer.style.display = 'none';
+            } else if (this.value === 'neet') {
+                // Auto-select Physics, Chemistry, Biology for NEET
+                document.getElementById('physics').checked = true;
+                document.getElementById('chemistry').checked = true;
+                document.getElementById('mathematics').checked = false;
+                document.getElementById('biology').checked = true;
+                
+                // Disable subject checkboxes for NEET
+                document.querySelectorAll('#subjects-container input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.disabled = true;
+                });
+                
+                subjectsContainer.style.display = 'none';
             }
         });
         
