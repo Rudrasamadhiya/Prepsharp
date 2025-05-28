@@ -189,44 +189,6 @@
                 }
             }
             
-            // Add demo users if no users found
-            if (Object.keys(users).length === 0) {
-                // Add current user if available
-                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-                
-                if (currentUser && currentUser.email) {
-                    users = {
-                        "user1": {
-                            name: currentUser.name || currentUser.fullName || 'Demo User',
-                            email: currentUser.email || 'user@example.com',
-                            mobile: currentUser.mobile || currentUser.phone || '9876543210',
-                            stream: currentUser.stream || 'Engineering',
-                            class: currentUser.class || '12th',
-                            createdAt: Date.now()
-                        }
-                    };
-                    
-                    // Add some demo users
-                    users["user2"] = {
-                        name: "Rahul Sharma",
-                        email: "rahul@example.com",
-                        mobile: "9876543211",
-                        stream: "Engineering",
-                        class: "12th",
-                        createdAt: Date.now() - 86400000
-                    };
-                    
-                    users["user3"] = {
-                        name: "Priya Patel",
-                        email: "priya@example.com",
-                        mobile: "9876543212",
-                        stream: "Medical",
-                        class: "12th",
-                        createdAt: Date.now() - 172800000
-                    };
-                }
-            }
-            
             displayUsers(users);
         }
         
