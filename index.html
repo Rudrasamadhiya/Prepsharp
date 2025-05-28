@@ -181,21 +181,12 @@
                     <input type="email" id="email" placeholder="Enter your email address" required>
                 </div>
                 
-                <div class="form-group password-group">
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password" required>
                 </div>
                 
-                <div class="form-group otp-group" style="display: none;">
-                    <label for="otp">Verification Code</label>
-                    <input type="text" id="otp" placeholder="Enter the code sent to your email" maxlength="6">
-                </div>
-                
                 <button type="submit" class="btn primary">Login to PrepSharp</button>
-                
-                <div class="login-options" style="margin-top: 15px; text-align: center;">
-                    <button type="button" id="toggle-login-method" class="btn text">Login with OTP instead</button>
-                </div>
                 
                 <div id="error-message" class="error-message"></div>
             </form>
@@ -218,21 +209,14 @@
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            const otp = document.getElementById('otp').value.trim();
             const errorMessage = document.getElementById('error-message');
             
             // Clear previous error messages
             errorMessage.style.display = 'none';
             
             // Validate inputs
-            if (!email) {
-                errorMessage.textContent = 'Email is required';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            if (!isOtpLogin && !password) {
-                errorMessage.textContent = 'Password is required';
+            if (!email || !password) {
+                errorMessage.textContent = 'Email and password are required';
                 errorMessage.style.display = 'block';
                 return;
             }
@@ -241,107 +225,8 @@
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             
-            if (isOtpLogin && !otp) {
-                // First step of OTP login - request OTP
-                submitButton.textContent = 'Sending code...';
-                
-                // For demo/testing, directly show OTP input without actual server call
-                otpGroup.style.display = 'block';
-                submitButton.textContent = 'Verify & Login';
-                submitButton.disabled = false;
-                errorMessage.textContent = 'Verification code sent to your email';
-                errorMessage.style.display = 'block';
-                errorMessage.style.color = '#4caf50'; // Green color for success
-                
-                /* Uncomment this for actual server integration
-                fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, loginMethod: 'otp' })
-                })
-                */
-                /* Uncomment this for actual server integration
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.requiresOTP) {
-                        // Show OTP input field
-                        otpGroup.style.display = 'block';
-                        submitButton.textContent = 'Verify & Login';
-                        submitButton.disabled = false;
-                        errorMessage.textContent = 'Verification code sent to your email';
-                        errorMessage.style.display = 'block';
-                        errorMessage.style.color = '#4caf50'; // Green color for success
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Send Verification Code';
-                        errorMessage.textContent = data.message || 'Failed to send verification code';
-                        errorMessage.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Send Verification Code';
-                    errorMessage.textContent = 'An error occurred. Please try again.';
-                    errorMessage.style.display = 'block';
-                });
-                */
-            } else if (isOtpLogin && otp) {
-                // Second step of OTP login - verify OTP
-                submitButton.textContent = 'Verifying...';
-                
-                // For demo/testing, directly log in without server verification
-                // Create a mock user
-                const mockUser = {
-                    id: '12345',
-                    name: 'Test User',
-                    email: email,
-                    mobile: '1234567890',
-                    stream: 'engineering',
-                    profileComplete: true
-                };
-                
-                // Store user in localStorage
-                localStorage.setItem('currentUser', JSON.stringify(mockUser));
-                
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-                
-                /* Uncomment this for actual server integration
-                fetch('/api/verify-otp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, otp, isLogin: true })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Store user in localStorage
-                        localStorage.setItem('currentUser', JSON.stringify(data.user));
-                        
-                        // Redirect to dashboard or profile setup
-                        window.location.href = data.redirectUrl || 'dashboard.html';
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Verify & Login';
-                        errorMessage.textContent = data.message || 'Invalid verification code';
-                        errorMessage.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Verify & Login';
-                    errorMessage.textContent = 'An error occurred. Please try again.';
-                    errorMessage.style.display = 'block';
-                });
-                */
-            } else {
-                // Regular password login
+            {
+                // Login
                 submitButton.textContent = 'Logging in...';
                 
                 // For demo/testing, directly log in without server verification
