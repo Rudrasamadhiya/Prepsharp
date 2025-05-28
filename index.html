@@ -328,6 +328,24 @@
                 // Second step of OTP login - verify OTP
                 submitButton.textContent = 'Verifying...';
                 
+                // For demo/testing, directly log in without server verification
+                // Create a mock user
+                const mockUser = {
+                    id: '12345',
+                    name: 'Test User',
+                    email: email,
+                    mobile: '1234567890',
+                    stream: 'engineering',
+                    profileComplete: true
+                };
+                
+                // Store user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(mockUser));
+                
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+                
+                /* Uncomment this for actual server integration
                 fetch('/api/verify-otp', {
                     method: 'POST',
                     headers: {
@@ -357,10 +375,29 @@
                     errorMessage.textContent = 'An error occurred. Please try again.';
                     errorMessage.style.display = 'block';
                 });
+                */
             } else {
                 // Regular password login
                 submitButton.textContent = 'Logging in...';
                 
+                // For demo/testing, directly log in without server verification
+                // Create a mock user
+                const mockUser = {
+                    id: '12345',
+                    name: 'Test User',
+                    email: email,
+                    mobile: '1234567890',
+                    stream: 'engineering',
+                    profileComplete: true
+                };
+                
+                // Store user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(mockUser));
+                
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+                
+                /* Uncomment this for actual server integration
                 fetch('/api/login', {
                     method: 'POST',
                     headers: {
@@ -395,6 +432,7 @@
                     errorMessage.textContent = 'An error occurred. Please try again.';
                     errorMessage.style.display = 'block';
                 });
+                */
             }
         });
     </script>
