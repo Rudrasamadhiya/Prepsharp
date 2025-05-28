@@ -68,30 +68,122 @@ function savePapers(papers) {
   fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify(papers, null, 2));
 }
 
-// Login endpoint - always returns success
-app.post('/api/login', (req, res) => {
-  const { email } = req.body;
+// Login endpoint - handles both regular login and OTP login
+app.post('/api/login', async (req, res) => {
+  const { email, password, loginMethod } = req.body;
   
-  // Always return success with user data
-  res.json({ 
-    success: true, 
-    message: 'Login successful',
-    user: {
-      id: '12345',
-      name: 'Test User',
-      email: email,
-      mobile: '1234567890',
-      stream: 'engineering',
-      profileComplete: true
+  // Get users from database
+  const users = getUsers();
+  
+  // Find user by email
+  const userId = Object.keys(users).find(id => users[id].email === email);
+  const user = userId ? users[userId] : null;
+  
+  if (loginMethod === 'otp') {
+    // OTP login flow
+    try {
+      // Send OTP for verification
+      const result = await sendOTP(email);
+      
+      if (result.success) {
+        res.json({ 
+          success: true, 
+          message: 'OTP sent to your email',
+          email: email,
+          requiresOTP: true
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          message: 'Failed to send verification email'
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'An error occurred during login'
+      });
     }
-  });
+  } else {
+    // Regular password login
+    if (!user) {
+      // User not found
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid email or password'
+      });
+    }
+    
+    // In a real app, you would verify the password hash here
+    // For demo, we'll just check if password exists
+    if (!password) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid email or password'
+      });
+    }
+    
+    // Check if user is verified
+    if (!user.verified) {
+      // Send OTP for verification
+      try {
+        const result = await sendOTP(email);
+        
+        if (result.success) {
+          return res.json({ 
+            success: true, 
+            message: 'Please verify your email first',
+            email: email,
+            requiresVerification: true
+          });
+        } else {
+          return res.status(500).json({ 
+            success: false, 
+            message: 'Failed to send verification email'
+          });
+        }
+      } catch (error) {
+        console.error('Verification error:', error);
+        return res.status(500).json({ 
+          success: false, 
+          message: 'An error occurred during verification'
+        });
+      }
+    }
+    
+    // Login successful
+    res.json({ 
+      success: true, 
+      message: 'Login successful',
+      user: {
+        id: userId,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile || '',
+        stream: user.stream || 'engineering',
+        profileComplete: user.profileComplete || false
+      }
+    });
+  }
 });
 
 // Registration endpoint - sends OTP for verification
 app.post('/api/register', async (req, res) => {
-  const { name, email, mobile } = req.body;
+  const { name, email, mobile, password } = req.body;
   
   try {
+    // Check if user already exists
+    const users = getUsers();
+    const existingUser = Object.values(users).find(user => user.email === email);
+    
+    if (existingUser) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Email already registered'
+      });
+    }
+    
     // Generate and send OTP
     const result = await sendOTP(email);
     
@@ -103,6 +195,7 @@ app.post('/api/register', async (req, res) => {
         name,
         email,
         mobile,
+        password, // In production, this should be hashed
         createdAt: Date.now()
       };
       
@@ -358,7 +451,7 @@ app.get('*', (req, res) => {
 
 // Verify OTP endpoint
 app.post('/api/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
+  const { email, otp, isLogin } = req.body;
   
   if (!email || !otp) {
     return res.status(400).json({
@@ -372,51 +465,89 @@ app.post('/api/verify-otp', (req, res) => {
   
   if (result.success) {
     try {
-      // Get temp user data
-      const tempUsersPath = path.join(__dirname, 'db', 'temp-users.json');
-      const tempUsers = JSON.parse(fs.readFileSync(tempUsersPath, 'utf8') || '{}');
+      // Get users from database
+      const users = getUsers();
       
-      if (!tempUsers[email]) {
-        return res.status(400).json({
-          success: false,
-          message: 'User registration data not found'
+      // Check if this is a login attempt or registration verification
+      if (isLogin) {
+        // Find user by email
+        const userId = Object.keys(users).find(id => users[id].email === email);
+        
+        if (!userId) {
+          return res.status(400).json({
+            success: false,
+            message: 'User not found'
+          });
+        }
+        
+        // Mark user as verified if not already
+        if (!users[userId].verified) {
+          users[userId].verified = true;
+          saveUsers(users);
+        }
+        
+        // Return success with user data
+        return res.json({
+          success: true,
+          message: 'Login successful',
+          redirectUrl: 'dashboard.html',
+          user: {
+            id: userId,
+            name: users[userId].name,
+            email: users[userId].email,
+            mobile: users[userId].mobile || '',
+            stream: users[userId].stream || 'engineering',
+            profileComplete: users[userId].profileComplete || false
+          }
+        });
+      } else {
+        // This is a registration verification
+        // Get temp user data
+        const tempUsersPath = path.join(__dirname, 'db', 'temp-users.json');
+        const tempUsers = JSON.parse(fs.readFileSync(tempUsersPath, 'utf8') || '{}');
+        
+        if (!tempUsers[email]) {
+          return res.status(400).json({
+            success: false,
+            message: 'User registration data not found'
+          });
+        }
+        
+        // Move user from temp to permanent storage
+        const userId = Date.now().toString();
+        
+        users[userId] = {
+          id: userId,
+          name: tempUsers[email].name,
+          email: email,
+          mobile: tempUsers[email].mobile,
+          password: tempUsers[email].password, // In production, this should be hashed
+          verified: true,
+          profileComplete: false,
+          createdAt: Date.now()
+        };
+        
+        // Save user
+        saveUsers(users);
+        
+        // Remove from temp storage
+        delete tempUsers[email];
+        fs.writeFileSync(tempUsersPath, JSON.stringify(tempUsers, null, 2));
+        
+        // Return success with user data
+        res.json({
+          success: true,
+          message: 'Email verified successfully',
+          redirectUrl: 'profile-setup.html',
+          user: {
+            id: userId,
+            name: users[userId].name,
+            email: users[userId].email,
+            mobile: users[userId].mobile,
+            profileComplete: false
+          }
         });
       }
-      
-      // Move user from temp to permanent storage
-      const users = getUsers();
-      const userId = Date.now().toString();
-      
-      users[userId] = {
-        id: userId,
-        name: tempUsers[email].name,
-        email: email,
-        mobile: tempUsers[email].mobile,
-        verified: true,
-        profileComplete: false,
-        createdAt: Date.now()
-      };
-      
-      // Save user
-      saveUsers(users);
-      
-      // Remove from temp storage
-      delete tempUsers[email];
-      fs.writeFileSync(tempUsersPath, JSON.stringify(tempUsers, null, 2));
-      
-      // Return success with user data
-      res.json({
-        success: true,
-        message: 'Email verified successfully',
-        redirectUrl: 'profile-setup.html',
-        user: {
-          id: userId,
-          name: users[userId].name,
-          email: users[userId].email,
-          mobile: users[userId].mobile,
-          profileComplete: false
-        }
-      });
     } catch (error) {
       console.error('Error during verification:', error);
       res.status(500).json({
