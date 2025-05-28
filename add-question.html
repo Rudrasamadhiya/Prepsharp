@@ -273,6 +273,15 @@
             PDFCapture.openPDF();
         });
         
+        // Check if PDF was previously opened and show capture buttons
+        if (localStorage.getItem('pdfOpened') === 'true') {
+            document.querySelectorAll('.upload-btn').forEach(btn => {
+                btn.style.display = 'block';
+            });
+            document.getElementById('pdf-btn').textContent = 'PDF Opened';
+            document.getElementById('pdf-btn').style.backgroundColor = '#1976d2';
+        }
+        
         document.getElementById('capture-question-btn').addEventListener('click', function() {
             PDFCapture.capture(function(imageData) {
                 document.getElementById('question-image').src = imageData;
