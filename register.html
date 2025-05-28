@@ -265,10 +265,9 @@
         return;
       }
       
-      // Check if email already exists in localStorage
-      const users = JSON.parse(localStorage.getItem('users') || '{}');
-      if (Object.values(users).some(user => user.email === email)) {
-        errorMessage.textContent = 'Email already registered';
+      // Form is valid if no custom validity messages are set
+      if (emailInput.validity.customError || mobileInput.validity.customError) {
+        errorMessage.textContent = 'Please fix the errors above';
         errorMessage.style.display = 'block';
         return;
       }
