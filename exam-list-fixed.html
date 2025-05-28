@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam List - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .btn.small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .exam-list {
+            margin-top: 20px;
+        }
+        .exam-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .exam-item:last-child {
+            border-bottom: none;
+        }
+        .exam-info h3 {
+            margin: 0 0 5px 0;
+        }
+        .exam-info p {
+            margin: 0;
+            color: #666;
+        }
+        .exam-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .debug-info {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
+            <h2 id="exam-type-header">PrepSharp - Exam List</h2>
+        </div>
+        <button id="dashboard-btn" class="btn">Dashboard</button>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" data-tab="practice">Practice Exams</div>
+                <div class="tab" data-tab="created">Created Exams</div>
+            </div>
+            
+            <div id="practice-exams" class="tab-content">
+                <div class="exam-list-header">
+                    <h2>Practice Exams</h2>
+                    <p>Select an exam to start practicing</p>
+                </div>
+                
+                <div class="exam-list" id="practice-exam-list">
+                    <!-- Practice exams will be loaded here -->
+                    <div class="empty-message">No practice exams available yet.</div>
+                </div>
+            </div>
+            
+            <div id="created-exams" class="tab-content" style="display: none;">
+                <div class="exam-list-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2>Created Exams</h2>
+                        <button id="create-exam-btn" class="btn">Create New Exam</button>
+                    </div>
+                    <p>Exams you have created</p>
+                </div>
+                
+                <div class="exam-list" id="created-exam-list">
+                    <!-- Created exams will be loaded here -->
+                </div>
+                
+                <!-- Debug info section -->
+                <div id="debug-info" class="debug-info"></div>
+                <button id="toggle-debug" class="btn small" style="margin-top: 10px; background-color: #6c757d;">Show Debug Info</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get exam type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const examType = urlParams.get('type');
+        
+        // Update header
+        const examTitles = {
+            'jee-advanced': 'JEE Advanced',
+            'jee-main': 'JEE Main',
+            'neet': 'NEET',
+            'bitsat': 'BITSAT',
+            'aiims': 'AIIMS'
+        };
+        
+        document.getElementById('exam-type-header').textContent = `PrepSharp - ${examTitles[examType] || 'Exams'}`;
+        document.title = `${examTitles[examType] || 'Exam'} List - PrepSharp`;
+        
+        // Debug info toggle
+        document.getElementById('toggle-debug').addEventListener('click', function() {
+            const debugInfo = document.getElementById('debug-info');
+            if (debugInfo.style.display === 'none' || !debugInfo.style.display) {
+                debugInfo.style.display = 'block';
+                this.textContent = 'Hide Debug Info';
+            } else {
+                debugInfo.style.display = 'none';
+                this.textContent = 'Show Debug Info';
+            }
+        });
+        
+        // Load created exams
+        function loadCreatedExams() {
+            const createdExamList = document.getElementById('created-exam-list');
+            const debugInfo = document.getElementById('debug-info');
+            
+            // Debug information
+            let debugText = '';
+            
+            // Get exams from localStorage with error handling
+            let exams = {};
+            try {
+                const examsData = localStorage.getItem('exams');
+                debugText += `Raw exams data: ${examsData ? (examsData.length > 100 ? examsData.substring(0, 100) + '...' : examsData) : 'null'}\n\n`;
+                
+                if (examsData) {
+                    exams = JSON.parse(examsData);
+                    debugText += `Number of exams found: ${Object.keys(exams).length}\n`;
+                    debugText += `Exam IDs: ${Object.keys(exams).join(', ')}\n\n`;
+                } else {
+                    debugText += "No exams data found in localStorage\n\n";
+                }
+            } catch (error) {
+                debugText += `Error loading exams from localStorage: ${error.message}\n\n`;
+                createdExamList.innerHTML = '<div class="empty-message">Error loading exams. Please try again.</div>';
+                debugInfo.textContent = debugText;
+                return;
+            }
+            
+            // Filter exams by type
+            const filteredExams = Object.entries(exams)
+                .filter(([id, exam]) => exam && exam.type === examType);
+            
+            debugText += `Filtered exams for type ${examType}: ${filteredExams.length}\n`;
+            if (filteredExams.length > 0) {
+                debugText += "Filtered exam IDs: " + filteredExams.map(([id]) => id).join(', ') + "\n\n";
+            }
+            
+            // Sort by year descending
+            filteredExams.sort((a, b) => {
+                // Handle potential missing year property
+                const yearA = a[1].year ? parseInt(a[1].year) : 0;
+                const yearB = b[1].year ? parseInt(b[1].year) : 0;
+                return yearB - yearA;
+            });
+            
+            // Update debug info
+            debugInfo.textContent = debugText;
+            
+            if (filteredExams.length === 0) {
+                createdExamList.innerHTML = '<div class="empty-message">You haven\'t created any exams yet.</div>';
+                return;
+            }
+            
+            createdExamList.innerHTML = '';
+            
+            filteredExams.forEach(([id, exam]) => {
+                let examTitle = examTitles[exam.type] || exam.type;
+                if (exam.type === 'jee-advanced' && exam.paperNumber) {
+                    examTitle += ` Paper ${exam.paperNumber}`;
+                }
+                
+                const examItem = document.createElement('div');
+                examItem.className = 'exam-item';
+                examItem.innerHTML = `
+                    <div class="exam-info">
+                        <h3>${examTitle} ${exam.year}</h3>
+                        <p>${exam.totalQuestions} questions | ${exam.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</p>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn small secondary edit-btn" data-id="${id}">Edit</button>
+                        <button class="btn small start-btn" data-id="${id}">Start Exam</button>
+                    </div>
+                `;
+                
+                createdExamList.appendChild(examItem);
+                
+                // Add event listeners
+                examItem.querySelector('.edit-btn').addEventListener('click', function() {
+                    const examId = this.getAttribute('data-id');
+                    editExam(examId);
+                });
+                
+                examItem.querySelector('.start-btn').addEventListener('click', function() {
+                    const examId = this.getAttribute('data-id');
+                    startExam(examId);
+                });
+            });
+        }
+        
+        // Edit exam
+        function editExam(examId) {
+            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
+            const exam = exams[examId];
+            
+            if (exam) {
+                // Set as current exam
+                localStorage.setItem('currentExam', JSON.stringify(exam));
+                localStorage.setItem('currentQuestionIndex', '0');
+                localStorage.setItem('currentSubject', exam.subjects[0]);
+                
+                if (exam.type === 'jee-advanced') {
+                    localStorage.setItem('currentSection', '0');
+                    window.location.href = 'add-question-advanced.html';
+                } else {
+                    window.location.href = 'add-question.html';
+                }
+            }
+        }
+        
+        // Start exam
+        function startExam(examId) {
+            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
+            const exam = exams[examId];
+            
+            if (exam) {
+                // Set as current exam for taking
+                localStorage.setItem('currentTakingExam', JSON.stringify(exam));
+                localStorage.setItem('currentExamId', examId);
+                
+                // Reset user answers
+                if (exam.questions) {
+                    exam.questions.forEach(question => {
+                        if (question) {
+                            delete question.userAnswer;
+                        }
+                    });
+                }
+                
+                // Go to exam pattern page first
+                window.location.href = 'exam-pattern.html';
+            }
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(`${tabName}-exams`).style.display = 'block';
+            });
+        });
+        
+        // Create new exam button
+        document.getElementById('create-exam-btn').addEventListener('click', function() {
+            // For testing purposes, allow anyone to create exams
+            localStorage.setItem('adminLoggedIn', 'true');
+            window.location.href = 'add-exam.html';
+        });
+        
+        // Dashboard button
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+        
+        // Load exams when page loads
+        window.addEventListener('load', function() {
+            loadCreatedExams();
+        });
+    </script>
+</body>
+</html>
