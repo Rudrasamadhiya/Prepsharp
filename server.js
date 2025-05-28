@@ -179,7 +179,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Registration endpoint - sends OTP for verification
+// Registration endpoint - direct registration without OTP
 app.post('/api/register', async (req, res) => {
   const { name, email, mobile, password } = req.body;
   
@@ -195,34 +195,32 @@ app.post('/api/register', async (req, res) => {
       });
     }
     
-    // Generate and send OTP
-    const result = await sendOTP(email);
+    // Create new user
+    const userId = Date.now().toString();
+    users[userId] = {
+      id: userId,
+      name,
+      email,
+      mobile,
+      password, // In production, this should be hashed
+      verified: true,
+      profileComplete: false,
+      createdAt: Date.now()
+    };
     
-    if (result.success) {
-      // Store user data temporarily (should use database in production)
-      const tempUsers = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'temp-users.json'), 'utf8') || '{}');
-      
-      tempUsers[email] = {
+    // Save to database
+    saveUsers(users);
+    
+    res.json({ 
+      success: true, 
+      message: 'Registration successful',
+      user: {
+        id: userId,
         name,
         email,
-        mobile,
-        password, // In production, this should be hashed
-        createdAt: Date.now()
-      };
-      
-      fs.writeFileSync(path.join(__dirname, 'db', 'temp-users.json'), JSON.stringify(tempUsers, null, 2));
-      
-      res.json({ 
-        success: true, 
-        message: 'OTP sent to your email',
-        email: email
-      });
-    } else {
-      res.status(500).json({ 
-        success: false, 
-        message: 'Failed to send verification email'
-      });
-    }
+        mobile
+      }
+    });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ 
