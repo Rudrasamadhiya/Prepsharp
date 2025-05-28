@@ -198,20 +198,34 @@
             }
             
             // Display user name
-            document.getElementById('user-name').textContent = `Welcome, ${currentUser.name}`;
+            document.getElementById('user-name').textContent = `Welcome, ${user.name || 'User'}`;
+            
+            // Show/hide exam sections based on user stream
+            const engineeringExams = document.getElementById('engineering-exams');
+            const medicalExams = document.getElementById('medical-exams');
+            const streamInfo = document.getElementById('stream-info');
+            
+            if (user.stream === 'engineering') {
+                engineeringExams.style.display = 'grid';
+                medicalExams.style.display = 'none';
+                streamInfo.textContent = 'You are viewing Engineering stream exams';
+            } else if (user.stream === 'medical') {
+                engineeringExams.style.display = 'none';
+                medicalExams.style.display = 'grid';
+                streamInfo.textContent = 'You are viewing Medical stream exams';
+            } else {
+                // For other streams or if stream not set, show all exams
+                engineeringExams.style.display = 'grid';
+                medicalExams.style.display = 'grid';
+                streamInfo.textContent = 'You are viewing all available exams';
+            }
             
             // Logout functionality
             document.getElementById('logout-btn').addEventListener('click', function() {
-                signOut(auth).then(() => {
-                    // Sign-out successful
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
-                }).catch((error) => {
-                    // An error happened
-                    console.error('Logout error:', error);
-                });
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
             });
-        });
+        }
     </script>
 </body>
 </html>
