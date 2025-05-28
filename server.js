@@ -1,8 +1,19 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { sendOTP, verifyOTP } = require('./otp-service');
 const app = express();
+
+// Optional OTP service import
+let sendOTP, verifyOTP;
+try {
+  const otpService = require('./otp-service');
+  sendOTP = otpService.sendOTP;
+  verifyOTP = otpService.verifyOTP;
+} catch (error) {
+  console.log('OTP service not available, some features will be disabled');
+  sendOTP = () => ({ success: false, message: 'OTP service not available' });
+  verifyOTP = () => ({ success: false, message: 'OTP service not available' });
+}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
