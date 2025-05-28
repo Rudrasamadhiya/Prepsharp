@@ -211,43 +211,7 @@
     </div>
 
     <script>
-                // Login method toggle
-        let isOtpLogin = false;
-        const toggleLoginBtn = document.getElementById('toggle-login-method');
-        const passwordGroup = document.querySelector('.password-group');
-        const otpGroup = document.querySelector('.otp-group');
-        
-        // Check if we're coming back from OTP verification
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('otpLogin') === 'true') {
-            isOtpLogin = true;
-            passwordGroup.style.display = 'none';
-            otpGroup.style.display = 'block';
-            toggleLoginBtn.textContent = 'Login with password instead';
-            document.querySelector('button[type="submit"]').textContent = 'Send Verification Code';
-            
-            // Pre-fill email if provided
-            const email = urlParams.get('email');
-            if (email) {
-                document.getElementById('email').value = email;
-            }
-        }
-        
-        toggleLoginBtn.addEventListener('click', function() {
-            isOtpLogin = !isOtpLogin;
-            
-            if (isOtpLogin) {
-                passwordGroup.style.display = 'none';
-                otpGroup.style.display = 'block';
-                toggleLoginBtn.textContent = 'Login with password instead';
-                document.querySelector('button[type="submit"]').textContent = 'Send Verification Code';
-            } else {
-                passwordGroup.style.display = 'block';
-                otpGroup.style.display = 'none';
-                toggleLoginBtn.textContent = 'Login with OTP instead';
-                document.querySelector('button[type="submit"]').textContent = 'Login to PrepSharp';
-            }
-        });
+                // Simple login without OTP
         
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
