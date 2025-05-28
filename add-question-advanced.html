@@ -172,6 +172,7 @@
     <header>
         <h2>PrepSharp - Add Question (JEE Advanced)</h2>
         <div>
+            <button id="pdf-upload-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;" onclick="openPdfUploader()">UPLOAD PDF</button>
             <button id="summary-btn" class="btn secondary">View Summary</button>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
@@ -306,6 +307,8 @@
 
     <script src="html2canvas.min.js"></script>
     <script src="screen-capture.js"></script>
+    <script src="pdf-uploader.js"></script>
+    <script src="simple-paste.js"></script>
     <script>
         // Check if exam data exists
         const examData = JSON.parse(localStorage.getItem('currentExam'));
