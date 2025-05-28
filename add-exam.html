@@ -387,47 +387,55 @@
                 }
             }
             
-            // Skip server API and use local storage directly
-            // Create a paper object with a temporary ID
-            const paper = {
-                ...examData,
-                id: 'local_' + Date.now(),
-                name: generatePaperName(examType, examYear, examData),
-                createdAt: new Date().toISOString(),
-                questions: []
-            };
-            
-            // Store it locally
-            localStorage.setItem('currentExam', JSON.stringify(paper));
-            
-            // Proceed with the flow
-            if (examType === 'jee-advanced') {
-                window.location.href = 'advanced-exam-setup.html';
-            } else if (examType === 'jee-main' || examType === 'neet') {
-                localStorage.setItem('currentQuestionIndex', '0');
-                localStorage.setItem('currentSubject', examData.subjects[0]);
-                window.location.href = 'add-question.html';
-            } else {
-                window.location.href = 'subject-setup.html';
-            }
-            
-            // Helper function to generate paper name
-            function generatePaperName(type, year, data) {
-                if (type === 'jee-main') {
+            try {
+                // Generate paper name
+                let paperName = '';
+                if (examType === 'jee-main') {
                     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    const monthName = monthNames[parseInt(data.month) - 1];
-                    return `JEE Main - ${data.date}/${monthName} Shift ${data.shift} ${year}`;
-                } else if (type === 'jee-advanced') {
-                    return `JEE Advanced - Paper ${data.paperNumber} ${year}`;
-                } else if (type === 'neet') {
-                    return `NEET ${year}`;
-                } else if (type === 'bitsat') {
-                    return `BITSAT ${year}`;
-                } else if (type === 'aiims') {
-                    return `AIIMS ${year}`;
+                    const monthName = monthNames[parseInt(examData.month) - 1];
+                    paperName = `JEE Main - ${examData.date}/${monthName} Shift ${examData.shift} ${examYear}`;
+                } else if (examType === 'jee-advanced') {
+                    paperName = `JEE Advanced - Paper ${examData.paperNumber} ${examYear}`;
+                } else if (examType === 'neet') {
+                    paperName = `NEET ${examYear}`;
+                } else if (examType === 'bitsat') {
+                    paperName = `BITSAT ${examYear}`;
+                } else if (examType === 'aiims') {
+                    paperName = `AIIMS ${examYear}`;
                 } else {
-                    return `${type.toUpperCase()} ${year}`;
+                    paperName = `${examType.toUpperCase()} ${examYear}`;
                 }
+                
+                // Create paper object
+                const paper = {
+                    ...examData,
+                    id: 'local_' + Date.now(),
+                    name: paperName,
+                    createdAt: new Date().toISOString(),
+                    questions: []
+                };
+                
+                // Store paper in localStorage
+                localStorage.setItem('currentExam', JSON.stringify(paper));
+                
+                // Store papers array if it doesn't exist
+                let papers = JSON.parse(localStorage.getItem('papers') || '[]');
+                papers.push(paper);
+                localStorage.setItem('papers', JSON.stringify(papers));
+                
+                // Redirect based on exam type
+                if (examType === 'jee-advanced') {
+                    window.location.href = 'advanced-exam-setup.html';
+                } else if (examType === 'jee-main' || examType === 'neet') {
+                    localStorage.setItem('currentQuestionIndex', '0');
+                    localStorage.setItem('currentSubject', examData.subjects[0]);
+                    window.location.href = 'add-question.html';
+                } else {
+                    window.location.href = 'subject-setup.html';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
             }
             
             // This code is now handled in the fetch promise
