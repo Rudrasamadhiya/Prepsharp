@@ -185,10 +185,62 @@
   </div>
 
   <script>
-    // Check if we have existing users in localStorage
-    if (!localStorage.getItem('users')) {
-      localStorage.setItem('users', JSON.stringify({}));
+    // Add real-time validation for email and mobile
+    const emailInput = document.getElementById('email');
+    const mobileInput = document.getElementById('mobile');
+    const emailError = document.getElementById('email-error');
+    const mobileError = document.getElementById('mobile-error');
+    
+    // Debounce function to limit API calls
+    function debounce(func, delay) {
+      let timer;
+      return function() {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, arguments), delay);
+      };
     }
+    
+    // Check if email exists in database
+    emailInput.addEventListener('blur', debounce(function() {
+      const email = emailInput.value.trim();
+      if (email) {
+        fetch(`/api/check-email?email=${encodeURIComponent(email)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.exists) {
+              emailError.style.display = 'block';
+              emailInput.setCustomValidity('Email already registered');
+            } else {
+              emailError.style.display = 'none';
+              emailInput.setCustomValidity('');
+            }
+          })
+          .catch(err => {
+            console.error('Error checking email:', err);
+          });
+      }
+    }, 300));
+    
+    // Check if mobile exists in database
+    mobileInput.addEventListener('blur', debounce(function() {
+      const mobile = mobileInput.value.trim();
+      if (mobile) {
+        fetch(`/api/check-mobile?mobile=${encodeURIComponent(mobile)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.exists) {
+              mobileError.style.display = 'block';
+              mobileInput.setCustomValidity('Mobile number already registered');
+            } else {
+              mobileError.style.display = 'none';
+              mobileInput.setCustomValidity('');
+            }
+          })
+          .catch(err => {
+            console.error('Error checking mobile:', err);
+          });
+      }
+    }, 300));
     
     document.getElementById('register-form').addEventListener('submit', function (e) {
       e.preventDefault();
