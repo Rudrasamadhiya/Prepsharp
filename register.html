@@ -183,6 +183,11 @@
   </div>
 
   <script>
+    // Check if we have existing users in localStorage
+    if (!localStorage.getItem('users')) {
+      localStorage.setItem('users', JSON.stringify({}));
+    }
+    
     document.getElementById('register-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -202,6 +207,14 @@
 
       if (password !== confirmPassword) {
         errorMessage.textContent = 'Passwords do not match';
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // Check if email already exists in localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      if (Object.values(users).some(user => user.email === email)) {
+        errorMessage.textContent = 'Email already registered';
         errorMessage.style.display = 'block';
         return;
       }
@@ -241,20 +254,50 @@
         }
       })
       .catch(err => {
-        console.error(err);
-        // Fallback to local storage if server is unavailable
-        submitButton.disabled = false;
-        submitButton.textContent = 'Register with PrepSharp';
+        console.error('Server error:', err);
         
-        const user = {
-          id: Date.now().toString(),
+        // Get existing users from localStorage or create empty object
+        let users = JSON.parse(localStorage.getItem('users') || '{}');
+        
+        // Check if email already exists
+        if (Object.values(users).some(user => user.email === email)) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Register with PrepSharp';
+          errorMessage.textContent = 'Email already registered';
+          errorMessage.style.display = 'block';
+          return;
+        }
+        
+        // Create new user ID
+        const userId = Date.now().toString();
+        
+        // Add user to users object
+        users[userId] = {
+          id: userId,
+          name,
+          email,
+          mobile,
+          password, // In a real app, this should be hashed
+          verified: true,
+          profileComplete: false,
+          createdAt: Date.now()
+        };
+        
+        // Save users to localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Create current user session
+        const currentUser = {
+          id: userId,
           name,
           email,
           mobile,
           stream: '',
           profileComplete: false
         };
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        // Set current user and redirect
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
         window.location.href = 'profile-setup.html';
       });
     });
