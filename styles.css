@@ -85,7 +85,8 @@ label {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -95,7 +96,8 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="email"]:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
@@ -115,6 +117,7 @@ input[type="password"]:focus {
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
+    width: 100%;
 }
 
 .btn.primary {
@@ -131,11 +134,34 @@ input[type="password"]:focus {
     background: none;
     color: var(--primary-color);
     padding: 8px 16px;
+    text-decoration: underline;
+    box-shadow: none;
+    font-weight: normal;
+}
+
+.btn.text:hover {
+    text-decoration: none;
+    background-color: rgba(25, 118, 210, 0.05);
+    transform: none;
 }
 
 .btn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
+}
+
+.login-options {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 10px;
+    text-align: center;
+    display: none;
+    padding: 8px;
+    border-radius: 4px;
 }
 
 /* Dashboard Styles */
