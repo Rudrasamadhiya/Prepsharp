@@ -138,14 +138,18 @@
             if (e.target.files.length > 0) {
                 const file = e.target.files[0];
                 const url = URL.createObjectURL(file);
-                window.open(url, '_blank');
+                
+                // Store PDF URL for later use
+                localStorage.setItem('pdfUrl', url);
+                localStorage.setItem('pdfUploaded', 'true');
+                
+                // Open PDF in a named window so we can reference it later
+                window.open(url, 'pdfWindow');
                 
                 document.getElementById('pdf-upload-btn').textContent = 'PDF OPENED';
                 document.getElementById('pdf-upload-btn').style.backgroundColor = '#1976d2';
                 
-                localStorage.setItem('pdfUploaded', 'true');
-                
-                alert('PDF opened in new tab. Use Win+Shift+S to capture screenshots, then click on a screenshot button and press Ctrl+V to paste.');
+                alert('PDF opened in new tab. When you click a screenshot button, the PDF will be focused. Use Win+Shift+S to capture screenshots, then press Ctrl+V to paste.');
             }
         };
         
