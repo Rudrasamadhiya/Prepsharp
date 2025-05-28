@@ -1,0 +1,3 @@
+@echo off
+echo Starting secure PrepSharp server...
+node secure-server.js
