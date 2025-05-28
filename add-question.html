@@ -156,41 +156,10 @@
     <header>
         <h2>PrepSharp - Add Question</h2>
         <div>
-            <button id="pdf-upload-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">UPLOAD PDF</button>
             <button id="summary-btn" class="btn secondary">View Summary</button>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
     </header>
-    
-    <script>
-    // Direct PDF upload handler
-    document.getElementById('pdf-upload-btn').addEventListener('click', function() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/pdf';
-        
-        input.onchange = function(e) {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const url = URL.createObjectURL(file);
-                
-                // Store PDF URL for later use
-                localStorage.setItem('pdfUrl', url);
-                localStorage.setItem('pdfUploaded', 'true');
-                
-                // Open PDF in a named window so we can reference it later
-                window.open(url, 'pdfWindow');
-                
-                document.getElementById('pdf-upload-btn').textContent = 'PDF OPENED';
-                document.getElementById('pdf-upload-btn').style.backgroundColor = '#1976d2';
-                
-                alert('PDF opened in new tab. When you click a screenshot button, the PDF will be focused. Use Win+Shift+S to capture screenshots, then press Ctrl+V to paste.');
-            }
-        };
-        
-        input.click();
-    });
-    </script>
     
     <div class="container">
         <div class="card">
@@ -223,21 +192,11 @@
                     <label for="correct-a" style="display:inline;">A.</label>
                     <input type="text" id="option-text-a" placeholder="Option A">
                 </div>
-                <button id="screenshot-option-a-btn" class="upload-btn">Take Screenshot for Option A</button>
-                <div id="option-a-image-container" class="image-container hidden">
-                    <img id="option-a-image" src="" alt="Option A Image">
-                    <button class="remove-btn" data-option="a">×</button>
-                </div>
                 
                 <div class="option-container" id="option-b">
                     <input type="checkbox" id="correct-b" class="correct-option">
                     <label for="correct-b" style="display:inline;">B.</label>
                     <input type="text" id="option-text-b" placeholder="Option B">
-                </div>
-                <button id="screenshot-option-b-btn" class="upload-btn">Take Screenshot for Option B</button>
-                <div id="option-b-image-container" class="image-container hidden">
-                    <img id="option-b-image" src="" alt="Option B Image">
-                    <button class="remove-btn" data-option="b">×</button>
                 </div>
                 
                 <div class="option-container" id="option-c">
@@ -245,21 +204,11 @@
                     <label for="correct-c" style="display:inline;">C.</label>
                     <input type="text" id="option-text-c" placeholder="Option C">
                 </div>
-                <button id="screenshot-option-c-btn" class="upload-btn">Take Screenshot for Option C</button>
-                <div id="option-c-image-container" class="image-container hidden">
-                    <img id="option-c-image" src="" alt="Option C Image">
-                    <button class="remove-btn" data-option="c">×</button>
-                </div>
                 
                 <div class="option-container" id="option-d">
                     <input type="checkbox" id="correct-d" class="correct-option">
                     <label for="correct-d" style="display:inline;">D.</label>
                     <input type="text" id="option-text-d" placeholder="Option D">
-                </div>
-                <button id="screenshot-option-d-btn" class="upload-btn">Take Screenshot for Option D</button>
-                <div id="option-d-image-container" class="image-container hidden">
-                    <img id="option-d-image" src="" alt="Option D Image">
-                    <button class="remove-btn" data-option="d">×</button>
                 </div>
             </div>
             
@@ -271,11 +220,6 @@
             <div class="form-group">
                 <label for="explanation">Explanation (Optional)</label>
                 <textarea id="explanation" rows="3"></textarea>
-                <button id="screenshot-explanation-btn" class="upload-btn">Take Screenshot</button>
-                <div id="explanation-image-container" class="image-container hidden">
-                    <img id="explanation-image" src="" alt="Explanation Image">
-                    <button class="remove-btn" id="remove-explanation-image">×</button>
-                </div>
             </div>
             
             <div style="display: flex; justify-content: space-between;">
@@ -285,10 +229,7 @@
         </div>
     </div>
 
-    <!-- Direct screenshot functionality -->
-    <script src="html2canvas.min.js"></script>
-    <script src="direct-capture.js"></script>
-    </script>
+
     <script>
         // Check if exam data exists
         const examData = JSON.parse(localStorage.getItem('currentExam'));
@@ -444,45 +385,7 @@
             }
         });
         
-        // Screenshot event listeners
-        document.getElementById('screenshot-question-btn').addEventListener('click', function() {
-            ScreenCapture.init(function(imageData) {
-                document.getElementById('question-image').src = imageData;
-                document.getElementById('question-image-container').classList.remove('hidden');
-            });
-        });
-        
-        document.getElementById('remove-question-image').addEventListener('click', function() {
-            document.getElementById('question-image').src = '';
-            document.getElementById('question-image-container').classList.add('hidden');
-        });
-        
-        document.getElementById('screenshot-explanation-btn').addEventListener('click', function() {
-            ScreenCapture.init(function(imageData) {
-                document.getElementById('explanation-image').src = imageData;
-                document.getElementById('explanation-image-container').classList.remove('hidden');
-            });
-        });
-        
-        document.getElementById('remove-explanation-image').addEventListener('click', function() {
-            document.getElementById('explanation-image').src = '';
-            document.getElementById('explanation-image-container').classList.add('hidden');
-        });
-        
-        // Option screenshot event listeners
-        ['a', 'b', 'c', 'd'].forEach(option => {
-            document.getElementById(`screenshot-option-${option}-btn`).addEventListener('click', function() {
-                ScreenCapture.init(function(imageData) {
-                    document.getElementById(`option-${option}-image`).src = imageData;
-                    document.getElementById(`option-${option}-image-container`).classList.remove('hidden');
-                });
-            });
-            
-            document.querySelector(`.remove-btn[data-option="${option}"]`).addEventListener('click', function() {
-                document.getElementById(`option-${option}-image`).src = '';
-                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
-            });
-        });
+        // Screenshot functionality removed
         
         document.getElementById('summary-btn').addEventListener('click', function() {
             // Save current question
@@ -530,17 +433,7 @@
             document.getElementById('explanation').value = '';
             document.getElementById('integer-value').value = '';
             
-            // Clear images
-            document.getElementById('question-image').src = '';
-            document.getElementById('question-image-container').classList.add('hidden');
-            document.getElementById('explanation-image').src = '';
-            document.getElementById('explanation-image-container').classList.add('hidden');
-            
-            // Clear option images
-            ['a', 'b', 'c', 'd'].forEach(option => {
-                document.getElementById(`option-${option}-image`).src = '';
-                document.getElementById(`option-${option}-image-container`).classList.add('hidden');
-            });
+            // Image handling removed
             
             document.querySelectorAll('.correct-option').forEach(checkbox => {
                 checkbox.checked = false;
@@ -578,16 +471,7 @@
                 document.getElementById('question-type').value = question.type;
                 document.getElementById('explanation').value = question.explanation || '';
                 
-                // Load images if available
-                if (question.questionImage) {
-                    document.getElementById('question-image').src = question.questionImage;
-                    document.getElementById('question-image-container').classList.remove('hidden');
-                }
-                
-                if (question.explanationImage) {
-                    document.getElementById('explanation-image').src = question.explanationImage;
-                    document.getElementById('explanation-image-container').classList.remove('hidden');
-                }
+                // Image loading removed
                 
                 // Trigger change event to show correct inputs
                 questionTypeSelect.dispatchEvent(event);
@@ -598,11 +482,7 @@
                         document.getElementById(`option-text-${letter}`).value = option.text || '';
                         document.getElementById(`correct-${letter}`).checked = option.correct;
                         
-                        // Load option image if available
-                        if (option.image) {
-                            document.getElementById(`option-${letter}-image`).src = option.image;
-                            document.getElementById(`option-${letter}-image-container`).classList.remove('hidden');
-                        }
+                        // Option image loading removed
                     });
                 } else if (question.type === 'integer') {
                     document.getElementById('integer-value').value = question.answer;
@@ -614,11 +494,9 @@
             const questionType = document.getElementById('question-type').value;
             const questionText = document.getElementById('question-text').value;
             const explanation = document.getElementById('explanation').value;
-            const questionImage = document.getElementById('question-image').src;
-            const explanationImage = document.getElementById('explanation-image').src;
             
-            if (!questionText && !questionImage) {
-                alert('Please enter question text or add an image');
+            if (!questionText) {
+                alert('Please enter question text');
                 return false;
             }
             
@@ -637,9 +515,7 @@
                 type: questionType,
                 text: questionText,
                 subject: currentSubject,
-                explanation: explanation,
-                questionImage: questionImage || null,
-                explanationImage: explanationImage || null
+                explanation: explanation
             };
             
             if (questionType === 'scq' || questionType === 'mcq') {
@@ -650,10 +526,9 @@
                     const letter = String.fromCharCode(97 + i); // a, b, c, d
                     const optionText = document.getElementById(`option-text-${letter}`).value;
                     const isCorrect = document.getElementById(`correct-${letter}`).checked;
-                    const optionImage = document.getElementById(`option-${letter}-image`).src;
                     
-                    if (!optionText && !optionImage) {
-                        alert(`Please enter text or add an image for option ${letter.toUpperCase()}`);
+                    if (!optionText) {
+                        alert(`Please enter text for option ${letter.toUpperCase()}`);
                         return false;
                     }
                     
@@ -663,8 +538,7 @@
                     
                     options.push({
                         text: optionText,
-                        correct: isCorrect,
-                        image: optionImage || null
+                        correct: isCorrect
                     });
                 }
                 
