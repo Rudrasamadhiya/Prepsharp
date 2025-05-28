@@ -48,7 +48,7 @@
 <body>
     <div class="otp-container card">
         <div class="logo-container">
-            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 150px;">
+            <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 150px;">
         </div>
         <h2>Email Verification</h2>
         <p>We've sent a verification code to <span id="user-email">your email</span></p>
@@ -137,6 +137,25 @@
                 this.disabled = true;
                 this.textContent = 'Verifying...';
                 
+                // For demo/testing, directly redirect to profile setup or dashboard
+                setTimeout(() => {
+                    // Create a mock user
+                    const mockUser = {
+                        id: '12345',
+                        name: 'Test User',
+                        email: email || 'user@example.com',
+                        mobile: '1234567890',
+                        profileComplete: false
+                    };
+                    
+                    // Store user in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(mockUser));
+                    
+                    // Redirect to profile setup
+                    window.location.href = 'profile-setup.html';
+                }, 1500);
+                
+                /* Uncomment this for actual server integration
                 // Send verification request to server
                 fetch('/api/verify-otp', {
                     method: 'POST',
@@ -162,6 +181,7 @@
                     this.disabled = false;
                     this.textContent = 'Verify';
                 });
+                */
             });
             
             // Resend button click
@@ -169,6 +189,28 @@
                 this.disabled = true;
                 this.textContent = 'Sending...';
                 
+                // For demo/testing, simulate resending OTP
+                setTimeout(() => {
+                    // Reset timer
+                    timeLeft = 10 * 60;
+                    this.textContent = 'Resend code';
+                    
+                    // Clear inputs
+                    inputs.forEach(input => input.value = '');
+                    inputs[0].focus();
+                    
+                    // Show success message
+                    const errorEl = document.getElementById('error-message');
+                    errorEl.textContent = 'Verification code resent';
+                    errorEl.style.display = 'block';
+                    errorEl.style.color = '#4caf50'; // Green color for success
+                    
+                    setTimeout(() => {
+                        errorEl.style.display = 'none';
+                    }, 5000);
+                }, 1500);
+                
+                /* Uncomment this for actual server integration
                 // Request new OTP
                 fetch('/api/resend-otp', {
                     method: 'POST',
@@ -198,6 +240,7 @@
                     this.textContent = 'Resend code';
                     showError('An error occurred. Please try again.');
                 });
+                */
             });
             
             function showError(message) {
