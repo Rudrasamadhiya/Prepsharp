@@ -151,11 +151,13 @@
             display: none;
         }
     </style>
+    <script src="pdf-capture.js"></script>
 </head>
 <body>
     <header>
         <h2>PrepSharp - Add Question</h2>
         <div>
+            <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Open PDF</button>
             <button id="summary-btn" class="btn secondary">View Summary</button>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
@@ -183,6 +185,11 @@
             <div class="form-group">
                 <label for="question-text">Question Text</label>
                 <textarea id="question-text" rows="4" required></textarea>
+                <button id="capture-question-btn" class="upload-btn" style="display: none;">Capture from PDF</button>
+                <div id="question-image-container" class="image-container hidden">
+                    <img id="question-image" src="" alt="Question Image">
+                    <button class="remove-btn" id="remove-question-image">×</button>
+                </div>
             </div>
             
             <div id="options-container" class="form-group">
@@ -220,6 +227,11 @@
             <div class="form-group">
                 <label for="explanation">Explanation (Optional)</label>
                 <textarea id="explanation" rows="3"></textarea>
+                <button id="capture-explanation-btn" class="upload-btn" style="display: none;">Capture from PDF</button>
+                <div id="explanation-image-container" class="image-container hidden">
+                    <img id="explanation-image" src="" alt="Explanation Image">
+                    <button class="remove-btn" id="remove-explanation-image">×</button>
+                </div>
             </div>
             
             <div style="display: flex; justify-content: space-between;">
@@ -228,7 +240,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         // Check if exam data exists
@@ -256,6 +267,35 @@
         
         // Add current question index to counter
         questionCounter += currentQuestionIndex + 1;
+        
+        // PDF capture functionality
+        document.getElementById('pdf-btn').addEventListener('click', function() {
+            PDFCapture.openPDF();
+        });
+        
+        document.getElementById('capture-question-btn').addEventListener('click', function() {
+            PDFCapture.capture(function(imageData) {
+                document.getElementById('question-image').src = imageData;
+                document.getElementById('question-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-question-image').addEventListener('click', function() {
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+        });
+        
+        document.getElementById('capture-explanation-btn').addEventListener('click', function() {
+            PDFCapture.capture(function(imageData) {
+                document.getElementById('explanation-image').src = imageData;
+                document.getElementById('explanation-image-container').classList.remove('hidden');
+            });
+        });
+        
+        document.getElementById('remove-explanation-image').addEventListener('click', function() {
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+        });
         
         // Update UI
         updateUI();
@@ -385,8 +425,6 @@
             }
         });
         
-        // Screenshot functionality removed
-        
         document.getElementById('summary-btn').addEventListener('click', function() {
             // Save current question
             saveCurrentQuestion();
@@ -433,7 +471,11 @@
             document.getElementById('explanation').value = '';
             document.getElementById('integer-value').value = '';
             
-            // Image handling removed
+            // Clear images
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
             
             document.querySelectorAll('.correct-option').forEach(checkbox => {
                 checkbox.checked = false;
@@ -471,7 +513,16 @@
                 document.getElementById('question-type').value = question.type;
                 document.getElementById('explanation').value = question.explanation || '';
                 
-                // Image loading removed
+                // Load images if available
+                if (question.questionImage) {
+                    document.getElementById('question-image').src = question.questionImage;
+                    document.getElementById('question-image-container').classList.remove('hidden');
+                }
+                
+                if (question.explanationImage) {
+                    document.getElementById('explanation-image').src = question.explanationImage;
+                    document.getElementById('explanation-image-container').classList.remove('hidden');
+                }
                 
                 // Trigger change event to show correct inputs
                 questionTypeSelect.dispatchEvent(event);
@@ -481,8 +532,6 @@
                         const letter = String.fromCharCode(97 + index); // a, b, c, d
                         document.getElementById(`option-text-${letter}`).value = option.text || '';
                         document.getElementById(`correct-${letter}`).checked = option.correct;
-                        
-                        // Option image loading removed
                     });
                 } else if (question.type === 'integer') {
                     document.getElementById('integer-value').value = question.answer;
@@ -494,9 +543,11 @@
             const questionType = document.getElementById('question-type').value;
             const questionText = document.getElementById('question-text').value;
             const explanation = document.getElementById('explanation').value;
+            const questionImage = document.getElementById('question-image').src;
+            const explanationImage = document.getElementById('explanation-image').src;
             
-            if (!questionText) {
-                alert('Please enter question text');
+            if (!questionText && !questionImage) {
+                alert('Please enter question text or add an image');
                 return false;
             }
             
@@ -515,7 +566,9 @@
                 type: questionType,
                 text: questionText,
                 subject: currentSubject,
-                explanation: explanation
+                explanation: explanation,
+                questionImage: questionImage || null,
+                explanationImage: explanationImage || null
             };
             
             if (questionType === 'scq' || questionType === 'mcq') {
