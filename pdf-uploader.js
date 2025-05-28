@@ -16,6 +16,9 @@ function openPdfUploader() {
         uploadBtn.style.backgroundColor = '#1976d2';
       }
       
+      // Set flag that PDF has been uploaded
+      localStorage.setItem('pdfUploaded', 'true');
+      
       alert('PDF opened in new tab. Use Win+Shift+S to capture screenshots, then click on a screenshot button and press Ctrl+V to paste.');
     }
   };
