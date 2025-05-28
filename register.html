@@ -107,10 +107,23 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Registering...';
             
-            // For demo/testing, directly redirect to OTP verification
-            // Simulate successful registration
+            // For demo/testing, directly create user and redirect to dashboard
             setTimeout(() => {
-                window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
+                // Create a mock user
+                const mockUser = {
+                    id: Date.now().toString(),
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    stream: '',
+                    profileComplete: false
+                };
+                
+                // Store user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(mockUser));
+                
+                // Redirect to profile setup
+                window.location.href = 'profile-setup.html';
             }, 1000);
             
             /* Uncomment this for actual server integration
@@ -125,8 +138,11 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Redirect to OTP verification page
-                    window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
+                    // Store user in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirect to profile setup
+                    window.location.href = 'profile-setup.html';
                 } else {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Register with PrepSharp';
