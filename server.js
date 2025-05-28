@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname)));
 // Database file paths
 const USERS_DB_PATH = path.join(__dirname, 'db', 'users.json');
 const RESULTS_DB_PATH = path.join(__dirname, 'db', 'results.json');
+const PAPERS_DB_PATH = path.join(__dirname, 'db', 'papers.json');
 
 // Create db directory if it doesn't exist
 try {
@@ -25,6 +26,10 @@ try {
   if (!fs.existsSync(RESULTS_DB_PATH)) {
     fs.writeFileSync(RESULTS_DB_PATH, JSON.stringify([]));
     console.log('Created results.json file');
+  }
+  if (!fs.existsSync(PAPERS_DB_PATH)) {
+    fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify([]));
+    console.log('Created papers.json file');
   }
 } catch (error) {
   console.error('Error creating database files:', error);
@@ -45,6 +50,14 @@ function getResults() {
 
 function saveResults(results) {
   fs.writeFileSync(RESULTS_DB_PATH, JSON.stringify(results, null, 2));
+}
+
+function getPapers() {
+  return JSON.parse(fs.readFileSync(PAPERS_DB_PATH));
+}
+
+function savePapers(papers) {
+  fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify(papers, null, 2));
 }
 
 // Login endpoint - always returns success
@@ -170,6 +183,141 @@ app.get('/api/results/:resultId', (req, res) => {
       message: 'Result not found'
     });
   }
+});
+
+// Create new exam paper
+app.post('/api/papers', (req, res) => {
+  const paperData = req.body;
+  
+  // Generate paper name based on exam type
+  let paperName = '';
+  
+  if (paperData.type === 'jee-main') {
+    // Format: JEE Main - DD/MM SHIFT# YYYY
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthName = monthNames[parseInt(paperData.month) - 1];
+    paperName = `JEE Main - ${paperData.date}/${monthName} Shift ${paperData.shift} ${paperData.year}`;
+  } else if (paperData.type === 'jee-advanced') {
+    // Format: JEE Advanced - Paper # YYYY
+    paperName = `JEE Advanced - Paper ${paperData.paperNumber} ${paperData.year}`;
+  } else {
+    // Format: EXAM NAME YYYY
+    const examNames = {
+      'neet': 'NEET',
+      'bitsat': 'BITSAT',
+      'aiims': 'AIIMS'
+    };
+    const examName = examNames[paperData.type] || paperData.type.toUpperCase();
+    paperName = `${examName} ${paperData.year}`;
+  }
+  
+  // Add unique ID and created timestamp
+  const paper = {
+    ...paperData,
+    id: Date.now().toString(),
+    name: paperName,
+    createdAt: new Date().toISOString(),
+    questions: []
+  };
+  
+  // Save to database
+  const papers = getPapers();
+  papers.push(paper);
+  savePapers(papers);
+  
+  res.json({ 
+    success: true, 
+    message: 'Paper created successfully',
+    paper: paper
+  });
+});
+
+// Get all papers
+app.get('/api/papers', (req, res) => {
+  const papers = getPapers();
+  
+  res.json({
+    success: true,
+    papers: papers
+  });
+});
+
+// Get a specific paper by ID
+app.get('/api/papers/:paperId', (req, res) => {
+  const paperId = req.params.paperId;
+  const paper = getPapers().find(p => p.id === paperId);
+  
+  if (paper) {
+    res.json({
+      success: true,
+      paper: paper
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Paper not found'
+    });
+  }
+});
+
+// Update a paper by ID
+app.put('/api/papers/:paperId', (req, res) => {
+  const paperId = req.params.paperId;
+  const updateData = req.body;
+  const papers = getPapers();
+  const paperIndex = papers.findIndex(p => p.id === paperId);
+  
+  if (paperIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: 'Paper not found'
+    });
+  }
+  
+  // Update the paper with new data
+  papers[paperIndex] = {
+    ...papers[paperIndex],
+    ...updateData,
+    updatedAt: new Date().toISOString()
+  };
+  
+  savePapers(papers);
+  
+  res.json({
+    success: true,
+    message: 'Paper updated successfully',
+    paper: papers[paperIndex]
+  });
+});
+
+// Add question to paper
+app.post('/api/papers/:paperId/questions', (req, res) => {
+  const paperId = req.params.paperId;
+  const questionData = req.body;
+  const papers = getPapers();
+  const paperIndex = papers.findIndex(p => p.id === paperId);
+  
+  if (paperIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: 'Paper not found'
+    });
+  }
+  
+  // Add question ID if not provided
+  if (!questionData.id) {
+    questionData.id = Date.now().toString();
+  }
+  
+  // Add question to paper
+  papers[paperIndex].questions.push(questionData);
+  savePapers(papers);
+  
+  res.json({
+    success: true,
+    message: 'Question added successfully',
+    questionId: questionData.id
+  });
 });
 
 // Serve static files
