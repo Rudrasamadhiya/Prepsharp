@@ -11,7 +11,7 @@
     <div style="display: flex; min-height: 100vh;">
         <div class="banner" style="flex: 1;">
             <div class="logo">
-                <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 200px;">
+                <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px;">
             </div>
             <h1>PrepSharp - Prepare Smarter</h1>
             <h2>Join the PrepSharp Community</h2>
@@ -63,7 +63,7 @@
                         <input type="password" id="confirm-password" placeholder="Confirm your password" required>
                     </div>
                     
-                    <button type="submit" class="btn">Register with PrepSharp</button>
+                    <button type="submit" class="btn primary">Register with PrepSharp</button>
                     
                     <div id="error-message" class="error-message" style="display: none;"></div>
                 </form>
@@ -107,6 +107,13 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Registering...';
             
+            // For demo/testing, directly redirect to OTP verification
+            // Simulate successful registration
+            setTimeout(() => {
+                window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
+            }, 1000);
+            
+            /* Uncomment this for actual server integration
             // Send registration request to server
             fetch('/api/register', {
                 method: 'POST',
@@ -134,6 +141,7 @@
                 errorMessage.textContent = 'An error occurred. Please try again.';
                 errorMessage.style.display = 'block';
             });
+            */
         });
     </script>
 </body>
