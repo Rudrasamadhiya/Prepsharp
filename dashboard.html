@@ -183,6 +183,30 @@
         .sidebar-overlay.active {
             display: block;
         }
+        
+        /* Floating help button */
+        .help-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 99;
+        }
+        .help-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--secondary-color);
+        }
     </style>
 </head>
 <body>
@@ -213,6 +237,9 @@
         </ul>
     </div>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Floating help button -->
+    <div class="help-btn" id="help-btn">?</div>
     
     <div class="container">
         <div class="welcome-message">
@@ -362,6 +389,11 @@
                 e.preventDefault();
                 localStorage.removeItem('currentUser');
                 window.location.href = 'index.html';
+            });
+            
+            // Help button functionality
+            document.getElementById('help-btn').addEventListener('click', function() {
+                alert('Need help? Contact us at support@prepsharp.com or call our helpline at 1800-123-4567');
             });
         }
     </script>
