@@ -321,6 +321,15 @@
           return;
         }
         
+        // Check if mobile already exists
+        if (Object.values(users).some(user => user.mobile === mobile)) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Register with PrepSharp';
+          errorMessage.textContent = 'Mobile number already registered';
+          errorMessage.style.display = 'block';
+          return;
+        }
+        
         // Create new user ID
         const userId = Date.now().toString();
         
