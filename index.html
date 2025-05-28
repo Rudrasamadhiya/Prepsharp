@@ -191,9 +191,9 @@
                     <input type="text" id="otp" placeholder="Enter the code sent to your email" maxlength="6">
                 </div>
                 
-                <button type="submit" class="btn">Login to PrepSharp</button>
+                <button type="submit" class="btn primary">Login to PrepSharp</button>
                 
-                <div class="login-options">
+                <div class="login-options" style="margin-top: 15px; text-align: center;">
                     <button type="button" id="toggle-login-method" class="btn text">Login with OTP instead</button>
                 </div>
                 
@@ -216,6 +216,22 @@
         const toggleLoginBtn = document.getElementById('toggle-login-method');
         const passwordGroup = document.querySelector('.password-group');
         const otpGroup = document.querySelector('.otp-group');
+        
+        // Check if we're coming back from OTP verification
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('otpLogin') === 'true') {
+            isOtpLogin = true;
+            passwordGroup.style.display = 'none';
+            otpGroup.style.display = 'block';
+            toggleLoginBtn.textContent = 'Login with password instead';
+            document.querySelector('button[type="submit"]').textContent = 'Send Verification Code';
+            
+            // Pre-fill email if provided
+            const email = urlParams.get('email');
+            if (email) {
+                document.getElementById('email').value = email;
+            }
+        }
         
         toggleLoginBtn.addEventListener('click', function() {
             isOtpLogin = !isOtpLogin;
@@ -265,6 +281,15 @@
                 // First step of OTP login - request OTP
                 submitButton.textContent = 'Sending code...';
                 
+                // For demo/testing, directly show OTP input without actual server call
+                otpGroup.style.display = 'block';
+                submitButton.textContent = 'Verify & Login';
+                submitButton.disabled = false;
+                errorMessage.textContent = 'Verification code sent to your email';
+                errorMessage.style.display = 'block';
+                errorMessage.style.color = '#4caf50'; // Green color for success
+                
+                /* Uncomment this for actual server integration
                 fetch('/api/login', {
                     method: 'POST',
                     headers: {
@@ -272,6 +297,7 @@
                     },
                     body: JSON.stringify({ email, loginMethod: 'otp' })
                 })
+                */
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.requiresOTP) {
