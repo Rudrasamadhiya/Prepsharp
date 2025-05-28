@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div style="display: flex; min-height: 100vh;">
-        <div class="banner" style="flex: 1;">
+    <div class="main-flex">
+        <div class="banner">
             <div class="logo">
-                <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px;">
+                <img src="logo for index (1).png" alt="PrepSharp Logo">
             </div>
             <h1>PrepSharp - Prepare Smarter</h1>
             <h2>Join the PrepSharp Community</h2>
-            
             <div class="features">
                 <div class="feature">
                     <div class="feature-icon">📝</div>
@@ -31,85 +30,64 @@
                 </div>
             </div>
         </div>
-        
         <div class="login-container">
             <div class="login-card">
                 <h1>Create Your Account</h1>
                 <p style="text-align: center;">Join PrepSharp to start your preparation journey for competitive exams.</p>
-                
                 <form id="register-form">
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" placeholder="Enter your full name" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" placeholder="Enter your email address" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="mobile">Mobile Number</label>
                         <input type="text" id="mobile" placeholder="Enter your mobile number" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" placeholder="Create a password" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="confirm-password">Confirm Password</label>
                         <input type="password" id="confirm-password" placeholder="Confirm your password" required>
                     </div>
-                    
                     <button type="submit" class="btn primary">Register with PrepSharp</button>
-                    
                     <div id="error-message" class="error-message" style="display: none;"></div>
                 </form>
-                
                 <div class="register-link">
                     Already have an account? <a href="index.html">Login to PrepSharp</a>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const mobile = document.getElementById('mobile').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
             const errorMessage = document.getElementById('error-message');
-            
-            // Clear previous error messages
             errorMessage.style.display = 'none';
-            
-            // Validate inputs
             if (!name || !email || !mobile || !password) {
                 errorMessage.textContent = 'All fields are required';
                 errorMessage.style.display = 'block';
                 return;
             }
-            
             if (password !== confirmPassword) {
                 errorMessage.textContent = 'Passwords do not match';
                 errorMessage.style.display = 'block';
                 return;
             }
-            
-            // Show loading state
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             submitButton.textContent = 'Registering...';
-            
-            // For demo/testing, directly create user and redirect to dashboard
             setTimeout(() => {
-                // Create a mock user
                 const mockUser = {
                     id: Date.now().toString(),
                     name: name,
@@ -118,46 +96,9 @@
                     stream: '',
                     profileComplete: false
                 };
-                
-                // Store user in localStorage
                 localStorage.setItem('currentUser', JSON.stringify(mockUser));
-                
-                // Redirect to profile setup
                 window.location.href = 'profile-setup.html';
             }, 1000);
-            
-            /* Uncomment this for actual server integration
-            // Send registration request to server
-            fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, email, mobile, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Store user in localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(data.user));
-                    
-                    // Redirect to profile setup
-                    window.location.href = 'profile-setup.html';
-                } else {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Register with PrepSharp';
-                    errorMessage.textContent = data.message || 'Registration failed';
-                    errorMessage.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                submitButton.disabled = false;
-                submitButton.textContent = 'Register with PrepSharp';
-                errorMessage.textContent = 'An error occurred. Please try again.';
-                errorMessage.style.display = 'block';
-            });
-            */
         });
     </script>
 </body>
