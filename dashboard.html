@@ -337,10 +337,24 @@
             // Add hamburger menu icon for better visibility
             const hamburgerIcon = document.createElement('span');
             hamburgerIcon.innerHTML = '☰';
+            hamburgerIcon.className = 'menu-icon';
             hamburgerIcon.style.fontSize = '24px';
-            hamburgerIcon.style.marginRight = '10px';
-            hamburgerIcon.style.cursor = 'pointer';
             logoContainer.prepend(hamburgerIcon);
+            
+            // Make only the hamburger icon clickable for sidebar toggle
+            hamburgerIcon.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event bubbling
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            // Remove the click event from logo container
+            logoContainer.removeEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+            });
             
             // Logout functionality (header button)
             document.getElementById('logout-btn').addEventListener('click', function() {
