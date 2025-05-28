@@ -122,10 +122,36 @@
     <header>
         <h2>PrepSharp - JEE Advanced Setup</h2>
         <div>
-            <button id="pdf-upload-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;" onclick="openPdfUploader()">UPLOAD PDF</button>
+            <button id="pdf-upload-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">UPLOAD PDF</button>
             <button id="back-btn" class="btn">Back</button>
         </div>
     </header>
+    
+    <script>
+    // Direct PDF upload handler
+    document.getElementById('pdf-upload-btn').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/pdf';
+        
+        input.onchange = function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const url = URL.createObjectURL(file);
+                window.open(url, '_blank');
+                
+                document.getElementById('pdf-upload-btn').textContent = 'PDF OPENED';
+                document.getElementById('pdf-upload-btn').style.backgroundColor = '#1976d2';
+                
+                localStorage.setItem('pdfUploaded', 'true');
+                
+                alert('PDF opened in new tab. Use Win+Shift+S to capture screenshots, then click on a screenshot button and press Ctrl+V to paste.');
+            }
+        };
+        
+        input.click();
+    });
+    </script>
     
     <div class="container">
         <div class="card">
