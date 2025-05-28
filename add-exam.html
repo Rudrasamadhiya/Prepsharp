@@ -101,6 +101,74 @@
                 </select>
             </div>
             
+            <div class="form-group" id="jee-main-details" style="display:none;">
+                <div class="form-group">
+                    <label for="exam-date">Date</label>
+                    <select id="exam-date" required>
+                        <option value="">Select Date</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="exam-month">Month</label>
+                    <select id="exam-month" required>
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="exam-shift">Shift</label>
+                    <select id="exam-shift" required>
+                        <option value="">Select Shift</option>
+                        <option value="1">Shift 1</option>
+                        <option value="2">Shift 2</option>
+                    </select>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label for="exam-year">Exam Year</label>
                 <select id="exam-year" required>
@@ -191,10 +259,17 @@
         // Event listeners
         document.getElementById('exam-type').addEventListener('change', function() {
             const paperNumberContainer = document.getElementById('paper-number-container');
+            const jeeMainDetails = document.getElementById('jee-main-details');
+            
+            // Hide both containers first
+            paperNumberContainer.style.display = 'none';
+            jeeMainDetails.style.display = 'none';
+            
+            // Show appropriate container based on exam type
             if (this.value === 'jee-advanced') {
                 paperNumberContainer.style.display = 'block';
-            } else {
-                paperNumberContainer.style.display = 'none';
+            } else if (this.value === 'jee-main') {
+                jeeMainDetails.style.display = 'block';
             }
         });
         
@@ -230,14 +305,52 @@
                 questions: []
             };
             
-            localStorage.setItem('currentExam', JSON.stringify(examData));
-            
-            // Redirect to appropriate setup page based on exam type
-            if (examType === 'jee-advanced') {
-                window.location.href = 'advanced-exam-setup.html';
-            } else {
-                window.location.href = 'subject-setup.html';
+            // Add JEE Main specific details if applicable
+            if (examType === 'jee-main') {
+                const examDate = document.getElementById('exam-date').value;
+                const examMonth = document.getElementById('exam-month').value;
+                const examShift = document.getElementById('exam-shift').value;
+                
+                if (!examDate || !examMonth || !examShift) {
+                    alert('Please fill in all JEE Main details (date, month, and shift)');
+                    return;
+                }
+                
+                examData.date = examDate;
+                examData.month = examMonth;
+                examData.shift = examShift;
             }
+            
+            // Create paper in database via API
+            fetch('/api/papers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(examData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store the paper data including the generated ID and name
+                    localStorage.setItem('currentExam', JSON.stringify(data.paper));
+                    
+                    // Redirect to appropriate setup page based on exam type
+                    if (examType === 'jee-advanced') {
+                        window.location.href = 'advanced-exam-setup.html';
+                    } else {
+                        window.location.href = 'subject-setup.html';
+                    }
+                } else {
+                    alert('Error creating paper: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to create paper. Please try again.');
+            });
+            
+            // This code is now handled in the fetch promise
         });
         
         document.getElementById('dashboard-btn').addEventListener('click', function() {
