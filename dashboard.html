@@ -36,6 +36,17 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            user-select: none;
+        }
+        
+        /* Hamburger menu icon */
+        .menu-icon {
+            display: inline-block;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .menu-icon:hover {
+            color: var(--primary-color);
         }
         .logo {
             width: 40px;
@@ -115,8 +126,8 @@
         .sidebar {
             position: fixed;
             top: 0;
-            left: -var(--sidebar-width);
-            width: var(--sidebar-width);
+            left: -250px; /* Use fixed value instead of var */
+            width: 250px; /* Use fixed value instead of var */
             height: 100%;
             background-color: white;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
@@ -313,13 +324,23 @@
             logoContainer.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
                 sidebarOverlay.classList.toggle('active');
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
             });
             
             // Close sidebar when clicking outside
             sidebarOverlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
+            
+            // Add hamburger menu icon for better visibility
+            const hamburgerIcon = document.createElement('span');
+            hamburgerIcon.innerHTML = '☰';
+            hamburgerIcon.style.fontSize = '24px';
+            hamburgerIcon.style.marginRight = '10px';
+            hamburgerIcon.style.cursor = 'pointer';
+            logoContainer.prepend(hamburgerIcon);
             
             // Logout functionality (header button)
             document.getElementById('logout-btn').addEventListener('click', function() {
