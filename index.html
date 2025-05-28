@@ -229,24 +229,61 @@
                 // Login
                 submitButton.textContent = 'Logging in...';
                 
-                // For demo/testing, directly log in without server verification
-                // Create a mock user
-                const mockUser = {
-                    id: '12345',
-                    name: 'Test User',
-                    email: email,
-                    mobile: '1234567890',
-                    stream: 'engineering',
-                    profileComplete: true
-                };
+                // Use server authentication instead of mock user
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.requiresVerification) {
+                            // User needs to verify email
+                            window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
+                        } else {
+                            // Store user in localStorage
+                            localStorage.setItem('currentUser', JSON.stringify(data.user));
+                            
+                            // Redirect to dashboard
+                            window.location.href = 'dashboard.html';
+                        }
+                    } else {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Login to PrepSharp';
+                        errorMessage.textContent = data.message || 'Invalid email or password';
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Login to PrepSharp';
+                    errorMessage.textContent = 'An error occurred. Please try again.';
+                    errorMessage.style.display = 'block';
+                });
                 
-                // Store user in localStorage
-                localStorage.setItem('currentUser', JSON.stringify(mockUser));
-                
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-                
-                /* Uncomment this for actual server integration
+                /* Fallback to mock user if server is not running
+                if (error.message === "Failed to fetch") {
+                    console.log("Server might be offline, using mock user");
+                    // Create a mock user as fallback
+                    const mockUser = {
+                        id: '12345',
+                        name: 'Test User',
+                        email: email,
+                        mobile: '1234567890',
+                        stream: 'engineering',
+                        profileComplete: true
+                    };
+                    
+                    // Store user in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(mockUser));
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
                 fetch('/api/login', {
                     method: 'POST',
                     headers: {
