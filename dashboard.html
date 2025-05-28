@@ -165,13 +165,11 @@
             display: none;
         }
         
-        /* Show sidebar when logo is hovered */
-        .logo-container:hover + .sidebar,
-        .sidebar:hover {
+        /* Sidebar active state */
+        .sidebar.active {
             left: 0;
         }
-        .logo-container:hover ~ .sidebar-overlay,
-        .sidebar:hover ~ .sidebar-overlay {
+        .sidebar-overlay.active {
             display: block;
         }
     </style>
@@ -309,11 +307,18 @@
             // Sidebar functionality
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const logoContainer = document.getElementById('logo-container');
+            
+            // Toggle sidebar when clicking on logo
+            logoContainer.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
             
             // Close sidebar when clicking outside
             sidebarOverlay.addEventListener('click', function() {
-                sidebar.style.left = '-' + getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
-                sidebarOverlay.style.display = 'none';
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
             });
             
             // Logout functionality (header button)
