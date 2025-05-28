@@ -298,6 +298,7 @@
                     body: JSON.stringify({ email, loginMethod: 'otp' })
                 })
                 */
+                /* Uncomment this for actual server integration
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.requiresOTP) {
@@ -322,6 +323,7 @@
                     errorMessage.textContent = 'An error occurred. Please try again.';
                     errorMessage.style.display = 'block';
                 });
+                */
             } else if (isOtpLogin && otp) {
                 // Second step of OTP login - verify OTP
                 submitButton.textContent = 'Verifying...';
