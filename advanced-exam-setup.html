@@ -121,7 +121,10 @@
 <body>
     <header>
         <h2>PrepSharp - JEE Advanced Setup</h2>
-        <button id="back-btn" class="btn">Back</button>
+        <div>
+            <button id="pdf-upload-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;" onclick="openPdfUploader()">UPLOAD PDF</button>
+            <button id="back-btn" class="btn">Back</button>
+        </div>
     </header>
     
     <div class="container">
@@ -152,6 +155,8 @@
 
     <script src="html2canvas.min.js"></script>
     <script src="screen-capture.js"></script>
+    <script src="pdf-uploader.js"></script>
+    <script src="simple-paste.js"></script>
     <script>
         // Check if exam data exists
         const examData = JSON.parse(localStorage.getItem('currentExam'));
