@@ -11,6 +11,7 @@
             --accent-color: #ff9800;
             --background-color: #f5f5f5;
             --text-color: #212121;
+            --sidebar-width: 250px;
         }
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -19,6 +20,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         header {
             background-color: white;
@@ -27,10 +29,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 100;
         }
         .logo-container {
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
         .logo {
             width: 40px;
@@ -105,11 +110,75 @@
             color: var(--primary-color);
             margin-top: 10px;
         }
+        
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -var(--sidebar-width);
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f5f5f5;
+        }
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        /* Show sidebar when logo is hovered */
+        .logo-container:hover + .sidebar,
+        .sidebar:hover {
+            left: 0;
+        }
+        .logo-container:hover ~ .sidebar-overlay,
+        .sidebar:hover ~ .sidebar-overlay {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-container">
+        <div class="logo-container" id="logo-container">
             <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
             <h2>PrepSharp</h2>
         </div>
@@ -118,6 +187,23 @@
             <button id="logout-btn" class="btn primary">Logout</button>
         </div>
     </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>PrepSharp Menu</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><span class="icon">🏠</span> Dashboard</a></li>
+            <li><a href="profile-setup.html"><span class="icon">👤</span> Edit Profile</a></li>
+            <li><a href="#"><span class="icon">❓</span> Ask Question</a></li>
+            <li><a href="#"><span class="icon">📊</span> My Results</a></li>
+            <li><a href="#"><span class="icon">📝</span> My Notes</a></li>
+            <li><a href="#"><span class="icon">⚙️</span> Settings</a></li>
+            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
     <div class="container">
         <div class="welcome-message">
@@ -220,8 +306,25 @@
                 streamInfo.textContent = 'You are viewing all available exams';
             }
             
-            // Logout functionality
+            // Sidebar functionality
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            // Close sidebar when clicking outside
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.style.left = '-' + getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width');
+                sidebarOverlay.style.display = 'none';
+            });
+            
+            // Logout functionality (header button)
             document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            });
+            
+            // Logout functionality (sidebar option)
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
                 localStorage.removeItem('currentUser');
                 window.location.href = 'index.html';
             });
