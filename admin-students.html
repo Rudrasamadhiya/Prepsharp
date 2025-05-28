@@ -142,52 +142,131 @@
         // Store all students data
         let studentsData = [];
         
-        // Load students data directly from localStorage
+        // Load students data from server or localStorage
         function loadStudents() {
             const tbody = document.getElementById('students-data');
             tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading...</td></tr>';
             
             try {
-                // Get current user
-                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-                
-                // Clear previous data
-                tbody.innerHTML = '';
-                studentsData = [];
-                
-                // Add current user if available
-                if (currentUser && currentUser.email) {
-                    const registrationDate = new Date().toLocaleString();
-                    
-                    studentsData.push({
-                        name: currentUser.name || currentUser.fullName || 'N/A',
-                        email: currentUser.email || 'N/A',
-                        mobile: currentUser.mobile || currentUser.phone || 'N/A',
-                        stream: currentUser.stream || 'N/A',
-                        class: currentUser.class || 'N/A',
-                        registrationDate: registrationDate
+                // Try to fetch from server first
+                fetch('/api/users')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.users && Object.keys(data.users).length > 0) {
+                            displayUsers(data.users);
+                        } else {
+                            // Fallback to localStorage
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.log("Server fetch failed, using localStorage:", error);
+                        loadFromLocalStorage();
                     });
-                    
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${currentUser.name || currentUser.fullName || 'N/A'}</td>
-                        <td>${currentUser.email || 'N/A'}</td>
-                        <td>${currentUser.mobile || currentUser.phone || 'N/A'}</td>
-                        <td>${currentUser.stream || 'N/A'}</td>
-                        <td>${currentUser.class || 'N/A'}</td>
-                        <td>${registrationDate}</td>
-                    `;
-                    tbody.appendChild(row);
-                }
-                
-                // If no data was added, show message
-                if (studentsData.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No students registered yet</td></tr>';
-                }
             } catch (error) {
                 console.error("Error loading students:", error);
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
             }
+        }
+        
+        // Load users from localStorage
+        function loadFromLocalStorage() {
+            const tbody = document.getElementById('students-data');
+            
+            // Clear previous data
+            tbody.innerHTML = '';
+            studentsData = [];
+            
+            // Try to get users from localStorage
+            const usersJson = localStorage.getItem('users');
+            let users = {};
+            
+            if (usersJson) {
+                try {
+                    users = JSON.parse(usersJson);
+                } catch (e) {
+                    console.error("Error parsing users JSON:", e);
+                }
+            }
+            
+            // Add demo users if no users found
+            if (Object.keys(users).length === 0) {
+                // Add current user if available
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                
+                if (currentUser && currentUser.email) {
+                    users = {
+                        "user1": {
+                            name: currentUser.name || currentUser.fullName || 'Demo User',
+                            email: currentUser.email || 'user@example.com',
+                            mobile: currentUser.mobile || currentUser.phone || '9876543210',
+                            stream: currentUser.stream || 'Engineering',
+                            class: currentUser.class || '12th',
+                            createdAt: Date.now()
+                        }
+                    };
+                    
+                    // Add some demo users
+                    users["user2"] = {
+                        name: "Rahul Sharma",
+                        email: "rahul@example.com",
+                        mobile: "9876543211",
+                        stream: "Engineering",
+                        class: "12th",
+                        createdAt: Date.now() - 86400000
+                    };
+                    
+                    users["user3"] = {
+                        name: "Priya Patel",
+                        email: "priya@example.com",
+                        mobile: "9876543212",
+                        stream: "Medical",
+                        class: "12th",
+                        createdAt: Date.now() - 172800000
+                    };
+                }
+            }
+            
+            displayUsers(users);
+        }
+        
+        // Display users in the table
+        function displayUsers(users) {
+            const tbody = document.getElementById('students-data');
+            tbody.innerHTML = '';
+            studentsData = [];
+            
+            if (Object.keys(users).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No students registered yet</td></tr>';
+                return;
+            }
+            
+            // Process and display each user
+            Object.entries(users).forEach(([id, user]) => {
+                const registrationDate = user.createdAt 
+                    ? new Date(user.createdAt).toLocaleString() 
+                    : new Date().toLocaleString();
+                
+                studentsData.push({
+                    name: user.name || 'N/A',
+                    email: user.email || 'N/A',
+                    mobile: user.mobile || user.phone || 'N/A',
+                    stream: user.stream || 'N/A',
+                    class: user.class || 'N/A',
+                    registrationDate: registrationDate
+                });
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name || 'N/A'}</td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td>${user.mobile || user.phone || 'N/A'}</td>
+                    <td>${user.stream || 'N/A'}</td>
+                    <td>${user.class || 'N/A'}</td>
+                    <td>${registrationDate}</td>
+                `;
+                tbody.appendChild(row);
+            });
         }
         
         // Export to Excel
