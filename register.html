@@ -19,13 +19,27 @@
       color: red;
       margin-top: 10px;
     }
+    /* Fix for mobile number input styling */
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    input[type="tel"]:focus {
+      border-color: #1976d2;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+    }
   </style>
 </head>
 <body>
   <div class="register-flex">
     <div class="banner">
       <div class="logo">
-        <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px;" />
+        <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="max-width: 200px;" />
       </div>
       <h1>PrepSharp - Prepare Smarter</h1>
       <h2>Join the PrepSharp Community</h2>
@@ -51,13 +65,6 @@
             <input type="email" id="email" placeholder="Enter your email address" required />
           </div>
           <div class="form-group">
-            <button type="button" class="btn secondary" id="send-otp-btn">Send OTP to Email</button>
-          </div>
-          <div class="form-group" id="otp-group" style="display: none;">
-            <label for="otp">Enter OTP</label>
-            <input type="text" id="otp" placeholder="Enter the OTP sent to your email" />
-          </div>
-          <div class="form-group">
             <label for="mobile">Mobile Number</label>
             <input type="tel" id="mobile" placeholder="Enter your mobile number" required />
           </div>
@@ -81,33 +88,6 @@
   </div>
 
   <script>
-    document.getElementById('send-otp-btn').addEventListener('click', function () {
-      const email = document.getElementById('email').value.trim();
-      if (!email) {
-        alert('Please enter a valid email address first.');
-        return;
-      }
-
-      fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert('OTP sent to your email.');
-          document.getElementById('otp-group').style.display = 'block';
-        } else {
-          alert(data.message || 'Failed to send OTP');
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert('An error occurred while sending OTP');
-      });
-    });
-
     document.getElementById('register-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -116,12 +96,11 @@
       const mobile = document.getElementById('mobile').value.trim();
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
-      const otp = document.getElementById('otp').value.trim();
       const errorMessage = document.getElementById('error-message');
       errorMessage.style.display = 'none';
 
-      if (!name || !email || !mobile || !password || !confirmPassword || !otp) {
-        errorMessage.textContent = 'All fields including OTP are required';
+      if (!name || !email || !mobile || !password || !confirmPassword) {
+        errorMessage.textContent = 'All fields are required';
         errorMessage.style.display = 'block';
         return;
       }
@@ -131,35 +110,18 @@
         errorMessage.style.display = 'block';
         return;
       }
-
-      fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          const mockUser = {
-            id: Date.now().toString(),
-            name,
-            email,
-            mobile,
-            stream: '',
-            profileComplete: false
-          };
-          localStorage.setItem('currentUser', JSON.stringify(mockUser));
-          window.location.href = 'profile-setup.html';
-        } else {
-          errorMessage.textContent = data.message || 'OTP verification failed';
-          errorMessage.style.display = 'block';
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        errorMessage.textContent = 'An error occurred during OTP verification';
-        errorMessage.style.display = 'block';
-      });
+      
+      // Create user and redirect
+      const user = {
+        id: Date.now().toString(),
+        name,
+        email,
+        mobile,
+        stream: '',
+        profileComplete: false
+      };
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      window.location.href = 'profile-setup.html';
     });
   </script>
 </body>
