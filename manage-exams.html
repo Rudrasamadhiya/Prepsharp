@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Exams - PrepSharp Admin</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn.secondary {
+            background-color: #757575;
+        }
+        .btn.danger {
+            background-color: #f44336;
+        }
+        .btn.success {
+            background-color: #4caf50;
+        }
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .exam-table th, .exam-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .exam-table th {
+            background-color: #f2f2f2;
+            color: var(--primary-color);
+        }
+        .exam-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .filter-controls select, .filter-controls input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .no-exams {
+            text-align: center;
+            padding: 40px;
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check if admin is logged in
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+    </script>
+
+    <div class="header">
+        <div class="logo">
+            <img src="logo for index (1).png" alt="PrepSharp Logo">
+            <h2>PrepSharp Admin</h2>
+        </div>
+        <button class="btn" onclick="location.href='admin-dashboard.html'">Back to Dashboard</button>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Manage Exams</h1>
+            <p>View, edit, and manage all exams in the system.</p>
+            
+            <div class="filter-controls">
+                <div>
+                    <label for="exam-type-filter">Filter by Type:</label>
+                    <select id="exam-type-filter">
+                        <option value="">All Types</option>
+                        <option value="jee-advanced">JEE Advanced</option>
+                        <option value="jee-main">JEE Main</option>
+                        <option value="neet">NEET</option>
+                        <option value="bitsat">BITSAT</option>
+                        <option value="aiims">AIIMS</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="exam-year-filter">Filter by Year:</label>
+                    <select id="exam-year-filter">
+                        <option value="">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="exam-search">Search:</label>
+                    <input type="text" id="exam-search" placeholder="Search exams...">
+                </div>
+            </div>
+            
+            <button class="btn success" onclick="location.href='add-exam.html'">Add New Exam</button>
+            
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>Exam Name</th>
+                        <th>Type</th>
+                        <th>Year</th>
+                        <th>Questions</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="exam-list">
+                    <!-- Exam data will be loaded here -->
+                </tbody>
+            </table>
+            
+            <div id="no-exams-message" class="no-exams" style="display: none;">
+                <h3>No exams found</h3>
+                <p>Create a new exam by clicking the "Add New Exam" button above.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExams();
+            
+            // Set up event listeners for filters
+            document.getElementById('exam-type-filter').addEventListener('change', filterExams);
+            document.getElementById('exam-year-filter').addEventListener('change', filterExams);
+            document.getElementById('exam-search').addEventListener('input', filterExams);
+        });
+        
+        function loadExams() {
+            // Try to load exams from localStorage first
+            let papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            
+            // If no papers in localStorage, try to fetch from server
+            if (papers.length === 0) {
+                fetch('/api/papers')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success && data.papers) {
+                            papers = data.papers;
+                            localStorage.setItem('papers', JSON.stringify(papers));
+                            displayExams(papers);
+                        } else {
+                            showNoExamsMessage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching papers:', error);
+                        showNoExamsMessage();
+                    });
+            } else {
+                displayExams(papers);
+            }
+        }
+        
+        function displayExams(papers) {
+            const examList = document.getElementById('exam-list');
+            examList.innerHTML = '';
+            
+            if (papers.length === 0) {
+                showNoExamsMessage();
+                return;
+            }
+            
+            document.getElementById('no-exams-message').style.display = 'none';
+            
+            papers.forEach(paper => {
+                const row = document.createElement('tr');
+                
+                // Format date
+                const createdDate = new Date(paper.createdAt);
+                const formattedDate = createdDate.toLocaleDateString();
+                
+                row.innerHTML = `
+                    <td>${paper.name}</td>
+                    <td>${formatExamType(paper.type)}</td>
+                    <td>${paper.year}</td>
+                    <td>${paper.questions ? paper.questions.length : 0} / ${paper.totalQuestions}</td>
+                    <td>${formattedDate}</td>
+                    <td class="actions">
+                        <button class="btn" onclick="viewExam('${paper.id}')">View</button>
+                        <button class="btn secondary" onclick="editExam('${paper.id}')">Edit</button>
+                        <button class="btn danger" onclick="deleteExam('${paper.id}')">Delete</button>
+                    </td>
+                `;
+                
+                examList.appendChild(row);
+            });
+        }
+        
+        function formatExamType(type) {
+            const types = {
+                'jee-advanced': 'JEE Advanced',
+                'jee-main': 'JEE Main',
+                'neet': 'NEET',
+                'bitsat': 'BITSAT',
+                'aiims': 'AIIMS'
+            };
+            
+            return types[type] || type;
+        }
+        
+        function filterExams() {
+            const typeFilter = document.getElementById('exam-type-filter').value;
+            const yearFilter = document.getElementById('exam-year-filter').value;
+            const searchFilter = document.getElementById('exam-search').value.toLowerCase();
+            
+            let papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            
+            // Apply filters
+            const filteredPapers = papers.filter(paper => {
+                const matchesType = !typeFilter || paper.type === typeFilter;
+                const matchesYear = !yearFilter || paper.year === yearFilter;
+                const matchesSearch = !searchFilter || 
+                    paper.name.toLowerCase().includes(searchFilter) || 
+                    paper.type.toLowerCase().includes(searchFilter);
+                
+                return matchesType && matchesYear && matchesSearch;
+            });
+            
+            displayExams(filteredPapers);
+        }
+        
+        function showNoExamsMessage() {
+            document.getElementById('exam-list').innerHTML = '';
+            document.getElementById('no-exams-message').style.display = 'block';
+        }
+        
+        function viewExam(examId) {
+            // Store the selected exam ID
+            localStorage.setItem('viewExamId', examId);
+            
+            // Redirect to exam viewer page
+            window.location.href = 'view-exam.html';
+        }
+        
+        function editExam(examId) {
+            // Get papers from localStorage
+            const papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            const paper = papers.find(p => p.id === examId);
+            
+            if (paper) {
+                // Store the current exam for editing
+                localStorage.setItem('currentExam', JSON.stringify(paper));
+                
+                // Redirect to appropriate edit page based on exam type
+                if (paper.type === 'jee-advanced') {
+                    window.location.href = 'advanced-exam-setup.html?edit=true';
+                } else if (paper.type === 'jee-main' || paper.type === 'neet') {
+                    localStorage.setItem('currentQuestionIndex', '0');
+                    localStorage.setItem('currentSubject', paper.subjects[0]);
+                    window.location.href = 'add-question.html?edit=true';
+                } else {
+                    window.location.href = 'subject-setup.html?edit=true';
+                }
+            } else {
+                alert('Exam not found');
+            }
+        }
+        
+        function deleteExam(examId) {
+            if (confirm('Are you sure you want to delete this exam? This action cannot be undone.')) {
+                // Get papers from localStorage
+                let papers = JSON.parse(localStorage.getItem('papers') || '[]');
+                
+                // Remove the paper with the specified ID
+                papers = papers.filter(paper => paper.id !== examId);
+                
+                // Update localStorage
+                localStorage.setItem('papers', JSON.stringify(papers));
+                
+                // Try to delete from server as well
+                fetch(`/api/papers/${examId}`, {
+                    method: 'DELETE'
+                }).catch(error => {
+                    console.error('Error deleting paper from server:', error);
+                });
+                
+                // Refresh the display
+                displayExams(papers);
+            }
+        }
+    </script>
+</body>
+</html>
