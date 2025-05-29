@@ -345,9 +345,15 @@
         // Add current question index to counter
         questionCounter += currentQuestionIndex + 1;
         
+        // Ensure questions array exists
+        if (!examData.questions) {
+            examData.questions = [];
+        
         // PDF and screenshot handling
         let currentCaptureTarget = null;
         let currentOptionTarget = null;
+        
+        }
         
         // PDF upload button
         document.getElementById('pdf-btn').addEventListener('click', function() {
@@ -591,10 +597,7 @@
                 }
                 
                 // Check if we've reached the end
-                let totalQuestions = 0;
-                Object.values(examData.subjectDetails).forEach(subject => {
-                    totalQuestions += subject.questionCount;
-                });
+                let totalQuestions = examData.totalQuestions || 0;
                 
                 // Calculate the actual total questions completed
                 let completedQuestionCount = 0;
@@ -606,19 +609,27 @@
                     }
                 });
                 
-                if (completedQuestionCount >= totalQuestions) {
+                console.log('Current question:', currentQuestionIndex, 'Subject:', currentSubject);
+                console.log('Completed:', completedQuestionCount, 'Total:', totalQuestions);
+                
+                if (completedQuestionCount > totalQuestions) {
                     // Save final data
                     localStorage.setItem('currentExam', JSON.stringify(examData));
                     
                     // Redirect to summary page
                     window.location.href = 'exam-summary.html';
                 } else {
-                    // Save current position
+                        // Save current position
                     localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
                     localStorage.setItem('currentSubject', currentSubject);
                     
+                    // Save exam data
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
                     // Update UI
                     updateUI();
+                    
+                    console.log('Moving to question:', currentQuestionIndex, 'Subject:', currentSubject);
                 }
             }
         });
@@ -651,22 +662,22 @@
         
         // Helper functions
         function updateUI() {
-            // Calculate question number
-            let questionNumber = 0;
+            // Recalculate question counter
+            questionCounter = 0;
             examData.subjects.forEach(subject => {
                 if (subject === currentSubject) {
-                    questionNumber += currentQuestionIndex + 1;
+                    questionCounter += currentQuestionIndex + 1;
                 } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
-                    questionNumber += examData.subjectDetails[subject].questionCount;
+                    questionCounter += examData.subjectDetails[subject].questionCount;
                 }
             });
             
             // Update progress
-            const progress = (questionNumber / examData.totalQuestions) * 100;
+            const progress = (questionCounter / examData.totalQuestions) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
             
             // Update question counter
-            document.getElementById('question-counter').textContent = `Question ${questionNumber} of ${examData.totalQuestions}`;
+            document.getElementById('question-counter').textContent = `Question ${questionCounter} of ${examData.totalQuestions}`;
             
             // Update subject
             const subjectName = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
