@@ -239,8 +239,23 @@
             // Add timestamp for sorting
             examData.createdAt = new Date().toISOString();
             
+            // Ensure questions array is properly formatted
+            if (examData.questions) {
+                // Remove any null entries from the questions array
+                examData.questions = examData.questions.filter(q => q !== null);
+                
+                console.log('Total questions saved:', examData.questions.length);
+                console.log('Questions data:', examData.questions);
+            } else {
+                console.warn('No questions array found in exam data');
+                examData.questions = [];
+            }
+            
             // Save exam to localStorage and server
             const examId = `${examData.type}-${examData.year}${examData.paperNumber ? '-p' + examData.paperNumber : ''}-${Date.now()}`;
+            
+            // Make a copy of examData to ensure it's properly saved
+            const examDataCopy = JSON.parse(JSON.stringify(examData));
             
             // Save to server API
             fetch('/api/papers', {
@@ -248,7 +263,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(examData)
+                body: JSON.stringify(examDataCopy)
             })
             .then(response => response.json())
             .then(data => {
@@ -277,8 +292,8 @@
                 exams = {};
             }
             
-            // Add new exam
-            exams[examId] = examData;
+            // Add new exam (using the copy to ensure it's properly saved)
+            exams[examId] = examDataCopy;
             
             // Save back to localStorage
             try {
