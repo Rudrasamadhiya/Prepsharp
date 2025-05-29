@@ -48,6 +48,37 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
+    <script>
+        // Set paper name immediately
+        document.addEventListener('DOMContentLoaded', function() {
+            const paperNameElement = document.getElementById('paper-name');
+            const examData = JSON.parse(localStorage.getItem('currentExam') || '{}');
+            
+            // Get exam type and year
+            const examType = examData.type || 'Exam';
+            const examYear = examData.year || '';
+            
+            // Format exam title
+            let examTitle;
+            if (examType === 'jee-advanced') {
+                examTitle = 'JEE Advanced';
+                if (examData.paperNumber) {
+                    examTitle += ` Paper ${examData.paperNumber}`;
+                }
+            } else if (examType === 'jee-main') {
+                examTitle = 'JEE Main';
+            } else if (examType === 'neet') {
+                examTitle = 'NEET';
+            } else if (examType === 'bitsat') {
+                examTitle = 'BITSAT';
+            } else {
+                examTitle = examType;
+            }
+            
+            // Set paper name
+            paperNameElement.textContent = `${examTitle} ${examYear}`;
+        });
+    </script>
         }
         input, select, textarea {
             width: 100%;
@@ -196,7 +227,7 @@
     <header>
         <div>
             <h2>PrepSharp - Add Question</h2>
-            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;"></h3>
+            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;">JEE Main 2023</h3>
         </div>
         <div>
             <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
