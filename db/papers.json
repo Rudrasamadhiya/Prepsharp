@@ -1,1 +1,120 @@
-[]
+[
+  {
+    "id": "1001",
+    "type": "jee-main",
+    "name": "JEE Main - 10/Jan Shift 1 2023",
+    "year": "2023",
+    "date": "10",
+    "month": "1",
+    "shift": "1",
+    "subjects": ["physics", "chemistry", "mathematics"],
+    "createdAt": "2023-01-15T10:30:00.000Z",
+    "questions": [
+      {
+        "id": "q1001",
+        "subject": "physics",
+        "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
+        "options": [
+          "8 m/s",
+          "10 m/s",
+          "12 m/s",
+          "14 m/s"
+        ],
+        "correctOption": 1
+      },
+      {
+        "id": "q1002",
+        "subject": "chemistry",
+        "text": "Which of the following is NOT a colligative property?",
+        "options": [
+          "Elevation in boiling point",
+          "Depression in freezing point",
+          "Osmotic pressure",
+          "Optical activity"
+        ],
+        "correctOption": 3
+      },
+      {
+        "id": "q1003",
+        "subject": "mathematics",
+        "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
+        "options": [
+          "3",
+          "5",
+          "7",
+          "9"
+        ],
+        "correctOption": 2
+      }
+    ]
+  },
+  {
+    "id": "1002",
+    "type": "jee-advanced",
+    "name": "JEE Advanced - Paper 1 2023",
+    "year": "2023",
+    "paperNumber": "1",
+    "subjects": ["physics", "chemistry", "mathematics"],
+    "createdAt": "2023-06-04T09:15:00.000Z",
+    "questions": [
+      {
+        "id": "q2001",
+        "subject": "physics",
+        "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
+        "options": [
+          "L(k₂)/(k₁+k₂)",
+          "L(k₁)/(k₁+k₂)",
+          "L/2",
+          "L(k₁-k₂)/(k₁+k₂)"
+        ],
+        "correctOption": 0
+      },
+      {
+        "id": "q2002",
+        "subject": "chemistry",
+        "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
+        "options": [
+          "sp³, sp³d, sp³",
+          "sp³d, sp³d², sp³d",
+          "sp³d, sp³d², sp³",
+          "sp³d², sp³d, sp³"
+        ],
+        "correctOption": 2
+      }
+    ]
+  },
+  {
+    "id": "1003",
+    "type": "neet",
+    "name": "NEET 2023",
+    "year": "2023",
+    "subjects": ["physics", "chemistry", "biology"],
+    "createdAt": "2023-05-07T10:00:00.000Z",
+    "questions": [
+      {
+        "id": "q3001",
+        "subject": "biology",
+        "text": "Which of the following is NOT a function of the liver?",
+        "options": [
+          "Production of bile",
+          "Storage of glycogen",
+          "Detoxification of harmful substances",
+          "Production of insulin"
+        ],
+        "correctOption": 3
+      },
+      {
+        "id": "q3002",
+        "subject": "chemistry",
+        "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
+        "options": [
+          "But-2-enal",
+          "But-3-enal",
+          "But-2-enoic acid",
+          "But-3-enoic acid"
+        ],
+        "correctOption": 0
+      }
+    ]
+  }
+]
