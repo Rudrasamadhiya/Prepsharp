@@ -164,6 +164,94 @@
         document.getElementById('exam-type-header').textContent = `PrepSharp - ${examTitles[examType] || 'Exams'}`;
         document.title = `${examTitles[examType] || 'Exam'} List - PrepSharp`;
         
+        // Load practice exams from server
+        function loadPracticeExams() {
+            const practiceExamList = document.getElementById('practice-exam-list');
+            const emptyMessage = document.getElementById('empty-practice-message');
+            
+            // Fetch papers from the server API
+            fetch('/api/papers')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.papers && data.papers.length > 0) {
+                        // Filter papers by exam type
+                        const filteredPapers = data.papers.filter(paper => paper.type === examType);
+                        
+                        if (filteredPapers.length > 0) {
+                            // Hide empty message
+                            emptyMessage.style.display = 'none';
+                            
+                            // Clear existing content
+                            practiceExamList.innerHTML = '';
+                            
+                            // Add each paper to the list
+                            filteredPapers.forEach(paper => {
+                                let examTitle = examTitles[paper.type] || paper.type;
+                                if (paper.type === 'jee-advanced' && paper.paperNumber) {
+                                    examTitle += ` Paper ${paper.paperNumber}`;
+                                }
+                                
+                                const examItem = document.createElement('div');
+                                examItem.className = 'exam-item';
+                                
+                                // Create subjects text if available
+                                let subjectsText = '';
+                                if (paper.subjects && paper.subjects.length > 0) {
+                                    subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                                }
+                                
+                                examItem.innerHTML = `
+                                    <div class="exam-info">
+                                        <h3>${paper.name || `${examTitle} ${paper.year}`}</h3>
+                                        <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
+                                    </div>
+                                    <div class="exam-actions">
+                                        <button class="btn small attend-btn" data-id="${paper.id}">Attend Exam</button>
+                                    </div>
+                                `;
+                                
+                                practiceExamList.appendChild(examItem);
+                                
+                                // Add event listener for attend button
+                                examItem.querySelector('.attend-btn').addEventListener('click', function() {
+                                    const paperId = this.getAttribute('data-id');
+                                    attendExam(paperId);
+                                });
+                            });
+                        } else {
+                            emptyMessage.textContent = `No ${examTitles[examType] || examType} exams available yet.`;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching papers:', error);
+                    emptyMessage.textContent = 'Failed to load exams. Please try again later.';
+                });
+        }
+        
+        // Function to attend an exam from the server
+        function attendExam(paperId) {
+            // Fetch the specific paper details
+            fetch(`/api/papers/${paperId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.paper) {
+                        // Store paper data for the exam
+                        localStorage.setItem('currentTakingExam', JSON.stringify(data.paper));
+                        localStorage.setItem('currentExamId', paperId);
+                        
+                        // Go to exam pattern page first
+                        window.location.href = 'exam-pattern.html';
+                    } else {
+                        alert('Failed to load exam. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching paper details:', error);
+                    alert('Failed to load exam. Please try again.');
+                });
+        }
+
         // Load created exams
         function loadCreatedExams() {
             const createdExamList = document.getElementById('created-exam-list');
@@ -293,6 +381,7 @@
         
         // Load exams when page loads
         window.addEventListener('load', function() {
+            loadPracticeExams();
             loadCreatedExams();
         });
     </script>
