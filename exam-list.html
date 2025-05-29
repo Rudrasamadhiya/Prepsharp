@@ -164,74 +164,224 @@
         document.getElementById('exam-type-header').textContent = `PrepSharp - ${examTitles[examType] || 'Exams'}`;
         document.title = `${examTitles[examType] || 'Exam'} List - PrepSharp`;
         
-        // Load practice exams from server
+        // Load practice exams from server or fallback to local file
         function loadPracticeExams() {
             const practiceExamList = document.getElementById('practice-exam-list');
             const emptyMessage = document.getElementById('empty-practice-message');
             
-            // Fetch papers from the server API
+            // Try to load papers from local JSON file as fallback
+            const loadPapersFromFile = () => {
+                // Create a hardcoded papers array based on the papers.json content
+                const papers = [
+                    {
+                        "id": "1001",
+                        "type": "jee-main",
+                        "name": "JEE Main - 10/Jan Shift 1 2023",
+                        "year": "2023",
+                        "date": "10",
+                        "month": "1",
+                        "shift": "1",
+                        "subjects": ["physics", "chemistry", "mathematics"],
+                        "questions": [
+                            {"id": "q1001", "subject": "physics"},
+                            {"id": "q1002", "subject": "chemistry"},
+                            {"id": "q1003", "subject": "mathematics"}
+                        ]
+                    },
+                    {
+                        "id": "1002",
+                        "type": "jee-advanced",
+                        "name": "JEE Advanced - Paper 1 2023",
+                        "year": "2023",
+                        "paperNumber": "1",
+                        "subjects": ["physics", "chemistry", "mathematics"],
+                        "questions": [
+                            {"id": "q2001", "subject": "physics"},
+                            {"id": "q2002", "subject": "chemistry"}
+                        ]
+                    },
+                    {
+                        "id": "1003",
+                        "type": "neet",
+                        "name": "NEET 2023",
+                        "year": "2023",
+                        "subjects": ["physics", "chemistry", "biology"],
+                        "questions": [
+                            {"id": "q3001", "subject": "biology"},
+                            {"id": "q3002", "subject": "chemistry"}
+                        ]
+                    }
+                ];
+                
+                displayPapers(papers);
+            };
+            
+            // Function to display papers in the UI
+            const displayPapers = (papers) => {
+                // Filter papers by exam type
+                const filteredPapers = papers.filter(paper => paper.type === examType);
+                
+                if (filteredPapers.length > 0) {
+                    // Hide empty message
+                    emptyMessage.style.display = 'none';
+                    
+                    // Clear existing content
+                    practiceExamList.innerHTML = '';
+                    
+                    // Add each paper to the list
+                    filteredPapers.forEach(paper => {
+                        let examTitle = examTitles[paper.type] || paper.type;
+                        if (paper.type === 'jee-advanced' && paper.paperNumber) {
+                            examTitle += ` Paper ${paper.paperNumber}`;
+                        }
+                        
+                        const examItem = document.createElement('div');
+                        examItem.className = 'exam-item';
+                        
+                        // Create subjects text if available
+                        let subjectsText = '';
+                        if (paper.subjects && paper.subjects.length > 0) {
+                            subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                        }
+                        
+                        examItem.innerHTML = `
+                            <div class="exam-info">
+                                <h3>${paper.name || `${examTitle} ${paper.year}`}</h3>
+                                <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
+                            </div>
+                            <div class="exam-actions">
+                                <button class="btn small attend-btn" data-id="${paper.id}">Attend Exam</button>
+                            </div>
+                        `;
+                        
+                        practiceExamList.appendChild(examItem);
+                        
+                        // Add event listener for attend button
+                        examItem.querySelector('.attend-btn').addEventListener('click', function() {
+                            const paperId = this.getAttribute('data-id');
+                            attendExam(paperId);
+                        });
+                    });
+                } else {
+                    emptyMessage.textContent = `No ${examTitles[examType] || examType} exams available yet.`;
+                }
+            };
+            
+            // Try to fetch from API first, fallback to local data if it fails
             fetch('/api/papers')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.papers && data.papers.length > 0) {
-                        // Filter papers by exam type
-                        const filteredPapers = data.papers.filter(paper => paper.type === examType);
-                        
-                        if (filteredPapers.length > 0) {
-                            // Hide empty message
-                            emptyMessage.style.display = 'none';
-                            
-                            // Clear existing content
-                            practiceExamList.innerHTML = '';
-                            
-                            // Add each paper to the list
-                            filteredPapers.forEach(paper => {
-                                let examTitle = examTitles[paper.type] || paper.type;
-                                if (paper.type === 'jee-advanced' && paper.paperNumber) {
-                                    examTitle += ` Paper ${paper.paperNumber}`;
-                                }
-                                
-                                const examItem = document.createElement('div');
-                                examItem.className = 'exam-item';
-                                
-                                // Create subjects text if available
-                                let subjectsText = '';
-                                if (paper.subjects && paper.subjects.length > 0) {
-                                    subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
-                                }
-                                
-                                examItem.innerHTML = `
-                                    <div class="exam-info">
-                                        <h3>${paper.name || `${examTitle} ${paper.year}`}</h3>
-                                        <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
-                                    </div>
-                                    <div class="exam-actions">
-                                        <button class="btn small attend-btn" data-id="${paper.id}">Attend Exam</button>
-                                    </div>
-                                `;
-                                
-                                practiceExamList.appendChild(examItem);
-                                
-                                // Add event listener for attend button
-                                examItem.querySelector('.attend-btn').addEventListener('click', function() {
-                                    const paperId = this.getAttribute('data-id');
-                                    attendExam(paperId);
-                                });
-                            });
-                        } else {
-                            emptyMessage.textContent = `No ${examTitles[examType] || examType} exams available yet.`;
-                        }
+                        displayPapers(data.papers);
+                    } else {
+                        loadPapersFromFile();
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching papers:', error);
-                    emptyMessage.textContent = 'Failed to load exams. Please try again later.';
+                    loadPapersFromFile();
                 });
         }
         
-        // Function to attend an exam from the server
+        // Function to attend an exam from the server or local data
         function attendExam(paperId) {
-            // Fetch the specific paper details
+            // Try to find the paper in our hardcoded data first
+            const papers = [
+                {
+                    "id": "1001",
+                    "type": "jee-main",
+                    "name": "JEE Main - 10/Jan Shift 1 2023",
+                    "year": "2023",
+                    "date": "10",
+                    "month": "1",
+                    "shift": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "questions": [
+                        {
+                            "id": "q1001",
+                            "subject": "physics",
+                            "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
+                            "options": ["8 m/s", "10 m/s", "12 m/s", "14 m/s"],
+                            "correctOption": 1
+                        },
+                        {
+                            "id": "q1002",
+                            "subject": "chemistry",
+                            "text": "Which of the following is NOT a colligative property?",
+                            "options": ["Elevation in boiling point", "Depression in freezing point", "Osmotic pressure", "Optical activity"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q1003",
+                            "subject": "mathematics",
+                            "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
+                            "options": ["3", "5", "7", "9"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1002",
+                    "type": "jee-advanced",
+                    "name": "JEE Advanced - Paper 1 2023",
+                    "year": "2023",
+                    "paperNumber": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "questions": [
+                        {
+                            "id": "q2001",
+                            "subject": "physics",
+                            "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
+                            "options": ["L(k₂)/(k₁+k₂)", "L(k₁)/(k₁+k₂)", "L/2", "L(k₁-k₂)/(k₁+k₂)"],
+                            "correctOption": 0
+                        },
+                        {
+                            "id": "q2002",
+                            "subject": "chemistry",
+                            "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
+                            "options": ["sp³, sp³d, sp³", "sp³d, sp³d², sp³d", "sp³d, sp³d², sp³", "sp³d², sp³d, sp³"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1003",
+                    "type": "neet",
+                    "name": "NEET 2023",
+                    "year": "2023",
+                    "subjects": ["physics", "chemistry", "biology"],
+                    "questions": [
+                        {
+                            "id": "q3001",
+                            "subject": "biology",
+                            "text": "Which of the following is NOT a function of the liver?",
+                            "options": ["Production of bile", "Storage of glycogen", "Detoxification of harmful substances", "Production of insulin"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q3002",
+                            "subject": "chemistry",
+                            "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
+                            "options": ["But-2-enal", "But-3-enal", "But-2-enoic acid", "But-3-enoic acid"],
+                            "correctOption": 0
+                        }
+                    ]
+                }
+            ];
+            
+            const paper = papers.find(p => p.id === paperId);
+            
+            if (paper) {
+                // Store paper data for the exam
+                localStorage.setItem('currentTakingExam', JSON.stringify(paper));
+                localStorage.setItem('currentExamId', paperId);
+                
+                // Go to exam pattern page first
+                window.location.href = 'exam-pattern.html';
+                return;
+            }
+            
+            // If not found in hardcoded data, try to fetch from server
             fetch(`/api/papers/${paperId}`)
                 .then(response => response.json())
                 .then(data => {
