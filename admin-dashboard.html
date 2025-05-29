@@ -208,6 +208,12 @@
                 <p>View paper attempts and student activity</p>
             </div>
             
+            <div class="dashboard-card" onclick="document.getElementById('studentMessagesModal').style.display='block'">
+                <div class="card-icon">💬</div>
+                <h3>Student Messages</h3>
+                <p>View and reply to student queries</p>
+            </div>
+            
             <div class="dashboard-card" onclick="location.href='index.html'">
                 <div class="card-icon">🏠</div>
                 <h3>Student View</h3>
@@ -270,6 +276,64 @@
             </div>
             
             <button id="save-dashboard-btn" class="btn" style="background-color: #4caf50;">Save Changes</button>
+        </div>
+    </div>
+    
+    <!-- Student Messages Modal -->
+    <div id="studentMessagesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('studentMessagesModal').style.display='none'">&times;</span>
+            <h2>Student Messages</h2>
+            <p>View and reply to student queries:</p>
+            
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="messages-data">
+                    <tr>
+                        <td>Rahul Sharma</td>
+                        <td>I'm having trouble accessing the JEE Advanced practice test</td>
+                        <td>2023-11-15</td>
+                        <td><button class="btn" onclick="replyToMessage('Rahul Sharma', 'rahul@example.com')">Reply</button></td>
+                    </tr>
+                    <tr>
+                        <td>Priya Patel</td>
+                        <td>When will the NEET 2024 mock tests be available?</td>
+                        <td>2023-11-14</td>
+                        <td><button class="btn" onclick="replyToMessage('Priya Patel', 'priya@example.com')">Reply</button></td>
+                    </tr>
+                    <tr>
+                        <td>Amit Kumar</td>
+                        <td>The physics questions in Test #3 have incorrect answers</td>
+                        <td>2023-11-12</td>
+                        <td><button class="btn" onclick="replyToMessage('Amit Kumar', 'amit@example.com')">Reply</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Reply Message Modal -->
+    <div id="replyMessageModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="document.getElementById('replyMessageModal').style.display='none'">&times;</span>
+            <h2>Reply to <span id="student-name">Student</span></h2>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="reply-message" style="display: block; margin-bottom: 8px;">Your Reply:</label>
+                <textarea id="reply-message" rows="6" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button class="btn" onclick="document.getElementById('replyMessageModal').style.display='none'">Cancel</button>
+                <button class="btn" style="background-color: #4caf50;" onclick="sendReply()">Send Reply</button>
+            </div>
         </div>
     </div>
 
@@ -378,6 +442,52 @@
                 window.location.href = 'admin-login.html';
             });
         });
+    </script>
+    
+    <script>
+        // Student message reply functionality
+        let currentStudentEmail = '';
+        
+        // Function to open reply modal
+        function replyToMessage(studentName, email) {
+            document.getElementById('student-name').textContent = studentName;
+            currentStudentEmail = email;
+            document.getElementById('replyMessageModal').style.display = 'block';
+            document.getElementById('reply-message').focus();
+        }
+        
+        // Function to send reply
+        function sendReply() {
+            const message = document.getElementById('reply-message').value.trim();
+            if (!message) {
+                alert('Please enter a reply message');
+                return;
+            }
+            
+            // Send email to student (in a real app, this would call an API)
+            alert(`Reply sent to ${currentStudentEmail}\n\nMessage: ${message}`);
+            
+            // In a real implementation, you would send this to your server
+            fetch('/api/send-reply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    to: currentStudentEmail,
+                    message: message,
+                    from: 'support@prepsharp.in'
+                })
+            }).catch(err => console.error('Error sending reply:', err));
+            
+            // Close modal and reset
+            document.getElementById('replyMessageModal').style.display = 'none';
+            document.getElementById('reply-message').value = '';
+        }
+        
+        // Make functions globally available
+        window.replyToMessage = replyToMessage;
+        window.sendReply = sendReply;
     </script>
 </body>
 </html>
