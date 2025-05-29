@@ -80,9 +80,14 @@
             
             if (examType === 'jee-main') {
                 const date = examData.date || '';
-                const month = examData.month || '';
+                const monthNum = examData.month || '';
                 const shift = examData.shift || '';
-                formattedName = `JEE Main ${date}/${month}-${examYear} Shift ${shift}`;
+                
+                // Convert month number to name
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const monthName = monthNames[parseInt(monthNum) - 1] || '';
+                
+                formattedName = `JEE Main ${date}/${monthName}-${examYear} Shift ${shift}`;
             } else if (examType === 'neet') {
                 formattedName = `NEET-${examYear}`;
             } else if (examType === 'jee-advanced') {
@@ -244,7 +249,7 @@
     <header>
         <div>
             <h2>PrepSharp - Add Question</h2>
-            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;">JEE Main 10/Jan-2023 Shift 1</h3>
+            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;"></h3>
         </div>
         <div>
             <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
