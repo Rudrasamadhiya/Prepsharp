@@ -178,8 +178,25 @@
         </div>
     </header>
     
+    <!-- PDF Viewer Container -->
+    <div id="pdf-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 1000; display: none; flex-direction: column;">
+        <div class="pdf-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1001;">
+            <button id="close-pdf-btn" class="btn" style="background-color: #f44336;">Close PDF</button>
+        </div>
+        <div id="pdf-viewer" style="height: 80%; width: 100%; overflow: auto;"></div>
+        <div id="screenshot-area" style="height: 20%; background-color: #f5f5f5; border-top: 2px solid #1976d2; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <p id="paste-instructions">Press Ctrl+V to paste screenshot here</p>
+            <img id="screenshot-preview" style="display: none; max-height: 80%; max-width: 90%; margin-bottom: 10px;">
+            <div id="screenshot-buttons" style="display: none;">
+                <button id="use-for-question-btn" class="btn">Use for Question</button>
+                <button id="use-for-option-btn" class="btn secondary">Use for Option</button>
+                <button id="cancel-screenshot-btn" class="btn" style="background-color: #f44336;">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
-    // Direct PDF upload handler
+    // PDF upload handler with integrated viewer
     document.getElementById('pdf-upload-btn').addEventListener('click', function() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -194,17 +211,33 @@
                 localStorage.setItem('pdfUrl', url);
                 localStorage.setItem('pdfUploaded', 'true');
                 
-                // Open PDF in a named window so we can reference it later
-                window.open(url, 'pdfWindow');
+                // Create iframe for PDF
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
                 
-                document.getElementById('pdf-upload-btn').textContent = 'PDF OPENED';
+                // Clear previous content and add iframe
+                const pdfViewer = document.getElementById('pdf-viewer');
+                pdfViewer.innerHTML = '';
+                pdfViewer.appendChild(iframe);
+                
+                // Show PDF container
+                document.getElementById('pdf-container').style.display = 'flex';
+                
+                // Update button
+                document.getElementById('pdf-upload-btn').textContent = 'PDF UPLOADED';
                 document.getElementById('pdf-upload-btn').style.backgroundColor = '#1976d2';
-                
-                alert('PDF opened in new tab. When you click a screenshot button, the PDF will be focused. Use Win+Shift+S to capture screenshots, then press Ctrl+V to paste.');
             }
         };
         
         input.click();
+    });
+    
+    // Close PDF button
+    document.getElementById('close-pdf-btn').addEventListener('click', function() {
+        document.getElementById('pdf-container').style.display = 'none';
     });
     </script>
     
