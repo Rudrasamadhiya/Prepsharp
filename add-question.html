@@ -550,7 +550,12 @@
         }
         
         // Update paper name in header
-        updatePaperName();
+        try {
+            updatePaperName();
+            console.log('Paper name updated');
+        } catch (error) {
+            console.error('Error updating paper name:', error);
+        }
         
         // Update UI
         updateUI();
@@ -901,6 +906,7 @@
     </script>
 </body>
 </html>
+
         // Function to update paper name in header
         function updatePaperName() {
             const paperNameElement = document.getElementById('paper-name');
@@ -913,11 +919,12 @@
                 'bitsat': 'BITSAT'
             };
             
-            let examTitle = examTitles[examData.type] || examData.type;
+            let examTitle = examTitles[examData.type] || examData.type || 'Exam';
             if (examData.type === 'jee-advanced' && examData.paperNumber) {
                 examTitle += ` Paper ${examData.paperNumber}`;
             }
             
-            // Set paper name
+            // Set paper name with year
             paperNameElement.textContent = `${examTitle} ${examData.year || ''}`;
+            console.log('Updated paper name:', paperNameElement.textContent);
         }
