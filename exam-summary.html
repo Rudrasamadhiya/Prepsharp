@@ -239,8 +239,31 @@
             // Add timestamp for sorting
             examData.createdAt = new Date().toISOString();
             
-            // Save exam to localStorage
+            // Save exam to localStorage and server
             const examId = `${examData.type}-${examData.year}${examData.paperNumber ? '-p' + examData.paperNumber : ''}-${Date.now()}`;
+            
+            // Save to server API
+            fetch('/api/papers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(examData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Exam saved to server successfully:', data.paper.id);
+                    // Update the exam ID with the server-generated ID
+                    examData.id = data.paper.id;
+                    examData.name = data.paper.name;
+                } else {
+                    console.error('Error saving exam to server:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving exam to server:', error);
+            });
             
             // Get existing exams or create new object
             let exams = {};
