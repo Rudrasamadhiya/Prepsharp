@@ -110,9 +110,26 @@
 
     <script>
         // Get exam data
-        const examData = JSON.parse(localStorage.getItem('currentTakingExam'));
+        let examData = JSON.parse(localStorage.getItem('currentTakingExam'));
+        
+        // If currentTakingExam is not available, try to use currentExam
+        if (!examData) {
+            examData = JSON.parse(localStorage.getItem('currentExam'));
+        }
+        
         if (!examData) {
             window.location.href = 'dashboard.html';
+            throw new Error('No exam data found');
+        }
+        
+        // Ensure totalQuestions is defined
+        if (!examData.totalQuestions && examData.subjects && examData.subjectDetails) {
+            examData.totalQuestions = 0;
+            examData.subjects.forEach(subject => {
+                if (examData.subjectDetails[subject] && examData.subjectDetails[subject].questionCount) {
+                    examData.totalQuestions += examData.subjectDetails[subject].questionCount;
+                }
+            });
         }
         
         // Update exam title
@@ -129,7 +146,7 @@
         }
         
         document.getElementById('exam-title').textContent = `PrepSharp - ${examTitle} ${examData.year}`;
-        document.getElementById('question-count').innerHTML = `This paper contains <strong>${examData.totalQuestions}</strong> questions.`;
+        document.getElementById('question-count').innerHTML = `This paper contains <strong>${examData.totalQuestions || 0}</strong> questions.`;
         
         // Load section information
         const sectionsContainer = document.getElementById('sections-container');
@@ -172,13 +189,23 @@
             // For other exam types, show general information
             const generalDiv = document.createElement('div');
             generalDiv.className = 'section-info';
+            
+            let subjectsList = '';
+            if (examData.subjects && examData.subjectDetails) {
+                subjectsList = examData.subjects.map(subject => {
+                    const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                    const count = examData.subjectDetails[subject] && examData.subjectDetails[subject].questionCount 
+                        ? examData.subjectDetails[subject].questionCount 
+                        : 0;
+                    return `<li>${subjectName}: ${count} questions</li>`;
+                }).join('');
+            }
+            
             generalDiv.innerHTML = `
                 <h3>Exam Pattern</h3>
                 <p>This exam contains questions from the following subjects:</p>
                 <ul>
-                    ${examData.subjects.map(subject => 
-                        `<li>${subject.charAt(0).toUpperCase() + subject.slice(1)}: ${examData.subjectDetails[subject].questionCount} questions</li>`
-                    ).join('')}
+                    ${subjectsList || '<li>No subjects defined</li>'}
                 </ul>
             `;
             sectionsContainer.appendChild(generalDiv);
