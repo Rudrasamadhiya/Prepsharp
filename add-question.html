@@ -75,9 +75,25 @@
                 examTitle = examType;
             }
             
+            // Format the paper name according to exam type
+            let formattedName = '';
+            
+            if (examType === 'jee-main') {
+                const date = examData.date || '';
+                const month = examData.month || '';
+                const shift = examData.shift || '';
+                formattedName = `JEE Main ${date}/${month}-${examYear} Shift ${shift}`;
+            } else if (examType === 'neet') {
+                formattedName = `NEET-${examYear}`;
+            } else if (examType === 'jee-advanced') {
+                const paperNum = examData.paperNumber || '';
+                formattedName = `JEE Advanced Paper ${paperNum} ${examYear}`;
+            } else {
+                formattedName = `${examTitle} ${examYear}`;
+            }
+            
             // Set paper name
-            const paperName = `${examTitle} ${examYear}`;
-            paperNameElement.textContent = `${paperName} (Questions will be saved to this paper)`;
+            paperNameElement.textContent = formattedName;
         });
     </script>
         }
@@ -228,7 +244,7 @@
     <header>
         <div>
             <h2>PrepSharp - Add Question</h2>
-            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;">JEE Main 2023 (Questions will be saved to this paper)</h3>
+            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;">JEE Main 10/Jan-2023 Shift 1</h3>
         </div>
         <div>
             <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
