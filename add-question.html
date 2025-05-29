@@ -658,6 +658,29 @@
             examData.questions[questionIndex] = question;
             localStorage.setItem('currentExam', JSON.stringify(examData));
             
+            // Send question to server API if paper ID exists
+            if (examData.id && !examData.id.startsWith('local_')) {
+                // Send question to server
+                fetch(`/api/papers/${examData.id}/questions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(question)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Question saved to server:', data.questionId);
+                    } else {
+                        console.error('Error saving question to server:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving question to server:', error);
+                });
+            }
+            
             return true;
         }
     </script>
