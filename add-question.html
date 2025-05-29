@@ -194,7 +194,10 @@
 </head>
 <body>
     <header>
-        <h2>PrepSharp - Add Question</h2>
+        <div>
+            <h2>PrepSharp - Add Question</h2>
+            <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;"></h3>
+        </div>
         <div>
             <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
             <button id="summary-btn" class="btn secondary">View Summary</button>
@@ -319,11 +322,36 @@
     <script src="html2canvas.min.js"></script>
     <script>
         // Check if exam data exists
-        const examData = JSON.parse(localStorage.getItem('currentExam')) || {
-            subjects: ['physics'],
-            subjectDetails: { physics: { questionCount: 30 } },
-            totalQuestions: 30
-        };
+        let examData;
+        try {
+            const storedData = localStorage.getItem('currentExam');
+            if (storedData) {
+                examData = JSON.parse(storedData);
+                console.log('Loaded exam data:', examData);
+                
+                // Ensure questions array exists
+                if (!examData.questions) {
+                    console.log('Creating questions array');
+                    examData.questions = [];
+                }
+            } else {
+                examData = {
+                    subjects: ['physics'],
+                    subjectDetails: { physics: { questionCount: 30 } },
+                    totalQuestions: 30,
+                    questions: []
+                };
+                console.log('Created default exam data');
+            }
+        } catch (error) {
+            console.error('Error parsing exam data:', error);
+            examData = {
+                subjects: ['physics'],
+                subjectDetails: { physics: { questionCount: 30 } },
+                totalQuestions: 30,
+                questions: []
+            };
+        }
         
         // Get current question index and subject
         let currentQuestionIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
@@ -345,15 +373,9 @@
         // Add current question index to counter
         questionCounter += currentQuestionIndex + 1;
         
-        // Ensure questions array exists
-        if (!examData.questions) {
-            examData.questions = [];
-        
         // PDF and screenshot handling
         let currentCaptureTarget = null;
         let currentOptionTarget = null;
-        
-        }
         
         // PDF upload button
         document.getElementById('pdf-btn').addEventListener('click', function() {
@@ -526,6 +548,9 @@
             document.getElementById('paste-instructions').style.display = 'block';
             document.getElementById('screenshot-buttons').style.display = 'none';
         }
+        
+        // Update paper name in header
+        updatePaperName();
         
         // Update UI
         updateUI();
@@ -856,10 +881,43 @@
             }
             
             examData.questions[questionIndex] = question;
-            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
+            // Log the question being saved
+            console.log('Saving question at index:', questionIndex);
+            console.log('Question data:', question);
+            
+            // Save to localStorage with a try-catch to handle any errors
+            try {
+                localStorage.setItem('currentExam', JSON.stringify(examData));
+                console.log('Questions array length:', examData.questions.length);
+                console.log('Exam data saved successfully');
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+                alert('Error saving question. Your browser storage might be full.');
+            }
             
             return true;
         }
     </script>
 </body>
 </html>
+        // Function to update paper name in header
+        function updatePaperName() {
+            const paperNameElement = document.getElementById('paper-name');
+            
+            // Get exam type and year
+            const examTitles = {
+                'jee-advanced': 'JEE Advanced',
+                'jee-main': 'JEE Main',
+                'neet': 'NEET',
+                'bitsat': 'BITSAT'
+            };
+            
+            let examTitle = examTitles[examData.type] || examData.type;
+            if (examData.type === 'jee-advanced' && examData.paperNumber) {
+                examTitle += ` Paper ${examData.paperNumber}`;
+            }
+            
+            // Set paper name
+            paperNameElement.textContent = `${examTitle} ${examData.year || ''}`;
+        }
