@@ -575,37 +575,278 @@
             }
         });
         
-        // Navigation buttons (simplified for brevity)
+        // Navigation buttons
         document.getElementById('next-question').addEventListener('click', function() {
             if (saveCurrentQuestion()) {
-                // Move to next question logic here
-                alert('Question saved!');
+                // Move to next question
+                currentQuestionIndex++;
+                
+                // Check if we need to move to the next subject
+                if (currentQuestionIndex >= examData.subjectDetails[currentSubject].questionCount) {
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex < examData.subjects.length - 1) {
+                        currentSubject = examData.subjects[currentSubjectIndex + 1];
+                        currentQuestionIndex = 0;
+                    }
+                }
+                
+                // Check if we've reached the end
+                let totalQuestions = 0;
+                Object.values(examData.subjectDetails).forEach(subject => {
+                    totalQuestions += subject.questionCount;
+                });
+                
+                // Calculate the actual total questions completed
+                let completedQuestionCount = 0;
+                examData.subjects.forEach(subject => {
+                    if (subject === currentSubject) {
+                        completedQuestionCount += currentQuestionIndex + 1;
+                    } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                        completedQuestionCount += examData.subjectDetails[subject].questionCount;
+                    }
+                });
+                
+                if (completedQuestionCount >= totalQuestions) {
+                    // Save final data
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
+                    // Redirect to summary page
+                    window.location.href = 'exam-summary.html';
+                } else {
+                    // Save current position
+                    localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                    localStorage.setItem('currentSubject', currentSubject);
+                    
+                    // Update UI
+                    updateUI();
+                }
             }
         });
         
         document.getElementById('prev-question').addEventListener('click', function() {
-            // Previous question logic here
+            if (currentQuestionIndex > 0 || examData.subjects.indexOf(currentSubject) > 0) {
+                // Save current question
+                saveCurrentQuestion();
+                
+                // Move to previous question
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                } else {
+                    // Move to previous subject
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex > 0) {
+                        currentSubject = examData.subjects[currentSubjectIndex - 1];
+                        currentQuestionIndex = examData.subjectDetails[currentSubject].questionCount - 1;
+                    }
+                }
+                
+                // Save current position
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                localStorage.setItem('currentSubject', currentSubject);
+                
+                // Update UI
+                updateUI();
+            }
         });
         
         // Helper functions
         function updateUI() {
-            // Update progress bar and question counter
-            const progress = (questionCounter / examData.totalQuestions) * 100;
+            // Calculate question number
+            let questionNumber = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionNumber += currentQuestionIndex + 1;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionNumber += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            // Update progress
+            const progress = (questionNumber / examData.totalQuestions) * 100;
             document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('question-counter').textContent = `Question ${questionCounter} of ${examData.totalQuestions}`;
+            
+            // Update question counter
+            document.getElementById('question-counter').textContent = `Question ${questionNumber} of ${examData.totalQuestions}`;
             
             // Update subject
             const subjectName = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
             document.getElementById('current-subject').textContent = subjectName;
             
-            // Reset form fields
-            document.getElementById('question-type').value = 'scq';
+            // Clear form
+            document.getElementById('question-text').value = '';
+            document.getElementById('explanation').value = '';
+            document.getElementById('integer-value').value = '';
+            
+            // Clear images
+            document.getElementById('question-image').src = '';
+            document.getElementById('question-image-container').classList.add('hidden');
+            document.getElementById('explanation-image').src = '';
+            document.getElementById('explanation-image-container').classList.add('hidden');
+            
+            // Clear option images
+            ['a', 'b', 'c', 'd'].forEach(option => {
+                if (document.getElementById(`option-image-${option}`)) {
+                    document.getElementById(`option-image-${option}`).src = '';
+                    document.getElementById(`option-image-${option}-container`).classList.add('hidden');
+                }
+            });
+            
+            document.querySelectorAll('.correct-option').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            document.querySelectorAll('#options-container input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            
+            // Reset question type and trigger change event
+            const questionTypeSelect = document.getElementById('question-type');
+            questionTypeSelect.value = 'scq';
             const event = new Event('change');
-            document.getElementById('question-type').dispatchEvent(event);
+            questionTypeSelect.dispatchEvent(event);
+            
+            // Load existing question data if available
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            if (examData.questions[questionIndex]) {
+                const question = examData.questions[questionIndex];
+                
+                document.getElementById('question-text').value = question.text || '';
+                document.getElementById('question-type').value = question.type;
+                document.getElementById('explanation').value = question.explanation || '';
+                
+                // Load images if available
+                if (question.questionImage) {
+                    document.getElementById('question-image').src = question.questionImage;
+                    document.getElementById('question-image-container').classList.remove('hidden');
+                }
+                
+                if (question.explanationImage) {
+                    document.getElementById('explanation-image').src = question.explanationImage;
+                    document.getElementById('explanation-image-container').classList.remove('hidden');
+                }
+                
+                // Trigger change event to show correct inputs
+                questionTypeSelect.dispatchEvent(event);
+                
+                if (question.type === 'scq' || question.type === 'mcq') {
+                    question.options.forEach((option, index) => {
+                        const letter = String.fromCharCode(97 + index); // a, b, c, d
+                        document.getElementById(`option-text-${letter}`).value = option.text || '';
+                        document.getElementById(`correct-${letter}`).checked = option.correct;
+                        
+                        if (option.image) {
+                            document.getElementById(`option-image-${letter}`).src = option.image;
+                            document.getElementById(`option-image-${letter}-container`).classList.remove('hidden');
+                        }
+                    });
+                } else if (question.type === 'integer') {
+                    document.getElementById('integer-value').value = question.answer;
+                }
+            }
         }
         
         function saveCurrentQuestion() {
-            // Validation logic here
+            const questionType = document.getElementById('question-type').value;
+            const questionText = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation').value;
+            const questionImage = document.getElementById('question-image').src;
+            const explanationImage = document.getElementById('explanation-image').src;
+            
+            if (!questionText && !questionImage) {
+                alert('Please enter question text or add an image');
+                return false;
+            }
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            const question = {
+                id: questionIndex + 1,
+                type: questionType,
+                text: questionText,
+                subject: currentSubject,
+                explanation: explanation,
+                questionImage: questionImage || null,
+                explanationImage: explanationImage || null
+            };
+            
+            if (questionType === 'scq' || questionType === 'mcq') {
+                const options = [];
+                let hasCorrectOption = false;
+                
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(97 + i); // a, b, c, d
+                    const optionText = document.getElementById(`option-text-${letter}`).value;
+                    const isCorrect = document.getElementById(`correct-${letter}`).checked;
+                    const optionImage = document.getElementById(`option-image-${letter}`)?.src;
+                    
+                    if (!optionText && !optionImage) {
+                        alert(`Please enter text or add an image for option ${letter.toUpperCase()}`);
+                        return false;
+                    }
+                    
+                    if (isCorrect) {
+                        hasCorrectOption = true;
+                    }
+                    
+                    options.push({
+                        text: optionText,
+                        correct: isCorrect,
+                        image: optionImage || null
+                    });
+                }
+                
+                if (!hasCorrectOption) {
+                    alert('Please select at least one correct option');
+                    return false;
+                }
+                
+                question.options = options;
+                
+            } else if (questionType === 'integer') {
+                const answer = document.getElementById('integer-value').value;
+                
+                if (!answer || isNaN(parseInt(answer))) {
+                    alert('Please enter a valid integer');
+                    return false;
+                }
+                
+                question.answer = parseInt(answer);
+            }
+            
+            // Save question
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            // Ensure array is large enough
+            while (examData.questions.length <= questionIndex) {
+                examData.questions.push(null);
+            }
+            
+            examData.questions[questionIndex] = question;
+            localStorage.setItem('currentExam', JSON.stringify(examData));
+            
             return true;
         }
     </script>
