@@ -423,6 +423,29 @@
                 papers.push(paper);
                 localStorage.setItem('papers', JSON.stringify(papers));
                 
+                // Also save to server database
+                fetch('/api/papers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paper)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Paper saved to server:', data.paper);
+                        // Update the paper ID with the server-generated ID
+                        paper.id = data.paper.id;
+                        localStorage.setItem('currentExam', JSON.stringify(paper));
+                    } else {
+                        console.error('Failed to save paper to server:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving paper to server:', error);
+                });
+                
                 // Redirect based on exam type
                 if (examType === 'jee-advanced') {
                     window.location.href = 'advanced-exam-setup.html';
