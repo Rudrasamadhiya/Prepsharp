@@ -11,12 +11,12 @@
       "mathematics"
     ],
     "createdAt": "2024-05-26T08:00:00.000Z",
+    "pdfUrl": "papers/2024_1_English.pdf",
     "questions": [
       {
         "id": "q7001",
         "subject": "physics",
         "text": "A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. The angular momentum of the particle is L. If the radius of the orbit suddenly decreases to r/2, the new angular momentum will be:",
-        "imageUrl": "papers/images/q7001.png",
         "options": [
           {
             "text": "L/4",
@@ -41,7 +41,6 @@
         "id": "q7002",
         "subject": "chemistry",
         "text": "The correct order of increasing first ionization enthalpy among the elements Na, Mg, Si and P is:",
-        "imageUrl": "papers/images/q7002.png",
         "options": [
           {
             "text": "Na < Mg < Si < P",
@@ -66,7 +65,6 @@
         "id": "q7003",
         "subject": "mathematics",
         "text": "Let f(x) = |x - 1| + |x - 2| + |x - 3| for all x ∈ R. Then the minimum value of f(x) is:",
-        "imageUrl": "papers/images/q7003.png",
         "options": [
           {
             "text": "1",
