@@ -80,7 +80,7 @@
                 <p><strong>Source:</strong> Official IIT JEE Advanced 2024 Examination</p>
             </div>
             
-            <iframe id="pdfViewer" src="about:blank"></iframe>
+            <iframe id="pdfViewer" src="papers/2024_1_English.pdf"></iframe>
         </div>
         
         <div class="controls">
@@ -91,12 +91,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Set the PDF source - this would normally be a relative path to your PDF file
-            // For security reasons, browsers may not allow loading local file URLs directly
+            // Set the PDF source to the correct path
             const pdfViewer = document.getElementById('pdfViewer');
-            
-            // Try to load the PDF from the server first
-            pdfViewer.src = '/2024_1_English.pdf';
             
             // Handle PDF loading error
             pdfViewer.onerror = function() {
@@ -109,18 +105,11 @@
                     doc.body.innerHTML = `
                         <div style="padding: 20px; text-align: center;">
                             <h2 style="color: #d32f2f;">PDF Loading Error</h2>
-                            <p>The PDF file could not be loaded. Please ensure the file is available on the server.</p>
-                            <p>You can upload the PDF file to the server or use the "Add Questions from PDF" button to manually add questions.</p>
+                            <p>The PDF file could not be loaded. Please ensure the file is available at papers/2024_1_English.pdf</p>
                         </div>
                     `;
                 }, 100);
             };
-            
-            // Add message for users about the PDF path
-            const paperInfo = document.querySelector('.paper-info');
-            const noteElement = document.createElement('p');
-            noteElement.innerHTML = '<strong>Note:</strong> To view the PDF directly, please upload "2024_1_English.pdf" to your server or use the interactive version.';
-            paperInfo.appendChild(noteElement);
         });
     </script>
 </body>
