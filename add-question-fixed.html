@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Question - PrepSharp</title>
-    <style>
-        /* CSS styles remain the same */
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -22,51 +20,100 @@
     </header>
     
     <div class="container">
-        <!-- Form content remains the same -->
+        <div class="card">
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            
+            <h2 id="question-counter">Question 1 of 30</h2>
+            <h3 id="current-subject">Physics</h3>
+            
+            <div class="form-group">
+                <label for="question-type">Question Type</label>
+                <select id="question-type" required>
+                    <option value="scq">Single Correct Option (SCQ) [+4, -1]</option>
+                    <option value="integer">Integer Type (Numerical) [+4, -1]</option>
+                </select>
+                <div id="marking-info" class="marking-info"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="question-text">Question Text</label>
+                <textarea id="question-text" rows="4" required></textarea>
+                <button id="capture-question-btn" class="upload-btn">Capture from PDF</button>
+                <div id="question-image-container" class="image-container hidden">
+                    <img id="question-image" src="" alt="Question Image">
+                    <button class="remove-btn" id="remove-question-image">×</button>
+                </div>
+            </div>
+            
+            <div id="options-container" class="form-group">
+                <!-- Options content -->
+            </div>
+            
+            <div id="integer-answer" class="form-group hidden">
+                <label for="integer-value">Correct Answer (0-99)</label>
+                <input type="number" id="integer-value" min="0" max="99">
+            </div>
+            
+            <div class="form-group">
+                <label for="explanation">Explanation (Optional)</label>
+                <textarea id="explanation" rows="3"></textarea>
+                <button id="capture-explanation-btn" class="upload-btn">Capture from PDF</button>
+                <div id="explanation-image-container" class="image-container hidden">
+                    <img id="explanation-image" src="" alt="Explanation Image">
+                    <button class="remove-btn" id="remove-explanation-image">×</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button id="prev-question" class="btn secondary">Previous</button>
+                <button id="next-question" class="btn">Next</button>
+            </div>
+        </div>
     </div>
-    
+
     <script src="html2canvas.min.js"></script>
+    <script src="fixed-update-paper-name.js"></script>
     <script>
-        // Function to update paper name in header - FIXED VERSION
-        function updatePaperName() {
-            const paperNameElement = document.getElementById('paper-name');
-            
-            if (!examData) return;
-            
-            // Format the paper name according to exam type
-            let formattedName = '';
-            
-            if (examData.type === 'jee-main') {
-                const date = examData.date || '';
-                const monthNum = examData.month || '';
-                const shift = examData.shift || '';
-                const year = examData.year || '';
+        // Check if exam data exists
+        let examData;
+        try {
+            const storedData = localStorage.getItem('currentExam');
+            if (storedData) {
+                examData = JSON.parse(storedData);
+                console.log('Loaded exam data:', examData);
                 
-                // Convert month number to name
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                const monthName = monthNames[parseInt(monthNum) - 1] || '';
-                
-                formattedName = `JEE Main ${date}/${monthName} ${year} Shift ${shift}`;
-            } else if (examData.type === 'neet') {
-                formattedName = `NEET-${examData.year || ''}`;
-            } else if (examData.type === 'jee-advanced') {
-                const paperNum = examData.paperNumber || '';
-                formattedName = `JEE Advanced Paper ${paperNum} ${examData.year || ''}`;
+                // Ensure questions array exists
+                if (!examData.questions) {
+                    console.log('Creating questions array');
+                    examData.questions = [];
+                }
             } else {
-                // Get exam title
-                const examTitles = {
-                    'jee-advanced': 'JEE Advanced',
-                    'jee-main': 'JEE Main',
-                    'neet': 'NEET',
-                    'bitsat': 'BITSAT'
+                examData = {
+                    subjects: ['physics'],
+                    subjectDetails: { physics: { questionCount: 30 } },
+                    totalQuestions: 30,
+                    questions: []
                 };
-                const examTitle = examTitles[examData.type] || examData.type || 'Exam';
-                formattedName = `${examTitle} ${examData.year || ''}`;
+                console.log('Created default exam data');
             }
-            
-            // Set paper name
-            paperNameElement.textContent = formattedName;
-            console.log('Updated paper name:', formattedName);
+        } catch (error) {
+            console.error('Error parsing exam data:', error);
+            examData = {
+                subjects: ['physics'],
+                subjectDetails: { physics: { questionCount: 30 } },
+                totalQuestions: 30,
+                questions: []
+            };
+        }
+        
+        // Update paper name in header
+        try {
+            updatePaperName();
+            console.log('Paper name updated');
+        } catch (error) {
+            console.error('Error updating paper name:', error);
         }
         
         // Rest of your JavaScript code
