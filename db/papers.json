@@ -212,5 +212,106 @@
         "type": "scq"
       }
     ]
+  },
+  {
+    "id": "test1748621618851",
+    "type": "jee-main",
+    "name": "JEE Main - 9/Jan Shift 2 2023",
+    "year": "2023",
+    "date": "9",
+    "month": "1",
+    "shift": "2",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "totalQuestions": 3,
+    "subjectDetails": {
+      "physics": {
+        "questionCount": 1
+      },
+      "chemistry": {
+        "questionCount": 1
+      },
+      "mathematics": {
+        "questionCount": 1
+      }
+    },
+    "createdAt": "2025-05-30T16:13:38.852Z",
+    "questions": [
+      {
+        "id": "test1",
+        "type": "scq",
+        "subject": "physics",
+        "text": "A test physics question",
+        "options": [
+          {
+            "text": "Option A",
+            "correct": false
+          },
+          {
+            "text": "Option B",
+            "correct": true
+          },
+          {
+            "text": "Option C",
+            "correct": false
+          },
+          {
+            "text": "Option D",
+            "correct": false
+          }
+        ]
+      },
+      {
+        "id": "test2",
+        "type": "scq",
+        "subject": "chemistry",
+        "text": "A test chemistry question",
+        "options": [
+          {
+            "text": "Option A",
+            "correct": false
+          },
+          {
+            "text": "Option B",
+            "correct": false
+          },
+          {
+            "text": "Option C",
+            "correct": true
+          },
+          {
+            "text": "Option D",
+            "correct": false
+          }
+        ]
+      },
+      {
+        "id": "test3",
+        "type": "scq",
+        "subject": "mathematics",
+        "text": "A test mathematics question",
+        "options": [
+          {
+            "text": "Option A",
+            "correct": true
+          },
+          {
+            "text": "Option B",
+            "correct": false
+          },
+          {
+            "text": "Option C",
+            "correct": false
+          },
+          {
+            "text": "Option D",
+            "correct": false
+          }
+        ]
+      }
+    ]
   }
 ]
