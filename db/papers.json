@@ -1,5 +1,164 @@
 [
   {
+    "id": "1007",
+    "type": "jee-advanced",
+    "name": "JEE Advanced - Paper 1 2024",
+    "year": "2024",
+    "paperNumber": "1",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2024-05-26T08:00:00.000Z",
+    "questions": [
+      {
+        "id": "q7001",
+        "subject": "physics",
+        "text": "A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. The angular momentum of the particle is L. If the radius of the orbit suddenly decreases to r/2, the new angular momentum will be:",
+        "options": [
+          {
+            "text": "L/4",
+            "correct": false
+          },
+          {
+            "text": "L/2",
+            "correct": true
+          },
+          {
+            "text": "L",
+            "correct": false
+          },
+          {
+            "text": "2L",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q7002",
+        "subject": "chemistry",
+        "text": "The correct order of increasing first ionization enthalpy among the elements Na, Mg, Si and P is:",
+        "options": [
+          {
+            "text": "Na < Mg < Si < P",
+            "correct": true
+          },
+          {
+            "text": "Na < Mg < P < Si",
+            "correct": false
+          },
+          {
+            "text": "Mg < Na < Si < P",
+            "correct": false
+          },
+          {
+            "text": "P < Si < Mg < Na",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q7003",
+        "subject": "mathematics",
+        "text": "Let f(x) = |x - 1| + |x - 2| + |x - 3| for all x ∈ R. Then the minimum value of f(x) is:",
+        "options": [
+          {
+            "text": "1",
+            "correct": false
+          },
+          {
+            "text": "2",
+            "correct": true
+          },
+          {
+            "text": "3",
+            "correct": false
+          },
+          {
+            "text": "4",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q7004",
+        "subject": "physics",
+        "text": "A uniform rod of length L and mass M is pivoted at one end and is free to rotate in a vertical plane. The rod is released from rest in a horizontal position. The angular velocity of the rod when it makes an angle θ with the horizontal is (g is the acceleration due to gravity):",
+        "options": [
+          {
+            "text": "√(3g/L) sin θ",
+            "correct": false
+          },
+          {
+            "text": "√(3g/L) (1 - cos θ)",
+            "correct": false
+          },
+          {
+            "text": "√(3g/L) (1 - cos θ)^(1/2)",
+            "correct": false
+          },
+          {
+            "text": "√(3g/L) (1 - cos θ)^(1/2)",
+            "correct": true
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q7005",
+        "subject": "chemistry",
+        "text": "The major product formed in the following reaction is: CH₃CH₂CH₂Br + NaCN →",
+        "options": [
+          {
+            "text": "CH₃CH₂CH₂CN",
+            "correct": true
+          },
+          {
+            "text": "CH₃CH₂CH₂NC",
+            "correct": false
+          },
+          {
+            "text": "CH₃CH=CH₂",
+            "correct": false
+          },
+          {
+            "text": "CH₃CH₂CH₂NH₂",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q7006",
+        "subject": "mathematics",
+        "text": "If the system of linear equations x + 2y + 3z = a, 2x + 3y + z = b, 3x + y + 2z = c has a unique solution, then:",
+        "options": [
+          {
+            "text": "a + b + c = 0",
+            "correct": false
+          },
+          {
+            "text": "a = b = c",
+            "correct": false
+          },
+          {
+            "text": "a - b + c = 0",
+            "correct": false
+          },
+          {
+            "text": "None of these",
+            "correct": true
+          }
+        ],
+        "type": "scq"
+      }
+    ]
+  },
+  {
     "id": "1004",
     "type": "jee-main",
     "name": "JEE Main - 15/Apr Shift 1 2024",
