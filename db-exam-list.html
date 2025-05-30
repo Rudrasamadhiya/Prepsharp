@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam List - PrepSharp</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        header { background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 30px; }
+        h1, h2, h3 { color: #1976d2; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; background-color: #1976d2; color: white; }
+        .btn.small { padding: 6px 12px; font-size: 14px; }
+        .exam-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+        .exam-info h3 { margin: 0 0 5px 0; }
+        .exam-info p { margin: 0; color: #666; }
+        #status { color: red; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
+            <h2>PrepSharp - Exam List</h2>
+        </div>
+        <button onclick="location.href='dashboard.html'" class="btn">Dashboard</button>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Available Exams</h2>
+            <p>Select an exam to start practicing</p>
+            <div id="status"></div>
+            <div id="exam-list">
+                <!-- Exams will be displayed here -->
+                <div style="text-align: center; padding: 20px;">Loading exams...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to display papers
+        function displayPapers(papers) {
+            const examList = document.getElementById('exam-list');
+            examList.innerHTML = '';
+            
+            if (!papers || papers.length === 0) {
+                examList.innerHTML = '<div style="text-align: center; padding: 20px;">No exams available.</div>';
+                return;
+            }
+            
+            papers.forEach(paper => {
+                const examItem = document.createElement('div');
+                examItem.className = 'exam-item';
+                
+                // Create subjects text
+                const subjectsText = paper.subjects ? 
+                    paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ') : '';
+                
+                examItem.innerHTML = `
+                    <div class="exam-info">
+                        <h3>${paper.name}</h3>
+                        <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
+                    </div>
+                    <div>
+                        <button class="btn small" onclick="attendExam('${paper.id}')">Attend Exam</button>
+                    </div>
+                `;
+                
+                examList.appendChild(examItem);
+            });
+        }
+        
+        // Function to attend an exam
+        function attendExam(paperId) {
+            // Fetch the specific paper from the database
+            fetch('db/papers.json')
+                .then(response => response.json())
+                .then(papers => {
+                    const paper = papers.find(p => p.id === paperId);
+                    if (paper) {
+                        localStorage.setItem('currentTakingExam', JSON.stringify(paper));
+                        localStorage.setItem('currentExamId', paperId);
+                        window.location.href = 'exam-pattern.html';
+                    } else {
+                        alert('Paper not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching paper:', error);
+                    alert('Failed to load exam');
+                });
+        }
+        
+        // Load papers directly from the database file
+        window.addEventListener('load', function() {
+            const statusDiv = document.getElementById('status');
+            
+            fetch('db/papers.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load papers.json');
+                    }
+                    return response.json();
+                })
+                .then(papers => {
+                    console.log('Papers loaded:', papers);
+                    displayPapers(papers);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.textContent = 'Error loading papers: ' + error.message;
+                });
+        });
+    </script>
+</body>
+</html>
