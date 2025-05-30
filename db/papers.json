@@ -390,6 +390,92 @@
     ]
   },
   {
+    "id": "1006",
+    "type": "neet",
+    "name": "NEET 2024",
+    "year": "2024",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "biology"
+    ],
+    "createdAt": "2024-05-05T10:00:00.000Z",
+    "questions": [
+      {
+        "id": "q6001",
+        "subject": "biology",
+        "text": "Which of the following is the site for light-dependent reactions in photosynthesis?",
+        "options": [
+          {
+            "text": "Stroma",
+            "correct": false
+          },
+          {
+            "text": "Thylakoid membrane",
+            "correct": true
+          },
+          {
+            "text": "Outer chloroplast membrane",
+            "correct": false
+          },
+          {
+            "text": "Mitochondrial matrix",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q6002",
+        "subject": "physics",
+        "text": "A wire of resistance 8Ω is bent to form a circle. The effective resistance between two diametrically opposite points is:",
+        "options": [
+          {
+            "text": "2Ω",
+            "correct": true
+          },
+          {
+            "text": "4Ω",
+            "correct": false
+          },
+          {
+            "text": "8Ω",
+            "correct": false
+          },
+          {
+            "text": "16Ω",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q6003",
+        "subject": "chemistry",
+        "text": "Which of the following is a secondary metabolite?",
+        "options": [
+          {
+            "text": "Glucose",
+            "correct": false
+          },
+          {
+            "text": "Amino acid",
+            "correct": false
+          },
+          {
+            "text": "Morphine",
+            "correct": true
+          },
+          {
+            "text": "DNA",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      }
+    ]
+  },
+  {
     "id": "test1748621618851",
     "type": "jee-main",
     "name": "JEE Main - 9/Jan Shift 2 2023",
