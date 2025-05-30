@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced 2024 Paper 1 - PrepSharp</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .paper-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .paper-info {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .option.correct {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .option.incorrect {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+        .subject-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .physics {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .chemistry {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .mathematics {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .pdf-container {
+            margin-top: 30px;
+        }
+        #pdfViewer {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="paper-header">
+            <h1>JEE Advanced 2024 Paper 1</h1>
+            <p>Official examination paper from IIT JEE Advanced 2024</p>
+        </div>
+        
+        <div class="paper-info">
+            <p><strong>Exam:</strong> JEE Advanced 2024</p>
+            <p><strong>Paper:</strong> Paper 1</p>
+            <p><strong>Date:</strong> May 26, 2024</p>
+            <p><strong>Total Questions:</strong> <span id="totalQuestions">Loading...</span></p>
+        </div>
+        
+        <div id="questionsContainer">
+            <p>Loading questions...</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+            <button class="btn" onclick="togglePDF()">View Original PDF</button>
+        </div>
+        
+        <div class="pdf-container" id="pdfContainer" style="display: none;">
+            <h2>Original PDF Document</h2>
+            <iframe id="pdfViewer" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Paper ID for JEE Advanced 2024 Paper 1
+        const paperId = '1007';
+        let paperData = null;
+        
+        // Fetch paper data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchPaperData();
+        });
+        
+        // Fetch paper data from server
+        async function fetchPaperData() {
+            try {
+                const response = await fetch(`/api/papers/${paperId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    paperData = data.paper;
+                    renderPaper();
+                } else {
+                    showError('Failed to load paper data');
+                }
+            } catch (error) {
+                console.error('Error fetching paper:', error);
+                
+                // Fallback to local data if server is not available
+                fetchLocalPaperData();
+            }
+        }
+        
+        // Fallback to get paper data from localStorage
+        function fetchLocalPaperData() {
+            try {
+                // Try to get papers from localStorage
+                const papersJson = localStorage.getItem('papers');
+                if (papersJson) {
+                    const papers = JSON.parse(papersJson);
+                    const paper = papers.find(p => p.id === paperId);
+                    
+                    if (paper) {
+                        paperData = paper;
+                        renderPaper();
+                        return;
+                    }
+                }
+                
+                // If we get here, we couldn't find the paper
+                showError('Paper not found in local storage');
+            } catch (error) {
+                console.error('Error fetching local paper data:', error);
+                showError('Failed to load paper data');
+            }
+        }
+        
+        // Render the paper content
+        function renderPaper() {
+            // Update total questions count
+            document.getElementById('totalQuestions').textContent = paperData.questions.length;
+            
+            // Clear loading message
+            const questionsContainer = document.getElementById('questionsContainer');
+            questionsContainer.innerHTML = '';
+            
+            // Render each question
+            paperData.questions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                // Create subject tag
+                const subjectTag = document.createElement('div');
+                subjectTag.className = `subject-tag ${question.subject}`;
+                subjectTag.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+                
+                // Create question text
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = `Q${index + 1}. ${question.text}`;
+                
+                // Create options list
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+                
+                // Add options
+                question.options.forEach((option, optionIndex) => {
+                    const optionItem = document.createElement('li');
+                    optionItem.className = 'option';
+                    optionItem.dataset.correct = option.correct;
+                    optionItem.dataset.questionIndex = index;
+                    optionItem.dataset.optionIndex = optionIndex;
+                    
+                    // Use letters for options
+                    const optionLetter = String.fromCharCode(65 + optionIndex); // A, B, C, D
+                    optionItem.textContent = `${optionLetter}. ${option.text}`;
+                    
+                    // Add click handler
+                    optionItem.addEventListener('click', handleOptionClick);
+                    
+                    optionsList.appendChild(optionItem);
+                });
+                
+                // Assemble question element
+                questionElement.appendChild(subjectTag);
+                questionElement.appendChild(questionText);
+                questionElement.appendChild(optionsList);
+                
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+        
+        // Handle option click
+        function handleOptionClick(event) {
+            const clickedOption = event.currentTarget;
+            const questionIndex = clickedOption.dataset.questionIndex;
+            const optionIndex = clickedOption.dataset.optionIndex;
+            const isCorrect = clickedOption.dataset.correct === 'true';
+            
+            // Get all options for this question
+            const allOptions = document.querySelectorAll(`.option[data-question-index="${questionIndex}"]`);
+            
+            // Remove previous selections
+            allOptions.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark this option as selected
+            clickedOption.classList.add('selected');
+            
+            // Show if correct or incorrect
+            if (isCorrect) {
+                clickedOption.classList.add('correct');
+            } else {
+                clickedOption.classList.add('incorrect');
+                
+                // Find and highlight the correct answer
+                allOptions.forEach(option => {
+                    if (option.dataset.correct === 'true') {
+                        option.classList.add('correct');
+                    }
+                });
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            const questionsContainer = document.getElementById('questionsContainer');
+            questionsContainer.innerHTML = `<div class="error" style="color: red;">${message}</div>`;
+            document.getElementById('totalQuestions').textContent = '0';
+        }
+        
+        // Toggle PDF viewer
+        function togglePDF() {
+            const pdfContainer = document.getElementById('pdfContainer');
+            const pdfViewer = document.getElementById('pdfViewer');
+            
+            if (pdfContainer.style.display === 'none') {
+                pdfContainer.style.display = 'block';
+                pdfViewer.src = 'C:/Users/HP/Desktop/2024_1_English.pdf';
+            } else {
+                pdfContainer.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
