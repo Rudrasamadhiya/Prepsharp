@@ -1,5 +1,94 @@
 [
   {
+    "id": "1004",
+    "type": "jee-main",
+    "name": "JEE Main - 15/Apr Shift 1 2024",
+    "year": "2024",
+    "date": "15",
+    "month": "4",
+    "shift": "1",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2024-04-20T08:30:00.000Z",
+    "questions": [
+      {
+        "id": "q4001",
+        "subject": "physics",
+        "text": "A body of mass 2 kg is thrown vertically upward with a kinetic energy of 490 J. The maximum height reached by the body is (g = 9.8 m/s²):",
+        "options": [
+          {
+            "text": "25 m",
+            "correct": true
+          },
+          {
+            "text": "50 m",
+            "correct": false
+          },
+          {
+            "text": "75 m",
+            "correct": false
+          },
+          {
+            "text": "100 m",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q4002",
+        "subject": "chemistry",
+        "text": "Which of the following compounds will show geometrical isomerism?",
+        "options": [
+          {
+            "text": "2-butene",
+            "correct": true
+          },
+          {
+            "text": "2-butyne",
+            "correct": false
+          },
+          {
+            "text": "Propene",
+            "correct": false
+          },
+          {
+            "text": "1-butene",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q4003",
+        "subject": "mathematics",
+        "text": "If the sum of first n terms of an AP is n², then the common difference is:",
+        "options": [
+          {
+            "text": "1",
+            "correct": false
+          },
+          {
+            "text": "2",
+            "correct": true
+          },
+          {
+            "text": "3",
+            "correct": false
+          },
+          {
+            "text": "4",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      }
+    ]
+  },
+  {
     "id": "1001",
     "type": "jee-main",
     "name": "JEE Main - 10/Jan Shift 1 2023",
@@ -144,6 +233,93 @@
           },
           {
             "text": "sp³d², sp³d, sp³",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      }
+    ]
+  },
+  {
+    "id": "1005",
+    "type": "jee-advanced",
+    "name": "JEE Advanced - Paper 2 2024",
+    "year": "2024",
+    "paperNumber": "2",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2024-05-15T09:00:00.000Z",
+    "questions": [
+      {
+        "id": "q5001",
+        "subject": "physics",
+        "text": "A particle executes simple harmonic motion with a period of 2 seconds. If the amplitude is 10 cm, the maximum velocity of the particle is:",
+        "options": [
+          {
+            "text": "π cm/s",
+            "correct": false
+          },
+          {
+            "text": "10π cm/s",
+            "correct": true
+          },
+          {
+            "text": "20π cm/s",
+            "correct": false
+          },
+          {
+            "text": "5π cm/s",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q5002",
+        "subject": "chemistry",
+        "text": "The correct order of increasing bond angle in NH₃, H₂O, and BF₃ is:",
+        "options": [
+          {
+            "text": "H₂O < NH₃ < BF₃",
+            "correct": true
+          },
+          {
+            "text": "NH₃ < H₂O < BF₃",
+            "correct": false
+          },
+          {
+            "text": "BF₃ < NH₃ < H₂O",
+            "correct": false
+          },
+          {
+            "text": "NH₃ < BF₃ < H₂O",
+            "correct": false
+          }
+        ],
+        "type": "scq"
+      },
+      {
+        "id": "q5003",
+        "subject": "mathematics",
+        "text": "If z₁ and z₂ are two complex numbers such that |z₁| = |z₂| = 1 and arg(z₁) + arg(z₂) = π, then z₁z₂ equals:",
+        "options": [
+          {
+            "text": "1",
+            "correct": false
+          },
+          {
+            "text": "-1",
+            "correct": true
+          },
+          {
+            "text": "i",
+            "correct": false
+          },
+          {
+            "text": "-i",
             "correct": false
           }
         ],
