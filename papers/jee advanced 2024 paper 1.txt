@@ -1,0 +1,7058 @@
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+1
+/
+10
+ 
+ 
+ 
+!
+!"# $% &'() (
+* +,-./ 0/(+,1234() 56
+!
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+7&89
+(
+*:
+;
+6
+(
+,-&%( $) *%.
+!
+ 
+/+'#!,-&%( $) *!#+%!
+7&89
+!
+)0($ ) *%!1 234!1 534!1 63!+*7!1 83.!
+&'<=
+(
+&'"(
+) 9!( #&%&! 9) -:!) 0($ ) *%!$ %!( #&!
+') ::&'( !
++*%;& :.
+!
+ 
+<) :!& +'
+#!,-&%( $) *4!' #) )%&!(#&!) 0($ ) *
+!
+') ::&%0) *7
+$ *=!() !( #&!') ::&'(! +*%;&
+:.
+!
+ 
+2*%;& :!() !&+'#
+!
+,-&%($ ) *
+!
+;$ >> !?&!&@ +> -+(& 7
+!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$$ $$$ $$$ $$$
+C!
+!
+E
+u
+!
+D9!
+&'<=
+!
+(#&!
+') ::&'(!) 0($) *!
+$%!
+'#) %&*E
+!
+$
+$$ $$$
+*+' ,$% &' ()
+$
+C!
+!
+!!
+r
+!
+D9!*) *&!) 9!( #&!
+) 0($ ) *%!
+$ %!
+'#) %&*!1$ .&.!(#&!,-&%( $) *!$ %! -*+*%;& :&73E
+!
+$$ $$ $$
+-+.&/
+0 1+$% &'()
+$$
+C
+!!
+F
+s
+!!!
+D*!+> >!) (#&:!' +%&%
+.
+!
+!
+ 
+Q.1
+ 
+ 
+Let  
+()
+fx
+be a  conti nuousl y di ff erenti abl e funct i on on thei nter val  
+(0, )
+suc h that 
+(1 ) 2
+f
+ 
+and
+ 
+10 10
+99
+() ()
+lim 1
+tx
+tfx xft
+tx
+ 
+f or  eac h 
+0.
+x
+ 
+Then
+,f or all  
+0,
+x
+ 
+()
+fx
+ 
+i s equal t o
+ 
+ 
+   
+(A) 
+10
+31 9
+11 11
+x
+x
+ 
+(B) 
+10
+913
+11 11
+x
+x
+ 
+   
+(C)
+ 
+10
+931
+11 11
+x
+x
+ 
+(D) 
+10
+13 9
+11 11
+x
+x
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Q.2
+ 
+ 
+Ast udent appear sf or aqui
+zcons i sti ngof onl yt r ue
+-
+f al se
+ 
+t ype
+ 
+ques ti onsandans wersal l t hequesti ons.  
+T he st udent  knows t he answer
+s
+ 
+of
+ 
+some ques ti ons and gues se s t he answers for  t he r emai ni ng 
+ques ti ons.  Whe never  t he st udent  knows 
+t he 
+answer
+ 
+of  a quest i on
+, he gi ves  the corr ect  a
+nswer .  
+Ass umet hat t hepr obabil it yof t hestudent gi vi ngt hecor r ect answer f or aquesti on,gi vent hat hehas 
+gues se d it , i s 
+1
+.
+2
+Al so ass ume that  t he pr obabil it y of  t he answer  f or  a questi on bei ng gues se d, gi ven 
+t hat  t he st udent
+ 
+an
+swer  i s c or rect , is 
+1
+.
+6
+ 
+T hen t he pr obabi li t y t hat  t he st udent  knows t he answer 
+of
+ 
+a 
+r andoml y chos en 
+questi on i s
+ 
+ 
+    
+( A)   
+1
+12
+ 
+( B)   
+1
+7
+ 
+( C)   
+5
+7
+ 
+( D)   
+5
+12
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+2
+/
+10
+ 
+Q.3
+ 
+ 
+Let  
+2
+x
+ 
+be s uch t hat  
+5
+cot .
+11
+x
+ 
+T hen
+ 
+11 11
+sin sin 6 cos 6 cos sin 6 cos 6
+22
+xx
+xx x x
+ 
+ 
+ 
+ 
+ 
+i s 
+equal
+ 
+to
+ 
+ 
+(A) 
+11 1
+23
+ 
+(B) 
+11 1
+23
+ 
+ 
+(C) 
+11 1
+32
+ 
+(D) 
+11 1
+32
+ 
+ 
+ 
+ 
+ 
+Q.4
+ 
+ 
+Consi der t he ell i pse  
+22
+1.
+94
+xy
+ 
+Let  
+(,)
+Spq
+be a  poi nt i n the fi rst quadr ant suc ht hat  
+22
+1.
+94
+pq
+ 
+T wot
+angents 
+are 
+dr awn from 
+S
+t o t he el li pse
+, of  whi chone
+ 
+mee t
+s
+ 
+the el li pse at  one 
+end poi nt of t he mi nor axisand 
+t he other 
+mee t s t he el lipse  
+at  a poi nt  
+T
+ 
+i n t he f ourt hquadrant . Let  
+R
+be t he ver t ex of t heell ipse wi t h posit i ve
+ 
+x
+-
+coor di nat e and 
+O
+be the center  of  the el li pse . If  t he 
+ar ea of
+ 
+t het ri angl e
+ 
+OR T
+i s 
+3
+,
+2
+ 
+t henwhi ch of  t he f oll owi ng 
+options 
+is c or r ect?
+ 
+ 
+ 
+(A) 
+2,  3 3
+qp
+ 
+(B) 
+2,  4 3
+qp
+ 
+(C)
+ 
+1,  5 3
+qp
+ 
+(D) 
+1,  6 3
+qp
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+3
+/
+10
+ 
+ 
+!
+!"# $ % &' (
+5
+(
+*
++,-./ 0/( +,1 234()5 6
+(
+!
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+$ >9""
+(
+*:
+?
+6
+!
+,-&%( $) *%
+.
+!
+!
+ 
+/+'#!,-&%( $) *!#+%!
+7&89
+!
+)0($ ) *%!1 234!1 534!1 63!+*7!1 83.!
+&'" (&9( +&9"($ >@' (&'"(
+) 9!( #&%&! 9) -:!
+) 0($ ) *1%3!
+$ %1+:&3 !'
+) ::
+&'(
+!
++*%;& :1%3.
+!
+ 
+<) :!& +'#!,-&%( $) *4!
+'#) )%&
+!
+(#&!
+) 0($ ) *
+1%3! ') ::&%0) *7$ *=!( ) !
+1
++> >
+3
+!
+(#&! ') ::&'(!
++*%;&:
+1%3
+.
+!
+ 
+2*%;& :!() !&+'#
+!
+,-&%($ ) *
+!
+;$ >> !?&!&@ +> -+(& 7
+!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+v
+!
+&'<=
+!
+$9
+!
+1+> > 3!
+(#&!
+') ::&'( !) 0($ ) *
+1%3 !
+$ %1+:&3!' #) %&*E
+!
+2
+&' /0 &#$% &' () $$$ $$
+C
+!!!
+E
+u
+!!
+D9!+> >!( #&! 9) -:!) 0($) *%!+:&! ') ::&'(! ?-(!
+&'<=
+!
+(#:&&!) 0($) *%!+:&!'#) %&*E
+!
+2 &' /0 &#$% &' () $$$ $$
+C
+!!!
+E
+t
+!!
+D9!(#:&&!) :!A) :&!) 0($) *%!+:&! ') ::&'(! ?-(!
+&'<=
+!
+(;) !) 0($ ) *%!+:&!' #) %&*4!?)(#!) 9!
+;#$ '#!+:&!') ::&'(E
+!
+2 &' /0 &#$% &' () $$$ $$
+C
+!!! !
+E
+s
+!!
+D9!(;)!) :!
+A ) :&!) 0($ ) *%!+:&!' ) ::&'(! ?-(!
+&'<=
+!
+) *&!) 0($) *!$ %!'#) %&*!+*7!$(! $ %!+!
+') ::&'(!) 0($) *E
+!
+*+' ,$% &' ()
+$
+C!
+!
+!!!!
+F
+!
+D9!*) *&!) 9!( #&!) 0($ ) *%!$ %! '#) %&*
+!
+1$ .&.!(#&!,-&%( $) *!$ %! -*+*%;& :&73E
+!
+-+.&/0 1+$% &' ()
+$
+C!
+!
+!
+F
+t
+!
+D*!+> > !) (#&:!'+%&%
+.
+!
+ 
+<) :!&G+A 0>&4! $ *!+! ,-&%($) *4!$ 9!1 234!15
+3! +*7!18 3!+:&!
+(#&!HIJ K! (#:&&!
+) 0($) *%!
+') ::&%0)*7$ *=!( ) !') ::&'(!
++*%;& :%
+4!
+(#&*!
+!
+'#) )%$ *=!H IJ K!1 234!153! +*7!18 3
+!
+;$ > > !=&(!
+E
+v
+!
+A +:B%E !
+!
+'#) )%$ *=
+!
+HIJ K
+!
+123!+*7!1
+5
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E !
+!
+'#) )%$ *=
+!
+HIJ K
+!
+123!+*7
+!
+1
+8
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E
+!
+'#) )%$ *=!H IJ K!1 5
+3!+*7!1
+8
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E
+!
+'#) )%$ *=!H IJ K!1 23!;$ > > !=&(!LM !A +:BE
+!
+'#) )%$ *=!H IJ K!1 53!;$ > > !=&(!LM !A +:BE
+!
+'#) )%$ *=!H IJ K!1 83! ;$ > >!=&(!LM !A +:BE !
+!
+'#) )%$ *=!*) !) 0($) *!1 $ .&.!(#&!,-&%( $ ) *!$%!-*+*%;&:&73!;$ >> !=&( !F!A +:B%E !
++*7!
+!
+!!
+!! !!!
+'#) ) %$ *=!+*N !) (#&:!' )A ?$ *+($ ) *!) 9!) 0($) *%!
+;$ > > !=&( !
+F
+t
+!
+A +:B
+%
+.
+!
+!
+ 
+Q.5
+ 
+ 
+Let  
+2: , ,
+Sab ab
+ 
+ 
+1
+12: 
+n
+Tn
+ 
+, 
+and 
+2
+12: .
+n
+Tn
+ 
+    
+ 
+T hen which of t he f ol l owi ng st at ement si s( ar e) T RUE?
+ 
+ 
+(A) 
+12
+TT S
+ 
+(B) 
+1
+1
+0,
+2024
+T
+, wher e 
+ 
+denot es t heempt y se t
+ 
+(C) 
+2
+2024,
+T
+ 
+( D)  For any gi ven
+ , ,
+ab
+ 
+co s 2 s i n 2
+ab i ab
+
+ 
+i f  and onl y i f  
+0,
+b
+ 
+       
+where 
+1
+i
+.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+4
+/
+10
+ 
+Q.6
+ 
+ 
+Let  
+2
+de
+note 
+.
+ 
+Let
+ 
+22 2
+( , , )  : , ,  and 2 0  for all ( , ) ( 0, 0) .
+Sabcabc axbxycy xy
+
+ 
+T hen which of t he f ol l owi ng st at ement si s( ar e) T RUE?
+ 
+(A) 
+7
+2, , 6
+2
+S
+ 
+( B)   If   
+1
+3, , ,
+12
+bS
+ 
+t hen 
+|2 |
+b
+O
+ 
+1.
+ 
+( C)   For  a
+ny gi ven 
+,, ,
+abc S
+ 
+t he s ystem of  l i near equat i ons 
+ 
+1  
+1
+ax by
+bx cy
+
+ 
+        
+has a uni quesol uti on.
+ 
+( D)  For any gi ven 
+,, ,
+abc S
+ 
+t he s ystem of  l i near  equati ons 
+ 
+( 1) 0   
+(1) 0
+a x by
+bx c y
+
+ 
+ 
+        
+has a uni quesol u
+ti on.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Q.7
+ 
+ 
+Let  
+3
+ 
+denote 
+t he thr ee
+-
+di mens i onal  space. 
+T ake
+t wo poi nt s
+ 
+(1, 2 , 3 )
+P
+and 
+(4, 2, 7).
+Q
+ 
+Let  
+(,)
+dist X Y
+denote the di st ance bet ween t wo poi nts 
+X
+and 
+Y
+i n 
+3
+.
+ 
+Let  
+ 
+22
+3
+ : ( , ) ( , ) 50
+SX distXP distXQ
+ 
+ 
+and
+ 
+22
+3
+ : ( , ) ( , ) 50 .
+TY distYQ distYP
+ 
+ 
+T hen which of t he f ol l owi ng st at ement si s( ar e) T RUE?
+ 
+ 
+ 
+    
+( A) T her e 
+i sa tr iangl e
+ 
+whose  ar ea i s1 and
+ 
+all  of  whose  ver ti ces  ar ef r om
+ 
+.
+S
+ 
+    
+( B) T her e are t wo 
+di st inct  
+point s 
+L
+ 
+and 
+M
+ 
+i n 
+T
+suc ht hat  each point  on t he li nese gmen t
+ 
+         
+ 
+LM
+i s al soi n
+ 
+.
+T
+ 
+    
+( C) T her e are i nf init el yman y r ec t angl es  of  per i meter  48,t wo of  whose  vert ices a r e fr om 
+S
+and 
+ 
+           
+the ot her  t wo vert ices a r e fr om 
+.
+T
+ 
+    
+(D) 
+T her ei sa s quare of per i met er  48,t wo of
+ 
+whose ver t i ces  ar ef r om 
+S
+and the ot her t wo vert i ces  ar e 
+ 
+           
+fr om 
+.
+T
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+5
+/
+10
+ 
+ 
+ 
+Q.8
+ 
+ 
+Let  
+32
+a
+and 
+1/ 6
+1
+56
+b
+.  If  
+,
+xy
+ 
+ar e sucht hat  
+ 
+      
+                             
+5
+4
+32 log18
+a
+xy
+          
+and      
+ 
+                                  
+2log1080,
+b
+xy
+ 
+hen 
+45
+xy
+ 
+i s e qual t o  ________
+.
+ 
+ 
+ 
+ 
+Q.9
+ 
+ 
+Let  
+432
+()
+fx x ax bx c
+ 
+be a  pol ynomi al  wi th rea
+l coe ff icients s uch t hat
+(1) 9.
+f
+ 
+Suppose 
+t hat  
+3
+i
+ 
+i s a  root of t heequat i on 
+32
+43 2 0,
+xax bx
+
+ 
+wher e 
+1
+i
+. If  
+12 3 4
+,,,and 
+ 
+ar e 
+al l t he r oot s of t he equat i on 
+() 0,
+fx
+ 
+t hen 
+2222
+12 3 4
+ 
+
+i sequal  to ______. 
+ 
+ 
+ 
+ 
+Q.10
+ 
+ 
+Let
+ 
+5
+L
+P
+#
+L
+m
+r
+s
+?
+s
+=
+@
+s
+>
+A
+q
+÷
+=
+á
+>
+á
+?
+á
+@
+á
+A
+Ð
+<
+r
+á
+s
+=
+
+#
+
+Ð
+<
+F
+s
+á
+s
+=
+Q
+, wher e 
+
+#
+
+ 
+denot es t he 
+det er mi nant  of   
+#
+. T hen the number  of  element s in 
+5
+ 
+i s _______.
+ 
+ 
+ 
+ 
+Q.11
+ 
+ 
+A gr o
+up of  
+9
+st udent s, 
+12 9
+,, ,,
+ss s
+ 
+i s t o be di vi ded 
+to f or m 
+t hr ee t ea ms 
+, ,  and 
+XY Z
+ 
+of  si zes 
+2, 3,  and 4,
+r es pec ti vel y. Suppose t hat  
+1
+s
+ 
+ca nnot  be se lect ed f or  t he t ea m 
+,
+X
+ 
+and 
+2
+s
+ 
+ca nnot  be 
+se l ected for t het ea m 
+.
+Y
+ 
+T hent he number  of  ways 
+t of or m 
+suc ht ea ms, i s_______. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+(
+!"# $% &'(?
+(
+* +,-./ 0/(+,1234(5 ;6
+(
+(
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+!% A
+(
+*:
+B
+6
+!
+,-&%($ ) *%.
+!
+ 
+"#&! +*%;&:! () !&+'#!,-&%($) *!$ %! +!
+'&'
+C
+'"D@$% E"
+(
+% '$"D "9
+.
+!
+ 
+<) :!&
++'#!
+,-&%( $) *4!& *(& :!(#&!') ::&'(! $ *(& =&:! ') ::&%0) *7$ *=!( ) !( #&!+*%;&:! -%$ *=!( #&! A) -%&!+*7!( #&!) *
+O
+%':&& *!@ $ :(-+> !*-A &:$ '!B &N0+7!$ *!(#&!0> +'&!7&%$ =*+(&7!( ) !&*(&:!( #&! +*%;& :.
+!
+ 
+2*%;& :!() !&+'#!,-&%($ ) *!;$ >> !?&!&@ +> -+(& 7!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +
+:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+v
+!
+D9!
+&'<=
+!
+(#&!') ::&'(!$ *(&=&:!$ %!&*(& :&7E
+!
+*+' ,$% &' ()
+$
+C!
+!
+!!!
+r
+!!!
+D
+*!+> > !) (#&:!'+%&%.
+!
+!
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+6
+/
+10
+ 
+Q.12
+ 
+ 
+Let  
+11
+ 
+, 
+OP i j k OQ i j k
+ 
+ 
+and  
+1
+2
+OR i j k
+ 
+ 
+be t hr ee  vect
+ors,wher e 
+,0
+ 
+and
+ 
+O
+ 
+denotes  the or i gi n.  
+If  
+0
+OP OQ OR
+
+and t he poi nt  
+(, ,2)
+ 
+li es  on 
+t he pl ane 
+33 0,
+xyzl
+
+t hen the val ue of  
+l
+ 
+i s ____
+____.
+ 
+ 
+ 
+Q.13
+ 
+ 
+Let  
+X
+be a  random var i able
+,
+ 
+and
+ 
+let
+ 
+()
+PX x
+ 
+denote t he probabi li ty t hat  
+X
+ 
+t akes  t he val ue 
+.
+x
+Suppose 
+t hat t he poi nt s 
+,( )
+xP X x
+, 
+0, 1, 2, 3, 4,
+x
+l ie on a fi xed str ai ght  li nei nthe 
+xy
+-
+pl ane , 
+and 
+()0
+PX x
+f or  al l  
+0,1, 2, 3, 4 .
+x
+ 
+If  t he mea n of  
+X
+is 
+5
+2
+, and the vari ance of  
+X
+i s 
+,
+t hent he value of  
+24
+i s ______.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+7
+/
+10
+ 
+Q.14
+ 
+ 
+Let  
+and 
+ 
+be t he di sti nct  r oot s of  t he equat i on 
+2
+1 0.
+xx
+
+ 
+Consi der
+t he set  
+1, , .
+T
+ 
+For a 
+33
+mat r i x 
+33
+,
+ij
+Ma
+ 
+def i ne 
+12 3
+ii i i
+Ra a a
+ 
+ 
+and 
+12 3
+jjjj
+Ca a a
+ 
+ 
+for
+1, 2 , 3
+i
+and
+1, 2, 3.
+j
+ 
+ 
+ 
+Ma tch eac h entr y i
+n
+ 
+Li st
+-
+I
+ 
+to t hecorr ect  ent r
+y
+ 
+i n 
+Li s t
+-
+II
+.
+ 
+ 
+Li st
+-
+I
+ 
+              
+Li st
+-
+II
+ 
+( P)
+  
+T he number  of  mat ri ces 
+33
+ij
+Ma
+wi t h 
+ 
+       
+a
+ll  
+ent ri es i n 
+T
+suc h t hat  
+0
+ij
+RC
+ 
+ 
+    
+   
+for all , ,
+ij
+ 
+i s 
+ 
+ 
+( 1)
+ 
+    
+1
+ 
+(Q)
+ 
+T henumber  of  symmet r i c mat ri ces
+  
+ 
+      
+33
+ij
+Ma
+ 
+wi th 
+al l  
+entr i es in 
+T
+suc ht hat  
+ 
+      
+0  for all  ,
+j
+Cj
+ 
+is
+ 
+       
+ 
+( 2)
+ 
+    
+12
+ 
+(R)
+  
+Let  
+33
+ij
+Ma
+ 
+be a
+ 
+skew symmet r i c 
+  
+ 
+       
+mat r i xsuc ht hat  
+ij
+aT
+f or  
+ij
+. Then 
+ 
+       
+t he number  of element s i n the set  
+ 
+      
+12
+23
+ :  , , ,  0
+xxa
+yxyz My
+zza
+ 
+ 
+ 
+ 
+ 
+ 
+is
+  
+ 
+        
+ 
+( 3)
+ 
+    
+i nfi ni te
+ 
+( S)
+ 
+Let  
+33
+ij
+Ma
+ 
+be a  mat ri x
+ 
+wit h 
+al l  
+ 
+      
+entr ies i n 
+T
+suc ht hat  
+0for
+i
+R
+al l  
+.
+i
+ 
+      
+Thent he
+ 
+abs ol ute val ue of  t he det er mi nant  
+ 
+      
+of  
+M
+ 
+i s 
+ 
+( 4)
+ 
+    
+6
+ 
+ 
+( 5)
+ 
+    
+0
+ 
+T he cor r ect  opti oni s
+ 
+    
+(A
+)
+   
+( P ) ( 4)  ( Q) ( 2)  ( R ) (5)  (S) (1)
+
+ 
+    
+(B)
+ 
+  
+( P ) ( 2)  ( Q) ( 4)  ( R ) (1)  (S) (5)
+
+ 
+    
+(C)
+  
+ 
+( P ) ( 2)  ( Q) ( 4)  ( R ) (3)  (S) (5)
+
+ 
+    
+(D)
+ 
+  
+( P ) (1)     ( Q ) (5)    ( R ) (3)    (S) ( 4)
+
+ 
+(
+!"# $% &'(;
+(
+* +,-./ 0/(+,1234() 56
+(
+(
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+7&89
+(
+*:
+;
+6
+!
+P +('#$ *=!J $ %(!Q&( %.
+!
+ 
+/+'#!%&(!#+%!
+&' "
+!
+P -> ($ 0> &!6#) $ '&!R-&%
+($) *
+.
+!
+ 
+/+'#!%&(!#+%!
+$F&
+!
+> $%(%C !
+<. 3 G
+C
+%
+!
++*7!
+<. 3 G
+C
+%%
+.
+!
+ 
+<. 3 G
+C
+%
+!
+#+%!
+7H01
+!
+&*(:$&%! 1
+S 34!1R34! 1T3! +*7!1 Q
+3!+*7!
+<.3 G
+C
+%%
+!
+#+%!
+7.I J
+!
+&*(:$ &%!1M 34! 1U 34!1 V34! 1W
+3! +*7!1
+X
+3.
+!
+ 
+7&89
+!
+) 0($ ) *%!+:&! =$@ &*!$ *!&+'#!P ->($ 0> &!6#) $ '&!R-&%($ ) *!?+%&7!) *!
+<.3 G
+C
+%
+!
++*7!
+<.3 G
+C
+%%
+!
++*7!
+&' <=( &'"
+!
+) 9!
+(#&
+%&! 9) -:!) 0($) *%!%+( $ %9$&%!( #&! ') *7$ ($) *!+%B&7!$ *!( #&!P -> ($ 0> &!6#) $ '&!R -&%($ ) *.
+!
+ 
+2*%;& :!() !&+'#!,-&%($ ) *!;$ >> !?&!&@ +> -+(& 7!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+u
+!
+&'<=
+!
+$9
+!
+(#&!) 0($) *!') ::&%0)*7$ *=!( ) !(#&!') ::&'( !')A ?$ *+($ ) *!$ %!'#) %&*
+E
+!
+*+' ,
+$
+%&' ()
+$
+C!
+!
+!!!
+r
+!!!
+D9!*) *&! )9!( #&!) 0($) *%!$ %!' #) %&*!1$ .&.!(#&! ,-&%( $) *!$ %!-*+*%;& :&73E !
+!
+-+.&/0 1+$% &' ()$3 $$
+!
+F
+s
+!
+!
+D*!+> > !) (#&:!'+%&%
+.
+!
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+8
+/
+10
+ 
+ 
+ 
+Q.15
+ 
+ 
+Let  the st rai ght l i ne 
+2
+yx
+ 
+t ouch
+ 
+a c ir cl e wit h center  
+( 0, ),   > 0,
+ 
+and radi us 
+r
+ 
+at  apoint  
+1
+.
+A
+  
+Let  
+1
+B
+be t he point  on t he ci r cle s ucht hat t hel i ne s egment  
+11
+AB
+i s a di amet er  of t he c ir cl e. Let  
+5 5.
+r
+
+ 
+ 
+ 
+Ma tch
+ 
+eac h entr y i n  
+Li st
+-
+I
+ 
+t o t he c or rec t ent r
+y
+ 
+i n  
+List
+-
+II
+.
+ 
+ 
+Li st
+-
+I
+ 
+Li st
+-
+II
+ 
+( P)
+  
+ 
+equal s
+ 
+(
+1
+)
+  
+(2,4)
+ 
+(Q)
+ 
+r
+  
+equa ls
+ 
+(
+2
+)
+ 
+5
+ 
+(R)
+ 
+1
+A
+  
+equal s
+ 
+(
+3
+)
+ 
+(2,6)
+ 
+( S)
+ 
+1
+B
+  
+equal s
+ 
+(
+4
+)
+ 
+5
+ 
+ 
+(
+5
+)
+ 
+( 2, 4)
+ 
+ 
+T he cor r ect  opti oni s
+ 
+ 
+(A)
+ 
+( P ) ( 4)  ( Q) ( 2)  ( R ) (1)  (S) (3)
+
+ 
+(B)
+ 
+( P ) ( 2)  ( Q) ( 4)  ( R ) (1)  (S) (3)
+
+ 
+(C)
+ 
+( P ) ( 4)  ( Q) ( 2)  ( R ) (5)  (S) (3)
+
+ 
+(D)
+ 
+( P ) ( 2)  ( Q) ( 4)  ( R ) (3)  (S) (5)
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+9
+/
+10
+ 
+Q.16
+ 
+ 
+Let  
+be s uch t hat t hel i nes  
+1
+11 21 29
+:
+12 3
+xy z
+L
+ 
+ 
+and 
+2
+16 11 4
+:
+32
+xyz
+L
+
+ 
+i nter sec t
+. 
+Let 
+1
+R
+ 
+be 
+t he poi nt of  i nt er secti on 
+of  
+1
+L
+ 
+and 
+2
+.
+L
+ 
+Let  
+(0, 0, 0),
+O
+ 
+and 
+n
+ 
+denot e a uni t  
+nor mal  
+vec t or  
+t ot he pl anecont ai ni ng bot ht hel ines  
+1
+L
+and 
+2
+.
+L
+ 
+ 
+ 
+Ma tch eac h entr y i n  
+Li st
+-
+I
+ 
+t o t he c or rec t ent r
+y
+ 
+i n  
+List
+-
+II
+.
+ 
+ 
+ 
+Li st
+-
+I
+ 
+  
+Li st
+-
+II
+ 
+( P)
+ 
+equal s
+ 
+( 1)
+ 
+ijk
+ 
+ 
+(Q)
+ 
+A possi bl echoice  
+f or
+ 
+n
+i
+s
+ 
+( 2)
+ 
+3
+2
+ 
+(R)
+ 
+1
+OR
+ 
+equa ls
+ 
+( 3)
+ 
+1
+ 
+( S)
+ 
+A poss ibl e val ue of
+ 
+1
+OR n
+ 
+i
+s
+ 
+( 4)
+ 
+12 1
+66 6
+ijk
+ 
+ 
+( 5)
+ 
+2
+3
+ 
+ 
+ 
+T he cor r ect  opti oni s
+ 
+               
+ 
+(A)
+ 
+( P ) (3)  ( Q) ( 4)  ( R ) (1)  (S) ( 2)
+
+ 
+(B)
+ 
+( P ) (5)  ( Q) ( 4)  ( R ) (1)  (S) ( 2)
+
+ 
+(C)
+ 
+( P ) (3)    ( Q ) ( 4)    ( R ) (1)    (S) (5)
+
+ 
+(D)
+ 
+( P ) (3)    ( Q ) (1)    ( R ) ( 4)    (S) (5)
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Ad va n c ed ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+10
+/
+10
+ 
+ 
+Q.17
+ 
+ 
+Let  
+:
+f
+and
+ 
+:
+g
+be f uncti ons defi ned by 
+ 
+1
+| | sin ,    0,  
+()
+0,                 0,
+xx x
+fx
+x
+x
+    
+and   
+1
+12,0 , 
+()
+2
+0, otherwise.
+xx
+gx
+
+ 
+Let  
+,,, .
+abc d
+ 
+Def i ne
+t he f uncti on
+ 
+:
+h
+ 
+by
+ 
+ 
+1
+() () () () (), .
+2
+hx af x b g x g x c x g x dg x x
+ 
+ 
+Ma tch eac h entr y i n  
+Li st
+-
+I
+ 
+t o t he c or rec t ent r
+y
+ 
+i n  
+List
+-
+II
+.
+ 
+ 
+Li st
+-
+I
+ 
+Li st
+-
+II
+ 
+( P)
+ 
+If  
+0,  1,  0,  and  0,
+abc d
+ 
+ 
+t hen
+ 
+( 1)
+ 
+h
+i s one
+-
+one
+.
+ 
+(Q)
+ 
+If
+ 
+1,  0,  0,  and  0,
+ab c d
+ 
+ 
+t hen
+ 
+( 2)
+ 
+h
+i s ont o
+.
+ 
+(R)
+ 
+If
+ 
+0,  0,  1,  and  0,
+abc d
+ 
+ 
+t hen
+ 
+( 3)
+ 
+h
+i s di ff er ent i abl eon
+ 
+.
+ 
+( S)
+ 
+If
+ 
+0,  0,  0,  and  1,
+abc d
+ 
+ 
+t hen
+ 
+( 4)
+ 
+t
+her ange of  
+h
+i s 
+0,1 .
+ 
+ 
+( 5)
+ 
+t
+her ange of  
+h
+i s 
+0, 1 .
+ 
+ 
+T he cor r ect  opti oni s
+ 
+ 
+(A)
+ 
+( P ) ( 4)  ( Q) (3)  ( R ) (1)  (S) ( 2)
+
+ 
+(B)
+ 
+( P ) (5)  ( Q) ( 2)  ( R ) ( 4)  (S) (3)
+
+ 
+(C)
+ 
+( P ) (5)  ( Q) (3)  ( R ) ( 2)  (S) ( 4)
+
+ 
+(D)
+ 
+( P ) ( 4)  ( Q) ( 2)  ( R ) (1)  (S) (3)
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+E
+!
+D OF THE QUESTI O
+!
+ PAPER
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+1
+/
+8
+ 
+ 
+ 
+!
+!"#$ %&' ()(
+*+,-./0/ (+ ,1234()56
+!
+ 
+"#$ %!%&' ($ )*! ' ) *(+$ *%!
+7&8 9
+(
+*:
+;
+6
+(
+, -&%($ ) *%.
+!
+ 
+/+'# !,-&% ($ )*!#+%!
+7&8 9
+!
+) 0($ )*%!1 23 4!15 34!1 63 !+*7!183 .!
+&' <=
+(
+&' " (
+) 9!(#&%& !9)-:!) 0($ )*%!$ %! (#&!
+')::&'( !
++*% ;&:.
+!
+ 
+<) :!&+'
+# !,-&% ($ )*4!'#)) %&!(#&!) 0($ )*
+!
+' ) ::&% 0)*7
+$ *= !() !(#&!
+')::&' (!+*% ;&:.
+!
+ 
+2*%; &:!() !&+ '#
+!
+,-&%($ )*
+!
+;$ > > !?&!&@+> -+ (&7
+!
++ '') :7$ *= !() !(#&!9)> > ) ; $ *=!A+:B$ *= !%'#&A&
+C
+!
+!"# # $%&' ( )
+$$$$ $$$$$$$
+C!
+!
+E
+u
+!
+D9!
+&' <=
+!
+(#&!
+' ) ::&'(!)0( $ )* !
+$ %!
+' #)% &*E
+!
+$
+$$$$ $
+*+',$%&' ( )
+$
+C!
+!
+!!
+r
+!
+D9!*)*& !)9!(# & !
+) 0($ )*%!
+$ %!
+'#) %&*!1$ .&.! (#&! ,-&%($ )*! $ %!
+- *+*% ;&:&73E
+!
+$$$ $$$
+-+.&/0 1 +$% &'()
+$$
+C
+!!
+F
+s
+!!!
+D* ! +> > !)(#&:! '+%& %
+.
+!
+!
+ 
+Q.1
+ 
+ 
+A di mensio nl ess qu antit y is
+ 
+con structed  in  terms of
+ 
+electro ni c char ge 
+A
+, permittiv ity  of  free space
+ 
+Ý
+4
+ 
+D
+,
+ 
+and  
+speed
+ 
+of  lig ht  
+?
+. If t
+he 
+di mens io nl ess 
+qu antit y
+ 
+is
+ 
+written  a s 
+A
+
+Ý
+4
+	
+D
+
+
+?
+
+ 
+and
+ 
+J
+ 
+is a n on
+-
+zero in teger, 
+th en 
+:
+Ù
+á
+Ú
+á
+Û
+á
+Ü
+;
+ 
+is
+ 
+gi ven by
+ 
+(A)
+:
+t
+J
+á
+F
+J
+á
+F
+J
+á
+F
+J
+;
+ 
+(B)
+:
+J
+á
+F
+J
+á
+F
+t
+J
+á
+F
+J
+;
+ 
+(C)
+:
+J
+á
+F
+J
+á
+F
+J
+á
+F
+t
+J
+;
+ 
+(D) 
+:
+t
+J
+á
+F
+J
+á
+F
+t
+J
+á
+F
+t
+J
+;
+ 
+ 
+ 
+ 
+ 
+Q.2
+ 
+ 
+An in fin itely lo ng  wire
+, located on
+ 
+the 
+V
+-
+axis, carri es a curr ent 
++
+ 
+alon g th e
+ 
++
+V
+-
+di rection
+ 
+and  
+pr od uces th e magn etic fi eld 
+$
+,
+&
+. Th e 
+magn itu de of  th e 
+lin e 
+in tegral
+ì
+$
+,
+&
+—
+@H
+,
+,
+,
+&
+ 
+al on g 
+a straigh t
+ 
+lin e 
+fro m  
+th e 
+po in t
+:
+F
+¾
+u
+=
+á
+=
+á
+r
+;
+ 
+to
+ 
+:
+=
+á
+=
+á
+r
+;
+ 
+is g iv en b y
+ 
+ 
+ä
+4
+ 
+is th e magn etic perme abili ty  o f free 
+space.
+ 
+(A) 
+y
+ä
+4
++
+tv
+ 
+(B) 
+y
+ä
+4
++
+st
+ 
+ 
+(C)  
+ä
+4
++
+z
+ 
+(D) 
+ 
+ä
+4
++
+x
+ 
+ 
+ 
+ 
+Q.3
+ 
+ 
+T
+wo beads,  each with  ch arge 
+M
+ 
+and  m ass 
+I
+, 
+are on  a ho rizon tal
+,
+ 
+frictio nl ess
+,
+ 
+non
+-
+condu cting
+,
+ 
+circular h
+oo p of  radius 
+4
+. One of  the beads is gl ued to th e hoop at some po in t
+,
+ 
+whil e th e other 
+on e 
+perfo rms s mall  oscillatio ns abo ut  its equ ilib riu m po sitio n
+ 
+alon g the ho op
+. Th e 
+squ are of  th e 
+an gu lar 
+frequ ency
+ 
+of th e
+ 
+s
+mall o sci llatio ns is g iven by  
+ 
+ 
+[
+Ý
+4
+ 
+is th e permittiv ity  o f free space.
+ 
+ 
+(A) 
+M
+6
+:
+v
+è
+Ý
+4
+4
+7
+I
+;
+ 
+ 
+(B) 
+M
+6
+:
+ut
+è
+Ý
+4
+4
+7
+I
+;
+ 
+ 
+(C)  
+M
+6
+:
+z
+è
+Ý
+4
+4
+7
+I
+;
+ 
+ 
+(D)  
+M
+6
+:
+sx
+è
+Ý
+4
+4
+7
+I
+;
+ 
+ 
+ 
+Q.4
+ 
+ 
+A bl ock  of  mass 5 kg  mov es alon g th e 
+x
+-
+di rection  sub ject to  th e 
+fo rce 
+(
+L
+:
+F
+tr
+T
+E
+sr
+;
+, with
+ 
+th e valu e of
+ 
+T
+ 
+in  m
+etre
+. At 
+time 
+P
+L
+r
+,
+ 
+it is
+ 
+at rest at
+ 
+po sitio n
+ 
+T
+L
+s
+. T
+he po sitio n and  
+momentu m o f th e bl ock
+ 
+at 
+P
+L
+:
+è
+v
+;
+ 
+are
+ 
+(A) 
+F
+r
+ä
+w
+m, 
+w
+ 
+kg  m/s
+ 
+(B) 
+r
+ä
+w
+ 
+m, 
+r
+ 
+kg 
+m/s
+ 
+(C) 
+r
+ä
+w
+ 
+m, 
+F
+w
+ 
+kg  m/s
+ 
+(D) 
+F
+s
+ 
+m, 5  k g m/s
+ 
+ 
+ 
+ 
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+2
+/
+8
+ 
+ 
+ 
+ 
+!
+!"#$ %&' (
+5
+(
+*
++,-./0 /(+ ,1234()56
+(
+!
+ 
+"#$ %!%&' ($ )*! ' ) *(+$ *%!
+$>9 " "
+(
+*:
+?
+6
+!
+,-&%($ ) *%
+.
+!
+!
+ 
+/+'# !,-&% ($ )*!#+%!
+7&8 9
+!
+) 0($ )*%!1 23 4!15 34!1 63 !+*7!183 .!
+&' "(&9(+& 9"($ >@'(&' "(
+) 9!(#&% &!9) -:!)0($ )*1 %3 !
+$ %1 +:&3 !'
+) ::&'(
+!
++*% ;&:1 %3 .
+!
+ 
+<) :!&+'#!,-& %($ ) *4!
+'#)) %&
+!
+(#&!
+) 0($ )*
+1 %3 !') ::&% 0)*7$ *=!() !
+1
++> >
+3
+!
+(#&!')::&' (!
++*% ; &:
+1%3
+.
+!
+ 
+2*%; &:!() !&+ '#
+!
+,-&%($ )*
+!
+;$ > > !?&!&@+> -+ (&7
+!
++ '') :7$ *= !() !(#&!9)> > ) ; $ *=!A+:B$ *= !%'#&A&
+C
+!
+!"# # $%&' ( )
+$
+C!
+!
+E
+v
+!
+&' <=
+!
+$9
+!
+1 +> > 3 !
+( #&!
+')::& '(!)0 ($ )*
+1%3!
+$ %1 +:&3!'#)% &*E
+!
+2&' /0 &# $%&' ( ) $$$ $$
+C
+!!!
+E
+u
+!!
+D9!+> > !(# &!9)-:!)0($ ) * %!+: &!') ::&' (!?-(!
+&' <=
+!
+(#: &&!) 0($ )*%!+: &!'#)% &*E
+!
+2&' /0 &# $%&' ( ) $$$ $$
+C
+!!!
+E
+t
+!!
+D9!(#:&& !):!A):&!)0 ($ ) *%!+:&!')::& '(! ?-(!
+&' <=
+!
+( ;) !)0($ )*% !+ :&!'#)% &*4 !?) (#!) 9!
+;#$ '#!+: &!') ::&'(E
+!
+2&' /0 &# $%&' ( ) $$$ $$
+C
+!!!!
+E
+s
+!!
+D9 !(;) ! ) :!A):&!)0($ ) *%!+:&!')::& '(! ?-(!
+&' <=
+!
+) *&!) 0($ )* !$ %! '#)%&*!+* 7!$ ( !$ %!+!
+')::&'( !)0($ ) *E
+!
+*+',$%&' ()
+$
+C!
+!
+!!! !
+F
+!
+D9!*)*& !)9!(# & !)0($ )*% !$ %! '#) %&*
+!
+1 $ .&.!(#& ! ,-&%($ )*! $ %!- *+*% ;&:&73E
+!
+-+.& /0 1+$%&' ()
+$
+C!
+!
+!
+F
+t
+!
+D*!+> > !) ( #&:! '+ %&%
+.
+!
+ 
+<) :!&G+A0 > &4! $ *!+!,-&% ($ )*4 !$ 9!1 23 4!15
+3 !+*7!183 !+:&!
+(#&!H IJK!(#:&& !
+) 0 ($ )*%!
+')::&% 0 ) *7$ *=!()!'): :&'(!
++*% ;&:%
+4!
+(#&*!
+!
+'#)) %$ *=!H IJ K!123 4!15 3 !+*7!183
+!
+;$ > > !=&(!
+E
+v
+!
+A+:B%E!
+!
+'#)) %$ *=
+!
+H IJ K
+!
+1 23 !+*7!1
+5
+3 ! ;$ > > !=& (!
+E
+t
+!
+A+:B %E!
+!
+'#)) %$ *=
+!
+H IJ K
+!
+1 23 !+*7!1
+8
+3 ! ;$ > > !=& (!
+E
+t
+!
+A+:B %E
+!
+'#)) %$ *=!H IJ K!15
+3 !+*7!1
+8
+3 !;$ > > !=& (!
+E
+t
+!
+A+:B %E
+!
+'#)) %$ *=!H IJ K!123 !;$ > > != &( ! LM!A+:BE
+!
+'#)) %$ *=!H IJ K!153 !;$ > > !=& (!LM!A+:BE
+!
+'#)) %$ *=!H IJ K!183 !;$ > > !=& (!LM!A+:BE !
+!
+'#)) %$ *=!*)! ) 0($ )*!1$ .&. !(# &!,- &%($ )*!$ %! -*+*% ;&:&73! ;$ > > !=& (!F! A+: B%E!
++*7!
+!
+!!! !!!!
+'#)) %$ *=! +*N!) (#&: !') A?$ *+($ )* !)9! ) 0($ )*%!
+;$ > > != &(!
+F
+t
+!
+A+:B
+%
+.
+!
+!
+ 
+ 
+ 
+Q.5
+ 
+ 
+A
+ 
+parti cle of  mas s 
+I
+ 
+is 
+m ov in g i
+n a circular or bi t un d
+er th e 
+influen ce of  th e central fo r ce
+ 
+ 
+(
+:
+N
+;
+L
+F
+GN
+, correspo nd ing  to th e potenti al energ y 
+8
+:
+N
+;
+L
+G
+N
+6
+t
+, where 
+G
+ 
+is a po sitiv e fo rce 
+con stant and  
+N
+ 
+is th e radial di stance fro m  th e or ig in . Ac
+ 
+ang ul ar mom entu m
+ 
+of  
+th e 
+parti cle 
+is  gi ven  by
+ 
+.
+L
+J
+0
+, where 
+0
+L
+D
+:
+t
+è
+;
+,
+ 
+D
+ 
+ 
+con stant,  and 
+J
+ 
+a po sitiv e in teger. If 
+R
+ 
+and  
+'
+ 
+are th e speed and  total energ y of th e parti cle, 
+respectively , t hen  wh ich of the fo llo wing exp ressio n( s) is(are) correct?
+ 
+ 
+(A) 
+N
+6
+L
+J
+0
+§
+5
+àÞ
+ 
+(B) 
+R
+6
+L
+J
+0
+§
+Þ
+à
+/
+ 
+(C)
+Å
+à
+å
+.
+L
+§
+Þ
+à
+ 
+(D)
+ 
+'
+L
+á
+0
+6
+§
+Þ
+à
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+3
+/
+8
+ 
+Q.6
+ 
+ 
+T
+wo un ifo rm strin gs of  mass per un it le ng th
+ 
+ä
+ 
+and  4
+ä
+, and  leng t
+h
+ 
+.
+ 
+and  
+t
+.
+, respective ly ,
+ 
+are jo in ed 
+at po in t O, and  tied 
+at
+ 
+two 
+fix ed 
+end s 
+P
+ 
+and  
+Q,
+ 
+as sho wn in  th e fig ur e. 
+Th e strin gs are u nd er a 
+un ifo rm tensio n 
+6
+.
+ 
+If we d efine th e
+ 
+fre qu ency 
+å
+4
+L
+5
+6
+Å
+§
+Í
+
+ 
+,
+ 
+w
+hi ch of  th e fo ll
+owin g statement(s )  
+is
+(are) corre ct
+?
+ 
+ 
+ 
+ 
+(A)
+ 
+W
+ith  a n ode at O
+,
+ 
+th e
+ 
+minimum fre qu ency of vi bratio n of  th e comp osit e strin g is
+å
+4
+.
+ 
+(B)
+ 
+W
+ith  a
+n
+ 
+anti
+no de at O
+,
+ 
+th e
+ 
+minimum  freq uen cy o fvi br ation of  the co mpo site strin g is
+ 
+t
+å
+4
+.
+ 
+(C)
+ 
+Wh en t he co mpo site strin g vibrates at th e 
+minimum freq uen cy 
+w
+ith  a n od e at O,
+ 
+it h as 
+6
+ 
+nodes, 
+in clud ing th eend  
+no des.
+ 
+(D)
+ 
+No 
+vi br ation al 
+mod e with  
+an 
+antinode
+ 
+at O 
+is p oss ib le 
+fo r th e compo site strin g.
+ 
+ 
+ 
+ 
+ 
+ 
+Q.7
+ 
+ 
+A gl ass 
+be aker has a  soli d,  pl ano
+-
+con vex base 
+of  refr active in dex  
+s
+ä
+xr
+, 
+as sho wn in  th e fig ur e. T
+he  
+radiu s of  
+curv ature of  th e con vex  surface (SP U)  is
+ 
+{
+, whil e th e pl anar 
+surfac e
+ 
+(STU) 
+act s a s  a  
+mirror.  Th is 
+beaker
+ 
+is fille d with  a
+ 
+liq ui d of  refractiv e in dex  
+J
+ 
+up  to th e level QP R. If th e im a ge of  
+a po in t object O at a heigh t of  
+D
+ 
+(
+OT in  th e fig ur e) is fo rmed
+ 
+on to itself, then , which of th e 
+fo llo wing op tio n( s) is(are) correct? 
+ 
+ 
+ 
+ 
+(A)
+ 
+Fo r 
+J
+L
+s
+ä
+vt
+, 
+D
+L
+wr
+.
+ 
+(B)
+ 
+Fo r 
+J
+L
+s
+ä
+uw
+, 
+D
+L
+ux
+.
+ 
+(C)
+ 
+Fo r 
+J
+L
+s
+ä
+vw
+, 
+D
+L
+xw
+.
+ 
+(D)
+ 
+Fo r 
+J
+L
+s
+ä
+vz
+á
+D
+L
+zw
+cm
+.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+4
+/
+8
+ 
+ 
+ 
+ 
+Q.8
+ 
+ 
+Th e specific heat 
+capacity  
+of  a sub stance is 
+tempe ra tu re dep end ent
+ 
+and  is
+ 
+given by  the fo rmula
+ 
+%
+L
+G6
+, where 
+G
+ 
+is a con stant
+ 
+of  suit able di mensio ns
+ 
+in  
+SI
+ 
+units
+, and  
+6
+ 
+is th e abso l
+ut e  
+temperature
+. If th e heat requ ired to raise th e tempera tu re of  
+s
+ 
+kg of th e sub stance fro m 
+F
+yu
+¹
+C to 
+ty
+¹
+C is 
+JG
+,
+ 
+th e value of 
+J
+ 
+is 
+__ ___.
+ 
+ 
+ 
+Given :
+ 
+r
+L
+F
+tyu
+¹
+.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Q.9
+ 
+ 
+A di sc of mass 
+/
+ 
+and radius 
+4
+ 
+is free to rot ate abo ut its verti cal axis as sho wn in th e fig ur e. A  
+battery  op erated moto r of  neg lig ib le mas s is  fix e d to  
+th is di sc at a po in t on  its circu mferenc e
+. 
+A
+no th er
+ 
+di sc of  
+th e 
+same mas s 
+/
+ 
+and  radiu s 
+4
+t
+ 
+is 
+ 
+haft.  
+In itially , bo th 
+th e di scs ar e at rest. 
+Th e moto r is 
+swit ched
+ 
+on  so that th e smaller  di sc ro tate
+s at a un ifo rm 
+ang ul ar  
+speed 
+ñ
+. I f t
+he an gu lar sp
+eed at wh ich th e large d isc rot ate
+s is 
+ñ
+J
+, t hen  
+the v alue o f 
+J
+ 
+is
+ 
+__ ___.
+ 
+ 
+ 
+ 
+ 
+ 
+Q.1 0
+ 
+ 
+A po in t sou rce S
+ 
+emits 
+u np ol arized ligh t
+ 
+unifo rmly in  all di rectio ns.   At two 
+po in ts A and B, th e 
+ratio  
+N
+L
++
+º
++
+»
+ 
+of  th e int ensities of  li
+g
+ht  is 2
+. If 
+a set of  two po lar
+oi ds
+ 
+hav ing  
+vw¹
+ 
+ang le betwee n  
+th e
+ir p ass
+-
+axe s is p laced
+ 
+ju st b efore
+ 
+po in t 
+B, t hen  th e new v alue o f 
+N
+will b e
+ 
+__ ___.
+ 
+ 
+ 
+ 
+ 
+ 
+(
+!"#$ %&' (?
+(
+*+,-./0/ (+ ,1234(5;6
+(
+(
+ 
+"#$ %!%&' ($ )*! ' ) *(+$ *%!
+!% A
+(
+*:
+B
+6
+!
+,-&%( $ )*% .
+!
+ 
+"#&!+*% ;&: !() !&+'#! ,-&%($ ) *!$ %!+!
+'&'
+C
+'"D@ $% E"(%' $"D"9
+.
+!
+ 
+<) :!&
++'# !
+,-& %($ ) *4!&*(&:!( #&!')::& '(!$ *(&=&:! ')::&% 0)*7$ *=! ()!( #& !+*%;&:!-%$ * = !(#& !A) -%& !+*7!(#&!)*
+O
+%':&&*!@$ : (-+> !*-A&:$ ' !B&N 0+7!$ * !(# &!0> + '&!7 &%$ =*+( & 7!() ! &*(&: !(# &!+*%;&:.
+!
+ 
+2*%; &:!() !&+ '#!,-&%($ )* ! ;$ > > !?&!&@+> -+ (&7!
++ '') :7$ *= !() !(#&!9)> > ) ; $ *=!A+:B$ *= !%'#&A&
+C
+!
+!"# # $%&' ( )
+$
+C!
+!
+E
+v
+!
+D9!
+&' <=
+!
+(#&!' ) ::&'(!$ *(&= & :!$ %!&* (&:&7E
+!
+*+',$%&' ()
+$
+C!
+!
+!!!
+r
+!!!
+D
+* !+> > !) (# & :!'+% &%.
+!
+!
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+5
+/
+8
+ 
+ 
+ 
+Q.1 1
+ 
+ 
+A sou rce (S) of  sound has
+ 
+frequ ency 
+tvr
+ 
+Hz
+.
+ 
+Wh en the ob server (O) and  th e sou rce mov e to wards  
+each ot her 
+at
+ 
+a speed 
+R
+ 
+with  respect to  the gr ou nd (as sho wn in  Case 1 in  the figure), 
+th e ob serv er  
+mea sures th e  frequ ency of  th e sou nd  to be 
+tzz
+ 
+Hz. Ho wever, 
+when  th e ob server and  th e sou rce 
+mov e away fro m each ot her at th e same speed 
+R
+ 
+with respect to  th e gr ou nd 
+(as shown  in Case 2 in  
+th e fig ur e), the ob server m easur e s th e frequ ency of  soun d to be 
+J
+ 
+Hz . T he v alue o f 
+J
+ 
+is _ ____ .
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Q.1 2
+ 
+ 
+Two
+ 
+large,
+ 
+ident ical water tank s, 1 and 2,
+ 
+k
+ept on  the to p of  a bu ild in g of  
+height 
+*
+,
+ 
+are filled  with  
+water 
+up  to  heig ht  
+D
+ 
+in  each tank .  
+Bot h 
+the 
+tank s con tain an id entical ho le of  small radiu s on  th e
+ir
+ 
+sides, close to  th eir bottom. A pi pe
+ 
+of 
+th e 
+s
+ame in ternal radiu s as th at of  th e ho le is con nected to  
+tank  2, and the 
+p
+ip e end s at th e grou nd level. Wh en
+ 
+t
+he water flo ws fro m th e tank s 1 and 2 thr ou gh 
+th e
+ 
+ho le
+s,
+ 
+the times taken  to  empt y the
+ 
+tank s are 
+P
+5
+ 
+and  
+P
+6
+, respectively
+. If 
+*
+L
+@
+5:
+=
+A
+D
+, th e
+n th e
+ 
+ratio  
+P
+5
+P
+6
+ 
+is
+ 
+__ ___.
+ 
+ 
+ 
+ 
+ 
+Q.1 3
+ 
+ 
+A
+ 
+th in  un ifor m 
+ro d
+ 
+of  leng th  
+.
+ 
+and  cert ain mas s is kep t on  a frictio nl ess ho rizon tal table with  a 
+mas sless strin g of  length 
+.
+ 
+fix ed to  on e end
+ 
+(
+top vi ew
+ 
+is 
+sho wn in  
+the fig ur e)
+. The ot her end  of  th e 
+strin g is pi voted to  a po int
+ 
+O
+. 
+If a
+ 
+ho rizon tal impu lse 
+2
+ 
+i
+s imparted to  th e ro d
+ 
+at 
+a 
+distance
+T
+L
+.
+J
+ 
+fro m
+ 
+th e
+ 
+mid
+-
+po in t of  the ro d
+ 
+(see fig ur e)
+, th en 
+th e ro d and  strin g revo lv e
+ 
+to gether
+ 
+arou nd  the
+ 
+po in t
+ 
+O,
+ 
+with  th e rod remainin g align ed wit h the strin g
+. I n such a cas e,
+ 
+th e valu e of
+ 
+J
+ 
+is _ __ __.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+6
+/
+8
+ 
+ 
+ 
+Q.1 4
+ 
+ 
+One mole of
+ 
+a 
+mon atomic id eal 
+gas un derg oes th e cyclic
+ 
+pr ocess 
+J
+ 
+K
+ 
+L
+ 
+M
+ 
+J
+,
+ 
+as sh own  
+i
+n 
+th e P
+-
+T 
+di agram
+.
+ 
+ 
+ 
+ 
+Match t
+he 
+quantit ies ment i on ed i n List
+-
+I with  th eir v alues in  L
+ist
+-
+II
+ 
+and  cho ose the correct o pt io n.
+ 
+ 
+ 
+[
+ì
+is th e gas co nstan t.]
+ 
+ 
+List
+-
+I
+ 
+List
+-
+II
+ 
+(P)
+ 
+Wo rk  done in th e 
+complete
+ 
+cyclic
+ 
+pr ocess
+ 
+(
+1
+)
+ 
+ì
+6
+4
+F
+vì
+6
+4
+t
+ 
+(Q)
+ 
+Chan ge i n th e in ternal energ y of  th egas in  
+th e 
+pr ocess 
+JK
+ 
+(
+2
+)
+ 
+0
+ 
+(R)
+ 
+Heat g iv e n to  th egas in
+ 
+th e pr ocess
+ 
+KL
+ 
+(
+3
+)
+ 
+uì
+6
+4
+ 
+(S)
+ 
+Chan ge i n the in ternal energ y of  the gas in 
+th e 
+pr ocess 
+MJ
+ 
+(
+4
+)
+ 
+F
+tì
+6
+4
+t
+ 
+ 
+(
+5
+)
+ 
+F
+uì
+6
+4
+t
+ 
+ 
+(A)
+ 
+P 
+ 
+1;  Q 
+ 
+3;  R
+ 
+ 
+5; S
+ 
+ 
+4
+ 
+(B)
+ 
+P 
+ 
+4;  Q 
+ 
+3;  R
+ 
+ 
+5; S
+ 
+ 
+2
+ 
+(C)
+ 
+P 
+ 
+4;  Q 
+ 
+1;  R
+ 
+ 
+2; 
+S
+ 
+ 
+2
+ 
+(D)
+ 
+P 
+ 
+2;  Q 
+ 
+5;  R
+ 
+ 
+3; S
+ 
+ 
+4
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+(
+!"#$ %&' (;
+(
+*+,-./0/ (+ ,1234()56
+(
+(
+ 
+"#$ %!%&' ($ )*! ' ) *(+$ *%!
+7&8 9
+(
+*:
+;
+6
+!
+P+ ( '#$ *=!J$ %( !Q&(% .
+!
+ 
+/+'# !%&(!#+ %!
+&'"
+!
+P-> ($ 0> & !6#) $ '&! R-&% ($ )*
+.
+!
+ 
+/+'# !%&(!#+ %!
+$F &
+!
+> $ %(%C!
+<.3 G
+C
+%
+!
++*7 !
+<. 3G
+C
+%%
+.
+!
+ 
+<.3G
+C
+%
+!
+#+% !
+7 H01
+!
+&* (:$ &%!1
+S3 4!1R3 4!1T3 !+*7!1Q
+3 !+*7!
+<. 3G
+C
+%%
+!
+# +% !
+7.IJ
+!
+&* (:$ & %!1 M3 4!1U 34!1 V3 4!1 W
+3 !+*7!1
+X
+3.
+!
+ 
+7&8 9
+!
+) 0($ )* %!+: &!=$ @&* !$ *! &+'#!P-> ($ 0> & !6#) $ '&! R-&% ($ )*!?+%&7 !)* !
+<.3 G
+C
+%
+!
++* 7!
+<.3 G
+C
+%%
+!
++*7 !
+&' <=(&' "
+!
+) 9!
+(#&%&!9) -: !)0 ($ )*%!% +($ %9 $ &%!(#&!')* 7$ ($) *!+%B&7 !$ *!(# &!P-> ($ 0> &!6# ) $ '&!R-&% ($ ) *.
+!
+ 
+2*%; &:!() !&+ '#!,-&%($ )* ! ;$ > > !?&!&@+> -+ (&7!
++ '') :7$ *= !() !(#&!9)> > ) ; $ *=!A+:B$ *= !%'#&A&
+C
+!
+!"# # $%&' ( )
+$
+C!
+!
+E
+u
+!
+&' <=
+!
+$9
+!
+(#&!) 0($ )*! ')::&% 0)*7$ *=! ()!( #& !') ::&' (!')A ?$ *+($ )*! $ %!'#) %&*
+E
+!
+*+',$%&' ()
+$
+C!
+!
+!!!
+r
+!!!
+D9! *)*&!)9 ! (#&!) 0 ($ )*%!$ % !'#)% &* !1$ .&. !(#&!, -&%($ )*! $ %!-*+*% ;&:& 73E!
+!
+-+.& /0 1+$%&' ()$3 $$
+!
+F
+s
+!
+!
+D*!+> > !) ( #&:! '+ %&%
+.
+!
+!
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+7
+/
+8
+ 
+Q.1 5
+ 
+ 
+Fo ur  id entical 
+th in , 
+squ are
+ 
+metal sheets,  
+5
+5
+, 
+5
+6
+, 
+5
+7
+ 
+and  
+5
+8
+, each  of  
+side
+ 
+=
+ 
+are  ke
+pt  parallel to  each 
+ot her with  equal
+ 
+di stance 
+@
+ 
+(
+'
+=
+) 
+between th em
+,
+ 
+as sho wn
+ 
+in  the fig ur e
+. L
+et
+ 
+%
+4
+L
+Ý
+4
+=
+6
+@
+, 
+where  
+Ý
+4
+ 
+is th e permittiv ity  o f free spa
+ce.
+ 
+ 
+ 
+M
+atch t
+he q uant ities menti on ed i n List
+-
+I with  th eir v alues in  L
+ist
+-
+II
+ 
+and  cho ose the correct o pt io n.
+ 
+ 
+List
+-
+I
+ 
+List
+-
+II
+ 
+(P)
+ 
+Th e capaci tance b etwee n 
+5
+5
+ 
+and  
+5
+8
+, wit h 
+5
+6
+ 
+and  
+5
+7
+ 
+no t co nnected,  is
+ 
+(
+1
+)
+ 
+u
+%
+4
+ 
+(Q)
+ 
+Th e capa citance betw e en 
+5
+5
+ 
+and  
+5
+8
+, wit h 
+5
+6
+ 
+sho rted to
+ 
+5
+7
+, is
+ 
+(
+2
+)
+ 
+%
+4
+t
+ 
+(R)
+ 
+Th e capa citance betw e en 
+5
+5
+ 
+and  
+5
+7
+, wit h 
+5
+6
+ 
+sho rted to
+ 
+5
+8
+, is
+ 
+(
+3
+)
+ 
+%
+4
+u
+ 
+(S)
+ 
+Th e capaci tance b etwee n 
+5
+5
+  
+and  
+5
+6
+, wit h 
+5
+7
+ 
+sho rted to
+5
+5
+,
+ 
+and
+5
+6
+ 
+sho rted to  
+5
+8
+, is
+ 
+(4 )
+ 
+t
+%
+4
+u
+ 
+ 
+(5 )
+ 
+t
+%
+4
+ 
+ 
+(A)
+ 
+P 
+ 
+3;  Q 
+ 
+2;  R
+ 
+ 
+4
+; S
+ 
+ 
+5
+ 
+(B
+) P  
+ 
+2
+; Q 
+ 
+3
+; R
+ 
+ 
+2
+; S
+ 
+ 
+1
+ 
+(C
+)
+ 
+P 
+ 
+3;  Q 
+ 
+2;  R
+ 
+ 
+4
+; S
+ 
+ 
+1
+ 
+(D)
+ 
+P 
+ 
+3
+; Q 
+ 
+2
+; R
+ 
+ 
+2
+; S
+ 
+ 
+5
+ 
+ 
+ 
+Q.1 6
+ 
+ 
+A lig ht  ray is in ciden t on  the surface  of  a sph ere of  re fractive in dex  
+J
+ 
+at
+ 
+an ang le of  in ciden ce
+ 
+à
+4
+. 
+Th e ray parti ally refracts i nt o th e sph ere with  
+ang le of  refractio n
+ 
+ö
+4
+ 
+and
+th en 
+partl y reflect
+s
+ 
+fr om 
+th e back surf ace
+. Th e  refl ected ray
+ 
+th e n 
+emerge s ou t 
+of  th e sph ere 
+after  a
+ 
+par tial
+ 
+refra ction
+. Th e  
+to tal 
+ang le of  
+dev iatio n 
+of th e emerg e nt  ray with  respect to  th e in ciden t ray is 
+Ù
+. 
+M
+atch t
+he  
+qu antit ies men tio ned  in List
+-
+I with  th eirvalu es in L
+ist
+-
+II
+ 
+and  cho ose th e correct op tio n.
+ 
+ 
+List
+-
+I
+ 
+List
+-
+II
+ 
+(P)
+ 
+If 
+J
+L
+t
+ 
+and  
+Ù
+L
+szr ¹
+,
+ 
+th en 
+all 
+th e 
+po ssible 
+value
+s
+ 
+of  
+à
+4
+ 
+will b e
+ 
+(
+1
+)
+ 
+ur¹
+ 
+and
+ 
+r¹
+ 
+(Q)
+ 
+If 
+J
+L
+¾
+u
+ 
+and  
+Ù
+L
+szr ¹
+,
+ 
+then  
+all 
+th e
+ 
+po ssible
+ 
+value
+s
+ 
+of  
+à
+4
+ 
+will b e
+ 
+(
+2
+)
+ 
+xr¹
+ 
+and
+ 
+r¹
+ 
+(R)
+ 
+If 
+J
+L
+¾
+u
+ 
+and  
+Ù
+L
+szr¹
+,
+ 
+th en 
+all 
+th e 
+po ssible 
+value
+s
+ 
+of  
+ö
+4
+ 
+will b e
+ 
+(
+3
+)
+ 
+vw¹
+ 
+and
+ 
+r¹
+ 
+(S)
+ 
+If 
+J
+L
+¾
+t
+ 
+and  
+à
+4
+L
+vw¹
+, 
+th en 
+all 
+th e 
+po ssible 
+value
+s
+ 
+of  
+Ù
+ 
+will b e
+ 
+(
+4
+)
+ 
+swr¹
+ 
+ 
+(
+5
+)
+ 
+r¹
+ 
+ 
+(A)
+ 
+P 
+ 
+5;  Q 
+ 
+2;  R
+ 
+1;S
+ 
+4
+ 
+(B)
+ 
+P 
+ 
+5;  Q 
+ 
+1;  R
+ 
+2;S
+ 
+4
+ 
+(C
+;
+P 
+ 
+3;  Q 
+ 
+2;  R
+ 
+1; S
+ 
+4
+ 
+(D
+) P  
+ 
+3;  Q 
+ 
+1;  R
+ 
+2;S
+ 
+5
+ 
+ 
+ 
+ 
+
+JEE (Adv an ced) 20 2 4
+ 
+ 
+                      
+Pap er1
+ 
+ 
+8
+/
+8
+ 
+ 
+ 
+ 
+ 
+Q.1 7
+ 
+ 
+The circuit shown in the fi gure contains an i
+nductor  
+.
+, a capacitor 
+%
+4
+,
+ 
+a resistor
+ 
+4
+4
+ 
+and
+ 
+an  
+idea l
+ 
+batter y. The cir cuit als o contains two keys K
+1
+ 
+and K
+2
+.  Ini tially, both the keys are  
+open and 
+ther e is 
+no char ge
+on the capac itor. At 
+an inst ant
+,
+ 
+k
+ey K
+1
+ 
+is 
+clos ed
+ 
+an d  
+im mediatel y aft er this the cur rent in 
+4
+4
+ 
+is found to be 
++
+5
+ä
+ 
+After 
+a long ti me, the curr ent 
+att ains 
+a
+ 
+steady sta te va lue 
++
+6
+. There after,
+ 
+K
+2
+ 
+is closed and simult aneously K
+1
+ 
+is opened an d  
+the volta ge acro ss 
+%
+4
+ 
+osci llate
+s
+ 
+with ampli tude 
+8
+4
+ 
+and 
+angula r 
+fr equency 
+ñ
+4
+.
+ 
+ 
+ 
+M
+atch th e quantit ies ment i on ed i n List
+-
+I with  th eir v alues in  Li st
+-
+II an d cho ose the correct o pt io n.
+ 
+ 
+List
+-
+I
+ 
+List
+-
+II
+ 
+(P)
+ 
+The value of 
++
+5
+ 
+in A
+mper e
+ 
+is
+ 
+(1)
+ 
+0
+ 
+(Q)
+ 
+The value  of 
++
+6
+ 
+in A
+m
+per e
+ 
+is
+ 
+(2)
+ 
+2
+ 
+(R)
+ 
+The value of 
+ñ
+4
+ 
+in ki lo
+-
+rad ians/s
+ 
+is
+ 
+(3)
+ 
+4
+ 
+(S)
+ 
+The value of 
+8
+4
+ 
+in V
+olt
+ 
+is
+ 
+(4)
+ 
+20
+ 
+ 
+(5)
+ 
+200
+ 
+ 
+(A)
+ 
+P 
+ 
+1;  Q 
+ 
+3;  R
+ 
+ 
+2; S
+ 
+ 
+5
+ 
+(B)
+ 
+P 
+ 
+1
+; Q 
+ 
+2
+; R
+ 
+ 
+3; S
+ 
+ 
+5
+ 
+(C)
+ 
+P 
+ 
+1;  Q 
+ 
+3
+; R
+ 
+ 
+2; S
+ 
+ 
+4
+ 
+(D)
+ 
+P 
+ 
+2;  Q 
+ 
+5;  R
+ 
+ 
+3; S
+ 
+ 
+4
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+E
+!
+D OF THE QU ESTIO 
+!
+ PA PER
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+1
+/
+12
+ 
+ 
+!
+! "#$% &'() (
+* +,-./ 0/(+,1234() 56
+!
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+7&89
+(
+*:
+;
+6
+(
+,-&%( $) *%.
+!
+ 
+/+'#!,-&%( $) *!#+%!
+7&89
+!
+)0($ ) *%!1 234!1 534!1 63!+*7!1 83.!
+&'<=
+(
+&'"(
+) 9!( #&%&! 9) -:!) 0($ ) *%!$ %!( #&!
+') ::&'( !
++*%;& :.
+!
+ 
+<) :!& +'
+#!,-&%( $) *4!' #) )%&!(#&!) 0($ ) *
+!
+') ::&%0) *7
+$ *=!() !( #&!
+') ::&'(! +*%;&:.
+!
+ 
+2*%;& :!() !&+'#
+!
+,-&%($ ) *
+!
+;$ >> !?&!&@ +> -+(& 7
+!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$$ $$$ $$$ $$$
+C!
+!
+E
+u
+!
+D9!
+&'<=
+!
+(#&!
+') ::&'(!) 0($) *!
+$%!
+'#) %&*E
+!
+$
+$$ $$$
+*+' ,$% &' ()
+$
+C!
+!
+!!
+r
+!
+D9!*) *&!) 9!( #&!
+) 0($ ) *%!
+$ %!
+'#) %&*!1$ .&.!(#&!,-&%( $) *!$ %!
+-*+*%;& :&73E
+!
+$$ $$ $$
+-+.&/0 1+$% &'()
+$$
+C
+!!
+F
+s
+!!!
+D*!+> >!) (#&:!' +%&%
+.
+!
+!
+ 
+Q.1
+ 
+ 
+A cl osed vess el  cont ai ns10 g of  an i dea l gas  
+X 
+at  300K, whi ch e xert s 2atm  pr essur e. At t he s am e 
+t em perat ur e,80 g of  anot her  i dea l gas  
+Y 
+i s addedt oi t and t hepr ess ur e bec om es 6atm . Ther at i oof  
+r oot m ean s quare vel oci ti es of  
+X
+ 
+and 
+Y
+ 
+at  300 K i s
+ 
+ 
+( A)     
+t
+¾
+t
+÷
+¾
+u
+ 
+( B)     
+t
+¾
+t
+÷
+s
+ 
+ 
+( C)     
+s
+÷
+t
+ 
+( D)     
+t
+÷
+s
+ 
+ 
+ 
+ 
+Q.2
+ 
+ 
+At  r oom t em perat ur e,
+ 
+d
+i spropor ti onati on of  anaqueous s oluti on of  
+i n sit u
+ 
+gener ated nit r ous aci d 
+(HNO
+2
+)  gi ves
+ 
+the s peci es
+ 
+( A)    H
+3
+O
++
+, NO
+3
+ 
+and NO
+ 
+( B)    H
+3
+O
++
+, NO
+3
+ 
+and NO
+2
+ 
+( C)    H
+3
+O
++
+, NO
+ 
+and NO
+2
+ 
+( D)    H
+3
+O
++
+, NO
+3
+ 
+and N
+2
+O
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+2
+/
+12
+ 
+Q.3
+ 
+ 
+Aspa rt am e, an ar ti fi cial  swee t ener , i s a dipept i de as par t yl  phenyl al ani ne m ethyl  est er . The str uct ure 
+of  aspart am ei s
+ 
+ 
+                            
+St ructur es of  phenyl alanine a nd aspar ti c aci dar egi ven bel ow.
+ 
+ 
+ 
+(A) 
+ 
+ 
+(B)
+ 
+ 
+(C)
+ 
+ 
+(D)
+ 
+ 
+ 
+ 
+ 
+ 
+Q.4
+ 
+ 
+Am ong t he f ol l owi ng
+options
+, 
+sel ect
+ 
+t he opt i on i n whi ch ea ch com plex i n 
+Set
+-
+I
+ 
+shows geom et ri cal 
+i som eri sm  and the t wocompl exes in 
+Set
+-
+II
+ 
+are ioniza tion i som er s of  eac h ot he
+r.
+ 
+[ en = H
+2
+NCH
+2
+CH
+2
+NH
+2
+]
+ 
+ 
+( A)    
+Set
+-
+I
+:[Ni(CO)
+4
+]  and [PdCl
+2
+( PPh
+3
+)
+2
+]
+ 
+        
+Set
+-
+II
+: [ Co( NH
+3
+)
+5
+Cl] SO
+4
+ 
+and [ Co( NH
+3
+)
+5
+( SO
+4
+)]Cl
+ 
+ 
+( B)    
+Set
+-
+I
+: [ Co(en)( NH
+3
+)
+2
+Cl
+2
+]  and[ PdCl
+2
+( PPh
+3
+)
+2
+]
+ 
+        
+Set
+-
+II
+: [ Co( NH
+3
+)
+6
+][ C r( C N )
+6
+]  and [ Cr( NH
+3
+)
+6
+][ Co(CN)
+6
+]
+ 
+ 
+( C)    
+Set
+-
+I
+: [ Co( NH
+3
+)
+3
+(NO
+2
+)
+3
+]  and [ Co( en)
+2
+Cl
+2
+]
+ 
+        
+Set
+-
+II
+: [ Co( NH
+3
+)
+5
+Cl] SO
+4
+ 
+and
+ 
+[ Co( NH
+3
+)
+5
+( SO
+4
+)]Cl
+ 
+ 
+( D)    
+Set
+-
+I
+:[Cr(NH
+3
+)
+5
+Cl ] C l
+2
+ 
+and [ Co( en) ( NH
+3
+)
+2
+Cl
+2
+]
+ 
+        
+Set
+-
+II
+:[Cr(H
+2
+O)
+6
+]Cl
+3
+ 
+and
+ 
+[Cr(H
+2
+O)
+5
+Cl] Cl
+2
+2
+O
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+3
+/
+12
+ 
+ 
+!
+! "#$ % &' (
+5
+(
+*
++,-./ 0/( +,1 234()5 6
+(
+!
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+$ >9""
+(
+*:
+?
+6
+!
+,-&%( $) *%
+.
+!
+!
+ 
+/+'#!,-&%( $) *!#+%!
+7&89
+!
+)0($ ) *%!1 234!1 534!1 63!+*7!1 83.!
+&'" (&9( +&9"($ >@' (&'"(
+) 9!( #&%&! 9) -:!) 0($) *1%3 !
+$ %1+:&3!'
+) ::&'(
+!
++*%;& :1%3 .
+!
+ 
+<) :!& +'#!,-&%( $) *4!
+'#) )%&
+!
+(#&!
+) 0($ ) *
+1%3! ') ::&%0) *7$ *=!( ) !
+1
++> >
+3
+!
+(#&! ') ::&'(!
++*%;&:
+1%3
+.
+!
+ 
+2*%;& :!() !&+'#
+!
+,-&%($ ) *
+!
+;$ >> !?&!&@ +> -+(& 7
+!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+v
+!
+&'<=
+!
+$9
+!
+1+> > 3!
+(#&!
+') ::&'( !) 0($ ) *
+1%3 !
+$ %1+:&3!' #) %&*E
+!
+2 &' /0 &#$% &' () $$$ $$
+C
+!!!
+E
+u
+!!
+D9!+> >!( #&! 9) -:!) 0($) *%!+:&! ') ::&'(! ?-(!
+&'<=
+!
+(#:&&!) 0($) *%!+:&!'#) %&*E
+!
+2 &' /0 &#$% &' () $$$ $$
+C
+!!!
+E
+t
+!!
+D9!(#:&&!) :!A) :&!) 0($) *%!+:&! ') ::&'(! ?-(!
+&'<=
+!
+(;) !) 0($ ) *%!+:&!' #) %&*4!?)(#!) 9!
+;#$ '#!+:&!') ::&'(E
+!
+2 &' /0 &#$% &' () $$$ $$
+C
+!!! !
+E
+s
+!!
+D9!(;)!) :!A ) :&!) 0($ ) *%!+:&!' ) ::&'(! ?-(!
+&'<=
+!
+) *&!) 0($) *!$ %!'#) %&*!+*7!$(! $ %!+!
+') ::&'(!) 0($) *E
+!
+*+' ,$% &' ()
+$
+C!
+!
+!!!!
+F
+!
+D9!*) *&!) 9!( #&!) 0($ ) *%!$ %! '#) %&*
+!
+1$ .&.!(#&!,-&%( $) *!$ %! -*+*%;& :&73E
+!
+-+.&/0 1+$% &' ()
+$
+C!
+!
+!
+F
+t
+!
+D*!+> > !) (#&:!'+%&%
+.
+!
+ 
+<) :!&G+A 0>&4! $ *!+! ,-&%($) *4!$ 9!1 234!15
+3! +*7!18 3!+:&!
+(#&!HIJ K! (#:&&!
+) 0($) *%!
+') ::&%0)*7$ *=!( ) !') ::&'(!
++*%;& :%
+4!
+(#&*!
+!
+'#) )%$ *=!H IJ K!1 234!153! +*7!18 3
+!
+;$ > > !=&(!
+E
+v
+!
+A +:B%E !
+!
+'#) )%$ *=
+!
+HIJ K
+!
+123!+*7!1
+5
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E !
+!
+'#) )%$ *=
+!
+HIJ K
+!
+123!+*7!1
+8
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E
+!
+'#) )%$ *=!H IJ K!1 5
+3!+*7!1
+8
+3!;$ > > !=&( !
+E
+t
+!
+A+:B%E
+!
+'#) )%$ *=!H IJ K!1 23!;$ > > !=&(!LM !A +:BE
+!
+'#) )%$ *=!H IJ K!1 53!;$ > > !=&(!LM !A +:BE
+!
+'#) )%$ *=!H IJ K!1 83! ;$ > >!=&(!LM !A +:BE !
+!
+'#) )%$ *=!*) !) 0($) *!1 $ .&.!(#&!,-&%( $ ) *!$%!-*+*%;&:&73!;$ >> !=&( !F!A +:B%E !
++*7!
+!
+!! !! !!!
+'#) ) %$ *=!+*N !) (#&:!' )A ?$ *+($ ) *!) 9!) 0($) *%!
+;$ > > !=&( !
+F
+t
+!
+A +:B
+%
+.
+!
+!
+ 
+ 
+ 
+Q.5
+ 
+ 
+Am ongt hef oll owi ng, the cor r ect stat em ent( s) f or electr onsi n an atom i s( are)
+ 
+( A)     
+Uncert aint ypri nci pler ul es out  the e xi st ence  of  def i nit e pat hs f or  el ect r ons.
+ 
+( B)     The e ner gyof  an elect r on 
+i n 2
+s
+ 
+orbit al of
+ 
+an at om i sl ower t han t he e ner gyof a
+n
+ 
+elect r on 
+t hat  
+   
+ 
+          
+is i nf init el y far  awayf r om  the nucl eus
+.
+ 
+
+ 
+         
+which c or res ponds tot hem ost  st abl e or bit .
+ 
+ 
+i n 
+    
+ 
+       
+ 
+ 
+val ues
+ 
+of  n.
+ 
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+4
+/
+12
+ 
+Q.6
+ 
+ 
+Rea cti on of  
+i so
+-
+pr opyl benzene  wi th O
+2
+ 
+f oll owed by the t rea tm ent  wit h H
+3
+O
++
+ 
+f or m s phenol  and a 
+by
+-
+pr oduct  
+P
+. Reacti on of 
+P
+ 
+wi th 3 equi val ent s of Cl
+2
+ 
+gi ves  com pound 
+Q
+. Tr eat ment of 
+Q
+ 
+with 
+Ca( OH)
+2
+ 
+pr oduces c om pound 
+R
+ 
+and cal ci um  salt  
+S
+.
+ 
+The cor r ect st at em ent (s) r egar di ng 
+P
+, 
+Q
+, 
+R
+ 
+and 
+S 
+is( are)
+ 
+( A)    Reacti on of  
+P 
+wit h 
+R
+ 
+in t he pr ese nce of  KOH followed by aci di fi cat ion gi ves
+ 
+ 
+ 
+( B)    Reac ti on of  
+R
+ 
+wit h O
+2
+ 
+i n the pr esenc eof l i ght  gi ves  phosge ne gas
+ 
+( C)    
+Q
+ 
+rea ct s wit haque ous NaOH t o pr oduce  Cl
+3
+CCH
+2
+OH and Cl
+3
+CCOONa
+ 
+( D)    
+S
+ 
+onheat i ng gives  
+P
+ 
+ 
+ 
+ 
+ 
+ 
+Q.7
+ 
+ 
+The opti on( s)  i n 
+whi chat l eas t t hree m ol ec ul es f ol l owOct et Rul e
+ 
+i s( ar e)
+ 
+( A)     CO
+2
+, C
+2
+H
+4
+, NO andHCl
+ 
+( B)     NO
+2
+, O
+3
+, HCl  and H
+2
+SO
+4
+ 
+( C)     BCl
+3
+, NO, NO
+2
+ 
+and H
+2
+SO
+4
+ 
+( D)     CO
+2
+, BCl
+3
+, O
+3
+ 
+and C
+2
+H
+4
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+5
+/
+12
+ 
+ 
+ 
+ 
+ 
+Q.8
+ 
+ 
+Consi der  t he f oll owi ng vol ume
+t em per at ure ( V
+T) di agr am  f or  
+the 
+expansi on of  5 m oles  of  an 
+i deal m onoat om ic gas. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Consi deri ng onl y P
+-
+V wor k is i nvol ved, t he t otal  change i n ent hal py ( i n Joule)  f or  t he 
+t r ansf orm ati onof  st at ei n the s equenc e 
+X
+Y
+Z
+ 
+i s____
+__.
+ 
+ 
+[
+Use t he g
+i ven
+ 
+data
+: Mol ar hea t ca pacit y
+ 
+of  the gas 
+f or t he gi vent em per at ure range
+,
+ 
+C
+V,
+ 
+m
+ 
+=12 J K
+ 
+m ol
+ 
+and
+ 
+g
+as  constant, R = 8.3 J K
+ 
+mol
+]
+ 
+ 
+ 
+ 
+ 
+ 
+(
+! "#$% &'(?
+(
+* +,-./ 0/(+,1234(5 ;6
+(
+(
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+!% A
+(
+*:
+B
+6
+!
+,-&%($ ) *%.
+!
+ 
+"#&! +*%;&:! () !&+'#!,-&%($) *!$ %! +!
+'&'
+C
+'"D@$% E"(% '$"D "9
+.
+!
+ 
+<) :!&
++'#!
+,-&%( $) *4!& *(& :!(#&!') ::&'(! $ *(& =&:! ') ::&%0) *7$ *=!( ) !( #&!+*%;&:! -%$ *=!( #&! A) -%&!+*7!( #&!) *
+O
+%':&& *!@ $ :(-+> !*-A &:$ '!B &N0+7!$ *!(#&!0> +'&!7&%$ =*+(&7!( ) !&*(&:!( #&! +*%;& :.
+!
+ 
+2*%;& :!() !&+'#!,-&%($ ) *!;$ >> !?&!&@ +> -+(& 7!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+v
+!
+D9!
+&'<=
+!
+(#&!') ::&'(!$ *(&=&:!$ %!&*(& :&7E
+!
+*+' ,$% &' ()
+$
+C!
+!
+!!!
+r
+!!!
+D
+*!+> > !) (#&:!'+%&%.
+!
+!
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+6
+/
+12
+ 
+Q.9
+ 
+ 
+Consi der t hef oll owi ng rea ct i on,
+ 
+ 
+222
+2H g  + 2NO g  N g  + 2H g
+ 
+O
+ 
+ 
+whi chf oll owst hem echa nism  gi ven bel ow:
+ 
+ 
+1
+1
+22
+2NO g   N O g                             
+            fast equli bri um
+k
+k
+ 
+                   
+2
+22 2 2 2
+NO g +H g  NO g +HO g slowreac
+tion
+k
+ 
+3
+22 22
+NO g +H g  N g +HO g  fastr
+eact i o n
+k
+ 
+ 
+ 
+The or der  of  the rea ct ion is 
+____
+__.
+ 
+ 
+ 
+ 
+ 
+ 
+Q.10
+ 
+ 
+Com plete rea ct ion of  
+a
+cetal dehyde wi th exce ss f orm al dehyde, upon heat i ng wi t h conc . NaOH 
+sol ut i on, gives  
+P
+ 
+and 
+Q
+. Com pound 
+P
+ 
+ 
+Q
+ 
+on ac i di fi cati on gi ves 
+ 
+P
+ 
+wit h exces s cyc l ohexanone i n t he pr esenc e of  cat alytic 
+am ount  of  
+p
+-
+t ol uenes ul f onic a ci d ( PTSA)  gi ves  pr oduct  
+R
+.
+ 
+Sum of  t he num ber  of met hyl ene 
+gr oups(
+-
+CH
+2
+-
+)
+ 
+and oxyge n at om si n 
+R
+ 
+is 
+______.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Q.11
+ 
+ 
+Am ong
+:
+;
+:
+, 
+:
+;
+9
+, 
+:
+;
+7
+, 
+:
+;
+9
+,
+ 
+:
+;
+9
+,
+ 
+>
+:
+;
+7
+?
+7
+?
+, 
+>
+:
+;
+8
+?
+8
+?
+, and 
+:
+;
+7
+, 
+t het otal  num ber  of  speci es i soel ect ronic wit h 
+:
+;
+8
+ 
+i s 
+______.
+ 
+ 
+[ Gi ven, atomi c num ber:  V= 23, Cr= 24,Mn =  25, Fe= 26, Co =27, Ni = 28, Cu= 29, Ir  = 77]
+ 
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+7
+/
+12
+ 
+Q.12
+ 
+ 
+In t he f ol lowi ngr eacti onsequenc e, t he maj or  pr oduct  
+P
+ 
+i s form ed
+. 
+ 
+ 
+G
+l ycer ol  r eacts com pletel y wi t h exce ss 
+P
+ 
+in t he pres ence  of  an aci d ca tal yst  t o form  
+Q
+.
+Reacti on of 
+Q
+ 
+wit h exce ss NaOH f ol l owed by t he tr eatm ent  wit hCaCl
+2
+ 
+yi el ds Ca
+-
+soa p 
+R
+, quanti t at ively.
+ 
+Sta rt ing wit h one m ol eof  
+Q
+, the am ount  of  
+R
+ 
+pr oduced i n gr am i s 
+____
+__.
+ 
+ 
+[ Gi ven, atomi c wei ght :  H = 1, C = 12, N =14, O = 16,Na = 23, Cl = 35, Ca = 40]
+ 
+ 
+ 
+ 
+ 
+Q.13
+ 
+ 
+Am ongt hef oll owi ng com pl exes, t he tot al  num ber  of  di am agneti c s peci es i s 
+____
+__.
+ 
+ 
+[ Mn( NH
+3
+)
+6
+]
+3+
+, [MnCl
+6
+]
+, [FeF
+6
+]
+, [ CoF
+6
+]
+, [ Fe( NH
+3
+)
+6
+]
+3+
+, and[ Co( en)
+3
+]
+3+
+ 
+ 
+ 
+[ Gi ven, atomi c num ber:  Mn = 25, Fe = 26, Co= 27
+ 
+ 
+en = H
+2
+NCH
+2
+CH
+2
+NH
+2
+]
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+8
+/
+12
+ 
+ 
+ 
+ 
+ 
+(
+! "#$% &'(;
+(
+* +,-./ 0/(+,1234() 56
+(
+(
+ 
+"#$ %!%&'($ ) *!') *(+$ *%!
+7&89
+(
+*:
+;
+6
+!
+P +('#$ *=!J $ %(!Q&( %.
+!
+ 
+/+'#!%&(!#+%!
+&' "
+!
+P -> ($ 0> &!6#) $ '&!R-&%($) *
+.
+!
+ 
+/+'#!%&(!#+%!
+$F&
+!
+> $%(%C !
+<. 3 G
+C
+%
+!
++*7!
+<. 3 G
+C
+%%
+.
+!
+ 
+<. 3 G
+C
+%
+!
+#+%!
+7H01
+!
+&*(:$&%! 1
+S 34!1R34! 1T3! +*7!1 Q
+3!+*7!
+<.3 G
+C
+%%
+!
+#+%!
+7.I J
+!
+&*(:$ &%!1M 34! 1U 34!1 V34! 1W
+3! +*7!1
+X
+3.
+!
+ 
+7&89
+!
+) 0($ ) *%!+:&! =$@ &*!$ *!&+'#!P ->($ 0> &!6#) $ '&!R-&%($ ) *!?+%&7!) *!
+<.3 G
+C
+%
+!
++*7!
+<.3 G
+C
+%%
+!
++*7!
+&' <=( &'"
+!
+) 9!
+(#&%& !9) -:!) 0($) *%!%+( $ %9$&%!( #&! ') *7$ ($) *!+%B&7!$ *!( #&!P -> ($ 0> &!6#) $ '&!R -&%($ ) *.
+!
+ 
+2*%;& :!() !&+'#!,-&%($ ) *!;$ >> !?&!&@ +> -+(& 7!
++'') :7$ *=!() !( #&!9) > >) ;$ *=!A +:B$ *=!%'#&A &
+C
+!
+!"# #$% &' ()
+$
+C!
+!
+E
+u
+!
+&'<=
+!
+$9
+!
+(#&!) 0($) *!') ::&%0)*7$ *=!( ) !(#&!') ::&'( !')A ?$ *+($ ) *!$ %!'#) %&*
+E
+!
+*+' ,$% &' ()
+$
+C!
+!
+!!!
+r
+!!!
+D9!*) *&! )9!( #&!) 0($) *%!$ %!' #) %&*!1$ .&.!(#&! ,-&%( $) *!$ %!-*+*%;& :&73E !
+!
+-+.&/0 1+$% &' ()$3 $$
+!
+F
+s
+!
+!
+D*!+> > !) (#&:!'+%&%
+.
+!
+!
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+9
+/
+12
+ 
+Q.14
+ 
+ 
+In a conductometr i c ti tr at i on, sm all  vol um e of 
+ti tr ant  of  higher  conce nt rati on i s added st epwi se t o a 
+l ar ger  vol um e of  ti tr ate of m uch l ower  conce nt rati on, and t he conduct ance
+ 
+i s mea sur ed
+ 
+aft er ea ch 
+addit i on
+.
+ 
+The li mit i ng i oni c c onductivi t y (
+&
+4
+;
+ 
+val ues  ( i n m S m
+2
+ 
+mol
+1
+) 
+f or  di f ferent  i ons 
+in aqueous  sol ut ions 
+ar e gi ven bel ow
+:
+ 
+ 
+Ions
+ 
+>
+ 
+>
+ 
+>
+ 
+>
+ 
+7
+?
+ 
+?
+ 
+8
+?
+ 
+?
+ 
+7
+?
+ 
+&
+4
+ 
+6.2
+ 
+7.4
+ 
+5.0
+ 
+35.0
+ 
+7.2
+ 
+7.6
+ 
+16.0
+ 
+19.9
+ 
+4.1
+ 
+ 
+For di ff er ent  com bi nat ions of ti tr ates and ti tr ant s given i n 
+Li st
+-
+I
+, 
+t he 
+gr aphs
+ 
+of
+ 
+
+ 
+List
+-
+II
+.
+ 
+Ma tch eac h entr y i n 
+Li st
+-
+I
+ 
+wi t ht he appr opri ate e nt r y in 
+Li st
+-
+II
+ 
+andchoose the c or r ect  opti on.
+ 
+ 
+        
+Li st
+-
+I
+ 
+ 
+Li st
+-
+II
+ 
+ 
+( P) Ti tr ate:  KCl
+ 
+      
+Tit r ant:
+ 
+AgNO
+3
+ 
+( 1)
+ 
+( Q)  Tit rate:
+ 
+AgNO
+3
+ 
+      
+Tit r ant:  KCl
+ 
+( 2)
+ 
+( R)  Tit rate:  NaOH
+ 
+      
+Tit r ant:  HCl
+ 
+( 3)
+ 
+( S) Ti tr ate:  NaOH
+ 
+      
+Tit r ant:  CH
+3
+COOH
+ 
+( 4)
+ 
+ 
+( 5)
+ 
+ 
+(A)
+ 
+P
+-
+4, Q
+-
+3, R
+-
+2, S
+-
+5
+ 
+(B)
+ 
+P
+-
+2, Q
+-
+4, R
+-
+3, S
+-
+1
+ 
+(C)
+ 
+P
+-
+3, Q
+-
+4, R
+-
+2, S
+-
+5
+ 
+(D)
+ 
+P
+-
+4, Q
+-
+3, R
+-
+2, S
+-
+1
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+10
+/
+12
+ 
+ 
+Q.15
+ 
+ 
+Bas ed on 
+V SEPR
+ 
+m odel , m at ch the xenon com pounds gi ven in 
+List
+-
+I
+ 
+wi t h the cor res pondi ng 
+geometr i es a nd t he num ber of  l one pai rs on xenon gi ven i n 
+List
+-
+II
+andchoose t he cor rect  opt i on.
+ 
+ 
+Li st
+-
+I
+ 
+Li st
+-
+II
+ 
+( P) XeF
+2
+ 
+( 1)  Tr i gonal  bi pyr ami dal  and t wo lone pair  of el ectr ons
+ 
+( Q)  XeF
+4
+ 
+( 2)  Tetr ahe dr al  and onel one pa ir  of  
+el ect r ons
+ 
+( R)  XeO
+3
+ 
+( 3)  Oct ahedral  and t wol one pa ir  of  el ect r ons
+ 
+( S) XeO
+3
+F
+2
+ 
+( 4)  Tr i gonal  bi pyr ami dal  and no l one pai r of  el ectr ons
+ 
+ 
+( 5)  Tr i gonal  bi pyr ami dal  and t hree l onepair  of  elect r ons
+ 
+ 
+( A)     P
+-
+5, Q
+-
+2, R
+-
+3, S
+-
+1
+ 
+( B)     P
+-
+5, Q
+-
+3, R
+-
+2, S
+-
+4
+ 
+( C)     P
+-
+4, Q
+-
+3, R
+-
+2, S
+-
+1
+ 
+( D)     P
+-
+4, Q
+-
+2, R
+-
+5, S
+-
+3
+ 
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+11
+/
+12
+ 
+Q.16
+ 
+ 
+Li st
+-
+I
+ 
+cont ai ns var i ous r eact ion se quenc es and 
+Li st
+-
+II
+ 
+cont ai ns t he possi bl e product s. Mat ch each 
+ent ry i n 
+Li s t
+-
+I
+ 
+wi th t he a ppr opri at e entr y i n 
+Li st
+-
+II
+ 
+and choose t he c or r ect  opti on.
+ 
+ 
+                          
+Li st
+-
+I
+ 
+Li st
+-
+II
+ 
+( P) 
+ 
+ 
+ 
+( 1)
+ 
+ 
+(Q)
+ 
+ 
+ 
+( 2)
+ 
+ 
+(R) 
+ 
+ 
+( 3)
+ 
+ 
+( S)
+ 
+ 
+( 4)
+ 
+ 
+ 
+ 
+ 
+ 
+( 5)
+ 
+ 
+ 
+( A)     P
+-
+3, Q
+-
+5, R
+-
+4, S
+-
+1
+ 
+( B)     P
+-
+3, Q
+-
+2, R
+-
+4, S
+-
+1
+ 
+( C)     P
+-
+3, Q
+-
+5, R
+-
+1, S
+-
+4
+ 
+( D)     P
+-
+5, 
+Q
+-
+2, R
+-
+4, S
+-
+1
+ 
+ 
+
+J
+EE (Adv an ce d ) 202 4
+ 
+ 
+                      
+Pa p e r  1
+ 
+ 
+12
+/
+12
+ 
+Q.17
+ 
+ 
+Li st
+-
+I
+ 
+contai ns var i ous rea ct i onse quences  and 
+Li st
+-
+II
+ 
+cont ai ns dif fer ent  phenol i ccom pounds. 
+Ma tch eac h entr y i n 
+Li st
+-
+I
+ 
+wi t ht he appr opri ate e nt r y in 
+Li st
+-
+II
+ 
+andchoose the c or r ect  opti on.
+ 
+ 
+                            
+Li s t
+-
+I
+ 
+ 
+Li st
+-
+II
+ 
+( P) 
+ 
+ 
+( 1)
+ 
+ 
+(Q)
+ 
+ 
+( 2)  
+ 
+ 
+(R)
+ 
+ 
+( 3)  
+ 
+ 
+( S)
+ 
+ 
+( 4)
+ 
+ 
+ 
+( 5)  
+ 
+ 
+ 
+ 
+( A)    P
+-
+2, Q
+-
+3, R
+-
+4, S
+-
+5
+ 
+( B)    P
+-
+2, Q
+-
+3, R
+-
+5, S
+-
+1
+ 
+( C)    
+P
+-
+3, Q
+-
+5, R
+-
+4, S
+-
+1
+ 
+( D)    P
+-
+3, Q
+-
+2, R
+-
+5, S
+-
+4
+ 
+ 
+ 
+ 
+ 
+E
+!
+D  OF THE QU ESTI O
+! 
+ PAP ER
+ 
