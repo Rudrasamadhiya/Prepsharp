@@ -573,6 +573,30 @@
             "correct": false
           }
         ]
+      },
+      {
+        "id": "test4",
+        "type": "scq",
+        "subject": "mathematics",
+        "text": "If the roots of the equation x² + px + q = 0 are in the ratio 1:4, then p² : q is equal to:",
+        "options": [
+          {
+            "text": "25:16",
+            "correct": true
+          },
+          {
+            "text": "16:25",
+            "correct": false
+          },
+          {
+            "text": "5:4",
+            "correct": false
+          },
+          {
+            "text": "4:5",
+            "correct": false
+          }
+        ]
       }
     ]
   }
