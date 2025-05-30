@@ -171,8 +171,22 @@
             
             // Try to load papers from local JSON file as fallback
             const loadPapersFromFile = () => {
-                // Create a hardcoded papers array based on the papers.json content
-                const papers = [
+                // First try to load from db/papers.json directly
+                fetch('/Prepsharp/db/papers.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Could not load papers.json');
+                        }
+                        return response.json();
+                    })
+                    .then(papers => {
+                        console.log('Papers loaded from file:', papers);
+                        displayPapers(papers);
+                    })
+                    .catch(error => {
+                        console.log('Falling back to hardcoded papers:', error);
+                        // Create a hardcoded papers array based on the papers.json content
+                        const papers = [
                     {
                         "id": "1001",
                         "type": "jee-main",
@@ -269,11 +283,18 @@
             
             // Try to fetch from API first, fallback to local data if it fails
             fetch('/api/papers')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success && data.papers && data.papers.length > 0) {
+                        console.log('Papers loaded from API:', data.papers);
                         displayPapers(data.papers);
                     } else {
+                        console.log('No papers found in API response, using fallback data');
                         loadPapersFromFile();
                     }
                 })
