@@ -1,0 +1,2 @@
+This is a placeholder file to ensure the papers directory exists.
+Place the JEE Advanced 2024 Paper 1 PDF file (2024_1_English.pdf) in this directory.
