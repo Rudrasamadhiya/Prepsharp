@@ -8,6 +8,7 @@
         :root {
             --primary-color: #1976d2;
             --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
             --background-color: #f5f5f5;
             --text-color: #212121;
         }
@@ -28,121 +29,153 @@
             align-items: center;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
-        .card {
+        .exam-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .exam-card {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s;
         }
-        h1, h2, h3 { color: var(--primary-color); }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
+        .exam-card:hover {
+            transform: translateY(-5px);
+        }
+        .exam-header {
+            padding: 15px;
             background-color: var(--primary-color);
             color: white;
         }
-        .btn.secondary {
-            background-color: var(--secondary-color);
+        .exam-body {
+            padding: 15px;
         }
-        .btn.small {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .exam-list {
-            margin-top: 20px;
-        }
-        .exam-item {
+        .exam-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
         }
-        .exam-item:last-child {
-            border-bottom: none;
-        }
-        .exam-info h3 {
-            margin: 0 0 5px 0;
-        }
-        .exam-info p {
-            margin: 0;
-            color: #666;
-        }
-        .exam-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            padding: 10px 20px;
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-        .tab.active {
-            border-bottom-color: var(--primary-color);
-            color: var(--primary-color);
             font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn.primary { 
+            background-color: var(--primary-color); 
+            color: white; 
+        }
+        .btn.secondary { 
+            background-color: var(--secondary-color); 
+            color: white; 
+        }
+        .btn.accent { 
+            background-color: var(--accent-color); 
+            color: white; 
+        }
+        .back-link {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-icon {
+            margin-right: 5px;
+        }
+        .exam-meta {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+        .badge.physics {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge.chemistry {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge.mathematics {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        .badge.biology {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .highlight {
+            border: 2px solid var(--accent-color);
+            position: relative;
+        }
+        .highlight::after {
+            content: "NEW";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .no-exams {
+            text-align: center;
+            padding: 50px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
     <header>
-        <div style="display: flex; align-items: center;">
-            <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
-            <h2 id="exam-type-header">PrepSharp - Exam List</h2>
+        <div class="logo-container">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp</h2>
         </div>
-        <button id="dashboard-btn" class="btn">Dashboard</button>
+        <div class="user-info">
+            <span id="user-name">Welcome, User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
     </header>
     
     <div class="container">
-        <div class="card">
-            <div class="tabs">
-                <div class="tab active" data-tab="practice">Practice Exams</div>
-                <div class="tab" data-tab="created">Created Exams</div>
-            </div>
-            
-            <div id="practice-exams" class="tab-content">
-                <div class="exam-list-header">
-                    <h2>Practice Exams</h2>
-                    <p>Select an exam to start practicing</p>
-                </div>
-                
-                <div class="exam-list" id="practice-exam-list">
-                    <!-- Practice exams will be loaded here -->
-                    <div class="empty-message" id="empty-practice-message">No practice exams available yet.</div>
-                </div>
-            </div>
-            
-            <div id="created-exams" class="tab-content" style="display: none;">
-                <div class="exam-list-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h2>Created Exams</h2>
-                        <button id="create-exam-btn" class="btn">Create New Exam</button>
-                    </div>
-                    <p>Exams you have created</p>
-                </div>
-                
-                <div class="exam-list" id="created-exam-list">
-                    <!-- Created exams will be loaded here -->
-                </div>
+        <a href="dashboard.html" class="back-link">
+            <span class="back-icon">←</span> Back to Dashboard
+        </a>
+        
+        <h1 id="exam-type-title">Exam Papers</h1>
+        <p id="exam-type-description">Select a paper to start practicing</p>
+        
+        <div id="exam-list" class="exam-list">
+            <!-- Exam cards will be loaded here -->
+            <div class="no-exams" id="no-exams">
+                <h2>Loading exam papers...</h2>
+                <p>Please wait while we fetch the available papers.</p>
             </div>
         </div>
     </div>
@@ -150,479 +183,232 @@
     <script>
         // Get exam type from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const examType = urlParams.get('type') || 'jee-main'; // Default to jee-main if no type specified
+        const examType = urlParams.get('type');
         
-        // Update header
-        const examTitles = {
-            'jee-advanced': 'JEE Advanced',
-            'jee-main': 'JEE Main',
-            'neet': 'NEET',
-            'bitsat': 'BITSAT',
-            'aiims': 'AIIMS'
-        };
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        } else {
+            const user = JSON.parse(currentUser);
+            document.getElementById('user-name').textContent = `Welcome, ${user.name || 'User'}`;
+        }
         
-        document.getElementById('exam-type-header').textContent = `PrepSharp - ${examTitles[examType] || 'Exams'}`;
-        document.title = `${examTitles[examType] || 'Exam'} List - PrepSharp`;
+        // Set page title and description based on exam type
+        const examTypeTitle = document.getElementById('exam-type-title');
+        const examTypeDescription = document.getElementById('exam-type-description');
         
-        // Load practice exams from server or fallback to local file
-        function loadPracticeExams() {
-            const practiceExamList = document.getElementById('practice-exam-list');
-            const emptyMessage = document.getElementById('empty-practice-message');
-            
-            // Try to load papers from local JSON file as fallback
-            const loadPapersFromFile = () => {
-                // First try to load from db/papers.json directly
-                fetch('/Prepsharp/db/papers.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Could not load papers.json');
-                        }
-                        return response.json();
-                    })
-                    .then(papers => {
-                        console.log('Papers loaded from file:', papers);
-                        displayPapers(papers);
-                    })
-                    .catch(error => {
-                        console.log('Falling back to hardcoded papers:', error);
-                        // Create a hardcoded papers array based on the papers.json content
-                        const papers = [
-                    {
-                        "id": "1001",
-                        "type": "jee-main",
-                        "name": "JEE Main - 10/Jan Shift 1 2023",
-                        "year": "2023",
-                        "date": "10",
-                        "month": "1",
-                        "shift": "1",
-                        "subjects": ["physics", "chemistry", "mathematics"],
-                        "questions": [
-                            {"id": "q1001", "subject": "physics"},
-                            {"id": "q1002", "subject": "chemistry"},
-                            {"id": "q1003", "subject": "mathematics"}
-                        ]
-                    },
-                    {
-                        "id": "1002",
-                        "type": "jee-advanced",
-                        "name": "JEE Advanced - Paper 1 2023",
-                        "year": "2023",
-                        "paperNumber": "1",
-                        "subjects": ["physics", "chemistry", "mathematics"],
-                        "questions": [
-                            {"id": "q2001", "subject": "physics"},
-                            {"id": "q2002", "subject": "chemistry"}
-                        ]
-                    },
-                    {
-                        "id": "1003",
-                        "type": "neet",
-                        "name": "NEET 2023",
-                        "year": "2023",
-                        "subjects": ["physics", "chemistry", "biology"],
-                        "questions": [
-                            {"id": "q3001", "subject": "biology"},
-                            {"id": "q3002", "subject": "chemistry"}
-                        ]
-                    }
-                ];
+        switch(examType) {
+            case 'jee-main':
+                examTypeTitle.textContent = 'JEE Main Papers';
+                examTypeDescription.textContent = 'Practice with previous year JEE Main papers';
+                break;
+            case 'jee-advanced':
+                examTypeTitle.textContent = 'JEE Advanced Papers';
+                examTypeDescription.textContent = 'Practice with previous year JEE Advanced papers';
+                break;
+            case 'neet':
+                examTypeTitle.textContent = 'NEET Papers';
+                examTypeDescription.textContent = 'Practice with previous year NEET papers';
+                break;
+            case 'bitsat':
+                examTypeTitle.textContent = 'BITSAT Papers';
+                examTypeDescription.textContent = 'Practice with previous year BITSAT papers';
+                break;
+            case 'aiims':
+                examTypeTitle.textContent = 'AIIMS Papers';
+                examTypeDescription.textContent = 'Practice with previous year AIIMS papers';
+                break;
+            default:
+                examTypeTitle.textContent = 'All Exam Papers';
+                examTypeDescription.textContent = 'Select a paper to start practicing';
+        }
+        
+        // Load exam papers
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExamPapers();
+        });
+        
+        // Function to load exam papers
+        async function loadExamPapers() {
+            try {
+                // Try to fetch papers from server
+                const response = await fetch('/api/papers');
+                const data = await response.json();
                 
-                displayPapers(papers);
-            };
-            
-            // Function to display papers in the UI
-            const displayPapers = (papers) => {
-                console.log('Display papers called with:', papers, 'exam type:', examType);
-                // Filter papers by exam type
-                const filteredPapers = papers.filter(paper => paper.type === examType);
-                
-                if (filteredPapers.length > 0) {
-                    // Hide empty message
-                    emptyMessage.style.display = 'none';
-                    
-                    // Clear existing content
-                    practiceExamList.innerHTML = '';
-                    
-                    // Add each paper to the list
-                    filteredPapers.forEach(paper => {
-                        let examTitle = examTitles[paper.type] || paper.type;
-                        if (paper.type === 'jee-advanced' && paper.paperNumber) {
-                            examTitle += ` Paper ${paper.paperNumber}`;
-                        }
-                        
-                        const examItem = document.createElement('div');
-                        examItem.className = 'exam-item';
-                        
-                        // Create subjects text if available
-                        let subjectsText = '';
-                        if (paper.subjects && paper.subjects.length > 0) {
-                            subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
-                        }
-                        
-                        examItem.innerHTML = `
-                            <div class="exam-info">
-                                <h3>${paper.name || `${examTitle} ${paper.year}`}</h3>
-                                <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
-                            </div>
-                            <div class="exam-actions">
-                                <button class="btn small attend-btn" data-id="${paper.id}">Attend Exam</button>
-                            </div>
-                        `;
-                        
-                        practiceExamList.appendChild(examItem);
-                        
-                        // Add event listener for attend button
-                        examItem.querySelector('.attend-btn').addEventListener('click', function() {
-                            const paperId = this.getAttribute('data-id');
-                            attendExam(paperId);
-                        });
-                    });
+                if (data.success) {
+                    renderPapers(data.papers);
                 } else {
-                    emptyMessage.textContent = `No ${examTitles[examType] || examType} exams available yet.`;
+                    throw new Error('Failed to fetch papers from server');
                 }
-            };
-            
-            // Skip API fetch and directly use papers.json content
-            const papers = [
-                {
-                    "id": "1001",
-                    "type": "jee-main",
-                    "name": "JEE Main - 10/Jan Shift 1 2023",
-                    "year": "2023",
-                    "date": "10",
-                    "month": "1",
-                    "shift": "1",
-                    "subjects": ["physics", "chemistry", "mathematics"],
-                    "createdAt": "2023-01-15T10:30:00.000Z",
-                    "questions": [
-                        {
-                            "id": "q1001",
-                            "subject": "physics",
-                            "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
-                            "options": ["8 m/s", "10 m/s", "12 m/s", "14 m/s"],
-                            "correctOption": 1
-                        },
-                        {
-                            "id": "q1002",
-                            "subject": "chemistry",
-                            "text": "Which of the following is NOT a colligative property?",
-                            "options": ["Elevation in boiling point", "Depression in freezing point", "Osmotic pressure", "Optical activity"],
-                            "correctOption": 3
-                        },
-                        {
-                            "id": "q1003",
-                            "subject": "mathematics",
-                            "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
-                            "options": ["3", "5", "7", "9"],
-                            "correctOption": 2
-                        }
-                    ]
-                },
-                {
-                    "id": "1002",
-                    "type": "jee-advanced",
-                    "name": "JEE Advanced - Paper 1 2023",
-                    "year": "2023",
-                    "paperNumber": "1",
-                    "subjects": ["physics", "chemistry", "mathematics"],
-                    "createdAt": "2023-06-04T09:15:00.000Z",
-                    "questions": [
-                        {
-                            "id": "q2001",
-                            "subject": "physics",
-                            "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
-                            "options": ["L(k₂)/(k₁+k₂)", "L(k₁)/(k₁+k₂)", "L/2", "L(k₁-k₂)/(k₁+k₂)"],
-                            "correctOption": 0
-                        },
-                        {
-                            "id": "q2002",
-                            "subject": "chemistry",
-                            "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
-                            "options": ["sp³, sp³d, sp³", "sp³d, sp³d², sp³d", "sp³d, sp³d², sp³", "sp³d², sp³d, sp³"],
-                            "correctOption": 2
-                        }
-                    ]
-                },
-                {
-                    "id": "1003",
-                    "type": "neet",
-                    "name": "NEET 2023",
-                    "year": "2023",
-                    "subjects": ["physics", "chemistry", "biology"],
-                    "createdAt": "2023-05-07T10:00:00.000Z",
-                    "questions": [
-                        {
-                            "id": "q3001",
-                            "subject": "biology",
-                            "text": "Which of the following is NOT a function of the liver?",
-                            "options": ["Production of bile", "Storage of glycogen", "Detoxification of harmful substances", "Production of insulin"],
-                            "correctOption": 3
-                        },
-                        {
-                            "id": "q3002",
-                            "subject": "chemistry",
-                            "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
-                            "options": ["But-2-enal", "But-3-enal", "But-2-enoic acid", "But-3-enoic acid"],
-                            "correctOption": 0
-                        }
-                    ]
+            } catch (error) {
+                console.error('Error fetching papers:', error);
+                
+                // Fallback to local storage
+                const papersJson = localStorage.getItem('papers');
+                if (papersJson) {
+                    try {
+                        const papers = JSON.parse(papersJson);
+                        renderPapers(papers);
+                    } catch (e) {
+                        showNoPapers('Error parsing papers data');
+                    }
+                } else {
+                    // Try to load from papers.json directly
+                    fetch('db/papers.json')
+                        .then(response => response.json())
+                        .then(papers => {
+                            renderPapers(papers);
+                            // Save to localStorage for future use
+                            localStorage.setItem('papers', JSON.stringify(papers));
+                        })
+                        .catch(error => {
+                            console.error('Error loading papers.json:', error);
+                            showNoPapers('No papers available for this exam type');
+                        });
                 }
-            ];
-            
-            console.log('Using hardcoded papers data');
-            displayPapers(papers);
+            }
         }
         
-        // Function to attend an exam from the server or local data
-        function attendExam(paperId) {
-            // Try to find the paper in our hardcoded data first
-            const papers = [
-                {
-                    "id": "1001",
-                    "type": "jee-main",
-                    "name": "JEE Main - 10/Jan Shift 1 2023",
-                    "year": "2023",
-                    "date": "10",
-                    "month": "1",
-                    "shift": "1",
-                    "subjects": ["physics", "chemistry", "mathematics"],
-                    "questions": [
-                        {
-                            "id": "q1001",
-                            "subject": "physics",
-                            "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
-                            "options": ["8 m/s", "10 m/s", "12 m/s", "14 m/s"],
-                            "correctOption": 1
-                        },
-                        {
-                            "id": "q1002",
-                            "subject": "chemistry",
-                            "text": "Which of the following is NOT a colligative property?",
-                            "options": ["Elevation in boiling point", "Depression in freezing point", "Osmotic pressure", "Optical activity"],
-                            "correctOption": 3
-                        },
-                        {
-                            "id": "q1003",
-                            "subject": "mathematics",
-                            "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
-                            "options": ["3", "5", "7", "9"],
-                            "correctOption": 2
-                        }
-                    ]
-                },
-                {
-                    "id": "1002",
-                    "type": "jee-advanced",
-                    "name": "JEE Advanced - Paper 1 2023",
-                    "year": "2023",
-                    "paperNumber": "1",
-                    "subjects": ["physics", "chemistry", "mathematics"],
-                    "questions": [
-                        {
-                            "id": "q2001",
-                            "subject": "physics",
-                            "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
-                            "options": ["L(k₂)/(k₁+k₂)", "L(k₁)/(k₁+k₂)", "L/2", "L(k₁-k₂)/(k₁+k₂)"],
-                            "correctOption": 0
-                        },
-                        {
-                            "id": "q2002",
-                            "subject": "chemistry",
-                            "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
-                            "options": ["sp³, sp³d, sp³", "sp³d, sp³d², sp³d", "sp³d, sp³d², sp³", "sp³d², sp³d, sp³"],
-                            "correctOption": 2
-                        }
-                    ]
-                },
-                {
-                    "id": "1003",
-                    "type": "neet",
-                    "name": "NEET 2023",
-                    "year": "2023",
-                    "subjects": ["physics", "chemistry", "biology"],
-                    "questions": [
-                        {
-                            "id": "q3001",
-                            "subject": "biology",
-                            "text": "Which of the following is NOT a function of the liver?",
-                            "options": ["Production of bile", "Storage of glycogen", "Detoxification of harmful substances", "Production of insulin"],
-                            "correctOption": 3
-                        },
-                        {
-                            "id": "q3002",
-                            "subject": "chemistry",
-                            "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
-                            "options": ["But-2-enal", "But-3-enal", "But-2-enoic acid", "But-3-enoic acid"],
-                            "correctOption": 0
-                        }
-                    ]
-                }
-            ];
+        // Function to render papers
+        function renderPapers(papers) {
+            const examListElement = document.getElementById('exam-list');
+            const noExamsElement = document.getElementById('no-exams');
             
-            const paper = papers.find(p => p.id === paperId);
+            // Filter papers by exam type if specified
+            let filteredPapers = papers;
+            if (examType) {
+                filteredPapers = papers.filter(paper => paper.type === examType);
+            }
             
-            if (paper) {
-                // Store paper data for the exam
-                localStorage.setItem('currentTakingExam', JSON.stringify(paper));
-                localStorage.setItem('currentExamId', paperId);
-                
-                // Go to exam pattern page first
-                window.location.href = 'exam-pattern.html';
+            // Sort papers by year (newest first)
+            filteredPapers.sort((a, b) => {
+                const yearA = parseInt(a.year) || 0;
+                const yearB = parseInt(b.year) || 0;
+                return yearB - yearA;
+            });
+            
+            if (filteredPapers.length === 0) {
+                showNoPapers('No papers available for this exam type');
                 return;
             }
             
-            // If not found in hardcoded data, try to fetch from server
-            fetch(`/api/papers/${paperId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.paper) {
-                        // Store paper data for the exam
-                        localStorage.setItem('currentTakingExam', JSON.stringify(data.paper));
-                        localStorage.setItem('currentExamId', paperId);
-                        
-                        // Go to exam pattern page first
-                        window.location.href = 'exam-pattern.html';
-                    } else {
-                        alert('Failed to load exam. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching paper details:', error);
-                    alert('Failed to load exam. Please try again.');
-                });
-        }
-
-        // Load created exams
-        function loadCreatedExams() {
-            const createdExamList = document.getElementById('created-exam-list');
+            // Remove loading message
+            noExamsElement.style.display = 'none';
             
-            // Get exams from localStorage
-            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
-            const filteredExams = Object.entries(exams)
-                .filter(([id, exam]) => exam.type === examType)
-                .sort((a, b) => b[1].year - a[1].year); // Sort by year descending
+            // Clear existing content
+            examListElement.innerHTML = '';
             
-            if (filteredExams.length === 0) {
-                createdExamList.innerHTML = '<div class="empty-message">You haven\'t created any exams yet.</div>';
-                return;
-            }
-            
-            createdExamList.innerHTML = '';
-            
-            filteredExams.forEach(([id, exam]) => {
-                let examTitle = examTitles[exam.type] || exam.type;
-                if (exam.type === 'jee-advanced' && exam.paperNumber) {
-                    examTitle += ` Paper ${exam.paperNumber}`;
-                }
-                
-                const examItem = document.createElement('div');
-                examItem.className = 'exam-item';
-                examItem.innerHTML = `
-                    <div class="exam-info">
-                        <h3>${examTitle} ${exam.year}</h3>
-                        <p>${exam.totalQuestions} questions | ${exam.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}</p>
+            // Add JEE Advanced 2024 Paper 1 at the top if we're on JEE Advanced page
+            if (examType === 'jee-advanced') {
+                const jeeAdvanced2024Card = document.createElement('div');
+                jeeAdvanced2024Card.className = 'exam-card highlight';
+                jeeAdvanced2024Card.innerHTML = `
+                    <div class="exam-header">
+                        <h3>JEE Advanced 2024 - Paper 1</h3>
                     </div>
-                    <div class="exam-actions">
-                        <button class="btn small secondary edit-btn" data-id="${id}">Edit</button>
-                        <button class="btn small start-btn" data-id="${id}">Start Exam</button>
+                    <div class="exam-body">
+                        <p>Official JEE Advanced 2024 Paper 1</p>
+                        <div class="exam-meta">
+                            <span>Date: May 26, 2024</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span class="badge physics">Physics</span>
+                            <span class="badge chemistry">Chemistry</span>
+                            <span class="badge mathematics">Mathematics</span>
+                        </div>
+                    </div>
+                    <div class="exam-footer">
+                        <a href="jee-advanced-viewer.html" class="btn primary">Start Exam</a>
+                        <a href="pdf-viewer.html" class="btn secondary">View PDF</a>
+                    </div>
+                `;
+                examListElement.appendChild(jeeAdvanced2024Card);
+            }
+            
+            // Render each paper
+            filteredPapers.forEach(paper => {
+                // Skip the JEE Advanced 2024 Paper 1 as we've already added it
+                if (paper.id === '1007') return;
+                
+                const examCard = document.createElement('div');
+                examCard.className = 'exam-card';
+                
+                // Create badges for subjects
+                const subjectBadges = (paper.subjects || []).map(subject => {
+                    return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
+                }).join('');
+                
+                // Format date if available
+                let dateInfo = '';
+                if (paper.date && paper.month) {
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const monthName = monthNames[parseInt(paper.month) - 1] || paper.month;
+                    dateInfo = `<span>Date: ${paper.date}/${monthName} ${paper.year}</span>`;
+                } else {
+                    dateInfo = `<span>Year: ${paper.year}</span>`;
+                }
+                
+                // Add shift info if available
+                const shiftInfo = paper.shift ? `<span> | Shift: ${paper.shift}</span>` : '';
+                
+                examCard.innerHTML = `
+                    <div class="exam-header">
+                        <h3>${paper.name}</h3>
+                    </div>
+                    <div class="exam-body">
+                        <p>${getExamTypeDescription(paper.type)}</p>
+                        <div class="exam-meta">
+                            ${dateInfo}
+                            ${shiftInfo}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            ${subjectBadges}
+                        </div>
+                    </div>
+                    <div class="exam-footer">
+                        <a href="exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
+                        <span>${paper.questions ? paper.questions.length : 0} Questions</span>
                     </div>
                 `;
                 
-                createdExamList.appendChild(examItem);
-                
-                // Add event listeners
-                examItem.querySelector('.edit-btn').addEventListener('click', function() {
-                    const examId = this.getAttribute('data-id');
-                    editExam(examId);
-                });
-                
-                examItem.querySelector('.start-btn').addEventListener('click', function() {
-                    const examId = this.getAttribute('data-id');
-                    startExam(examId);
-                });
+                examListElement.appendChild(examCard);
             });
         }
         
-        // Edit exam
-        function editExam(examId) {
-            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
-            const exam = exams[examId];
-            
-            if (exam) {
-                // Set as current exam
-                localStorage.setItem('currentExam', JSON.stringify(exam));
-                localStorage.setItem('currentQuestionIndex', '0');
-                localStorage.setItem('currentSubject', exam.subjects[0]);
-                
-                if (exam.type === 'jee-advanced') {
-                    localStorage.setItem('currentSection', '0');
-                    window.location.href = 'add-question-advanced.html';
-                } else {
-                    window.location.href = 'add-question.html';
-                }
+        // Function to show no papers message
+        function showNoPapers(message) {
+            const noExamsElement = document.getElementById('no-exams');
+            noExamsElement.innerHTML = `
+                <h2>No Papers Available</h2>
+                <p>${message}</p>
+                <a href="dashboard.html" class="btn primary">Back to Dashboard</a>
+            `;
+            noExamsElement.style.display = 'block';
+        }
+        
+        // Function to get exam type description
+        function getExamTypeDescription(type) {
+            switch(type) {
+                case 'jee-main':
+                    return 'JEE Main Examination';
+                case 'jee-advanced':
+                    return 'JEE Advanced Examination';
+                case 'neet':
+                    return 'NEET Examination';
+                case 'bitsat':
+                    return 'BITSAT Examination';
+                case 'aiims':
+                    return 'AIIMS Examination';
+                default:
+                    return 'Entrance Examination';
             }
         }
         
-        // Start exam
-        function startExam(examId) {
-            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
-            const exam = exams[examId];
-            
-            if (exam) {
-                // Set as current exam for taking
-                localStorage.setItem('currentTakingExam', JSON.stringify(exam));
-                localStorage.setItem('currentExamId', examId);
-                
-                // Reset user answers
-                if (exam.questions) {
-                    exam.questions.forEach(question => {
-                        if (question) {
-                            delete question.userAnswer;
-                        }
-                    });
-                }
-                
-                // Go to exam pattern page first
-                window.location.href = 'exam-pattern.html';
-            }
-        }
-        
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Update active tab
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show corresponding content
-                const tabName = this.getAttribute('data-tab');
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.style.display = 'none';
-                });
-                document.getElementById(`${tabName}-exams`).style.display = 'block';
-            });
-        });
-        
-        // Create new exam button
-        document.getElementById('create-exam-btn').addEventListener('click', function() {
-            // Check if admin is logged in
-            if (localStorage.getItem('adminLoggedIn')) {
-                window.location.href = 'add-exam.html';
-            } else {
-                alert('Only administrators can create new exams');
-                window.location.href = 'admin-login.html';
-            }
-        });
-        
-        // Dashboard button
-        document.getElementById('dashboard-btn').addEventListener('click', function() {
-            window.location.href = 'dashboard.html';
-        });
-        
-        // Load exams when page loads
-        window.addEventListener('load', function() {
-            loadPracticeExams();
-            loadCreatedExams();
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
         });
     </script>
 </body>
