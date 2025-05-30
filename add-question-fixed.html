@@ -4,7 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Question - PrepSharp</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.secondary {
+            background-color: var(--secondary-color);
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        #status-message {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,7 +117,6 @@
             <h3 id="paper-name" style="margin-top: 5px; color: #666; font-size: 16px;"></h3>
         </div>
         <div>
-            <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
             <button id="summary-btn" class="btn secondary">View Summary</button>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
@@ -28,55 +131,55 @@
             <h2 id="question-counter">Question 1 of 30</h2>
             <h3 id="current-subject">Physics</h3>
             
-            <div class="form-group">
-                <label for="question-type">Question Type</label>
-                <select id="question-type" required>
-                    <option value="scq">Single Correct Option (SCQ) [+4, -1]</option>
-                    <option value="integer">Integer Type (Numerical) [+4, -1]</option>
-                </select>
-                <div id="marking-info" class="marking-info"></div>
-            </div>
+            <div id="status-message"></div>
             
             <div class="form-group">
                 <label for="question-text">Question Text</label>
                 <textarea id="question-text" rows="4" required></textarea>
-                <button id="capture-question-btn" class="upload-btn">Capture from PDF</button>
-                <div id="question-image-container" class="image-container hidden">
-                    <img id="question-image" src="" alt="Question Image">
-                    <button class="remove-btn" id="remove-question-image">×</button>
-                </div>
             </div>
             
             <div id="options-container" class="form-group">
-                <!-- Options content -->
-            </div>
-            
-            <div id="integer-answer" class="form-group hidden">
-                <label for="integer-value">Correct Answer (0-99)</label>
-                <input type="number" id="integer-value" min="0" max="99">
+                <label>Options</label>
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-a" value="0">
+                    <label for="correct-a" style="display:inline;">A.</label>
+                    <input type="text" id="option-text-a" placeholder="Option A">
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-b" value="1">
+                    <label for="correct-b" style="display:inline;">B.</label>
+                    <input type="text" id="option-text-b" placeholder="Option B">
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-c" value="2">
+                    <label for="correct-c" style="display:inline;">C.</label>
+                    <input type="text" id="option-text-c" placeholder="Option C">
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-d" value="3">
+                    <label for="correct-d" style="display:inline;">D.</label>
+                    <input type="text" id="option-text-d" placeholder="Option D">
+                </div>
             </div>
             
             <div class="form-group">
                 <label for="explanation">Explanation (Optional)</label>
                 <textarea id="explanation" rows="3"></textarea>
-                <button id="capture-explanation-btn" class="upload-btn">Capture from PDF</button>
-                <div id="explanation-image-container" class="image-container hidden">
-                    <img id="explanation-image" src="" alt="Explanation Image">
-                    <button class="remove-btn" id="remove-explanation-image">×</button>
-                </div>
             </div>
             
             <div style="display: flex; justify-content: space-between;">
                 <button id="prev-question" class="btn secondary">Previous</button>
+                <button id="save-question" class="btn">Save Question</button>
                 <button id="next-question" class="btn">Next</button>
             </div>
         </div>
     </div>
 
-    <script src="html2canvas.min.js"></script>
-    <script src="fixed-update-paper-name.js"></script>
     <script>
-        // Check if exam data exists
+        // Get exam data from localStorage
         let examData;
         try {
             const storedData = localStorage.getItem('currentExam');
@@ -86,37 +189,361 @@
                 
                 // Ensure questions array exists
                 if (!examData.questions) {
-                    console.log('Creating questions array');
                     examData.questions = [];
                 }
             } else {
-                examData = {
-                    subjects: ['physics'],
-                    subjectDetails: { physics: { questionCount: 30 } },
-                    totalQuestions: 30,
-                    questions: []
-                };
-                console.log('Created default exam data');
+                alert('No exam data found. Please create an exam first.');
+                window.location.href = 'add-exam.html';
             }
         } catch (error) {
             console.error('Error parsing exam data:', error);
-            examData = {
-                subjects: ['physics'],
-                subjectDetails: { physics: { questionCount: 30 } },
-                totalQuestions: 30,
-                questions: []
+            alert('Error loading exam data. Please create an exam first.');
+            window.location.href = 'add-exam.html';
+        }
+        
+        // Get current question index and subject
+        let currentQuestionIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+        let currentSubject = localStorage.getItem('currentSubject') || examData.subjects[0];
+        
+        // Initialize question counter
+        let questionCounter = 0;
+        
+        // Calculate question counter
+        examData.subjects.forEach(subject => {
+            if (subject === currentSubject) {
+                questionCounter += currentQuestionIndex + 1;
+            } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                questionCounter += examData.subjectDetails[subject].questionCount;
+            }
+        });
+        
+        // Update UI on load
+        updateUI();
+        
+        // Save question button
+        document.getElementById('save-question').addEventListener('click', function() {
+            saveCurrentQuestion();
+        });
+        
+        // Navigation buttons
+        document.getElementById('next-question').addEventListener('click', function() {
+            if (saveCurrentQuestion()) {
+                // Move to next question
+                currentQuestionIndex++;
+                
+                // Check if we need to move to the next subject
+                if (currentQuestionIndex >= examData.subjectDetails[currentSubject].questionCount) {
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex < examData.subjects.length - 1) {
+                        currentSubject = examData.subjects[currentSubjectIndex + 1];
+                        currentQuestionIndex = 0;
+                    }
+                }
+                
+                // Check if we've reached the end
+                let totalQuestions = examData.totalQuestions || 0;
+                
+                // Calculate the actual total questions completed
+                let completedQuestionCount = 0;
+                examData.subjects.forEach(subject => {
+                    if (subject === currentSubject) {
+                        completedQuestionCount += currentQuestionIndex + 1;
+                    } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                        completedQuestionCount += examData.subjectDetails[subject].questionCount;
+                    }
+                });
+                
+                if (completedQuestionCount > totalQuestions) {
+                    // Save final data
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
+                    // Save to server
+                    saveToServer(examData, true);
+                } else {
+                    // Save current position
+                    localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                    localStorage.setItem('currentSubject', currentSubject);
+                    
+                    // Save exam data
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
+                    // Update UI
+                    updateUI();
+                }
+            }
+        });
+        
+        document.getElementById('prev-question').addEventListener('click', function() {
+            if (currentQuestionIndex > 0 || examData.subjects.indexOf(currentSubject) > 0) {
+                // Save current question
+                saveCurrentQuestion();
+                
+                // Move to previous question
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                } else {
+                    // Move to previous subject
+                    const currentSubjectIndex = examData.subjects.indexOf(currentSubject);
+                    if (currentSubjectIndex > 0) {
+                        currentSubject = examData.subjects[currentSubjectIndex - 1];
+                        currentQuestionIndex = examData.subjectDetails[currentSubject].questionCount - 1;
+                    }
+                }
+                
+                // Save current position
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+                localStorage.setItem('currentSubject', currentSubject);
+                
+                // Update UI
+                updateUI();
+            }
+        });
+        
+        // Dashboard button
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to leave? Any unsaved changes will be lost.')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        // Summary button
+        document.getElementById('summary-btn').addEventListener('click', function() {
+            saveCurrentQuestion();
+            window.location.href = 'exam-summary.html';
+        });
+        
+        // Helper functions
+        function updateUI() {
+            // Update paper name
+            const paperNameElement = document.getElementById('paper-name');
+            paperNameElement.textContent = examData.name || 'New Exam';
+            
+            // Recalculate question counter
+            questionCounter = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionCounter += currentQuestionIndex + 1;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionCounter += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            // Update progress
+            const progress = (questionCounter / examData.totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update question counter
+            document.getElementById('question-counter').textContent = `Question ${questionCounter} of ${examData.totalQuestions}`;
+            
+            // Update subject
+            const subjectName = currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1);
+            document.getElementById('current-subject').textContent = subjectName;
+            
+            // Clear form
+            document.getElementById('question-text').value = '';
+            document.getElementById('explanation').value = '';
+            
+            document.querySelectorAll('input[name="correct-option"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            document.querySelectorAll('#options-container input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            // Load existing question data if available
+            if (examData.questions[questionIndex]) {
+                const question = examData.questions[questionIndex];
+                
+                document.getElementById('question-text').value = question.text || '';
+                document.getElementById('explanation').value = question.explanation || '';
+                
+                if (question.options) {
+                    question.options.forEach((option, index) => {
+                        const letter = String.fromCharCode(97 + index); // a, b, c, d
+                        document.getElementById(`option-text-${letter}`).value = option.text || '';
+                        
+                        if (option.correct) {
+                            document.getElementById(`correct-${letter}`).checked = true;
+                        }
+                    });
+                }
+            }
+            
+            // Hide status message
+            document.getElementById('status-message').style.display = 'none';
+        }
+        
+        function saveCurrentQuestion() {
+            const questionText = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation').value;
+            
+            if (!questionText) {
+                alert('Please enter question text');
+                return false;
+            }
+            
+            // Find the question index in the questions array
+            let questionIndex = 0;
+            examData.subjects.forEach(subject => {
+                if (subject === currentSubject) {
+                    questionIndex += currentQuestionIndex;
+                } else if (examData.subjects.indexOf(subject) < examData.subjects.indexOf(currentSubject)) {
+                    questionIndex += examData.subjectDetails[subject].questionCount;
+                }
+            });
+            
+            // Get selected correct option
+            let correctOption = -1;
+            document.querySelectorAll('input[name="correct-option"]').forEach(radio => {
+                if (radio.checked) {
+                    correctOption = parseInt(radio.value);
+                }
+            });
+            
+            if (correctOption === -1) {
+                alert('Please select a correct option');
+                return false;
+            }
+            
+            // Get option texts
+            const options = [];
+            for (let i = 0; i < 4; i++) {
+                const letter = String.fromCharCode(97 + i); // a, b, c, d
+                const optionText = document.getElementById(`option-text-${letter}`).value;
+                
+                if (!optionText) {
+                    alert(`Please enter text for option ${letter.toUpperCase()}`);
+                    return false;
+                }
+                
+                options.push({
+                    text: optionText,
+                    correct: i === correctOption
+                });
+            }
+            
+            // Create question object
+            const question = {
+                id: `q${questionIndex + 1}`,
+                subject: currentSubject,
+                text: questionText,
+                options: options,
+                explanation: explanation,
+                correctOption: correctOption
             };
+            
+            // Ensure array is large enough
+            while (examData.questions.length <= questionIndex) {
+                examData.questions.push(null);
+            }
+            
+            // Save question
+            examData.questions[questionIndex] = question;
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('currentExam', JSON.stringify(examData));
+                
+                // Save to server
+                saveToServer(examData);
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+                alert('Error saving question. Your browser storage might be full.');
+                return false;
+            }
         }
         
-        // Update paper name in header
-        try {
-            updatePaperName();
-            console.log('Paper name updated');
-        } catch (error) {
-            console.error('Error updating paper name:', error);
+        function saveToServer(examData, redirect = false) {
+            // Show saving status
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.textContent = 'Saving to server...';
+            statusMessage.className = '';
+            statusMessage.style.display = 'block';
+            
+            // Check if we have an ID
+            if (examData.id) {
+                // Update existing paper
+                fetch(`/api/papers/${examData.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(examData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusMessage.textContent = 'Saved successfully!';
+                        statusMessage.className = 'success';
+                        
+                        if (redirect) {
+                            window.location.href = 'exam-summary.html';
+                        }
+                    } else {
+                        statusMessage.textContent = 'Failed to save: ' + data.message;
+                        statusMessage.className = 'error';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving to server:', error);
+                    statusMessage.textContent = 'Error connecting to server';
+                    statusMessage.className = 'error';
+                    
+                    if (redirect) {
+                        window.location.href = 'exam-summary.html';
+                    }
+                });
+            } else {
+                // Create new paper
+                fetch('/api/papers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(examData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the ID
+                        examData.id = data.paper.id;
+                        localStorage.setItem('currentExam', JSON.stringify(examData));
+                        
+                        statusMessage.textContent = 'Saved successfully!';
+                        statusMessage.className = 'success';
+                        
+                        if (redirect) {
+                            window.location.href = 'exam-summary.html';
+                        }
+                    } else {
+                        statusMessage.textContent = 'Failed to save: ' + data.message;
+                        statusMessage.className = 'error';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving to server:', error);
+                    statusMessage.textContent = 'Error connecting to server';
+                    statusMessage.className = 'error';
+                    
+                    if (redirect) {
+                        window.location.href = 'exam-summary.html';
+                    }
+                });
+            }
         }
-        
-        // Rest of your JavaScript code
     </script>
 </body>
 </html>
