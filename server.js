@@ -500,6 +500,11 @@ app.put('/api/papers/:paperId', (req, res) => {
     });
   }
   
+  // Clean up questions array - remove null entries
+  if (updateData.questions) {
+    updateData.questions = updateData.questions.filter(q => q !== null);
+  }
+  
   // Update the paper with new data
   papers[paperIndex] = {
     ...papers[paperIndex],
