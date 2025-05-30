@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add JEE Advanced Paper - PrepSharp</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .option-group {
+            margin-top: 10px;
+        }
+        .file-upload {
+            margin-bottom: 20px;
+        }
+        #pdfViewer {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add JEE Advanced 2024 Paper</h1>
+        <p>Upload the PDF and extract questions or add them manually</p>
+        
+        <div class="success-message" id="successMessage"></div>
+        
+        <div class="file-upload">
+            <h2>Upload PDF</h2>
+            <input type="file" id="pdfFile" accept=".pdf" />
+            <button class="btn" onclick="loadPDF()">Load PDF</button>
+        </div>
+        
+        <iframe id="pdfViewer"></iframe>
+        
+        <form id="paperForm">
+            <h2>Paper Details</h2>
+            <div class="form-group">
+                <label for="paperType">Paper Type</label>
+                <select id="paperType">
+                    <option value="jee-advanced" selected>JEE Advanced</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="paperYear">Year</label>
+                <input type="text" id="paperYear" value="2024" />
+            </div>
+            
+            <div class="form-group">
+                <label for="paperNumber">Paper Number</label>
+                <input type="text" id="paperNumber" value="1" />
+            </div>
+            
+            <h2>Questions</h2>
+            <div id="questionsContainer"></div>
+            
+            <button type="button" class="btn" onclick="addQuestion()">Add Question</button>
+            <button type="button" class="btn btn-secondary" onclick="addMultipleQuestions()">Add Multiple Questions</button>
+            <button type="submit" class="btn">Save Paper</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialize question counter
+        let questionCounter = 1;
+        
+        // Function to load PDF
+        function loadPDF() {
+            const fileInput = document.getElementById('pdfFile');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const pdfViewer = document.getElementById('pdfViewer');
+                pdfViewer.style.display = 'block';
+                
+                // Create object URL for the PDF
+                const objectUrl = URL.createObjectURL(file);
+                pdfViewer.src = objectUrl;
+                
+                // You could add PDF.js integration here to extract text
+                // For now, we'll just display the PDF for manual extraction
+            } else {
+                alert('Please select a PDF file first.');
+            }
+        }
+        
+        // Function to add a new question form
+        function addQuestion() {
+            const questionsContainer = document.getElementById('questionsContainer');
+            const questionId = `q${Date.now()}${questionCounter++}`;
+            
+            const questionHTML = `
+                <div class="question-container" id="question-${questionId}">
+                    <h3>Question ${questionCounter - 1}</h3>
+                    <div class="form-group">
+                        <label for="subject-${questionId}">Subject</label>
+                        <select id="subject-${questionId}" name="subject">
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="mathematics">Mathematics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="text-${questionId}">Question Text</label>
+                        <textarea id="text-${questionId}" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="option-group">
+                        <div class="form-group">
+                            <label for="option1-${questionId}">Option 1</label>
+                            <input type="text" id="option1-${questionId}" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="option2-${questionId}">Option 2</label>
+                            <input type="text" id="option2-${questionId}" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="option3-${questionId}">Option 3</label>
+                            <input type="text" id="option3-${questionId}" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="option4-${questionId}">Option 4</label>
+                            <input type="text" id="option4-${questionId}" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="correct-${questionId}">Correct Answer</label>
+                        <select id="correct-${questionId}">
+                            <option value="0">Option 1</option>
+                            <option value="1">Option 2</option>
+                            <option value="2">Option 3</option>
+                            <option value="3">Option 4</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-secondary" onclick="removeQuestion('question-${questionId}')">Remove Question</button>
+                </div>
+            `;
+            
+            questionsContainer.insertAdjacentHTML('beforeend', questionHTML);
+        }
+        
+        // Function to remove a question
+        function removeQuestion(questionId) {
+            const questionElement = document.getElementById(questionId);
+            questionElement.remove();
+        }
+        
+        // Function to add multiple questions at once
+        function addMultipleQuestions() {
+            const count = prompt('How many questions do you want to add?', '5');
+            const numQuestions = parseInt(count);
+            
+            if (!isNaN(numQuestions) && numQuestions > 0) {
+                for (let i = 0; i < numQuestions; i++) {
+                    addQuestion();
+                }
+            }
+        }
+        
+        // Form submission handler
+        document.getElementById('paperForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get paper details
+            const paperType = document.getElementById('paperType').value;
+            const paperYear = document.getElementById('paperYear').value;
+            const paperNumber = document.getElementById('paperNumber').value;
+            
+            // Generate paper name
+            const paperName = `JEE Advanced - Paper ${paperNumber} ${paperYear}`;
+            
+            // Collect questions
+            const questions = [];
+            const questionContainers = document.querySelectorAll('.question-container');
+            
+            questionContainers.forEach((container) => {
+                const questionId = container.id.split('-')[1];
+                const subject = document.getElementById(`subject-${questionId}`).value;
+                const text = document.getElementById(`text-${questionId}`).value;
+                const option1 = document.getElementById(`option1-${questionId}`).value;
+                const option2 = document.getElementById(`option2-${questionId}`).value;
+                const option3 = document.getElementById(`option3-${questionId}`).value;
+                const option4 = document.getElementById(`option4-${questionId}`).value;
+                const correctIndex = parseInt(document.getElementById(`correct-${questionId}`).value);
+                
+                const options = [
+                    { text: option1, correct: correctIndex === 0 },
+                    { text: option2, correct: correctIndex === 1 },
+                    { text: option3, correct: correctIndex === 2 },
+                    { text: option4, correct: correctIndex === 3 }
+                ];
+                
+                questions.push({
+                    id: `q${Date.now()}-${questionId}`,
+                    subject,
+                    text,
+                    options,
+                    type: 'scq'
+                });
+            });
+            
+            // Create paper object
+            const paper = {
+                id: `jee-adv-${paperYear}-${paperNumber}-${Date.now()}`,
+                type: paperType,
+                name: paperName,
+                year: paperYear,
+                paperNumber,
+                subjects: ['physics', 'chemistry', 'mathematics'],
+                createdAt: new Date().toISOString(),
+                questions
+            };
+            
+            // Send to server
+            fetch('/api/papers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paper)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.textContent = `Paper "${paperName}" created successfully with ${questions.length} questions!`;
+                    successMessage.style.display = 'block';
+                    
+                    // Reset form
+                    document.getElementById('questionsContainer').innerHTML = '';
+                    questionCounter = 1;
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to save paper. Check console for details.');
+            });
+        });
+        
+        // Add initial question
+        addQuestion();
+    </script>
+</body>
+</html>
