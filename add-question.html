@@ -1158,6 +1158,26 @@
             
             // Save to localStorage with a try-catch to handle any errors
             try {
+                // Clean up questions array - remove null entries
+                examData.questions = examData.questions.filter(q => q !== null);
+                
+                // Limit the size of image data to prevent localStorage issues
+                examData.questions.forEach(q => {
+                    if (q.questionImage && q.questionImage.length > 1000) {
+                        q.questionImage = null;
+                    }
+                    if (q.explanationImage && q.explanationImage.length > 1000) {
+                        q.explanationImage = null;
+                    }
+                    if (q.options) {
+                        q.options.forEach(opt => {
+                            if (opt.image && opt.image.length > 1000) {
+                                opt.image = null;
+                            }
+                        });
+                    }
+                });
+                
                 localStorage.setItem('currentExam', JSON.stringify(examData));
                 console.log('Questions array length:', examData.questions.length);
                 console.log('Exam data saved successfully');
