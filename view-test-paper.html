@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Paper View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #1976d2;
+        }
+        .paper-info {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #1976d2;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .subject {
+            background-color: #1976d2;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .option.correct {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Paper View</h1>
+        
+        <div class="paper-info">
+            <h2 id="paper-name">Loading paper...</h2>
+            <div id="paper-details"></div>
+        </div>
+        
+        <h2>Questions</h2>
+        <div id="questions-container"></div>
+    </div>
+
+    <script>
+        // Load the test paper
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the paper ID from localStorage
+            const paperId = localStorage.getItem('viewExamId');
+            
+            if (!paperId) {
+                document.getElementById('paper-name').textContent = 'No paper selected';
+                return;
+            }
+            
+            // Try to load the paper from localStorage
+            const papersJson = localStorage.getItem('papers');
+            if (!papersJson) {
+                document.getElementById('paper-name').textContent = 'No papers found';
+                return;
+            }
+            
+            try {
+                const papers = JSON.parse(papersJson);
+                const paper = papers.find(p => p.id === paperId);
+                
+                if (!paper) {
+                    document.getElementById('paper-name').textContent = 'Paper not found';
+                    return;
+                }
+                
+                // Display paper info
+                document.getElementById('paper-name').textContent = paper.name;
+                
+                const paperDetails = document.getElementById('paper-details');
+                paperDetails.innerHTML = `
+                    <p><strong>Type:</strong> ${formatExamType(paper.type)}</p>
+                    <p><strong>Year:</strong> ${paper.year}</p>
+                    <p><strong>Total Questions:</strong> ${paper.totalQuestions}</p>
+                    <p><strong>Questions Added:</strong> ${paper.questions ? paper.questions.filter(q => q !== null).length : 0}</p>
+                `;
+                
+                // Display questions
+                const questionsContainer = document.getElementById('questions-container');
+                
+                if (!paper.questions || paper.questions.length === 0) {
+                    questionsContainer.innerHTML = '<p>No questions found</p>';
+                    return;
+                }
+                
+                // Filter out null questions
+                const validQuestions = paper.questions.filter(q => q !== null);
+                
+                validQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    
+                    const questionHeader = document.createElement('div');
+                    questionHeader.className = 'question-header';
+                    
+                    const questionNumber = document.createElement('div');
+                    questionNumber.textContent = `Question ${index + 1}`;
+                    
+                    const subjectDiv = document.createElement('div');
+                    subjectDiv.className = 'subject';
+                    subjectDiv.textContent = formatSubject(question.subject);
+                    
+                    questionHeader.appendChild(questionNumber);
+                    questionHeader.appendChild(subjectDiv);
+                    
+                    const questionText = document.createElement('div');
+                    questionText.textContent = question.text;
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+                    
+                    if (question.type === 'scq' || question.type === 'mcq') {
+                        question.options.forEach((option, optionIndex) => {
+                            const optionDiv = document.createElement('div');
+                            optionDiv.className = 'option';
+                            
+                            if (option.correct) {
+                                optionDiv.classList.add('correct');
+                            }
+                            
+                            const optionLabel = String.fromCharCode(65 + optionIndex); // A, B, C, D
+                            optionDiv.textContent = `${optionLabel}: ${option.text || ''}`;
+                            optionsDiv.appendChild(optionDiv);
+                        });
+                    } else if (question.type === 'integer') {
+                        const answerDiv = document.createElement('div');
+                        answerDiv.className = 'option correct';
+                        answerDiv.textContent = `Answer: ${question.answer}`;
+                        optionsDiv.appendChild(answerDiv);
+                    }
+                    
+                    questionDiv.appendChild(questionHeader);
+                    questionDiv.appendChild(questionText);
+                    questionDiv.appendChild(optionsDiv);
+                    
+                    questionsContainer.appendChild(questionDiv);
+                });
+                
+            } catch (error) {
+                console.error('Error loading paper:', error);
+                document.getElementById('paper-name').textContent = 'Error loading paper';
+            }
+        });
+        
+        function formatExamType(type) {
+            const types = {
+                'jee-advanced': 'JEE Advanced',
+                'jee-main': 'JEE Main',
+                'neet': 'NEET',
+                'bitsat': 'BITSAT',
+                'aiims': 'AIIMS'
+            };
+            
+            return types[type] || type;
+        }
+        
+        function formatSubject(subject) {
+            const subjects = {
+                'physics': 'Physics',
+                'chemistry': 'Chemistry',
+                'mathematics': 'Mathematics',
+                'biology': 'Biology'
+            };
+            
+            return subjects[subject] || subject.charAt(0).toUpperCase() + subject.slice(1);
+        }
+    </script>
+</body>
+</html>
