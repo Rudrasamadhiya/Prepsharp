@@ -209,6 +209,18 @@
                 questionText.className = 'question-text';
                 questionText.textContent = `Q${index + 1}. ${question.text}`;
                 
+                // Add image if available
+                if (question.imageUrl) {
+                    const questionImage = document.createElement('img');
+                    questionImage.src = question.imageUrl;
+                    questionImage.alt = `Question ${index + 1} image`;
+                    questionImage.style.maxWidth = '100%';
+                    questionImage.style.marginTop = '10px';
+                    questionImage.style.marginBottom = '10px';
+                    questionText.appendChild(document.createElement('br'));
+                    questionText.appendChild(questionImage);
+                }
+                
                 // Create options list
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options';
