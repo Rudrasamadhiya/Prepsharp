@@ -991,6 +991,86 @@
                 localStorage.setItem('currentExam', JSON.stringify(examData));
                 console.log('Questions array length:', examData.questions.length);
                 console.log('Exam data saved successfully');
+                
+                // Also save to server database if we have a paper ID
+                if (examData.id) {
+                    // Check if it's a server ID (not starting with 'local_')
+                    const isServerPaper = !examData.id.startsWith('local_');
+                    
+                    if (isServerPaper) {
+                        // Update the paper on the server
+                        fetch(`/api/papers/${examData.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(examData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Question saved to server database');
+                            } else {
+                                console.error('Failed to save question to server:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error saving question to server:', error);
+                        });
+                    } else {
+                        // For papers created locally but not yet saved to server
+                        // Try to save the entire paper to the server
+                        fetch('/api/papers', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(examData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Paper saved to server:', data.paper);
+                                // Update the paper ID with the server-generated ID
+                                examData.id = data.paper.id;
+                                localStorage.setItem('currentExam', JSON.stringify(examData));
+                            } else {
+                                console.error('Failed to save paper to server:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error saving paper to server:', error);
+                        });
+                    }
+                } else {
+                    // If no paper ID exists, this is a new paper
+                    // Add a temporary local ID
+                    examData.id = 'local_' + Date.now();
+                    localStorage.setItem('currentExam', JSON.stringify(examData));
+                    
+                    // Try to save to server
+                    fetch('/api/papers', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(examData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('New paper saved to server:', data.paper);
+                            // Update the paper ID with the server-generated ID
+                            examData.id = data.paper.id;
+                            localStorage.setItem('currentExam', JSON.stringify(examData));
+                        } else {
+                            console.error('Failed to save new paper to server:', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error saving new paper to server:', error);
+                    });
+                }
             } catch (error) {
                 console.error('Error saving to localStorage:', error);
                 alert('Error saving question. Your browser storage might be full.');
