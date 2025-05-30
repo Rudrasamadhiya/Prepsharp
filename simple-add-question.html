@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Add Question - PrepSharp</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #1976d2;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: #1976d2;
+            color: white;
+            margin-right: 10px;
+        }
+        .btn.success {
+            background-color: #4caf50;
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success-status {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        .error-status {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Add Question</h1>
+        <div id="paper-info">
+            <h2 id="paper-name">Loading paper...</h2>
+        </div>
+        
+        <form id="question-form">
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" required>
+                    <option value="physics">Physics</option>
+                    <option value="chemistry">Chemistry</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="biology">Biology</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="question-text">Question Text</label>
+                <textarea id="question-text" rows="3" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Options</label>
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-a" value="0" required>
+                    <label for="correct-a" style="display:inline;">A.</label>
+                    <input type="text" id="option-a" placeholder="Option A" required>
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-b" value="1">
+                    <label for="correct-b" style="display:inline;">B.</label>
+                    <input type="text" id="option-b" placeholder="Option B" required>
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-c" value="2">
+                    <label for="correct-c" style="display:inline;">C.</label>
+                    <input type="text" id="option-c" placeholder="Option C" required>
+                </div>
+                
+                <div class="option-container">
+                    <input type="radio" name="correct-option" id="correct-d" value="3">
+                    <label for="correct-d" style="display:inline;">D.</label>
+                    <input type="text" id="option-d" placeholder="Option D" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="explanation">Explanation (Optional)</label>
+                <textarea id="explanation" rows="2"></textarea>
+            </div>
+            
+            <button type="submit" class="btn success">Save Question</button>
+            <button type="button" id="next-btn" class="btn">Next Question</button>
+            <button type="button" id="summary-btn" class="btn">View Summary</button>
+        </form>
+        
+        <div id="status" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Load exam data
+        let examData;
+        try {
+            const storedData = localStorage.getItem('currentExam');
+            if (storedData) {
+                examData = JSON.parse(storedData);
+                console.log('Loaded exam data:', examData);
+                
+                // Display paper name
+                const paperNameElement = document.getElementById('paper-name');
+                
+                if (examData.name) {
+                    paperNameElement.textContent = examData.name;
+                } else {
+                    // Generate paper name based on exam type
+                    let paperName = '';
+                    
+                    if (examData.type === 'jee-main') {
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        const monthName = monthNames[parseInt(examData.month) - 1] || '';
+                        paperName = `JEE Main ${examData.date}/${monthName} Shift ${examData.shift} ${examData.year}`;
+                    } else if (examData.type === 'jee-advanced') {
+                        paperName = `JEE Advanced Paper ${examData.paperNumber} ${examData.year}`;
+                    } else {
+                        paperName = `${examData.type.toUpperCase()} ${examData.year}`;
+                    }
+                    
+                    paperNameElement.textContent = paperName;
+                    examData.name = paperName;
+                }
+                
+                // Ensure questions array exists
+                if (!examData.questions) {
+                    examData.questions = [];
+                }
+            } else {
+                showError('No exam data found. Please create an exam first.');
+            }
+        } catch (error) {
+            console.error('Error loading exam data:', error);
+            showError('Error loading exam data. Please try again.');
+        }
+        
+        // Handle form submission
+        document.getElementById('question-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveQuestion();
+        });
+        
+        // Next button
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (saveQuestion()) {
+                // Clear form for next question
+                document.getElementById('question-form').reset();
+                document.getElementById('status').style.display = 'none';
+            }
+        });
+        
+        // Summary button
+        document.getElementById('summary-btn').addEventListener('click', function() {
+            if (saveQuestion()) {
+                window.location.href = 'exam-summary.html';
+            }
+        });
+        
+        function saveQuestion() {
+            // Get form values
+            const subject = document.getElementById('subject').value;
+            const questionText = document.getElementById('question-text').value;
+            const explanation = document.getElementById('explanation').value;
+            
+            // Get selected correct option
+            const correctOption = document.querySelector('input[name="correct-option"]:checked');
+            if (!correctOption) {
+                showError('Please select a correct option');
+                return false;
+            }
+            
+            // Get option texts
+            const optionA = document.getElementById('option-a').value;
+            const optionB = document.getElementById('option-b').value;
+            const optionC = document.getElementById('option-c').value;
+            const optionD = document.getElementById('option-d').value;
+            
+            if (!optionA || !optionB || !optionC || !optionD) {
+                showError('Please fill in all options');
+                return false;
+            }
+            
+            // Create question object
+            const question = {
+                id: Date.now().toString(),
+                type: 'scq',
+                subject: subject,
+                text: questionText,
+                explanation: explanation,
+                options: [
+                    { text: optionA, correct: correctOption.value === '0' },
+                    { text: optionB, correct: correctOption.value === '1' },
+                    { text: optionC, correct: correctOption.value === '2' },
+                    { text: optionD, correct: correctOption.value === '3' }
+                ]
+            };
+            
+            // Add question to exam data
+            if (!examData.questions) {
+                examData.questions = [];
+            }
+            
+            examData.questions.push(question);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('currentExam', JSON.stringify(examData));
+                
+                // Save to server
+                saveToServer(examData)
+                    .then(() => {
+                        showSuccess(`Question saved to "${examData.name}"!`);
+                    })
+                    .catch(error => {
+                        console.error('Error saving to server:', error);
+                        showSuccess('Question saved locally, but failed to save to server.');
+                    });
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving question:', error);
+                showError('Error saving question. Please try again.');
+                return false;
+            }
+        }
+        
+        function saveToServer(examData) {
+            return new Promise((resolve, reject) => {
+                if (examData.id) {
+                    // Update existing paper
+                    fetch(`/api/papers/${examData.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(examData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            resolve(data);
+                        } else {
+                            reject(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                } else {
+                    // Create new paper
+                    fetch('/api/papers', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(examData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update ID with server-generated ID
+                            examData.id = data.paper.id;
+                            localStorage.setItem('currentExam', JSON.stringify(examData));
+                            resolve(data);
+                        } else {
+                            reject(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                }
+            });
+        }
+        
+        function showSuccess(message) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = 'status success-status';
+            statusElement.style.display = 'block';
+        }
+        
+        function showError(message) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = 'status error-status';
+            statusElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
