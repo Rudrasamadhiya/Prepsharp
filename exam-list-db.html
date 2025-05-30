@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam List - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn.small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .exam-list {
+            margin-top: 20px;
+        }
+        .exam-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .exam-info h3 {
+            margin: 0 0 5px 0;
+        }
+        .exam-info p {
+            margin: 0;
+            color: #666;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .filter-controls select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 30px; margin-right: 10px;">
+            <h2 id="exam-type-header">PrepSharp - Exam List</h2>
+        </div>
+        <button id="dashboard-btn" class="btn" onclick="location.href='dashboard.html'">Dashboard</button>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <div class="filter-controls">
+                <div>
+                    <label for="exam-type-filter">Filter by Type:</label>
+                    <select id="exam-type-filter">
+                        <option value="">All Types</option>
+                        <option value="jee-advanced">JEE Advanced</option>
+                        <option value="jee-main">JEE Main</option>
+                        <option value="neet">NEET</option>
+                        <option value="bitsat">BITSAT</option>
+                        <option value="aiims">AIIMS</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="exam-list-header">
+                <h2>Practice Exams</h2>
+                <p>Select an exam to start practicing</p>
+            </div>
+            
+            <div class="exam-list" id="practice-exam-list">
+                <!-- Practice exams will be loaded here -->
+                <div class="empty-message" id="empty-practice-message">Loading exams...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExams();
+            
+            // Set up event listener for filter
+            document.getElementById('exam-type-filter').addEventListener('change', filterExams);
+        });
+        
+        function loadExams() {
+            // First try to load from papers.json directly
+            fetch('db/papers.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Could not load papers.json');
+                    }
+                    return response.json();
+                })
+                .then(papers => {
+                    console.log('Papers loaded from file:', papers);
+                    // Store papers in localStorage for filtering
+                    localStorage.setItem('papers', JSON.stringify(papers));
+                    displayExams(papers);
+                })
+                .catch(error => {
+                    console.error('Error loading papers:', error);
+                    // Try to load from localStorage as fallback
+                    const papers = JSON.parse(localStorage.getItem('papers') || '[]');
+                    if (papers.length > 0) {
+                        displayExams(papers);
+                    } else {
+                        document.getElementById('empty-practice-message').textContent = 'No exams available.';
+                    }
+                });
+        }
+        
+        function displayExams(papers) {
+            const practiceExamList = document.getElementById('practice-exam-list');
+            const emptyMessage = document.getElementById('empty-practice-message');
+            
+            if (!papers || papers.length === 0) {
+                emptyMessage.textContent = 'No exams available.';
+                return;
+            }
+            
+            // Hide empty message
+            emptyMessage.style.display = 'none';
+            
+            // Clear existing content
+            practiceExamList.innerHTML = '';
+            
+            // Add each paper to the list
+            papers.forEach(paper => {
+                const examItem = document.createElement('div');
+                examItem.className = 'exam-item';
+                
+                // Format exam type
+                const examTypes = {
+                    'jee-advanced': 'JEE Advanced',
+                    'jee-main': 'JEE Main',
+                    'neet': 'NEET',
+                    'bitsat': 'BITSAT',
+                    'aiims': 'AIIMS'
+                };
+                const examType = examTypes[paper.type] || paper.type;
+                
+                // Create subjects text if available
+                let subjectsText = '';
+                if (paper.subjects && paper.subjects.length > 0) {
+                    subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                }
+                
+                examItem.innerHTML = `
+                    <div class="exam-info">
+                        <h3>${paper.name || `${examType} ${paper.year}`}</h3>
+                        <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
+                    </div>
+                    <div>
+                        <button class="btn small" onclick="attendExam('${paper.id}')">Attend Exam</button>
+                    </div>
+                `;
+                
+                practiceExamList.appendChild(examItem);
+            });
+        }
+        
+        function filterExams() {
+            const typeFilter = document.getElementById('exam-type-filter').value;
+            
+            // Get papers from localStorage
+            const papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            
+            // Apply filter
+            const filteredPapers = typeFilter ? 
+                papers.filter(paper => paper.type === typeFilter) : 
+                papers;
+            
+            displayExams(filteredPapers);
+        }
+        
+        function attendExam(paperId) {
+            // Get papers from localStorage
+            const papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            const paper = papers.find(p => p.id === paperId);
+            
+            if (paper) {
+                // Store paper data for the exam
+                localStorage.setItem('currentTakingExam', JSON.stringify(paper));
+                localStorage.setItem('currentExamId', paperId);
+                
+                // Go to exam pattern page first
+                window.location.href = 'exam-pattern.html';
+            } else {
+                alert('Failed to load exam. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
