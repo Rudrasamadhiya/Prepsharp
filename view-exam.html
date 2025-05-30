@@ -324,7 +324,7 @@
             addInfoItem(examInfo, 'Exam Type', formatExamType(exam.type));
             addInfoItem(examInfo, 'Year', exam.year);
             addInfoItem(examInfo, 'Total Questions', exam.totalQuestions);
-            addInfoItem(examInfo, 'Questions Added', exam.questions ? exam.questions.length : 0);
+            addInfoItem(examInfo, 'Questions Added', exam.questions ? exam.questions.filter(q => q !== null).length : 0);
             
             // Add JEE Main specific details if applicable
             if (exam.type === 'jee-main' && exam.date && exam.month && exam.shift) {
@@ -358,7 +358,7 @@
                     // Get question count for this subject
                     let questionCount = 0;
                     if (exam.questions) {
-                        questionCount = exam.questions.filter(q => q.subject === subject).length;
+                        questionCount = exam.questions.filter(q => q && q.subject === subject).length;
                     }
                     
                     // Get target question count if available
@@ -384,7 +384,10 @@
             const questionList = document.getElementById('question-list');
             const noQuestionsMessage = document.getElementById('no-questions-message');
             
-            if (!exam.questions || exam.questions.length === 0) {
+            // Filter out null questions and check if there are any valid questions
+            const validQuestions = exam.questions ? exam.questions.filter(q => q !== null) : [];
+            
+            if (!validQuestions || validQuestions.length === 0) {
                 questionList.innerHTML = '';
                 noQuestionsMessage.style.display = 'block';
                 return;
@@ -393,7 +396,7 @@
             noQuestionsMessage.style.display = 'none';
             questionList.innerHTML = '';
             
-            exam.questions.forEach((question, index) => {
+            validQuestions.forEach((question, index) => {
                 const questionItem = document.createElement('div');
                 questionItem.className = 'question-item';
                 
@@ -421,17 +424,28 @@
                 const options = document.createElement('div');
                 options.className = 'options';
                 
-                ['A', 'B', 'C', 'D'].forEach((optionLabel, optionIndex) => {
-                    const option = document.createElement('div');
-                    option.className = 'option';
-                    
-                    if (question.correctOption === optionIndex) {
-                        option.classList.add('correct');
-                    }
-                    
-                    option.textContent = `${optionLabel}: ${question.options[optionIndex]}`;
-                    options.appendChild(option);
-                });
+                // Handle different question types
+                if (question.type === 'scq' || question.type === 'mcq') {
+                    // For multiple choice questions
+                    question.options.forEach((option, optionIndex) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+                        
+                        if (option.correct) {
+                            optionDiv.classList.add('correct');
+                        }
+                        
+                        const optionLabel = String.fromCharCode(65 + optionIndex); // A, B, C, D
+                        optionDiv.textContent = `${optionLabel}: ${option.text || ''}`;
+                        options.appendChild(optionDiv);
+                    });
+                } else if (question.type === 'integer') {
+                    // For integer type questions
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'option correct';
+                    answerDiv.textContent = `Answer: ${question.answer}`;
+                    options.appendChild(answerDiv);
+                }
                 
                 // Assemble question item
                 questionItem.appendChild(questionHeader);
