@@ -237,6 +237,30 @@
           }
         ],
         "type": "scq"
+      },
+      {
+        "id": "q2003",
+        "subject": "mathematics",
+        "text": "The value of the integral ∫(0 to π/2) sin²x cos²x dx is:",
+        "options": [
+          {
+            "text": "π/8",
+            "correct": true
+          },
+          {
+            "text": "π/16",
+            "correct": false
+          },
+          {
+            "text": "π/4",
+            "correct": false
+          },
+          {
+            "text": "π/32",
+            "correct": false
+          }
+        ],
+        "type": "scq"
       }
     ]
   },
