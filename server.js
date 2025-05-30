@@ -306,23 +306,61 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Profile setup endpoint - always returns success
+// Profile setup endpoint - updates user data in database
 app.post('/api/profile-setup', (req, res) => {
-  const { fullName, stream } = req.body;
+  const { userId, fullName, stream, classValue, mobile, referral } = req.body;
   
-  // Always return success
-  res.json({ 
-    success: true, 
-    message: 'Profile setup completed',
-    user: {
-      id: '12345',
-      name: fullName,
-      email: 'user@example.com',
-      mobile: '1234567890',
-      stream: stream,
-      profileComplete: true
+  if (!userId) {
+    return res.status(400).json({
+      success: false,
+      message: 'User ID is required'
+    });
+  }
+  
+  try {
+    // Get users from database
+    const users = getUsers();
+    
+    // Check if user exists
+    if (!users[userId]) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
     }
-  });
+    
+    // Update user data
+    users[userId].name = fullName || users[userId].name;
+    users[userId].stream = stream || users[userId].stream;
+    users[userId].class = classValue || users[userId].class;
+    users[userId].mobile = mobile || users[userId].mobile;
+    users[userId].referral = referral || users[userId].referral;
+    users[userId].profileComplete = true;
+    
+    // Save updated user data
+    saveUsers(users);
+    
+    // Return success with updated user data
+    res.json({ 
+      success: true, 
+      message: 'Profile setup completed',
+      user: {
+        id: userId,
+        name: users[userId].name,
+        email: users[userId].email,
+        mobile: users[userId].mobile,
+        stream: users[userId].stream,
+        class: users[userId].class,
+        profileComplete: true
+      }
+    });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while updating profile'
+    });
+  }
 });
 
 // Get user data endpoint
@@ -415,6 +453,13 @@ app.get('/api/results/:resultId', (req, res) => {
 app.post('/api/papers', (req, res) => {
   const paperData = req.body;
   
+  // Clean up questions array if it exists
+  if (paperData.questions) {
+    paperData.questions = paperData.questions.filter(q => q !== null);
+  } else {
+    paperData.questions = [];
+  }
+  
   // Generate paper name based on exam type
   let paperName = '';
   
@@ -442,8 +487,7 @@ app.post('/api/papers', (req, res) => {
     ...paperData,
     id: Date.now().toString(),
     name: paperName,
-    createdAt: new Date().toISOString(),
-    questions: []
+    createdAt: new Date().toISOString()
   };
   
   // Save to database
@@ -540,14 +584,25 @@ app.post('/api/papers/:paperId/questions', (req, res) => {
     questionData.id = Date.now().toString();
   }
   
+  // Initialize questions array if it doesn't exist
+  if (!papers[paperIndex].questions) {
+    papers[paperIndex].questions = [];
+  }
+  
   // Add question to paper
   papers[paperIndex].questions.push(questionData);
+  
+  // Log for debugging
+  console.log(`Added question to paper ${paperId}. Total questions: ${papers[paperIndex].questions.length}`);
+  
   savePapers(papers);
   
   res.json({
     success: true,
     message: 'Question added successfully',
-    questionId: questionData.id
+    questionId: questionData.id,
+    paperName: papers[paperIndex].name,
+    totalQuestions: papers[paperIndex].questions.length
   });
 });
 
