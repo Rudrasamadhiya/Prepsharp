@@ -1,261 +1,153 @@
-// PDF Uploader and Screenshot Handler
-const PDFUploader = {
-    pdfViewer: null,
-    captureArea: null,
-    
-    // Initialize the PDF viewer and capture area
-    init: function() {
-        // Create PDF viewer container
-        this.pdfViewer = document.createElement('div');
-        this.pdfViewer.id = 'pdf-viewer';
-        this.pdfViewer.style.height = '80vh';
-        this.pdfViewer.style.width = '100%';
-        this.pdfViewer.style.border = '1px solid #ccc';
-        this.pdfViewer.style.marginBottom = '10px';
-        this.pdfViewer.style.display = 'none';
-        
-        // Create capture area
-        this.captureArea = document.createElement('div');
-        this.captureArea.id = 'capture-area';
-        this.captureArea.style.height = '20vh';
-        this.captureArea.style.width = '100%';
-        this.captureArea.style.border = '1px dashed #ccc';
-        this.captureArea.style.display = 'flex';
-        this.captureArea.style.alignItems = 'center';
-        this.captureArea.style.justifyContent = 'center';
-        this.captureArea.style.flexDirection = 'column';
-        this.captureArea.style.backgroundColor = '#f9f9f9';
-        this.captureArea.style.display = 'none';
-        
-        // Add instructions
-        const instructions = document.createElement('p');
-        instructions.textContent = 'Press Ctrl+V to paste screenshot here';
-        this.captureArea.appendChild(instructions);
-        
-        // Add to document
-        document.body.appendChild(this.pdfViewer);
-        document.body.appendChild(this.captureArea);
-        
-        // Set up paste event listener
-        document.addEventListener('paste', this.handlePaste.bind(this));
-    },
-    
-    // Open PDF file
-    openPDF: function() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/pdf';
-        
-        input.onchange = (e) => {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const url = URL.createObjectURL(file);
-                
-                // Store PDF URL
-                localStorage.setItem('pdfUrl', url);
-                localStorage.setItem('pdfOpened', 'true');
-                
-                // Show PDF viewer and capture area
-                this.showPDFViewer(url);
-                
-                // Update PDF button
-                const pdfBtn = document.getElementById('pdf-btn');
-                pdfBtn.textContent = 'PDF Opened';
-                pdfBtn.style.backgroundColor = '#1976d2';
-                
-                // Show capture buttons
-                document.querySelectorAll('.upload-btn').forEach(btn => {
-                    btn.style.display = 'block';
-                });
-            }
-        };
-        
-        input.click();
-    },
-    
-    // Show PDF viewer
-    showPDFViewer: function(url) {
-        // Create iframe for PDF
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        
-        // Clear previous content
-        this.pdfViewer.innerHTML = '';
-        this.pdfViewer.appendChild(iframe);
-        
-        // Show PDF viewer and capture area
-        this.pdfViewer.style.display = 'block';
-        this.captureArea.style.display = 'flex';
-        
-        // Adjust main container
-        const container = document.querySelector('.container');
-        container.style.maxWidth = '100%';
-        container.style.padding = '0 10px';
-        
-        // Hide the card temporarily
-        const card = document.querySelector('.card');
-        card.style.display = 'none';
-        
-        // Add close button
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = 'Close PDF';
-        closeBtn.className = 'btn';
-        closeBtn.style.position = 'absolute';
-        closeBtn.style.top = '10px';
-        closeBtn.style.right = '10px';
-        closeBtn.style.zIndex = '1000';
-        
-        closeBtn.addEventListener('click', () => {
-            this.closePDFViewer();
-        });
-        
-        this.pdfViewer.appendChild(closeBtn);
-    },
-    
-    // Close PDF viewer
-    closePDFViewer: function() {
-        this.pdfViewer.style.display = 'none';
-        this.captureArea.style.display = 'none';
-        
-        // Restore container and card
-        const container = document.querySelector('.container');
-        container.style.maxWidth = '800px';
-        
-        const card = document.querySelector('.card');
-        card.style.display = 'block';
-    },
-    
-    // Handle paste event
-    handlePaste: function(e) {
-        // Only process if capture area is visible
-        if (this.captureArea.style.display !== 'flex') return;
-        
-        const items = e.clipboardData.items;
-        
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf('image') !== -1) {
-                const blob = items[i].getAsFile();
-                const reader = new FileReader();
-                
-                reader.onload = (event) => {
-                    const imageData = event.target.result;
-                    
-                    // Create image preview
-                    const img = document.createElement('img');
-                    img.src = imageData;
-                    img.style.maxWidth = '90%';
-                    img.style.maxHeight = '80%';
-                    
-                    // Clear capture area and add image
-                    this.captureArea.innerHTML = '';
-                    this.captureArea.appendChild(img);
-                    
-                    // Add buttons
-                    const buttonContainer = document.createElement('div');
-                    buttonContainer.style.marginTop = '10px';
-                    
-                    // Use for question button
-                    const useForQuestionBtn = document.createElement('button');
-                    useForQuestionBtn.textContent = 'Use for Question';
-                    useForQuestionBtn.className = 'btn';
-                    useForQuestionBtn.style.marginRight = '10px';
-                    
-                    useForQuestionBtn.addEventListener('click', () => {
-                        document.getElementById('question-image').src = imageData;
-                        document.getElementById('question-image-container').classList.remove('hidden');
-                        this.closePDFViewer();
-                    });
-                    
-                    // Use for option button
-                    const useForOptionBtn = document.createElement('button');
-                    useForOptionBtn.textContent = 'Use for Option';
-                    useForOptionBtn.className = 'btn secondary';
-                    
-                    useForOptionBtn.addEventListener('click', () => {
-                        // Find first empty option
-                        const options = ['a', 'b', 'c', 'd'];
-                        let optionUsed = false;
-                        
-                        for (const letter of options) {
-                            const optionInput = document.getElementById(`option-text-${letter}`);
-                            if (!optionInput.value) {
-                                optionInput.value = `[Image Option ${letter.toUpperCase()}]`;
-                                
-                                // Create or update option image container
-                                let imgContainer = document.getElementById(`option-image-${letter}-container`);
-                                if (!imgContainer) {
-                                    imgContainer = document.createElement('div');
-                                    imgContainer.id = `option-image-${letter}-container`;
-                                    imgContainer.className = 'image-container';
-                                    imgContainer.style.marginTop = '5px';
-                                    
-                                    const img = document.createElement('img');
-                                    img.id = `option-image-${letter}`;
-                                    img.style.maxWidth = '100%';
-                                    img.style.maxHeight = '100px';
-                                    
-                                    const removeBtn = document.createElement('button');
-                                    removeBtn.className = 'remove-btn';
-                                    removeBtn.textContent = '×';
-                                    removeBtn.onclick = function() {
-                                        imgContainer.style.display = 'none';
-                                        img.src = '';
-                                        optionInput.value = '';
-                                    };
-                                    
-                                    imgContainer.appendChild(img);
-                                    imgContainer.appendChild(removeBtn);
-                                    
-                                    // Add after the option input
-                                    optionInput.parentNode.appendChild(imgContainer);
-                                }
-                                
-                                // Set image source
-                                const optionImg = document.getElementById(`option-image-${letter}`);
-                                optionImg.src = imageData;
-                                imgContainer.style.display = 'block';
-                                
-                                optionUsed = true;
-                                break;
-                            }
-                        }
-                        
-                        if (!optionUsed) {
-                            alert('All options are already filled. Clear an option first.');
-                        } else {
-                            // Clear capture area
-                            this.captureArea.innerHTML = '';
-                            this.captureArea.appendChild(document.createElement('p')).textContent = 'Press Ctrl+V to paste screenshot here';
-                        }
-                    });
-                    
-                    // Cancel button
-                    const cancelBtn = document.createElement('button');
-                    cancelBtn.textContent = 'Cancel';
-                    cancelBtn.className = 'btn';
-                    cancelBtn.style.marginLeft = '10px';
-                    cancelBtn.style.backgroundColor = '#f44336';
-                    
-                    cancelBtn.addEventListener('click', () => {
-                        // Clear capture area
-                        this.captureArea.innerHTML = '';
-                        this.captureArea.appendChild(document.createElement('p')).textContent = 'Press Ctrl+V to paste screenshot here';
-                    });
-                    
-                    buttonContainer.appendChild(useForQuestionBtn);
-                    buttonContainer.appendChild(useForOptionBtn);
-                    buttonContainer.appendChild(cancelBtn);
-                    this.captureArea.appendChild(buttonContainer);
-                    
-                    break;
-                };
-                
-                reader.readAsDataURL(blob);
-                break;
-            }
+// PDF Uploader and Parser for JEE Advanced Papers
+// This script helps extract questions from JEE Advanced PDF papers
+
+// PDF.js library is required for this functionality
+// Make sure to include the PDF.js library in your HTML:
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+class PDFUploader {
+    constructor() {
+        this.pdfData = null;
+        this.currentPage = 1;
+        this.totalPages = 0;
+    }
+
+    // Initialize PDF.js
+    init() {
+        if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        } else {
+            console.error('PDF.js library not loaded');
         }
     }
-};
+
+    // Load PDF from file input
+    async loadPDF(fileInput) {
+        const file = fileInput.files[0];
+        if (!file || file.type !== 'application/pdf') {
+            throw new Error('Please select a valid PDF file');
+        }
+
+        const fileReader = new FileReader();
+        
+        return new Promise((resolve, reject) => {
+            fileReader.onload = async (event) => {
+                try {
+                    const typedArray = new Uint8Array(event.target.result);
+                    const loadingTask = pdfjsLib.getDocument(typedArray);
+                    
+                    this.pdfData = await loadingTask.promise;
+                    this.totalPages = this.pdfData.numPages;
+                    
+                    resolve({
+                        totalPages: this.totalPages,
+                        filename: file.name
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            
+            fileReader.onerror = reject;
+            fileReader.readAsArrayBuffer(file);
+        });
+    }
+
+    // Extract text from a specific page
+    async extractTextFromPage(pageNumber) {
+        if (!this.pdfData) {
+            throw new Error('No PDF loaded');
+        }
+
+        const page = await this.pdfData.getPage(pageNumber);
+        const textContent = await page.getTextContent();
+        
+        // Combine text items into a single string
+        return textContent.items.map(item => item.str).join(' ');
+    }
+
+    // Extract all text from the PDF
+    async extractAllText() {
+        if (!this.pdfData) {
+            throw new Error('No PDF loaded');
+        }
+
+        const textPromises = [];
+        for (let i = 1; i <= this.totalPages; i++) {
+            textPromises.push(this.extractTextFromPage(i));
+        }
+
+        return Promise.all(textPromises);
+    }
+
+    // Parse JEE Advanced questions from text
+    parseJEEAdvancedQuestions(text) {
+        // This is a simplified parser - you'll need to adapt it based on the actual PDF format
+        const questions = [];
+        
+        // Split text into sections that might contain questions
+        // This regex pattern looks for question numbers like "1.", "2.", etc.
+        const questionSections = text.split(/\d+\.\s+/);
+        
+        // Skip the first section as it's likely to be header text
+        for (let i = 1; i < questionSections.length; i++) {
+            const section = questionSections[i].trim();
+            
+            // Skip empty sections
+            if (!section) continue;
+            
+            // Try to identify the question text and options
+            const lines = section.split('\n').map(line => line.trim()).filter(line => line);
+            
+            if (lines.length >= 5) { // Question + 4 options at minimum
+                const questionText = lines[0];
+                
+                // Look for option indicators (A), (B), (C), (D) or similar patterns
+                const optionPattern = /\([A-D]\)/;
+                const optionIndices = [];
+                
+                for (let j = 0; j < lines.length; j++) {
+                    if (optionPattern.test(lines[j])) {
+                        optionIndices.push(j);
+                    }
+                }
+                
+                // If we found 4 options
+                if (optionIndices.length === 4) {
+                    const options = optionIndices.map((index, optionNum) => {
+                        const optionText = lines[index].replace(optionPattern, '').trim();
+                        return {
+                            text: optionText,
+                            correct: false // We don't know the correct answer from the PDF
+                        };
+                    });
+                    
+                    // Determine subject based on keywords
+                    let subject = 'physics'; // Default
+                    const lowerText = questionText.toLowerCase();
+                    
+                    if (lowerText.includes('atom') || lowerText.includes('molecule') || 
+                        lowerText.includes('compound') || lowerText.includes('reaction')) {
+                        subject = 'chemistry';
+                    } else if (lowerText.includes('integral') || lowerText.includes('derivative') || 
+                               lowerText.includes('equation') || lowerText.includes('function')) {
+                        subject = 'mathematics';
+                    }
+                    
+                    questions.push({
+                        id: `q${Date.now()}-${i}`,
+                        subject,
+                        text: questionText,
+                        options,
+                        type: 'scq'
+                    });
+                }
+            }
+        }
+        
+        return questions;
+    }
+}
+
+// Export the class
+window.PDFUploader = PDFUploader;
