@@ -101,17 +101,6 @@
             color: var(--primary-color);
             font-weight: 500;
         }
-        .debug-info {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -138,7 +127,7 @@
                 
                 <div class="exam-list" id="practice-exam-list">
                     <!-- Practice exams will be loaded here -->
-                    <div class="empty-message">No practice exams available yet.</div>
+                    <div class="empty-message" id="empty-practice-message">No practice exams available yet.</div>
                 </div>
             </div>
             
@@ -154,10 +143,6 @@
                 <div class="exam-list" id="created-exam-list">
                     <!-- Created exams will be loaded here -->
                 </div>
-                
-                <!-- Debug info section -->
-                <div id="debug-info" class="debug-info"></div>
-                <button id="toggle-debug" class="btn small" style="margin-top: 10px; background-color: #6c757d;">Show Debug Info</button>
             </div>
         </div>
     </div>
@@ -165,7 +150,7 @@
     <script>
         // Get exam type from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const examType = urlParams.get('type');
+        const examType = urlParams.get('type') || 'jee-main'; // Default to jee-main if no type specified
         
         // Update header
         const examTitles = {
@@ -179,65 +164,258 @@
         document.getElementById('exam-type-header').textContent = `PrepSharp - ${examTitles[examType] || 'Exams'}`;
         document.title = `${examTitles[examType] || 'Exam'} List - PrepSharp`;
         
-        // Debug info toggle
-        document.getElementById('toggle-debug').addEventListener('click', function() {
-            const debugInfo = document.getElementById('debug-info');
-            if (debugInfo.style.display === 'none' || !debugInfo.style.display) {
-                debugInfo.style.display = 'block';
-                this.textContent = 'Hide Debug Info';
+        // Load practice exams directly from hardcoded data
+        function loadPracticeExams() {
+            const practiceExamList = document.getElementById('practice-exam-list');
+            const emptyMessage = document.getElementById('empty-practice-message');
+            
+            // Hardcoded papers data from papers.json
+            const papers = [
+                {
+                    "id": "1001",
+                    "type": "jee-main",
+                    "name": "JEE Main - 10/Jan Shift 1 2023",
+                    "year": "2023",
+                    "date": "10",
+                    "month": "1",
+                    "shift": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "createdAt": "2023-01-15T10:30:00.000Z",
+                    "questions": [
+                        {
+                            "id": "q1001",
+                            "subject": "physics",
+                            "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
+                            "options": ["8 m/s", "10 m/s", "12 m/s", "14 m/s"],
+                            "correctOption": 1
+                        },
+                        {
+                            "id": "q1002",
+                            "subject": "chemistry",
+                            "text": "Which of the following is NOT a colligative property?",
+                            "options": ["Elevation in boiling point", "Depression in freezing point", "Osmotic pressure", "Optical activity"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q1003",
+                            "subject": "mathematics",
+                            "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
+                            "options": ["3", "5", "7", "9"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1002",
+                    "type": "jee-advanced",
+                    "name": "JEE Advanced - Paper 1 2023",
+                    "year": "2023",
+                    "paperNumber": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "createdAt": "2023-06-04T09:15:00.000Z",
+                    "questions": [
+                        {
+                            "id": "q2001",
+                            "subject": "physics",
+                            "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
+                            "options": ["L(k₂)/(k₁+k₂)", "L(k₁)/(k₁+k₂)", "L/2", "L(k₁-k₂)/(k₁+k₂)"],
+                            "correctOption": 0
+                        },
+                        {
+                            "id": "q2002",
+                            "subject": "chemistry",
+                            "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
+                            "options": ["sp³, sp³d, sp³", "sp³d, sp³d², sp³d", "sp³d, sp³d², sp³", "sp³d², sp³d, sp³"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1003",
+                    "type": "neet",
+                    "name": "NEET 2023",
+                    "year": "2023",
+                    "subjects": ["physics", "chemistry", "biology"],
+                    "createdAt": "2023-05-07T10:00:00.000Z",
+                    "questions": [
+                        {
+                            "id": "q3001",
+                            "subject": "biology",
+                            "text": "Which of the following is NOT a function of the liver?",
+                            "options": ["Production of bile", "Storage of glycogen", "Detoxification of harmful substances", "Production of insulin"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q3002",
+                            "subject": "chemistry",
+                            "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
+                            "options": ["But-2-enal", "But-3-enal", "But-2-enoic acid", "But-3-enoic acid"],
+                            "correctOption": 0
+                        }
+                    ]
+                }
+            ];
+            
+            // Filter papers by exam type
+            const filteredPapers = papers.filter(paper => paper.type === examType);
+            console.log('Filtered papers for type', examType, ':', filteredPapers);
+            
+            if (filteredPapers.length > 0) {
+                // Hide empty message
+                emptyMessage.style.display = 'none';
+                
+                // Clear existing content
+                practiceExamList.innerHTML = '';
+                
+                // Add each paper to the list
+                filteredPapers.forEach(paper => {
+                    let examTitle = examTitles[paper.type] || paper.type;
+                    if (paper.type === 'jee-advanced' && paper.paperNumber) {
+                        examTitle += ` Paper ${paper.paperNumber}`;
+                    }
+                    
+                    const examItem = document.createElement('div');
+                    examItem.className = 'exam-item';
+                    
+                    // Create subjects text if available
+                    let subjectsText = '';
+                    if (paper.subjects && paper.subjects.length > 0) {
+                        subjectsText = paper.subjects.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                    }
+                    
+                    examItem.innerHTML = `
+                        <div class="exam-info">
+                            <h3>${paper.name || `${examTitle} ${paper.year}`}</h3>
+                            <p>${paper.questions ? paper.questions.length : 0} questions${subjectsText ? ' | ' + subjectsText : ''}</p>
+                        </div>
+                        <div class="exam-actions">
+                            <button class="btn small attend-btn" data-id="${paper.id}">Attend Exam</button>
+                        </div>
+                    `;
+                    
+                    practiceExamList.appendChild(examItem);
+                    
+                    // Add event listener for attend button
+                    examItem.querySelector('.attend-btn').addEventListener('click', function() {
+                        const paperId = this.getAttribute('data-id');
+                        attendExam(paperId);
+                    });
+                });
             } else {
-                debugInfo.style.display = 'none';
-                this.textContent = 'Show Debug Info';
+                emptyMessage.textContent = `No ${examTitles[examType] || examType} exams available yet.`;
+                emptyMessage.style.display = 'block';
             }
-        });
+        }
         
+        // Function to attend an exam
+        function attendExam(paperId) {
+            // Hardcoded papers data
+            const papers = [
+                {
+                    "id": "1001",
+                    "type": "jee-main",
+                    "name": "JEE Main - 10/Jan Shift 1 2023",
+                    "year": "2023",
+                    "date": "10",
+                    "month": "1",
+                    "shift": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "questions": [
+                        {
+                            "id": "q1001",
+                            "subject": "physics",
+                            "text": "A particle moves along x-axis such that its position as a function of time is given by x(t) = 3t² - 2t + 5. The instantaneous velocity at t = 2s is:",
+                            "options": ["8 m/s", "10 m/s", "12 m/s", "14 m/s"],
+                            "correctOption": 1
+                        },
+                        {
+                            "id": "q1002",
+                            "subject": "chemistry",
+                            "text": "Which of the following is NOT a colligative property?",
+                            "options": ["Elevation in boiling point", "Depression in freezing point", "Osmotic pressure", "Optical activity"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q1003",
+                            "subject": "mathematics",
+                            "text": "If f(x) = x³ - 3x² + 2x - 1, then f'(2) equals:",
+                            "options": ["3", "5", "7", "9"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1002",
+                    "type": "jee-advanced",
+                    "name": "JEE Advanced - Paper 1 2023",
+                    "year": "2023",
+                    "paperNumber": "1",
+                    "subjects": ["physics", "chemistry", "mathematics"],
+                    "questions": [
+                        {
+                            "id": "q2001",
+                            "subject": "physics",
+                            "text": "A uniform rod of length L and mass M is suspended by two parallel springs of spring constants k₁ and k₂. If the rod remains horizontal, the distance of the spring k₁ from the center of mass of the rod is:",
+                            "options": ["L(k₂)/(k₁+k₂)", "L(k₁)/(k₁+k₂)", "L/2", "L(k₁-k₂)/(k₁+k₂)"],
+                            "correctOption": 0
+                        },
+                        {
+                            "id": "q2002",
+                            "subject": "chemistry",
+                            "text": "The hybridization of central atom in ClF₃, SF₄, and XeF₂ respectively are:",
+                            "options": ["sp³, sp³d, sp³", "sp³d, sp³d², sp³d", "sp³d, sp³d², sp³", "sp³d², sp³d, sp³"],
+                            "correctOption": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "1003",
+                    "type": "neet",
+                    "name": "NEET 2023",
+                    "year": "2023",
+                    "subjects": ["physics", "chemistry", "biology"],
+                    "questions": [
+                        {
+                            "id": "q3001",
+                            "subject": "biology",
+                            "text": "Which of the following is NOT a function of the liver?",
+                            "options": ["Production of bile", "Storage of glycogen", "Detoxification of harmful substances", "Production of insulin"],
+                            "correctOption": 3
+                        },
+                        {
+                            "id": "q3002",
+                            "subject": "chemistry",
+                            "text": "The IUPAC name of CH₃-CH=CH-CHO is:",
+                            "options": ["But-2-enal", "But-3-enal", "But-2-enoic acid", "But-3-enoic acid"],
+                            "correctOption": 0
+                        }
+                    ]
+                }
+            ];
+            
+            const paper = papers.find(p => p.id === paperId);
+            
+            if (paper) {
+                // Store paper data for the exam
+                localStorage.setItem('currentTakingExam', JSON.stringify(paper));
+                localStorage.setItem('currentExamId', paperId);
+                
+                // Go to exam pattern page first
+                window.location.href = 'exam-pattern.html';
+            } else {
+                alert('Failed to load exam. Please try again.');
+            }
+        }
+
         // Load created exams
         function loadCreatedExams() {
             const createdExamList = document.getElementById('created-exam-list');
-            const debugInfo = document.getElementById('debug-info');
             
-            // Debug information
-            let debugText = '';
-            
-            // Get exams from localStorage with error handling
-            let exams = {};
-            try {
-                const examsData = localStorage.getItem('exams');
-                debugText += `Raw exams data: ${examsData ? (examsData.length > 100 ? examsData.substring(0, 100) + '...' : examsData) : 'null'}\n\n`;
-                
-                if (examsData) {
-                    exams = JSON.parse(examsData);
-                    debugText += `Number of exams found: ${Object.keys(exams).length}\n`;
-                    debugText += `Exam IDs: ${Object.keys(exams).join(', ')}\n\n`;
-                } else {
-                    debugText += "No exams data found in localStorage\n\n";
-                }
-            } catch (error) {
-                debugText += `Error loading exams from localStorage: ${error.message}\n\n`;
-                createdExamList.innerHTML = '<div class="empty-message">Error loading exams. Please try again.</div>';
-                debugInfo.textContent = debugText;
-                return;
-            }
-            
-            // Filter exams by type
+            // Get exams from localStorage
+            const exams = JSON.parse(localStorage.getItem('exams') || '{}');
             const filteredExams = Object.entries(exams)
-                .filter(([id, exam]) => exam && exam.type === examType);
-            
-            debugText += `Filtered exams for type ${examType}: ${filteredExams.length}\n`;
-            if (filteredExams.length > 0) {
-                debugText += "Filtered exam IDs: " + filteredExams.map(([id]) => id).join(', ') + "\n\n";
-            }
-            
-            // Sort by year descending
-            filteredExams.sort((a, b) => {
-                // Handle potential missing year property
-                const yearA = a[1].year ? parseInt(a[1].year) : 0;
-                const yearB = b[1].year ? parseInt(b[1].year) : 0;
-                return yearB - yearA;
-            });
-            
-            // Update debug info
-            debugInfo.textContent = debugText;
+                .filter(([id, exam]) => exam.type === examType)
+                .sort((a, b) => b[1].year - a[1].year); // Sort by year descending
             
             if (filteredExams.length === 0) {
                 createdExamList.innerHTML = '<div class="empty-message">You haven\'t created any exams yet.</div>';
@@ -342,9 +520,13 @@
         
         // Create new exam button
         document.getElementById('create-exam-btn').addEventListener('click', function() {
-            // For testing purposes, allow anyone to create exams
-            localStorage.setItem('adminLoggedIn', 'true');
-            window.location.href = 'add-exam.html';
+            // Check if admin is logged in
+            if (localStorage.getItem('adminLoggedIn')) {
+                window.location.href = 'add-exam.html';
+            } else {
+                alert('Only administrators can create new exams');
+                window.location.href = 'admin-login.html';
+            }
         });
         
         // Dashboard button
@@ -354,6 +536,7 @@
         
         // Load exams when page loads
         window.addEventListener('load', function() {
+            loadPracticeExams();
             loadCreatedExams();
         });
     </script>
