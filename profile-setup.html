@@ -246,24 +246,63 @@
             
             try {
                 const user = JSON.parse(localStorage.getItem('currentUser'));
+                const fullName = document.getElementById('fullName').value;
+                const mobile = document.getElementById('phone').value;
+                const classValue = document.getElementById('class').value;
+                const referral = document.getElementById('referral').value;
                 
-                // Add profile information
-                user.name = document.getElementById('fullName').value;
-                user.mobile = document.getElementById('phone').value;
+                // Update local storage
+                user.name = fullName;
+                user.mobile = mobile;
                 user.stream = selectedStream;
-                user.class = document.getElementById('class').value;
-                user.referral = document.getElementById('referral').value;
+                user.class = classValue;
+                user.referral = referral;
                 user.profileComplete = true;
                 
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Show success message briefly before redirecting
-                showSuccess('Profile setup complete! Redirecting to dashboard...');
-                
-                // Redirect to dashboard after a short delay
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                // Save to server
+                fetch('/api/profile-setup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        fullName: fullName,
+                        stream: selectedStream,
+                        classValue: classValue,
+                        mobile: mobile,
+                        referral: referral
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update local storage with server response
+                        localStorage.setItem('currentUser', JSON.stringify(data.user));
+                        
+                        // Show success message briefly before redirecting
+                        showSuccess('Profile setup complete! Redirecting to dashboard...');
+                        
+                        // Redirect to dashboard after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    } else {
+                        showError(data.message || 'Error saving your profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving profile to server:', error);
+                    
+                    // Fallback: still update local storage
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Show success message and redirect anyway
+                    showSuccess('Profile saved locally. Redirecting to dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                });
             } catch (e) {
                 console.error('Error saving profile:', e);
                 showError('Error saving your profile. Please try again.');
