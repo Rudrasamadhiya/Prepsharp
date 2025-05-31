@@ -365,36 +365,24 @@
                 return;
             }
             
-            // Try to delete from server
-            fetch(`/api/papers/${paperId}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+            // Directly use local storage since DELETE endpoint is not implemented on server
+            try {
+                const papersJson = localStorage.getItem('papers');
+                if (papersJson) {
+                    let papers = JSON.parse(papersJson);
+                    papers = papers.filter(paper => paper.id !== paperId);
+                    localStorage.setItem('papers', JSON.stringify(papers));
                     alert('Exam paper deleted successfully');
                     loadExamPapers(); // Reload the list
                 } else {
-                    throw new Error('Failed to delete paper');
+                    // If no papers in localStorage, create empty array
+                    localStorage.setItem('papers', JSON.stringify([]));
+                    alert('No papers found to delete');
                 }
-            })
-            .catch(error => {
-                console.error('Error deleting paper:', error);
-                
-                // Fallback to local storage
-                try {
-                    const papersJson = localStorage.getItem('papers');
-                    if (papersJson) {
-                        let papers = JSON.parse(papersJson);
-                        papers = papers.filter(paper => paper.id !== paperId);
-                        localStorage.setItem('papers', JSON.stringify(papers));
-                        alert('Exam paper deleted from local storage');
-                        loadExamPapers(); // Reload the list
-                    }
-                } catch (e) {
-                    alert('Failed to delete exam paper');
-                }
-            });
+            } catch (e) {
+                console.error('Error deleting paper:', e);
+                alert('Failed to delete exam paper');
+            }
         }
         
         // Function to apply filters
