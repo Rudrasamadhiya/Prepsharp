@@ -1,0 +1,273 @@
+[
+  {
+    "id": "jee-adv-2018-p1",
+    "name": "JEE Advanced 2018 Paper 1",
+    "year": 2018,
+    "paperNumber": 1,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2018-p2",
+    "name": "JEE Advanced 2018 Paper 2",
+    "year": 2018,
+    "paperNumber": 2,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6},
+      "matrixMatch": {"count": 6, "perSubject": 2}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2019-p1",
+    "name": "JEE Advanced 2019 Paper 1",
+    "year": 2019,
+    "paperNumber": 1,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6}
+    },
+    "markingScheme": {
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -1},
+      "numericalAnswerType": {"correct": 3, "incorrect": 0}
+    }
+  },
+  {
+    "id": "jee-adv-2019-p2",
+    "name": "JEE Advanced 2019 Paper 2",
+    "year": 2019,
+    "paperNumber": 2,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6}
+    },
+    "markingScheme": {
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -1},
+      "numericalAnswerType": {"correct": 3, "incorrect": 0}
+    }
+  },
+  {
+    "id": "jee-adv-2020-p1",
+    "name": "JEE Advanced 2020 Paper 1",
+    "year": 2020,
+    "paperNumber": 1,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2020-p2",
+    "name": "JEE Advanced 2020 Paper 2",
+    "year": 2020,
+    "paperNumber": 2,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 18, "perSubject": 6}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2021-p1",
+    "name": "JEE Advanced 2021 Paper 1",
+    "year": 2021,
+    "paperNumber": 1,
+    "totalQuestions": 57,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 15, "perSubject": 5},
+      "assertionReason": {"count": 3, "perSubject": 1}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2021-p2",
+    "name": "JEE Advanced 2021 Paper 2",
+    "year": 2021,
+    "paperNumber": 2,
+    "totalQuestions": 57,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalAnswerType": {"count": 15, "perSubject": 5},
+      "matchList": {"count": 3, "perSubject": 1}
+    },
+    "markingScheme": {
+      "description": "Varies by section; included both positive and negative marking"
+    }
+  },
+  {
+    "id": "jee-adv-2022-p1",
+    "name": "JEE Advanced 2022 Paper 1",
+    "year": 2022,
+    "paperNumber": 1,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalDecimal": {"count": 18, "perSubject": 6},
+      "matchList": {"count": 6, "perSubject": 2}
+    },
+    "markingScheme": {
+      "numericalDecimal": {"correct": 3, "incorrect": 0},
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "matchList": {"correct": 3, "incorrect": -1}
+    }
+  },
+  {
+    "id": "jee-adv-2022-p2",
+    "name": "JEE Advanced 2022 Paper 2",
+    "year": 2022,
+    "paperNumber": 2,
+    "totalQuestions": 54,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
+      "numericalDecimal": {"count": 18, "perSubject": 6},
+      "matchList": {"count": 6, "perSubject": 2}
+    },
+    "markingScheme": {
+      "numericalDecimal": {"correct": 3, "incorrect": 0},
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "matchList": {"correct": 3, "incorrect": -1}
+    }
+  },
+  {
+    "id": "jee-adv-2023-p1",
+    "name": "JEE Advanced 2023 Paper 1",
+    "year": 2023,
+    "paperNumber": 1,
+    "totalQuestions": 51,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "numericalInteger": {"count": 17, "perSubject": 5.7},
+      "matchList": {"count": 6, "perSubject": 2}
+    },
+    "markingScheme": {
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "numericalInteger": {"correct": 4, "incorrect": 0},
+      "matchList": {"correct": 3, "incorrect": -1}
+    }
+  },
+  {
+    "id": "jee-adv-2023-p2",
+    "name": "JEE Advanced 2023 Paper 2",
+    "year": 2023,
+    "paperNumber": 2,
+    "totalQuestions": 51,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "numericalInteger": {"count": 17, "perSubject": 5.7},
+      "paragraphBased": {"count": 6, "perSubject": 2}
+    },
+    "markingScheme": {
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "numericalInteger": {"correct": 4, "incorrect": 0},
+      "paragraphBased": {"correct": 3, "incorrect": 0}
+    }
+  },
+  {
+    "id": "jee-adv-2024-p1",
+    "name": "JEE Advanced 2024 Paper 1",
+    "year": 2024,
+    "paperNumber": 1,
+    "totalQuestions": 51,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "numericalInteger": {"count": 17, "perSubject": 5.7},
+      "matchList": {"count": 5, "perSubject": 1.7}
+    },
+    "markingScheme": {
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "numericalInteger": {"correct": 4, "incorrect": 0},
+      "matchList": {"correct": 3, "incorrect": -1}
+    },
+    "examDate": "May 26, 2024",
+    "pdfPath": "papers/2024_1_English.pdf"
+  },
+  {
+    "id": "jee-adv-2024-p2",
+    "name": "JEE Advanced 2024 Paper 2",
+    "year": 2024,
+    "paperNumber": 2,
+    "totalQuestions": 51,
+    "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
+    "questionTypes": {
+      "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
+      "numericalInteger": {"count": 17, "perSubject": 5.7},
+      "paragraphBased": {"count": 5, "perSubject": 1.7}
+    },
+    "markingScheme": {
+      "multipleCorrectMCQ": {"allCorrect": 4, "partialCorrect": true, "incorrect": -2},
+      "singleCorrectMCQ": {"correct": 3, "incorrect": -1},
+      "numericalInteger": {"correct": 4, "incorrect": 0},
+      "paragraphBased": {"correct": 3, "incorrect": 0}
+    },
+    "examDate": "May 26, 2024",
+    "pdfPath": "papers/2024_2_English.pdf"
+  }
+]
