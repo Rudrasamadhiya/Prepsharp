@@ -1,0 +1,269 @@
+[
+  {
+    "id": "p2024-1-c1",
+    "subject": "chemistry",
+    "type": "single",
+    "text": "Question 18: The IUPAC name of the compound CH₃-CH=CH-CHO is:",
+    "options": [
+      "Option 1: But-2-enal",
+      "Option 2: But-3-enal",
+      "Option 3: But-2-en-1-al",
+      "Option 4: But-3-en-1-al"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c2",
+    "subject": "chemistry",
+    "type": "single",
+    "text": "Question 19: Which of the following compounds will show geometrical isomerism?",
+    "options": [
+      "Option 1: 2-butyne",
+      "Option 2: 2-butene",
+      "Option 3: 1-butene",
+      "Option 4: Propene"
+    ],
+    "correctOption": 1,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c3",
+    "subject": "chemistry",
+    "type": "single",
+    "text": "Question 20: The hybridization of carbon atoms in diamond is:",
+    "options": [
+      "Option 1: sp",
+      "Option 2: sp²",
+      "Option 3: sp³",
+      "Option 4: dsp²"
+    ],
+    "correctOption": 2,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c4",
+    "subject": "chemistry",
+    "type": "single",
+    "text": "Question 21: Which of the following is the strongest acid?",
+    "options": [
+      "Option 1: HF",
+      "Option 2: HCl",
+      "Option 3: HBr",
+      "Option 4: HI"
+    ],
+    "correctOption": 3,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c5",
+    "subject": "chemistry",
+    "type": "multiple",
+    "text": "Question 22: Which of the following statements is/are correct about benzene?",
+    "options": [
+      "Option 1: It has a planar structure",
+      "Option 2: All carbon atoms are sp² hybridized",
+      "Option 3: It undergoes substitution reactions more readily than addition reactions",
+      "Option 4: It has a delocalized π-electron cloud"
+    ],
+    "correctOptions": [0, 1, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-c6",
+    "subject": "chemistry",
+    "type": "multiple",
+    "text": "Question 23: Which of the following statements is/are correct about the periodic table?",
+    "options": [
+      "Option 1: Atomic radius increases down a group",
+      "Option 2: Ionization energy decreases down a group",
+      "Option 3: Electronegativity increases across a period",
+      "Option 4: Metallic character decreases across a period"
+    ],
+    "correctOptions": [0, 1, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-c7",
+    "subject": "chemistry",
+    "type": "multiple",
+    "text": "Question 24: Which of the following statements is/are correct about chemical equilibrium?",
+    "options": [
+      "Option 1: The equilibrium constant depends on temperature",
+      "Option 2: Addition of a catalyst changes the equilibrium constant",
+      "Option 3: The equilibrium shifts in the forward direction when concentration of products is decreased",
+      "Option 4: The equilibrium constant is independent of pressure for reactions involving gases"
+    ],
+    "correctOptions": [0, 2],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-c8",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 25: The number of isomers possible for an alkene with molecular formula C₄H₈ is:",
+    "correctAnswer": 4,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c9",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 26: The number of sigma bonds in benzene (C₆H₆) is:",
+    "correctAnswer": 12,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c10",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 27: The oxidation number of chromium in K₂Cr₂O₇ is:",
+    "correctAnswer": 6,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c11",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 28: The number of structural isomers possible for a compound with molecular formula C₅H₁₂ is:",
+    "correctAnswer": 3,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c12",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 29: The pH of a 0.001 M HCl solution is:",
+    "correctAnswer": 3,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c13",
+    "subject": "chemistry",
+    "type": "integer",
+    "text": "Question 30: The number of d-electrons in Fe²⁺ ion (Atomic number of Fe = 26) is:",
+    "correctAnswer": 6,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-c14",
+    "subject": "chemistry",
+    "type": "match",
+    "text": "Question 31: Match List I (Compounds) with List II (Functional groups) and select the correct answer using the code given below:",
+    "listI": [
+      "CH₃COOH",
+      "CH₃CHO",
+      "CH₃OH",
+      "CH₃NH₂"
+    ],
+    "listII": [
+      "Aldehyde",
+      "Alcohol",
+      "Amine",
+      "Carboxylic acid"
+    ],
+    "options": [
+      "Option 1: A-D, B-A, C-B, D-C",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-C, B-D, C-A, D-B",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c15",
+    "subject": "chemistry",
+    "type": "match",
+    "text": "Question 32: Match List I (Elements) with List II (Properties) and select the correct answer using the code given below:",
+    "listI": [
+      "Sodium",
+      "Chlorine",
+      "Neon",
+      "Carbon"
+    ],
+    "listII": [
+      "Inert gas",
+      "Halogen",
+      "Alkali metal",
+      "Non-metal"
+    ],
+    "options": [
+      "Option 1: A-C, B-B, C-A, D-D",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-D, B-A, C-B, D-C",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c16",
+    "subject": "chemistry",
+    "type": "match",
+    "text": "Question 33: Match List I (Reactions) with List II (Types) and select the correct answer using the code given below:",
+    "listI": [
+      "Aldol condensation",
+      "Cannizzaro reaction",
+      "Friedel-Crafts reaction",
+      "Wurtz reaction"
+    ],
+    "listII": [
+      "Alkylation",
+      "Disproportionation",
+      "Condensation",
+      "Coupling"
+    ],
+    "options": [
+      "Option 1: A-C, B-B, C-A, D-D",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-D, B-A, C-B, D-C",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-c17",
+    "subject": "chemistry",
+    "type": "match",
+    "text": "Question 34: Match List I (Compounds) with List II (Uses) and select the correct answer using the code given below:",
+    "listI": [
+      "Sodium hydroxide",
+      "Calcium carbonate",
+      "Sulfuric acid",
+      "Sodium chloride"
+    ],
+    "listII": [
+      "Cement manufacturing",
+      "Food preservative",
+      "Battery electrolyte",
+      "Soap making"
+    ],
+    "options": [
+      "Option 1: A-D, B-A, C-C, D-B",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-C, B-D, C-A, D-B",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  }
+]
