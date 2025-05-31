@@ -5,7 +5,11 @@
     "name": "JEE Advanced 2024 Paper 1",
     "year": "2024",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2024-05-26T10:00:00.000Z",
     "questions": [
       {
@@ -26,32 +30,275 @@
       {
         "id": "p2024-1-p2",
         "subject": "physics",
+        "type": "single",
+        "text": "Question 2: A body of mass 5 kg is moving with a velocity of 2 m/s. The kinetic energy of the body is:",
+        "options": [
+          "Option 1: 5 J",
+          "Option 2: 10 J",
+          "Option 3: 15 J",
+          "Option 4: 20 J"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p3",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 3: A particle is moving with a velocity of 5 m/s at t = 0 and has an acceleration of 2 m/s². Its velocity after 10 seconds is:",
+        "options": [
+          "Option 1: 15 m/s",
+          "Option 2: 20 m/s",
+          "Option 3: 25 m/s",
+          "Option 4: 30 m/s"
+        ],
+        "correctOption": 2,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p4",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 4: A body is thrown vertically upward with a velocity of 19.6 m/s. The maximum height reached by the body is: (g = 9.8 m/s²)",
+        "options": [
+          "Option 1: 19.6 m",
+          "Option 2: 9.8 m",
+          "Option 3: 39.2 m",
+          "Option 4: 4.9 m"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p5",
+        "subject": "physics",
         "type": "multiple",
-        "text": "Question 2: Which of the following statements is/are correct about simple harmonic motion?",
+        "text": "Question 5: Which of the following statements is/are correct about simple harmonic motion?",
         "options": [
           "Option 1: The acceleration is proportional to displacement",
           "Option 2: The total energy remains constant",
           "Option 3: The velocity is maximum at the mean position",
           "Option 4: The acceleration is maximum at the extreme positions"
         ],
-        "correctOptions": [0, 1, 2, 3],
+        "correctOptions": [
+          0,
+          1,
+          2,
+          3
+        ],
         "marks": 4,
         "negativeMark": -2
       },
       {
-        "id": "p2024-1-p3",
+        "id": "p2024-1-p6",
+        "subject": "physics",
+        "type": "multiple",
+        "text": "Question 6: Which of the following statements is/are correct about projectile motion?",
+        "options": [
+          "Option 1: The horizontal component of velocity remains constant",
+          "Option 2: The vertical component of velocity changes uniformly",
+          "Option 3: The path followed is parabolic",
+          "Option 4: The acceleration is constant and equal to g"
+        ],
+        "correctOptions": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-p7",
+        "subject": "physics",
+        "type": "multiple",
+        "text": "Question 7: Which of the following statements is/are correct about electromagnetic waves?",
+        "options": [
+          "Option 1: They are transverse waves",
+          "Option 2: They can travel through vacuum",
+          "Option 3: Their speed depends on the medium",
+          "Option 4: They carry energy and momentum"
+        ],
+        "correctOptions": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-p8",
         "subject": "physics",
         "type": "integer",
-        "text": "Question 3: A body of mass 2 kg is moving with a velocity of 10 m/s. If a constant force produces 100 W of power, the velocity (in m/s) of the body after 5 seconds will be:",
+        "text": "Question 8: A body of mass 2 kg is moving with a velocity of 10 m/s. If a constant force produces 100 W of power, the velocity (in m/s) of the body after 5 seconds will be:",
         "correctAnswer": 20,
         "marks": 4,
         "negativeMark": 0
       },
       {
+        "id": "p2024-1-p9",
+        "subject": "physics",
+        "type": "integer",
+        "text": "Question 9: A body is projected with a velocity of 20 m/s at an angle of 30° with the horizontal. The time of flight (in seconds) is: (g = 10 m/s²)",
+        "correctAnswer": 2,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-p10",
+        "subject": "physics",
+        "type": "integer",
+        "text": "Question 10: A particle executes simple harmonic motion with amplitude 10 cm and time period 2 seconds. The maximum speed (in cm/s) of the particle is:",
+        "correctAnswer": 31,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-p11",
+        "subject": "physics",
+        "type": "integer",
+        "text": "Question 11: A body of mass 5 kg is moving with a velocity of 4 m/s. The momentum of the body (in kg·m/s) is:",
+        "correctAnswer": 20,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-p12",
+        "subject": "physics",
+        "type": "integer",
+        "text": "Question 12: A body is moving in a circle of radius 10 cm with constant speed. If the body takes 2 seconds to complete one revolution, the speed of the body (in cm/s) is:",
+        "correctAnswer": 31,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-p13",
+        "subject": "physics",
+        "type": "integer",
+        "text": "Question 13: A body of mass 2 kg is moving with a velocity of 5 m/s. The kinetic energy of the body (in J) is:",
+        "correctAnswer": 25,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-p14",
+        "subject": "physics",
+        "type": "match",
+        "text": "Question 14: Match List I (Physical quantities) with List II (SI units) and select the correct answer using the code given below:",
+        "listI": [
+          "Force",
+          "Energy",
+          "Power",
+          "Momentum"
+        ],
+        "listII": [
+          "Watt",
+          "Joule",
+          "Newton",
+          "kg·m/s"
+        ],
+        "options": [
+          "Option 1: A-C, B-B, C-A, D-D",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-D, B-A, C-B, D-C",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p15",
+        "subject": "physics",
+        "type": "match",
+        "text": "Question 15: Match List I (Laws) with List II (Scientists) and select the correct answer using the code given below:",
+        "listI": [
+          "Law of gravitation",
+          "Laws of motion",
+          "Law of electromagnetic induction",
+          "Laws of thermodynamics"
+        ],
+        "listII": [
+          "Newton",
+          "Faraday",
+          "Clausius",
+          "Einstein"
+        ],
+        "options": [
+          "Option 1: A-A, B-A, C-B, D-C",
+          "Option 2: A-D, B-C, C-B, D-A",
+          "Option 3: A-B, B-D, C-A, D-C",
+          "Option 4: A-C, B-A, C-D, D-B"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p16",
+        "subject": "physics",
+        "type": "match",
+        "text": "Question 16: Match List I (Physical phenomena) with List II (Applications) and select the correct answer using the code given below:",
+        "listI": [
+          "Photoelectric effect",
+          "Total internal reflection",
+          "Doppler effect",
+          "Nuclear fission"
+        ],
+        "listII": [
+          "Optical fibers",
+          "Solar cells",
+          "Radar systems",
+          "Nuclear reactors"
+        ],
+        "options": [
+          "Option 1: A-B, B-A, C-C, D-D",
+          "Option 2: A-C, B-D, C-A, D-B",
+          "Option 3: A-D, B-C, C-B, D-A",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-p17",
+        "subject": "physics",
+        "type": "match",
+        "text": "Question 17: Match List I (Devices) with List II (Principles) and select the correct answer using the code given below:",
+        "listI": [
+          "Electric motor",
+          "Transformer",
+          "Generator",
+          "Galvanometer"
+        ],
+        "listII": [
+          "Electromagnetic induction",
+          "Magnetic effect of current",
+          "Mutual induction",
+          "Electrostatic force"
+        ],
+        "options": [
+          "Option 1: A-B, B-C, C-A, D-B",
+          "Option 2: A-C, B-D, C-A, D-B",
+          "Option 3: A-D, B-C, C-B, D-A",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
         "id": "p2024-1-c1",
         "subject": "chemistry",
         "type": "single",
-        "text": "Question 4: The IUPAC name of the compound CH₃-CH=CH-CHO is:",
+        "text": "Question 18: The IUPAC name of the compound CH₃-CH=CH-CHO is:",
         "options": [
           "Option 1: But-2-enal",
           "Option 2: But-3-enal",
@@ -65,32 +312,273 @@
       {
         "id": "p2024-1-c2",
         "subject": "chemistry",
+        "type": "single",
+        "text": "Question 19: Which of the following compounds will show geometrical isomerism?",
+        "options": [
+          "Option 1: 2-butyne",
+          "Option 2: 2-butene",
+          "Option 3: 1-butene",
+          "Option 4: Propene"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c3",
+        "subject": "chemistry",
+        "type": "single",
+        "text": "Question 20: The hybridization of carbon atoms in diamond is:",
+        "options": [
+          "Option 1: sp",
+          "Option 2: sp²",
+          "Option 3: sp³",
+          "Option 4: dsp²"
+        ],
+        "correctOption": 2,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c4",
+        "subject": "chemistry",
+        "type": "single",
+        "text": "Question 21: Which of the following is the strongest acid?",
+        "options": [
+          "Option 1: HF",
+          "Option 2: HCl",
+          "Option 3: HBr",
+          "Option 4: HI"
+        ],
+        "correctOption": 3,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c5",
+        "subject": "chemistry",
         "type": "multiple",
-        "text": "Question 5: Which of the following statements is/are correct about benzene?",
+        "text": "Question 22: Which of the following statements is/are correct about benzene?",
         "options": [
           "Option 1: It has a planar structure",
           "Option 2: All carbon atoms are sp² hybridized",
           "Option 3: It undergoes substitution reactions more readily than addition reactions",
           "Option 4: It has a delocalized π-electron cloud"
         ],
-        "correctOptions": [0, 1, 2, 3],
+        "correctOptions": [
+          0,
+          1,
+          2,
+          3
+        ],
         "marks": 4,
         "negativeMark": -2
       },
       {
-        "id": "p2024-1-c3",
+        "id": "p2024-1-c6",
+        "subject": "chemistry",
+        "type": "multiple",
+        "text": "Question 23: Which of the following statements is/are correct about the periodic table?",
+        "options": [
+          "Option 1: Atomic radius increases down a group",
+          "Option 2: Ionization energy decreases down a group",
+          "Option 3: Electronegativity increases across a period",
+          "Option 4: Metallic character decreases across a period"
+        ],
+        "correctOptions": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-c7",
+        "subject": "chemistry",
+        "type": "multiple",
+        "text": "Question 24: Which of the following statements is/are correct about chemical equilibrium?",
+        "options": [
+          "Option 1: The equilibrium constant depends on temperature",
+          "Option 2: Addition of a catalyst changes the equilibrium constant",
+          "Option 3: The equilibrium shifts in the forward direction when concentration of products is decreased",
+          "Option 4: The equilibrium constant is independent of pressure for reactions involving gases"
+        ],
+        "correctOptions": [
+          0,
+          2
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-c8",
         "subject": "chemistry",
         "type": "integer",
-        "text": "Question 6: The number of isomers possible for an alkene with molecular formula C₄H₈ is:",
+        "text": "Question 25: The number of isomers possible for an alkene with molecular formula C₄H₈ is:",
         "correctAnswer": 4,
         "marks": 4,
         "negativeMark": 0
       },
       {
+        "id": "p2024-1-c9",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 26: The number of sigma bonds in benzene (C₆H₆) is:",
+        "correctAnswer": 12,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-c10",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 27: The oxidation number of chromium in K₂Cr₂O₇ is:",
+        "correctAnswer": 6,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-c11",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 28: The number of structural isomers possible for a compound with molecular formula C₅H₁₂ is:",
+        "correctAnswer": 3,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-c12",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 29: The pH of a 0.001 M HCl solution is:",
+        "correctAnswer": 3,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-c13",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 30: The number of d-electrons in Fe²⁺ ion (Atomic number of Fe = 26) is:",
+        "correctAnswer": 6,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-c14",
+        "subject": "chemistry",
+        "type": "match",
+        "text": "Question 31: Match List I (Compounds) with List II (Functional groups) and select the correct answer using the code given below:",
+        "listI": [
+          "CH₃COOH",
+          "CH₃CHO",
+          "CH₃OH",
+          "CH₃NH₂"
+        ],
+        "listII": [
+          "Aldehyde",
+          "Alcohol",
+          "Amine",
+          "Carboxylic acid"
+        ],
+        "options": [
+          "Option 1: A-D, B-A, C-B, D-C",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-C, B-D, C-A, D-B",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c15",
+        "subject": "chemistry",
+        "type": "match",
+        "text": "Question 32: Match List I (Elements) with List II (Properties) and select the correct answer using the code given below:",
+        "listI": [
+          "Sodium",
+          "Chlorine",
+          "Neon",
+          "Carbon"
+        ],
+        "listII": [
+          "Inert gas",
+          "Halogen",
+          "Alkali metal",
+          "Non-metal"
+        ],
+        "options": [
+          "Option 1: A-C, B-B, C-A, D-D",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-D, B-A, C-B, D-C",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c16",
+        "subject": "chemistry",
+        "type": "match",
+        "text": "Question 33: Match List I (Reactions) with List II (Types) and select the correct answer using the code given below:",
+        "listI": [
+          "Aldol condensation",
+          "Cannizzaro reaction",
+          "Friedel-Crafts reaction",
+          "Wurtz reaction"
+        ],
+        "listII": [
+          "Alkylation",
+          "Disproportionation",
+          "Condensation",
+          "Coupling"
+        ],
+        "options": [
+          "Option 1: A-C, B-B, C-A, D-D",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-D, B-A, C-B, D-C",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-c17",
+        "subject": "chemistry",
+        "type": "match",
+        "text": "Question 34: Match List I (Compounds) with List II (Uses) and select the correct answer using the code given below:",
+        "listI": [
+          "Sodium hydroxide",
+          "Calcium carbonate",
+          "Sulfuric acid",
+          "Sodium chloride"
+        ],
+        "listII": [
+          "Cement manufacturing",
+          "Food preservative",
+          "Battery electrolyte",
+          "Soap making"
+        ],
+        "options": [
+          "Option 1: A-D, B-A, C-C, D-B",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-C, B-D, C-A, D-B",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
         "id": "p2024-1-m1",
         "subject": "mathematics",
         "type": "single",
-        "text": "Question 7: If α and β are the roots of the equation x² - 5x + 6 = 0, then the value of α³ + β³ is:",
+        "text": "Question 35: If α and β are the roots of the equation x² - 5x + 6 = 0, then the value of α³ + β³ is:",
         "options": [
           "Option 1: 125",
           "Option 2: 91",
@@ -104,201 +592,23 @@
       {
         "id": "p2024-1-m2",
         "subject": "mathematics",
-        "type": "multiple",
-        "text": "Question 8: Which of the following statements is/are correct about the function f(x) = x³ - 3x² + 3x - 1?",
+        "type": "single",
+        "text": "Question 36: The derivative of sin⁻¹(x) with respect to x is:",
         "options": [
-          "Option 1: f(x) is an increasing function for all x",
-          "Option 2: f(x) has a local minimum at x = 1",
-          "Option 3: f(1) = 0",
-          "Option 4: f'(x) = 3(x-1)²"
+          "Option 1: 1/√(1-x²)",
+          "Option 2: -1/√(1-x²)",
+          "Option 3: 1/(1+x²)",
+          "Option 4: -1/(1+x²)"
         ],
-        "correctOptions": [0, 3],
-        "marks": 4,
-        "negativeMark": -2
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
       },
       {
         "id": "p2024-1-m3",
         "subject": "mathematics",
-        "type": "integer",
-        "text": "Question 9: The value of ∫(0 to π/2) sin²x cos²x dx is equal to:",
-        "correctAnswer": 16,
-        "marks": 4,
-        "negativeMark": 0
-      }
-    ]
-  },
-  {
-    "id": "2024-adv-p2",
-    "type": "jee-advanced",
-    "name": "JEE Advanced 2024 Paper 2",
-    "year": "2024",
-    "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
-    "createdAt": "2024-05-26T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2024-2-p1",
-        "subject": "physics",
         "type": "single",
-        "text": "Question 1: A uniform rod of length L and mass M is suspended from one end by a string. The tension in the string is:",
-        "options": [
-          "Option 1: Mg",
-          "Option 2: Mg/2",
-          "Option 3: Mg/3",
-          "Option 4: Mg/4"
-        ],
-        "correctOption": 1,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2024-2-p2",
-        "subject": "physics",
-        "type": "multiple",
-        "text": "Question 2: Which of the following statements is/are correct about electromagnetic waves?",
-        "options": [
-          "Option 1: They are transverse waves",
-          "Option 2: They can travel through vacuum",
-          "Option 3: Their speed depends on the medium",
-          "Option 4: They carry energy and momentum"
-        ],
-        "correctOptions": [0, 1, 2, 3],
-        "marks": 4,
-        "negativeMark": -2
-      },
-      {
-        "id": "p2024-2-p3",
-        "subject": "physics",
-        "type": "integer",
-        "text": "Question 3: A particle executes simple harmonic motion with amplitude 10 cm and time period 2 seconds. The maximum speed (in cm/s) of the particle is:",
-        "correctAnswer": 31,
-        "marks": 4,
-        "negativeMark": 0
-      },
-      {
-        "id": "p2024-2-c1",
-        "subject": "chemistry",
-        "type": "single",
-        "text": "Question 4: Which of the following compounds will show geometrical isomerism?",
-        "options": [
-          "Option 1: 2-butyne",
-          "Option 2: 2-butene",
-          "Option 3: 1-butene",
-          "Option 4: Propene"
-        ],
-        "correctOption": 1,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2024-2-c2",
-        "subject": "chemistry",
-        "type": "multiple",
-        "text": "Question 5: Which of the following statements is/are correct about the periodic table?",
-        "options": [
-          "Option 1: Atomic radius increases down a group",
-          "Option 2: Ionization energy decreases down a group",
-          "Option 3: Electronegativity increases across a period",
-          "Option 4: Metallic character decreases across a period"
-        ],
-        "correctOptions": [0, 1, 2, 3],
-        "marks": 4,
-        "negativeMark": -2
-      },
-      {
-        "id": "p2024-2-c3",
-        "subject": "chemistry",
-        "type": "integer",
-        "text": "Question 6: The number of sigma bonds in benzene (C₆H₆) is:",
-        "correctAnswer": 12,
-        "marks": 4,
-        "negativeMark": 0
-      },
-      {
-        "id": "p2024-2-m1",
-        "subject": "mathematics",
-        "type": "single",
-        "text": "Question 7: The value of ∫(0 to π/2) sin²x cos²x dx is:",
-        "options": [
-          "Option 1: π/8",
-          "Option 2: π/16",
-          "Option 3: π/32",
-          "Option 4: π/64"
-        ],
-        "correctOption": 1,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2024-2-m2",
-        "subject": "mathematics",
-        "type": "multiple",
-        "text": "Question 8: Which of the following statements is/are correct about the function f(x) = |x - 1| + |x - 2|?",
-        "options": [
-          "Option 1: f(x) has a minimum value at x = 1.5",
-          "Option 2: f(x) is differentiable at x = 1",
-          "Option 3: f(x) is continuous for all real x",
-          "Option 4: f(x) = 2x - 3 for x ≥ 2"
-        ],
-        "correctOptions": [0, 2, 3],
-        "marks": 4,
-        "negativeMark": -2
-      },
-      {
-        "id": "p2024-2-m3",
-        "subject": "mathematics",
-        "type": "integer",
-        "text": "Question 9: The number of solutions of the equation tan x = x in the interval [0, 2π] is:",
-        "correctAnswer": 3,
-        "marks": 4,
-        "negativeMark": 0
-      }
-    ]
-  },
-  {
-    "id": "2023-adv-p1",
-    "type": "jee-advanced",
-    "name": "JEE Advanced 2023 Paper 1",
-    "year": "2023",
-    "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
-    "createdAt": "2023-06-04T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2023-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body of mass 2 kg is moving with a velocity of 10 m/s. It is subjected to a force which produces a constant power of 100 W. The velocity of the body after 5 seconds is:",
-        "options": [
-          "Option 1: 15 m/s",
-          "Option 2: 20 m/s",
-          "Option 3: 25 m/s",
-          "Option 4: 30 m/s"
-        ],
-        "correctOption": 1,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2023-1-c1",
-        "subject": "chemistry",
-        "type": "single",
-        "text": "Question 2: The hybridization of carbon atoms in diamond is:",
-        "options": [
-          "Option 1: sp",
-          "Option 2: sp²",
-          "Option 3: sp³",
-          "Option 4: dsp²"
-        ],
-        "correctOption": 2,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2023-1-m1",
-        "subject": "mathematics",
-        "type": "single",
-        "text": "Question 3: If the lines 2x + 3y = 5 and 3x + ky = 8 are perpendicular to each other, then the value of k is:",
+        "text": "Question 37: If the lines 2x + 3y = 5 and 3x + ky = 8 are perpendicular to each other, then the value of k is:",
         "options": [
           "Option 1: -2",
           "Option 2: 2",
@@ -308,53 +618,12 @@
         "correctOption": 0,
         "marks": 3,
         "negativeMark": -1
-      }
-    ]
-  },
-  {
-    "id": "2023-adv-p2",
-    "type": "jee-advanced",
-    "name": "JEE Advanced 2023 Paper 2",
-    "year": "2023",
-    "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
-    "createdAt": "2023-06-04T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2023-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A simple pendulum of length 1 m has a time period T. If the length is increased to 4 m, the new time period will be:",
-        "options": [
-          "Option 1: T",
-          "Option 2: 2T",
-          "Option 3: T/2",
-          "Option 4: 4T"
-        ],
-        "correctOption": 1,
-        "marks": 3,
-        "negativeMark": -1
       },
       {
-        "id": "p2023-2-c1",
-        "subject": "chemistry",
-        "type": "single",
-        "text": "Question 2: Which of the following is the strongest acid?",
-        "options": [
-          "Option 1: HF",
-          "Option 2: HCl",
-          "Option 3: HBr",
-          "Option 4: HI"
-        ],
-        "correctOption": 3,
-        "marks": 3,
-        "negativeMark": -1
-      },
-      {
-        "id": "p2023-2-m1",
+        "id": "p2024-1-m4",
         "subject": "mathematics",
         "type": "single",
-        "text": "Question 3: The value of ∫(0 to 1) x²e^x dx is:",
+        "text": "Question 38: The value of ∫(0 to 1) x²e^x dx is:",
         "options": [
           "Option 1: e - 2",
           "Option 2: e - 3",
@@ -364,8 +633,267 @@
         "correctOption": 0,
         "marks": 3,
         "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-m5",
+        "subject": "mathematics",
+        "type": "multiple",
+        "text": "Question 39: Which of the following statements is/are correct about the function f(x) = x³ - 3x² + 3x - 1?",
+        "options": [
+          "Option 1: f(x) is an increasing function for all x",
+          "Option 2: f(x) has a local minimum at x = 1",
+          "Option 3: f(1) = 0",
+          "Option 4: f'(x) = 3(x-1)²"
+        ],
+        "correctOptions": [
+          0,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-m6",
+        "subject": "mathematics",
+        "type": "multiple",
+        "text": "Question 40: Which of the following statements is/are correct about the function f(x) = |x - 1| + |x - 2|?",
+        "options": [
+          "Option 1: f(x) has a minimum value at x = 1.5",
+          "Option 2: f(x) is differentiable at x = 1",
+          "Option 3: f(x) is continuous for all real x",
+          "Option 4: f(x) = 2x - 3 for x ≥ 2"
+        ],
+        "correctOptions": [
+          0,
+          2,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-m7",
+        "subject": "mathematics",
+        "type": "multiple",
+        "text": "Question 41: Which of the following statements is/are correct about the sequence {an} where an = n²/(n+1)?",
+        "options": [
+          "Option 1: The sequence is monotonically increasing",
+          "Option 2: The sequence is bounded above",
+          "Option 3: The sequence converges to 1",
+          "Option 4: The sequence diverges to infinity"
+        ],
+        "correctOptions": [
+          0,
+          3
+        ],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-1-m8",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 42: The value of ∫(0 to π/2) sin²x cos²x dx is equal to:",
+        "correctAnswer": 16,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m9",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 43: The number of solutions of the equation tan x = x in the interval [0, 2π] is:",
+        "correctAnswer": 3,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m10",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 44: The sum of the first 10 terms of the arithmetic progression 5, 8, 11, ... is:",
+        "correctAnswer": 140,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m11",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 45: The number of ways to arrange the letters of the word 'MATHEMATICS' is:",
+        "correctAnswer": 75600,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m12",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 46: The coefficient of x⁵ in the expansion of (1 + x)¹⁰ is:",
+        "correctAnswer": 252,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m13",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 47: The value of the determinant |2 3 1; 4 5 2; 6 7 3| is:",
+        "correctAnswer": 0,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-1-m14",
+        "subject": "mathematics",
+        "type": "match",
+        "text": "Question 48: Match List I (Functions) with List II (Properties) and select the correct answer using the code given below:",
+        "listI": [
+          "sin x",
+          "cos x",
+          "tan x",
+          "sec x"
+        ],
+        "listII": [
+          "Even function",
+          "Odd function",
+          "Period π",
+          "Period 2π"
+        ],
+        "options": [
+          "Option 1: A-B, B-A, C-C, D-A",
+          "Option 2: A-C, B-D, C-A, D-B",
+          "Option 3: A-D, B-C, C-B, D-A",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-m15",
+        "subject": "mathematics",
+        "type": "match",
+        "text": "Question 49: Match List I (Curves) with List II (Equations) and select the correct answer using the code given below:",
+        "listI": [
+          "Circle",
+          "Ellipse",
+          "Parabola",
+          "Hyperbola"
+        ],
+        "listII": [
+          "x²/a² + y²/b² = 1",
+          "x²/a² - y²/b² = 1",
+          "y² = 4ax",
+          "x² + y² = r²"
+        ],
+        "options": [
+          "Option 1: A-D, B-A, C-C, D-B",
+          "Option 2: A-B, B-C, C-D, D-A",
+          "Option 3: A-C, B-D, C-A, D-B",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-m16",
+        "subject": "mathematics",
+        "type": "match",
+        "text": "Question 50: Match List I (Concepts) with List II (Applications) and select the correct answer using the code given below:",
+        "listI": [
+          "Differentiation",
+          "Integration",
+          "Matrices",
+          "Probability"
+        ],
+        "listII": [
+          "Area under a curve",
+          "Rate of change",
+          "Linear transformations",
+          "Random experiments"
+        ],
+        "options": [
+          "Option 1: A-B, B-A, C-C, D-D",
+          "Option 2: A-C, B-D, C-A, D-B",
+          "Option 3: A-D, B-C, C-B, D-A",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-1-m17",
+        "subject": "mathematics",
+        "type": "match",
+        "text": "Question 51: Match List I (Theorems) with List II (Mathematicians) and select the correct answer using the code given below:",
+        "listI": [
+          "Fundamental theorem of calculus",
+          "Pythagorean theorem",
+          "Fermat's last theorem",
+          "Rolle's theorem"
+        ],
+        "listII": [
+          "Pythagoras",
+          "Newton-Leibniz",
+          "Rolle",
+          "Fermat-Wiles"
+        ],
+        "options": [
+          "Option 1: A-B, B-A, C-D, D-C",
+          "Option 2: A-C, B-D, C-A, D-B",
+          "Option 3: A-D, B-C, C-B, D-A",
+          "Option 4: A-A, B-B, C-C, D-D"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
       }
     ]
+  },
+  {
+    "id": "2024-adv-p2",
+    "type": "jee-advanced",
+    "name": "JEE Advanced 2024 Paper 2",
+    "year": "2024",
+    "paperNumber": "2",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2024-05-26T14:00:00.000Z",
+    "questions": []
+  },
+  {
+    "id": "2023-adv-p1",
+    "type": "jee-advanced",
+    "name": "JEE Advanced 2023 Paper 1",
+    "year": "2023",
+    "paperNumber": "1",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2023-06-04T10:00:00.000Z",
+    "questions": []
+  },
+  {
+    "id": "2023-adv-p2",
+    "type": "jee-advanced",
+    "name": "JEE Advanced 2023 Paper 2",
+    "year": "2023",
+    "paperNumber": "2",
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
+    "createdAt": "2023-06-04T14:00:00.000Z",
+    "questions": []
   },
   {
     "id": "2022-adv-p1",
@@ -373,25 +901,13 @@
     "name": "JEE Advanced 2022 Paper 1",
     "year": "2022",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2022-06-26T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2022-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A particle moves in a circle of radius 5 cm with constant speed and time period 0.2π seconds. The acceleration of the particle is:",
-        "options": [
-          "Option 1: 5 cm/s²",
-          "Option 2: 10 cm/s²",
-          "Option 3: 20 cm/s²",
-          "Option 4: 50 cm/s²"
-        ],
-        "correctOption": 3,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2022-adv-p2",
@@ -399,25 +915,13 @@
     "name": "JEE Advanced 2022 Paper 2",
     "year": "2022",
     "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2022-06-26T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2022-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body is thrown vertically upward with a velocity of 19.6 m/s. The maximum height reached by the body is: (g = 9.8 m/s²)",
-        "options": [
-          "Option 1: 19.6 m",
-          "Option 2: 9.8 m",
-          "Option 3: 39.2 m",
-          "Option 4: 4.9 m"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2021-adv-p1",
@@ -425,25 +929,13 @@
     "name": "JEE Advanced 2021 Paper 1",
     "year": "2021",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2021-10-03T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2021-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A ball is dropped from a height of 20 m. If the coefficient of restitution is 0.5, the height reached after the first bounce is:",
-        "options": [
-          "Option 1: 5 m",
-          "Option 2: 10 m",
-          "Option 3: 2.5 m",
-          "Option 4: 1.25 m"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2021-adv-p2",
@@ -451,25 +943,13 @@
     "name": "JEE Advanced 2021 Paper 2",
     "year": "2021",
     "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2021-10-03T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2021-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: Two identical charged particles are placed at a distance d apart. If the force between them is F, then the force between them when placed at a distance 2d apart will be:",
-        "options": [
-          "Option 1: F/4",
-          "Option 2: F/2",
-          "Option 3: 2F",
-          "Option 4: 4F"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2020-adv-p1",
@@ -477,25 +957,13 @@
     "name": "JEE Advanced 2020 Paper 1",
     "year": "2020",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2020-09-27T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2020-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body of mass m is attached to a spring of spring constant k. The time period of oscillation is:",
-        "options": [
-          "Option 1: 2π√(m/k)",
-          "Option 2: 2π√(k/m)",
-          "Option 3: π√(m/k)",
-          "Option 4: π√(k/m)"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2020-adv-p2",
@@ -503,25 +971,13 @@
     "name": "JEE Advanced 2020 Paper 2",
     "year": "2020",
     "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2020-09-27T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2020-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body is projected with a velocity of 20 m/s at an angle of 30° with the horizontal. The maximum height reached by the body is: (g = 10 m/s²)",
-        "options": [
-          "Option 1: 5 m",
-          "Option 2: 10 m",
-          "Option 3: 15 m",
-          "Option 4: 20 m"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2019-adv-p1",
@@ -529,25 +985,13 @@
     "name": "JEE Advanced 2019 Paper 1",
     "year": "2019",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2019-05-27T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2019-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body is moving with a velocity of 10 m/s. If a force of 5 N acts on it for 2 seconds, the final velocity of the body will be: (mass of the body = 2 kg)",
-        "options": [
-          "Option 1: 15 m/s",
-          "Option 2: 20 m/s",
-          "Option 3: 25 m/s",
-          "Option 4: 30 m/s"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2019-adv-p2",
@@ -555,25 +999,13 @@
     "name": "JEE Advanced 2019 Paper 2",
     "year": "2019",
     "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2019-05-27T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2019-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body of mass 2 kg is moving with a velocity of 10 m/s. The kinetic energy of the body is:",
-        "options": [
-          "Option 1: 100 J",
-          "Option 2: 200 J",
-          "Option 3: 50 J",
-          "Option 4: 20 J"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2018-adv-p1",
@@ -581,25 +1013,13 @@
     "name": "JEE Advanced 2018 Paper 1",
     "year": "2018",
     "paperNumber": "1",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2018-05-20T10:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2018-1-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body is thrown vertically upward with a velocity of 49 m/s. The time taken by the body to reach the maximum height is: (g = 9.8 m/s²)",
-        "options": [
-          "Option 1: 5 s",
-          "Option 2: 10 s",
-          "Option 3: 2.5 s",
-          "Option 4: 4.9 s"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   },
   {
     "id": "2018-adv-p2",
@@ -607,24 +1027,12 @@
     "name": "JEE Advanced 2018 Paper 2",
     "year": "2018",
     "paperNumber": "2",
-    "subjects": ["physics", "chemistry", "mathematics"],
+    "subjects": [
+      "physics",
+      "chemistry",
+      "mathematics"
+    ],
     "createdAt": "2018-05-20T14:00:00.000Z",
-    "questions": [
-      {
-        "id": "p2018-2-p1",
-        "subject": "physics",
-        "type": "single",
-        "text": "Question 1: A body is moving in a circle of radius 10 cm with constant speed. If the body takes 2 seconds to complete one revolution, the speed of the body is:",
-        "options": [
-          "Option 1: 10π cm/s",
-          "Option 2: 20π cm/s",
-          "Option 3: 5π cm/s",
-          "Option 4: 40π cm/s"
-        ],
-        "correctOption": 0,
-        "marks": 3,
-        "negativeMark": -1
-      }
-    ]
+    "questions": []
   }
 ]
