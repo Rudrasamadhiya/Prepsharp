@@ -299,7 +299,8 @@
                 <td class="actions">
                     <a href="exam.html?id=1007" class="btn secondary">View</a>
                     <a href="add-question.html?paperId=1007" class="btn primary">Add Questions</a>
-                    <a href="pdf-viewer.html" class="btn accent">View PDF</a>
+                    <a href="pdf-viewer.html?id=1007" class="btn accent">PDF</a>
+                    <button class="btn danger" onclick="deletePaper('1007')">Delete</button>
                 </td>
             `;
             examsListElement.appendChild(jeeAdvanced2024Row);
@@ -325,6 +326,7 @@
                     <td class="actions">
                         <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
                         <a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>
+                        <a href="pdf-viewer.html?id=${paper.id}" class="btn accent">PDF</a>
                         <button class="btn danger" onclick="deletePaper('${paper.id}')">Delete</button>
                     </td>
                 `;
