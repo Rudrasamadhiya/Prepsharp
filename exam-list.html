@@ -299,37 +299,11 @@
             // Clear existing content
             examListElement.innerHTML = '';
             
-            // Add JEE Advanced 2024 Paper 1 at the top if we're on JEE Advanced page
-            if (examType === 'jee-advanced') {
-                const jeeAdvanced2024Card = document.createElement('div');
-                jeeAdvanced2024Card.className = 'exam-card highlight';
-                jeeAdvanced2024Card.innerHTML = `
-                    <div class="exam-header">
-                        <h3>JEE Advanced 2024 - Paper 1</h3>
-                    </div>
-                    <div class="exam-body">
-                        <p>Official JEE Advanced 2024 Paper 1</p>
-                        <div class="exam-meta">
-                            <span>Date: May 26, 2024</span>
-                        </div>
-                        <div style="margin-top: 10px;">
-                            <span class="badge physics">Physics</span>
-                            <span class="badge chemistry">Chemistry</span>
-                            <span class="badge mathematics">Mathematics</span>
-                        </div>
-                    </div>
-                    <div class="exam-footer">
-                        <a href="exam.html?id=1007" class="btn primary">Start Exam</a>
-                        <a href="pdf-viewer.html" class="btn secondary">View PDF</a>
-                    </div>
-                `;
-                examListElement.appendChild(jeeAdvanced2024Card);
-            }
+            // JEE Advanced 2024 Paper 1 has been removed
             
             // Render each paper
             filteredPapers.forEach(paper => {
-                // Skip the JEE Advanced 2024 Paper 1 as we've already added it
-                if (paper.id === '1007') return;
+                // No papers to skip
                 
                 const examCard = document.createElement('div');
                 examCard.className = 'exam-card';
