@@ -6,6 +6,7 @@
     "paperNumber": 1,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
