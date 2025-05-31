@@ -23,6 +23,7 @@
     "paperNumber": 2,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -40,6 +41,7 @@
     "paperNumber": 1,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -58,6 +60,7 @@
     "paperNumber": 2,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -76,6 +79,7 @@
     "paperNumber": 1,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -92,6 +96,7 @@
     "paperNumber": 2,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -108,6 +113,7 @@
     "paperNumber": 1,
     "totalQuestions": 57,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -125,6 +131,7 @@
     "paperNumber": 2,
     "totalQuestions": 57,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -142,6 +149,7 @@
     "paperNumber": 1,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -161,6 +169,7 @@
     "paperNumber": 2,
     "totalQuestions": 54,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 18, "perSubject": 6},
       "multipleCorrectMCQ": {"count": 18, "perSubject": 6},
@@ -180,6 +189,7 @@
     "paperNumber": 1,
     "totalQuestions": 51,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
       "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
@@ -200,6 +210,7 @@
     "paperNumber": 2,
     "totalQuestions": 51,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
       "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
@@ -220,6 +231,7 @@
     "paperNumber": 1,
     "totalQuestions": 51,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
       "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
@@ -242,6 +254,7 @@
     "paperNumber": 2,
     "totalQuestions": 51,
     "subjects": ["Physics", "Chemistry", "Mathematics"],
+    "type": "jee-advanced",
     "questionTypes": {
       "singleCorrectMCQ": {"count": 17, "perSubject": 5.7},
       "multipleCorrectMCQ": {"count": 17, "perSubject": 5.7},
