@@ -296,15 +296,26 @@
                     return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
                 }).join('');
                 
+                // Highlight 2024 papers
+                if (paper.year === 2024) {
+                    row.className = 'highlight';
+                }
+                
+                // Add PDF viewer link if available
+                const pdfLink = paper.pdfPath ? 
+                    `<a href="pdf-viewer.html${paper.paperNumber === 1 ? '' : '?paper=2'}" class="btn accent">View PDF</a>` : 
+                    '';
+                
                 row.innerHTML = `
                     <td>${paper.name}</td>
                     <td>${getExamTypeDisplay(paper.type)}</td>
                     <td>${paper.year}</td>
-                    <td>${paper.questions ? paper.questions.length : 0}</td>
+                    <td>${paper.totalQuestions || (paper.questions ? paper.questions.length : 0)}</td>
                     <td>${subjectBadges}</td>
                     <td class="actions">
                         <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
                         <a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>
+                        ${pdfLink}
                         <button class="btn danger" onclick="deletePaper('${paper.id}')">Delete</button>
                     </td>
                 `;
