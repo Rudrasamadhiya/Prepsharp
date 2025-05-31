@@ -1,0 +1,269 @@
+[
+  {
+    "id": "p2024-1-p1",
+    "subject": "physics",
+    "type": "single",
+    "text": "Question 1: A particle moves along the x-axis such that its position as a function of time is given by x(t) = 4t³ - 6t² + 3t - 5, where x is in meters and t is in seconds. The acceleration of the particle at t = 2 s is:",
+    "options": [
+      "Option 1: 12 m/s²",
+      "Option 2: 18 m/s²",
+      "Option 3: 24 m/s²",
+      "Option 4: 36 m/s²"
+    ],
+    "correctOption": 3,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p2",
+    "subject": "physics",
+    "type": "single",
+    "text": "Question 2: A body of mass 5 kg is moving with a velocity of 2 m/s. The kinetic energy of the body is:",
+    "options": [
+      "Option 1: 5 J",
+      "Option 2: 10 J",
+      "Option 3: 15 J",
+      "Option 4: 20 J"
+    ],
+    "correctOption": 1,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p3",
+    "subject": "physics",
+    "type": "single",
+    "text": "Question 3: A particle is moving with a velocity of 5 m/s at t = 0 and has an acceleration of 2 m/s². Its velocity after 10 seconds is:",
+    "options": [
+      "Option 1: 15 m/s",
+      "Option 2: 20 m/s",
+      "Option 3: 25 m/s",
+      "Option 4: 30 m/s"
+    ],
+    "correctOption": 2,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p4",
+    "subject": "physics",
+    "type": "single",
+    "text": "Question 4: A body is thrown vertically upward with a velocity of 19.6 m/s. The maximum height reached by the body is: (g = 9.8 m/s²)",
+    "options": [
+      "Option 1: 19.6 m",
+      "Option 2: 9.8 m",
+      "Option 3: 39.2 m",
+      "Option 4: 4.9 m"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p5",
+    "subject": "physics",
+    "type": "multiple",
+    "text": "Question 5: Which of the following statements is/are correct about simple harmonic motion?",
+    "options": [
+      "Option 1: The acceleration is proportional to displacement",
+      "Option 2: The total energy remains constant",
+      "Option 3: The velocity is maximum at the mean position",
+      "Option 4: The acceleration is maximum at the extreme positions"
+    ],
+    "correctOptions": [0, 1, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-p6",
+    "subject": "physics",
+    "type": "multiple",
+    "text": "Question 6: Which of the following statements is/are correct about projectile motion?",
+    "options": [
+      "Option 1: The horizontal component of velocity remains constant",
+      "Option 2: The vertical component of velocity changes uniformly",
+      "Option 3: The path followed is parabolic",
+      "Option 4: The acceleration is constant and equal to g"
+    ],
+    "correctOptions": [0, 1, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-p7",
+    "subject": "physics",
+    "type": "multiple",
+    "text": "Question 7: Which of the following statements is/are correct about electromagnetic waves?",
+    "options": [
+      "Option 1: They are transverse waves",
+      "Option 2: They can travel through vacuum",
+      "Option 3: Their speed depends on the medium",
+      "Option 4: They carry energy and momentum"
+    ],
+    "correctOptions": [0, 1, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-p8",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 8: A body of mass 2 kg is moving with a velocity of 10 m/s. If a constant force produces 100 W of power, the velocity (in m/s) of the body after 5 seconds will be:",
+    "correctAnswer": 20,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p9",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 9: A body is projected with a velocity of 20 m/s at an angle of 30° with the horizontal. The time of flight (in seconds) is: (g = 10 m/s²)",
+    "correctAnswer": 2,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p10",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 10: A particle executes simple harmonic motion with amplitude 10 cm and time period 2 seconds. The maximum speed (in cm/s) of the particle is:",
+    "correctAnswer": 31,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p11",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 11: A body of mass 5 kg is moving with a velocity of 4 m/s. The momentum of the body (in kg·m/s) is:",
+    "correctAnswer": 20,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p12",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 12: A body is moving in a circle of radius 10 cm with constant speed. If the body takes 2 seconds to complete one revolution, the speed of the body (in cm/s) is:",
+    "correctAnswer": 31,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p13",
+    "subject": "physics",
+    "type": "integer",
+    "text": "Question 13: A body of mass 2 kg is moving with a velocity of 5 m/s. The kinetic energy of the body (in J) is:",
+    "correctAnswer": 25,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-p14",
+    "subject": "physics",
+    "type": "match",
+    "text": "Question 14: Match List I (Physical quantities) with List II (SI units) and select the correct answer using the code given below:",
+    "listI": [
+      "Force",
+      "Energy",
+      "Power",
+      "Momentum"
+    ],
+    "listII": [
+      "Watt",
+      "Joule",
+      "Newton",
+      "kg·m/s"
+    ],
+    "options": [
+      "Option 1: A-C, B-B, C-A, D-D",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-D, B-A, C-B, D-C",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p15",
+    "subject": "physics",
+    "type": "match",
+    "text": "Question 15: Match List I (Laws) with List II (Scientists) and select the correct answer using the code given below:",
+    "listI": [
+      "Law of gravitation",
+      "Laws of motion",
+      "Law of electromagnetic induction",
+      "Laws of thermodynamics"
+    ],
+    "listII": [
+      "Newton",
+      "Faraday",
+      "Clausius",
+      "Einstein"
+    ],
+    "options": [
+      "Option 1: A-A, B-A, C-B, D-C",
+      "Option 2: A-D, B-C, C-B, D-A",
+      "Option 3: A-B, B-D, C-A, D-C",
+      "Option 4: A-C, B-A, C-D, D-B"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p16",
+    "subject": "physics",
+    "type": "match",
+    "text": "Question 16: Match List I (Physical phenomena) with List II (Applications) and select the correct answer using the code given below:",
+    "listI": [
+      "Photoelectric effect",
+      "Total internal reflection",
+      "Doppler effect",
+      "Nuclear fission"
+    ],
+    "listII": [
+      "Optical fibers",
+      "Solar cells",
+      "Radar systems",
+      "Nuclear reactors"
+    ],
+    "options": [
+      "Option 1: A-B, B-A, C-C, D-D",
+      "Option 2: A-C, B-D, C-A, D-B",
+      "Option 3: A-D, B-C, C-B, D-A",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-p17",
+    "subject": "physics",
+    "type": "match",
+    "text": "Question 17: Match List I (Devices) with List II (Principles) and select the correct answer using the code given below:",
+    "listI": [
+      "Electric motor",
+      "Transformer",
+      "Generator",
+      "Galvanometer"
+    ],
+    "listII": [
+      "Electromagnetic induction",
+      "Magnetic effect of current",
+      "Mutual induction",
+      "Electrostatic force"
+    ],
+    "options": [
+      "Option 1: A-B, B-C, C-A, D-B",
+      "Option 2: A-C, B-D, C-A, D-B",
+      "Option 3: A-D, B-C, C-B, D-A",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  }
+]
