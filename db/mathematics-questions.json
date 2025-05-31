@@ -1,0 +1,269 @@
+[
+  {
+    "id": "p2024-1-m1",
+    "subject": "mathematics",
+    "type": "single",
+    "text": "Question 35: If α and β are the roots of the equation x² - 5x + 6 = 0, then the value of α³ + β³ is:",
+    "options": [
+      "Option 1: 125",
+      "Option 2: 91",
+      "Option 3: 117",
+      "Option 4: 64"
+    ],
+    "correctOption": 1,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m2",
+    "subject": "mathematics",
+    "type": "single",
+    "text": "Question 36: The derivative of sin⁻¹(x) with respect to x is:",
+    "options": [
+      "Option 1: 1/√(1-x²)",
+      "Option 2: -1/√(1-x²)",
+      "Option 3: 1/(1+x²)",
+      "Option 4: -1/(1+x²)"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m3",
+    "subject": "mathematics",
+    "type": "single",
+    "text": "Question 37: If the lines 2x + 3y = 5 and 3x + ky = 8 are perpendicular to each other, then the value of k is:",
+    "options": [
+      "Option 1: -2",
+      "Option 2: 2",
+      "Option 3: -2/3",
+      "Option 4: 2/3"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m4",
+    "subject": "mathematics",
+    "type": "single",
+    "text": "Question 38: The value of ∫(0 to 1) x²e^x dx is:",
+    "options": [
+      "Option 1: e - 2",
+      "Option 2: e - 3",
+      "Option 3: 2e - 5",
+      "Option 4: 2 - e"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m5",
+    "subject": "mathematics",
+    "type": "multiple",
+    "text": "Question 39: Which of the following statements is/are correct about the function f(x) = x³ - 3x² + 3x - 1?",
+    "options": [
+      "Option 1: f(x) is an increasing function for all x",
+      "Option 2: f(x) has a local minimum at x = 1",
+      "Option 3: f(1) = 0",
+      "Option 4: f'(x) = 3(x-1)²"
+    ],
+    "correctOptions": [0, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-m6",
+    "subject": "mathematics",
+    "type": "multiple",
+    "text": "Question 40: Which of the following statements is/are correct about the function f(x) = |x - 1| + |x - 2|?",
+    "options": [
+      "Option 1: f(x) has a minimum value at x = 1.5",
+      "Option 2: f(x) is differentiable at x = 1",
+      "Option 3: f(x) is continuous for all real x",
+      "Option 4: f(x) = 2x - 3 for x ≥ 2"
+    ],
+    "correctOptions": [0, 2, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-m7",
+    "subject": "mathematics",
+    "type": "multiple",
+    "text": "Question 41: Which of the following statements is/are correct about the sequence {an} where an = n²/(n+1)?",
+    "options": [
+      "Option 1: The sequence is monotonically increasing",
+      "Option 2: The sequence is bounded above",
+      "Option 3: The sequence converges to 1",
+      "Option 4: The sequence diverges to infinity"
+    ],
+    "correctOptions": [0, 3],
+    "marks": 4,
+    "negativeMark": -2
+  },
+  {
+    "id": "p2024-1-m8",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 42: The value of ∫(0 to π/2) sin²x cos²x dx is equal to:",
+    "correctAnswer": 16,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m9",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 43: The number of solutions of the equation tan x = x in the interval [0, 2π] is:",
+    "correctAnswer": 3,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m10",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 44: The sum of the first 10 terms of the arithmetic progression 5, 8, 11, ... is:",
+    "correctAnswer": 140,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m11",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 45: The number of ways to arrange the letters of the word 'MATHEMATICS' is:",
+    "correctAnswer": 75600,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m12",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 46: The coefficient of x⁵ in the expansion of (1 + x)¹⁰ is:",
+    "correctAnswer": 252,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m13",
+    "subject": "mathematics",
+    "type": "integer",
+    "text": "Question 47: The value of the determinant |2 3 1; 4 5 2; 6 7 3| is:",
+    "correctAnswer": 0,
+    "marks": 4,
+    "negativeMark": 0
+  },
+  {
+    "id": "p2024-1-m14",
+    "subject": "mathematics",
+    "type": "match",
+    "text": "Question 48: Match List I (Functions) with List II (Properties) and select the correct answer using the code given below:",
+    "listI": [
+      "sin x",
+      "cos x",
+      "tan x",
+      "sec x"
+    ],
+    "listII": [
+      "Even function",
+      "Odd function",
+      "Period π",
+      "Period 2π"
+    ],
+    "options": [
+      "Option 1: A-B, B-A, C-C, D-A",
+      "Option 2: A-C, B-D, C-A, D-B",
+      "Option 3: A-D, B-C, C-B, D-A",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m15",
+    "subject": "mathematics",
+    "type": "match",
+    "text": "Question 49: Match List I (Curves) with List II (Equations) and select the correct answer using the code given below:",
+    "listI": [
+      "Circle",
+      "Ellipse",
+      "Parabola",
+      "Hyperbola"
+    ],
+    "listII": [
+      "x²/a² + y²/b² = 1",
+      "x²/a² - y²/b² = 1",
+      "y² = 4ax",
+      "x² + y² = r²"
+    ],
+    "options": [
+      "Option 1: A-D, B-A, C-C, D-B",
+      "Option 2: A-B, B-C, C-D, D-A",
+      "Option 3: A-C, B-D, C-A, D-B",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m16",
+    "subject": "mathematics",
+    "type": "match",
+    "text": "Question 50: Match List I (Concepts) with List II (Applications) and select the correct answer using the code given below:",
+    "listI": [
+      "Differentiation",
+      "Integration",
+      "Matrices",
+      "Probability"
+    ],
+    "listII": [
+      "Area under a curve",
+      "Rate of change",
+      "Linear transformations",
+      "Random experiments"
+    ],
+    "options": [
+      "Option 1: A-B, B-A, C-C, D-D",
+      "Option 2: A-C, B-D, C-A, D-B",
+      "Option 3: A-D, B-C, C-B, D-A",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  },
+  {
+    "id": "p2024-1-m17",
+    "subject": "mathematics",
+    "type": "match",
+    "text": "Question 51: Match List I (Theorems) with List II (Mathematicians) and select the correct answer using the code given below:",
+    "listI": [
+      "Fundamental theorem of calculus",
+      "Pythagorean theorem",
+      "Fermat's last theorem",
+      "Rolle's theorem"
+    ],
+    "listII": [
+      "Pythagoras",
+      "Newton-Leibniz",
+      "Rolle",
+      "Fermat-Wiles"
+    ],
+    "options": [
+      "Option 1: A-B, B-A, C-D, D-C",
+      "Option 2: A-C, B-D, C-A, D-B",
+      "Option 3: A-D, B-C, C-B, D-A",
+      "Option 4: A-A, B-B, C-C, D-D"
+    ],
+    "correctOption": 0,
+    "marks": 3,
+    "negativeMark": -1
+  }
+]
