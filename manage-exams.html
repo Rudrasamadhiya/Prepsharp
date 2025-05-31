@@ -241,9 +241,9 @@
                 // Clear any cached data and load directly from file
                 localStorage.removeItem('papers');
                 
-                    // Try to load from papers.json directly with cache busting
+                    // Try to load from papers.json directly
                     localStorage.removeItem('papers'); // Clear existing cache
-                    fetch('db/papers.json?v=' + new Date().getTime())
+                    fetch('papers.json')
                         .then(response => response.json())
                         .then(papers => {
                             renderPapers(papers);
