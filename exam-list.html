@@ -278,7 +278,14 @@
             // Filter papers by exam type if specified
             let filteredPapers = papers;
             if (examType) {
-                filteredPapers = papers.filter(paper => paper.type === examType);
+                // For JEE Advanced, include papers with IDs starting with 'jee-adv'
+                if (examType === 'jee-advanced') {
+                    filteredPapers = papers.filter(paper => 
+                        paper.type === examType || paper.id.startsWith('jee-adv')
+                    );
+                } else {
+                    filteredPapers = papers.filter(paper => paper.type === examType);
+                }
             }
             
             // Sort papers by year (newest first)
@@ -299,31 +306,59 @@
             // Clear existing content
             examListElement.innerHTML = '';
             
-            // Add JEE Advanced 2024 Paper 1 at the top if we're on JEE Advanced page
+            // Display papers from papers.json
             if (examType === 'jee-advanced') {
-                const jeeAdvanced2024Card = document.createElement('div');
-                jeeAdvanced2024Card.className = 'exam-card highlight';
-                jeeAdvanced2024Card.innerHTML = `
-                    <div class="exam-header">
-                        <h3>JEE Advanced 2024 - Paper 1</h3>
-                    </div>
-                    <div class="exam-body">
-                        <p>Official JEE Advanced 2024 Paper 1</p>
-                        <div class="exam-meta">
-                            <span>Date: May 26, 2024</span>
+                // We'll display papers from the papers.json file instead of hardcoding
+                const jeeAdvancedPapers = filteredPapers.filter(paper => paper.id.startsWith('jee-adv'));
+                
+                // Sort by year and paper number (newest first)
+                jeeAdvancedPapers.sort((a, b) => {
+                    if (a.year !== b.year) {
+                        return b.year - a.year;
+                    }
+                    return b.paperNumber - a.paperNumber;
+                });
+                
+                // Clear existing content again to ensure proper order
+                examListElement.innerHTML = '';
+                
+                // Render each JEE Advanced paper
+                jeeAdvancedPapers.forEach(paper => {
+                    const examCard = document.createElement('div');
+                    // Highlight 2024 papers
+                    examCard.className = paper.year === 2024 ? 'exam-card highlight' : 'exam-card';
+                    
+                    const viewPdfLink = paper.pdfPath ? 
+                        `<a href="pdf-viewer.html${paper.paperNumber === 1 ? '' : '?paper=2'}" class="btn secondary">View PDF</a>` : 
+                        '';
+                    
+                    examCard.innerHTML = `
+                        <div class="exam-header">
+                            <h3>${paper.name}</h3>
                         </div>
-                        <div style="margin-top: 10px;">
-                            <span class="badge physics">Physics</span>
-                            <span class="badge chemistry">Chemistry</span>
-                            <span class="badge mathematics">Mathematics</span>
+                        <div class="exam-body">
+                            <p>JEE Advanced Examination</p>
+                            <div class="exam-meta">
+                                <span>Year: ${paper.year}</span>
+                                ${paper.examDate ? ` | Date: ${paper.examDate}` : ''}
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <span class="badge physics">Physics</span>
+                                <span class="badge chemistry">Chemistry</span>
+                                <span class="badge mathematics">Mathematics</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="exam-footer">
-                        <a href="exam.html?id=1007" class="btn primary">Start Exam</a>
-                        <a href="pdf-viewer.html" class="btn secondary">View PDF</a>
-                    </div>
-                `;
-                examListElement.appendChild(jeeAdvanced2024Card);
+                        <div class="exam-footer">
+                            <a href="exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
+                            ${viewPdfLink}
+                        </div>
+                    `;
+                    
+                    examListElement.appendChild(examCard);
+                });
+                
+                // Return early as we've already rendered the papers
+                return;
             }
             
             // Render each paper
