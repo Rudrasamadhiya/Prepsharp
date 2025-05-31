@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>Add Question - JEE Advanced</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; }
+        .btn { padding: 10px 15px; background: #1976d2; color: white; border: none; cursor: pointer; }
+        .success { background: #d4edda; color: #155724; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class=\"container\">
+        <h1>Add Question to JEE Advanced Paper</h1>
+        
+        <div id=\"message\" style=\"display:none;\"></div>
+        
+        <form id=\"questionForm\">
+            <div class=\"form-group\">
+                <label for=\"paperId\">Select Paper:</label>
+                <select id=\"paperId\" required>
+                    <option value=\"1007\">JEE Advanced 2024 Paper 1</option>
+                </select>
+            </div>
+            
+            <div class=\"form-group\">
+                <label for=\"subject\">Subject:</label>
+                <select id=\"subject\" required>
+                    <option value=\"physics\">Physics</option>
+                    <option value=\"chemistry\">Chemistry</option>
+                    <option value=\"mathematics\">Mathematics</option>
+                </select>
+            </div>
+            
+            <div class=\"form-group\">
+                <label for=\"questionText\">Question Text:</label>
+                <textarea id=\"questionText\" rows=\"4\" required></textarea>
+            </div>
+            
+            <div class=\"form-group\">
+                <label for=\"questionType\">Question Type:</label>
+                <select id=\"questionType\" required>
+                    <option value=\"scq\">Single Choice Question</option>
+                    <option value=\"mcq\">Multiple Choice Question</option>
+                </select>
+            </div>
+            
+            <div id=\"options\">
+                <div class=\"form-group\">
+                    <label>Option A:</label>
+                    <input type=\"text\" id=\"optionA\" required>
+                    <input type=\"checkbox\" id=\"correctA\"> Correct
+                </div>
+                
+                <div class=\"form-group\">
+                    <label>Option B:</label>
+                    <input type=\"text\" id=\"optionB\" required>
+                    <input type=\"checkbox\" id=\"correctB\"> Correct
+                </div>
+                
+                <div class=\"form-group\">
+                    <label>Option C:</label>
+                    <input type=\"text\" id=\"optionC\" required>
+                    <input type=\"checkbox\" id=\"correctC\"> Correct
+                </div>
+                
+                <div class=\"form-group\">
+                    <label>Option D:</label>
+                    <input type=\"text\" id=\"optionD\" required>
+                    <input type=\"checkbox\" id=\"correctD\"> Correct
+                </div>
+            </div>
+            
+            <button type=\"submit\" class=\"btn\">Add Question</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('questionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const paperId = document.getElementById('paperId').value;
+            const subject = document.getElementById('subject').value;
+            const questionText = document.getElementById('questionText').value;
+            const questionType = document.getElementById('questionType').value;
+            
+            // Create options array
+            const options = [
+                {
+                    text: document.getElementById('optionA').value,
+                    correct: document.getElementById('correctA').checked
+                },
+                {
+                    text: document.getElementById('optionB').value,
+                    correct: document.getElementById('correctB').checked
+                },
+                {
+                    text: document.getElementById('optionC').value,
+                    correct: document.getElementById('correctC').checked
+                },
+                {
+                    text: document.getElementById('optionD').value,
+                    correct: document.getElementById('correctD').checked
+                }
+            ];
+            
+            // Create question object
+            const question = {
+                id: Date.now().toString(),
+                type: questionType,
+                text: questionText,
+                subject: subject,
+                options: options
+            };
+            
+            // Send to server
+            fetch(`/api/papers/${paperId}/questions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(question)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(`Question added successfully! Total questions: ${data.totalQuestions}`, 'success');
+                    document.getElementById('questionForm').reset();
+                } else {
+                    showMessage('Error: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Fallback for offline mode
+                addQuestionLocally(paperId, question);
+            });
+        });
+        
+        // Fallback function for offline mode
+        function addQuestionLocally(paperId, question) {
+            // Get papers from localStorage
+            let papers = JSON.parse(localStorage.getItem('papers') || '[]');
+            
+            // Find the paper
+            const paperIndex = papers.findIndex(p => p.id === paperId);
+            
+            if (paperIndex === -1) {
+                // Paper not found, create it
+                papers.push({
+                    id: paperId,
+                    type: 'jee-advanced',
+                    name: 'JEE Advanced 2024 Paper 1',
+                    questions: [question]
+                });
+            } else {
+                // Add question to existing paper
+                if (!papers[paperIndex].questions) {
+                    papers[paperIndex].questions = [];
+                }
+                papers[paperIndex].questions.push(question);
+            }
+            
+            // Save back to localStorage
+            localStorage.setItem('papers', JSON.stringify(papers));
+            
+            showMessage('Question added locally (offline mode)', 'success');
+        }
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Handle single choice question type
+        document.getElementById('questionType').addEventListener('change', function() {
+            const isSCQ = this.value === 'scq';
+            
+            if (isSCQ) {
+                // For SCQ, ensure only one option can be selected
+                const checkboxes = ['correctA', 'correctB', 'correctC', 'correctD'];
+                
+                checkboxes.forEach(id => {
+                    document.getElementById(id).addEventListener('change', function() {
+                        if (this.checked) {
+                            checkboxes.forEach(otherId => {
+                                if (otherId !== id) {
+                                    document.getElementById(otherId).checked = false;
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
