@@ -283,32 +283,11 @@
             // Clear existing content
             examsListElement.innerHTML = '';
             
-            // Add JEE Advanced 2024 Paper 1 at the top
-            const jeeAdvanced2024Row = document.createElement('tr');
-            jeeAdvanced2024Row.className = 'highlight';
-            jeeAdvanced2024Row.innerHTML = `
-                <td>JEE Advanced 2024 - Paper 1</td>
-                <td>JEE Advanced</td>
-                <td>2024</td>
-                <td>6</td>
-                <td>
-                    <span class="badge physics">Physics</span>
-                    <span class="badge chemistry">Chemistry</span>
-                    <span class="badge mathematics">Mathematics</span>
-                </td>
-                <td class="actions">
-                    <a href="exam.html?id=1007" class="btn secondary">View</a>
-                    <a href="add-question.html?paperId=1007" class="btn primary">Add Questions</a>
-                    <a href="pdf-viewer.html?id=1007" class="btn accent">PDF</a>
-                    <button class="btn danger" onclick="deletePaper('1007')">Delete</button>
-                </td>
-            `;
-            examsListElement.appendChild(jeeAdvanced2024Row);
+            // No special paper at the top
             
             // Render each paper
             papers.forEach(paper => {
-                // Skip the JEE Advanced 2024 Paper 1 as we've already added it
-                if (paper.id === '1007') return;
+                // Display all papers
                 
                 const row = document.createElement('tr');
                 
@@ -321,7 +300,7 @@
                     <td>${paper.name}</td>
                     <td>${getExamTypeDisplay(paper.type)}</td>
                     <td>${paper.year}</td>
-                    <td>${paper.questions ? paper.questions.length : 0}</td>
+                    <td>${Array.isArray(paper.questions) ? paper.questions.length : 0}</td>
                     <td>${subjectBadges}</td>
                     <td class="actions">
                         <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
