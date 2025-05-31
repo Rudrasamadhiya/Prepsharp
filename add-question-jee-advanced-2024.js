@@ -2,16 +2,16 @@
 const jeeAdvanced2024 = {
     // Paper configuration
     paperConfig: {
-        paper2: {
-            name: "JEE Advanced 2024: Paper 2",
+        paper1: {
+            name: "JEE Advanced 2024: Paper 1",
             subjects: ["physics", "chemistry", "mathematics"],
             questionsPerSubject: 17,
             totalQuestions: 51,
             questionTypes: {
+                scq: { count: 4, marks: 3, negative: 1 },
                 mcq: { count: 3, marks: 4, negative: 2, partial: true },
-                scq: { count: 4, marks: 3, negative: 1, partial: false },
-                integer: { count: 6, marks: 4, negative: 0, partial: false },
-                numerical: { count: 4, marks: 3, negative: 0, partial: false }
+                integer: { count: 6, marks: 4, negative: 0 },
+                matchList: { count: 4, marks: 3, negative: 1 }
             }
         }
     },
@@ -21,9 +21,9 @@ const jeeAdvanced2024 = {
     
     // Question counters
     questionCounts: {
-        physics: { mcq: 0, scq: 0, integer: 0, numerical: 0 },
-        chemistry: { mcq: 0, scq: 0, integer: 0, numerical: 0 },
-        mathematics: { mcq: 0, scq: 0, integer: 0, numerical: 0 }
+        physics: { scq: 0, mcq: 0, integer: 0, matchList: 0 },
+        chemistry: { scq: 0, mcq: 0, integer: 0, matchList: 0 },
+        mathematics: { scq: 0, mcq: 0, integer: 0, matchList: 0 }
     },
     
     // Initialize paper
@@ -50,10 +50,10 @@ const jeeAdvanced2024 = {
     resetQuestionCounts: function() {
         for (const subject of this.currentPaper.subjects) {
             this.questionCounts[subject] = {
-                mcq: 0,
                 scq: 0,
+                mcq: 0,
                 integer: 0,
-                numerical: 0
+                matchList: 0
             };
         }
     },
@@ -61,7 +61,7 @@ const jeeAdvanced2024 = {
     // Add a question
     addQuestion: function(subject, type, data) {
         // Check if we've reached the limit for this question type
-        const config = this.paperConfig.paper2;
+        const config = this.paperConfig.paper1;
         if (this.questionCounts[subject][type] >= config.questionTypes[type].count) {
             throw new Error(`Maximum ${config.questionTypes[type].count} ${type.toUpperCase()} questions allowed for ${subject}`);
         }
@@ -78,17 +78,19 @@ const jeeAdvanced2024 = {
         };
         
         // Add type-specific data
-        if (type === 'mcq' || type === 'scq') {
+        if (type === 'scq' || type === 'mcq') {
             question.options = data.options;
             question.marks = config.questionTypes[type].marks;
             question.negative = config.questionTypes[type].negative;
         } else if (type === 'integer') {
             question.answer = data.answer;
             question.marks = config.questionTypes[type].marks;
-        } else if (type === 'numerical') {
-            question.answer = data.answer;
-            question.paragraph = data.paragraph || "";
+        } else if (type === 'matchList') {
+            question.matchItems = data.matchItems;
+            question.options = data.options;
+            question.correctOption = data.correctOption;
             question.marks = config.questionTypes[type].marks;
+            question.negative = config.questionTypes[type].negative;
         }
         
         // Add to questions array
@@ -102,7 +104,7 @@ const jeeAdvanced2024 = {
     
     // Get available question types for a subject
     getAvailableTypes: function(subject) {
-        const config = this.paperConfig.paper2;
+        const config = this.paperConfig.paper1;
         const availableTypes = [];
         
         for (const type in config.questionTypes) {
@@ -115,21 +117,6 @@ const jeeAdvanced2024 = {
         }
         
         return availableTypes;
-    },
-    
-    // Check if all questions have been added
-    isComplete: function() {
-        const config = this.paperConfig.paper2;
-        
-        for (const subject of this.currentPaper.subjects) {
-            for (const type in config.questionTypes) {
-                if (this.questionCounts[subject][type] !== config.questionTypes[type].count) {
-                    return false;
-                }
-            }
-        }
-        
-        return true;
     },
     
     // Get question count summary
@@ -152,12 +139,12 @@ const jeeAdvanced2024 = {
     
     // Save paper to localStorage
     savePaper: function() {
-        localStorage.setItem('jeeAdvanced2024Paper', JSON.stringify(this.currentPaper));
+        localStorage.setItem('jeeAdvanced2024Paper1', JSON.stringify(this.currentPaper));
     },
     
     // Load paper from localStorage
     loadPaper: function() {
-        const savedPaper = localStorage.getItem('jeeAdvanced2024Paper');
+        const savedPaper = localStorage.getItem('jeeAdvanced2024Paper1');
         if (savedPaper) {
             this.currentPaper = JSON.parse(savedPaper);
             this.recalculateQuestionCounts();
@@ -177,8 +164,3 @@ const jeeAdvanced2024 = {
         }
     }
 };
-
-// Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = jeeAdvanced2024;
-}
