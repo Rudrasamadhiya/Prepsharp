@@ -213,7 +213,6 @@
         </div>
     </div>
 
-    <script src="hardcoded-papers.js"></script>
     <script>
         // Load exam papers when page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -239,12 +238,18 @@
             } catch (error) {
                 console.error('Error fetching papers:', error);
                 
-                // Clear any cached data and load directly from file
-                localStorage.removeItem('papers');
-                
+                // Fallback to local storage
+                const papersJson = localStorage.getItem('papers');
+                if (papersJson) {
+                    try {
+                        const papers = JSON.parse(papersJson);
+                        renderPapers(papers);
+                    } catch (e) {
+                        showError('Error parsing papers data');
+                    }
+                } else {
                     // Try to load from papers.json directly
-                    localStorage.removeItem('papers'); // Clear existing cache
-                    fetch('papers.json')
+                    fetch('db/papers.json')
                         .then(response => response.json())
                         .then(papers => {
                             renderPapers(papers);
