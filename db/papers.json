@@ -12,14 +12,14 @@
         "id": "p2024-1-p1",
         "subject": "physics",
         "type": "single",
-        "text": "Question 1",
+        "text": "Question 1: A particle moves along the x-axis such that its position as a function of time is given by x(t) = 4t³ - 6t² + 3t - 5, where x is in meters and t is in seconds. The acceleration of the particle at t = 2 s is:",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: 12 m/s²",
+          "Option 2: 18 m/s²",
+          "Option 3: 24 m/s²",
+          "Option 4: 36 m/s²"
         ],
-        "correctOption": 0,
+        "correctOption": 3,
         "marks": 3,
         "negativeMark": -1
       },
@@ -27,14 +27,14 @@
         "id": "p2024-1-p2",
         "subject": "physics",
         "type": "multiple",
-        "text": "Question 2",
+        "text": "Question 2: Which of the following statements is/are correct about simple harmonic motion?",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: The acceleration is proportional to displacement",
+          "Option 2: The total energy remains constant",
+          "Option 3: The velocity is maximum at the mean position",
+          "Option 4: The acceleration is maximum at the extreme positions"
         ],
-        "correctOptions": [0, 2],
+        "correctOptions": [0, 1, 2, 3],
         "marks": 4,
         "negativeMark": -2
       },
@@ -42,8 +42,8 @@
         "id": "p2024-1-p3",
         "subject": "physics",
         "type": "integer",
-        "text": "Question 3",
-        "correctAnswer": 5,
+        "text": "Question 3: A body of mass 2 kg is moving with a velocity of 10 m/s. If a constant force produces 100 W of power, the velocity (in m/s) of the body after 5 seconds will be:",
+        "correctAnswer": 20,
         "marks": 4,
         "negativeMark": 0
       },
@@ -51,14 +51,14 @@
         "id": "p2024-1-c1",
         "subject": "chemistry",
         "type": "single",
-        "text": "Question 4",
+        "text": "Question 4: The IUPAC name of the compound CH₃-CH=CH-CHO is:",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: But-2-enal",
+          "Option 2: But-3-enal",
+          "Option 3: But-2-en-1-al",
+          "Option 4: But-3-en-1-al"
         ],
-        "correctOption": 1,
+        "correctOption": 0,
         "marks": 3,
         "negativeMark": -1
       },
@@ -66,14 +66,14 @@
         "id": "p2024-1-c2",
         "subject": "chemistry",
         "type": "multiple",
-        "text": "Question 5",
+        "text": "Question 5: Which of the following statements is/are correct about benzene?",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: It has a planar structure",
+          "Option 2: All carbon atoms are sp² hybridized",
+          "Option 3: It undergoes substitution reactions more readily than addition reactions",
+          "Option 4: It has a delocalized π-electron cloud"
         ],
-        "correctOptions": [1, 3],
+        "correctOptions": [0, 1, 2, 3],
         "marks": 4,
         "negativeMark": -2
       },
@@ -81,8 +81,8 @@
         "id": "p2024-1-c3",
         "subject": "chemistry",
         "type": "integer",
-        "text": "Question 6",
-        "correctAnswer": 7,
+        "text": "Question 6: The number of isomers possible for an alkene with molecular formula C₄H₈ is:",
+        "correctAnswer": 4,
         "marks": 4,
         "negativeMark": 0
       },
@@ -90,14 +90,14 @@
         "id": "p2024-1-m1",
         "subject": "mathematics",
         "type": "single",
-        "text": "Question 7",
+        "text": "Question 7: If α and β are the roots of the equation x² - 5x + 6 = 0, then the value of α³ + β³ is:",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: 125",
+          "Option 2: 91",
+          "Option 3: 117",
+          "Option 4: 64"
         ],
-        "correctOption": 2,
+        "correctOption": 1,
         "marks": 3,
         "negativeMark": -1
       },
@@ -105,14 +105,14 @@
         "id": "p2024-1-m2",
         "subject": "mathematics",
         "type": "multiple",
-        "text": "Question 8",
+        "text": "Question 8: Which of the following statements is/are correct about the function f(x) = x³ - 3x² + 3x - 1?",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: f(x) is an increasing function for all x",
+          "Option 2: f(x) has a local minimum at x = 1",
+          "Option 3: f(1) = 0",
+          "Option 4: f'(x) = 3(x-1)²"
         ],
-        "correctOptions": [0, 1, 3],
+        "correctOptions": [0, 3],
         "marks": 4,
         "negativeMark": -2
       },
@@ -120,8 +120,8 @@
         "id": "p2024-1-m3",
         "subject": "mathematics",
         "type": "integer",
-        "text": "Question 9",
-        "correctAnswer": 3,
+        "text": "Question 9: The value of ∫(0 to π/2) sin²x cos²x dx is equal to:",
+        "correctAnswer": 16,
         "marks": 4,
         "negativeMark": 0
       }
@@ -140,14 +140,14 @@
         "id": "p2024-2-p1",
         "subject": "physics",
         "type": "single",
-        "text": "Question 1",
+        "text": "Question 1: A uniform rod of length L and mass M is suspended from one end by a string. The tension in the string is:",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: Mg",
+          "Option 2: Mg/2",
+          "Option 3: Mg/3",
+          "Option 4: Mg/4"
         ],
-        "correctOption": 0,
+        "correctOption": 1,
         "marks": 3,
         "negativeMark": -1
       },
@@ -155,14 +155,14 @@
         "id": "p2024-2-p2",
         "subject": "physics",
         "type": "multiple",
-        "text": "Question 2",
+        "text": "Question 2: Which of the following statements is/are correct about electromagnetic waves?",
         "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3",
-          "Option 4"
+          "Option 1: They are transverse waves",
+          "Option 2: They can travel through vacuum",
+          "Option 3: Their speed depends on the medium",
+          "Option 4: They carry energy and momentum"
         ],
-        "correctOptions": [0, 2],
+        "correctOptions": [0, 1, 2, 3],
         "marks": 4,
         "negativeMark": -2
       },
@@ -170,8 +170,86 @@
         "id": "p2024-2-p3",
         "subject": "physics",
         "type": "integer",
-        "text": "Question 3",
-        "correctAnswer": 5,
+        "text": "Question 3: A particle executes simple harmonic motion with amplitude 10 cm and time period 2 seconds. The maximum speed (in cm/s) of the particle is:",
+        "correctAnswer": 31,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-2-c1",
+        "subject": "chemistry",
+        "type": "single",
+        "text": "Question 4: Which of the following compounds will show geometrical isomerism?",
+        "options": [
+          "Option 1: 2-butyne",
+          "Option 2: 2-butene",
+          "Option 3: 1-butene",
+          "Option 4: Propene"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-2-c2",
+        "subject": "chemistry",
+        "type": "multiple",
+        "text": "Question 5: Which of the following statements is/are correct about the periodic table?",
+        "options": [
+          "Option 1: Atomic radius increases down a group",
+          "Option 2: Ionization energy decreases down a group",
+          "Option 3: Electronegativity increases across a period",
+          "Option 4: Metallic character decreases across a period"
+        ],
+        "correctOptions": [0, 1, 2, 3],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-2-c3",
+        "subject": "chemistry",
+        "type": "integer",
+        "text": "Question 6: The number of sigma bonds in benzene (C₆H₆) is:",
+        "correctAnswer": 12,
+        "marks": 4,
+        "negativeMark": 0
+      },
+      {
+        "id": "p2024-2-m1",
+        "subject": "mathematics",
+        "type": "single",
+        "text": "Question 7: The value of ∫(0 to π/2) sin²x cos²x dx is:",
+        "options": [
+          "Option 1: π/8",
+          "Option 2: π/16",
+          "Option 3: π/32",
+          "Option 4: π/64"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2024-2-m2",
+        "subject": "mathematics",
+        "type": "multiple",
+        "text": "Question 8: Which of the following statements is/are correct about the function f(x) = |x - 1| + |x - 2|?",
+        "options": [
+          "Option 1: f(x) has a minimum value at x = 1.5",
+          "Option 2: f(x) is differentiable at x = 1",
+          "Option 3: f(x) is continuous for all real x",
+          "Option 4: f(x) = 2x - 3 for x ≥ 2"
+        ],
+        "correctOptions": [0, 2, 3],
+        "marks": 4,
+        "negativeMark": -2
+      },
+      {
+        "id": "p2024-2-m3",
+        "subject": "mathematics",
+        "type": "integer",
+        "text": "Question 9: The number of solutions of the equation tan x = x in the interval [0, 2π] is:",
+        "correctAnswer": 3,
         "marks": 4,
         "negativeMark": 0
       }
@@ -185,7 +263,53 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2023-06-04T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2023-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body of mass 2 kg is moving with a velocity of 10 m/s. It is subjected to a force which produces a constant power of 100 W. The velocity of the body after 5 seconds is:",
+        "options": [
+          "Option 1: 15 m/s",
+          "Option 2: 20 m/s",
+          "Option 3: 25 m/s",
+          "Option 4: 30 m/s"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2023-1-c1",
+        "subject": "chemistry",
+        "type": "single",
+        "text": "Question 2: The hybridization of carbon atoms in diamond is:",
+        "options": [
+          "Option 1: sp",
+          "Option 2: sp²",
+          "Option 3: sp³",
+          "Option 4: dsp²"
+        ],
+        "correctOption": 2,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2023-1-m1",
+        "subject": "mathematics",
+        "type": "single",
+        "text": "Question 3: If the lines 2x + 3y = 5 and 3x + ky = 8 are perpendicular to each other, then the value of k is:",
+        "options": [
+          "Option 1: -2",
+          "Option 2: 2",
+          "Option 3: -2/3",
+          "Option 4: 2/3"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2023-adv-p2",
@@ -195,7 +319,53 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2023-06-04T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2023-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A simple pendulum of length 1 m has a time period T. If the length is increased to 4 m, the new time period will be:",
+        "options": [
+          "Option 1: T",
+          "Option 2: 2T",
+          "Option 3: T/2",
+          "Option 4: 4T"
+        ],
+        "correctOption": 1,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2023-2-c1",
+        "subject": "chemistry",
+        "type": "single",
+        "text": "Question 2: Which of the following is the strongest acid?",
+        "options": [
+          "Option 1: HF",
+          "Option 2: HCl",
+          "Option 3: HBr",
+          "Option 4: HI"
+        ],
+        "correctOption": 3,
+        "marks": 3,
+        "negativeMark": -1
+      },
+      {
+        "id": "p2023-2-m1",
+        "subject": "mathematics",
+        "type": "single",
+        "text": "Question 3: The value of ∫(0 to 1) x²e^x dx is:",
+        "options": [
+          "Option 1: e - 2",
+          "Option 2: e - 3",
+          "Option 3: 2e - 5",
+          "Option 4: 2 - e"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2022-adv-p1",
@@ -205,7 +375,23 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2022-06-26T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2022-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A particle moves in a circle of radius 5 cm with constant speed and time period 0.2π seconds. The acceleration of the particle is:",
+        "options": [
+          "Option 1: 5 cm/s²",
+          "Option 2: 10 cm/s²",
+          "Option 3: 20 cm/s²",
+          "Option 4: 50 cm/s²"
+        ],
+        "correctOption": 3,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2022-adv-p2",
@@ -215,7 +401,23 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2022-06-26T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2022-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body is thrown vertically upward with a velocity of 19.6 m/s. The maximum height reached by the body is: (g = 9.8 m/s²)",
+        "options": [
+          "Option 1: 19.6 m",
+          "Option 2: 9.8 m",
+          "Option 3: 39.2 m",
+          "Option 4: 4.9 m"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2021-adv-p1",
@@ -225,7 +427,23 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2021-10-03T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2021-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A ball is dropped from a height of 20 m. If the coefficient of restitution is 0.5, the height reached after the first bounce is:",
+        "options": [
+          "Option 1: 5 m",
+          "Option 2: 10 m",
+          "Option 3: 2.5 m",
+          "Option 4: 1.25 m"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2021-adv-p2",
@@ -235,7 +453,23 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2021-10-03T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2021-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: Two identical charged particles are placed at a distance d apart. If the force between them is F, then the force between them when placed at a distance 2d apart will be:",
+        "options": [
+          "Option 1: F/4",
+          "Option 2: F/2",
+          "Option 3: 2F",
+          "Option 4: 4F"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2020-adv-p1",
@@ -245,7 +479,23 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2020-09-27T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2020-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body of mass m is attached to a spring of spring constant k. The time period of oscillation is:",
+        "options": [
+          "Option 1: 2π√(m/k)",
+          "Option 2: 2π√(k/m)",
+          "Option 3: π√(m/k)",
+          "Option 4: π√(k/m)"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2020-adv-p2",
@@ -255,7 +505,23 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2020-09-27T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2020-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body is projected with a velocity of 20 m/s at an angle of 30° with the horizontal. The maximum height reached by the body is: (g = 10 m/s²)",
+        "options": [
+          "Option 1: 5 m",
+          "Option 2: 10 m",
+          "Option 3: 15 m",
+          "Option 4: 20 m"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2019-adv-p1",
@@ -265,7 +531,23 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2019-05-27T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2019-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body is moving with a velocity of 10 m/s. If a force of 5 N acts on it for 2 seconds, the final velocity of the body will be: (mass of the body = 2 kg)",
+        "options": [
+          "Option 1: 15 m/s",
+          "Option 2: 20 m/s",
+          "Option 3: 25 m/s",
+          "Option 4: 30 m/s"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2019-adv-p2",
@@ -275,7 +557,23 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2019-05-27T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2019-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body of mass 2 kg is moving with a velocity of 10 m/s. The kinetic energy of the body is:",
+        "options": [
+          "Option 1: 100 J",
+          "Option 2: 200 J",
+          "Option 3: 50 J",
+          "Option 4: 20 J"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2018-adv-p1",
@@ -285,7 +583,23 @@
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2018-05-20T10:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2018-1-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body is thrown vertically upward with a velocity of 49 m/s. The time taken by the body to reach the maximum height is: (g = 9.8 m/s²)",
+        "options": [
+          "Option 1: 5 s",
+          "Option 2: 10 s",
+          "Option 3: 2.5 s",
+          "Option 4: 4.9 s"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   },
   {
     "id": "2018-adv-p2",
@@ -295,6 +609,22 @@
     "paperNumber": "2",
     "subjects": ["physics", "chemistry", "mathematics"],
     "createdAt": "2018-05-20T14:00:00.000Z",
-    "questions": []
+    "questions": [
+      {
+        "id": "p2018-2-p1",
+        "subject": "physics",
+        "type": "single",
+        "text": "Question 1: A body is moving in a circle of radius 10 cm with constant speed. If the body takes 2 seconds to complete one revolution, the speed of the body is:",
+        "options": [
+          "Option 1: 10π cm/s",
+          "Option 2: 20π cm/s",
+          "Option 3: 5π cm/s",
+          "Option 4: 40π cm/s"
+        ],
+        "correctOption": 0,
+        "marks": 3,
+        "negativeMark": -1
+      }
+    ]
   }
 ]
