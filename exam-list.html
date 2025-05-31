@@ -352,6 +352,10 @@
                 // Add shift info if available
                 const shiftInfo = paper.shift ? `<span> | Shift: ${paper.shift}</span>` : '';
                 
+                // Add PDF viewer button only for JEE Advanced papers
+                const pdfViewerButton = examType === 'jee-advanced' ? 
+                    `<a href="pdf-viewer.html?paper=${paper.id}" class="btn secondary">View PDF</a>` : '';
+                
                 examCard.innerHTML = `
                     <div class="exam-header">
                         <h3>${paper.name}</h3>
@@ -368,6 +372,7 @@
                     </div>
                     <div class="exam-footer">
                         <a href="exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
+                        ${pdfViewerButton}
                         <span>${paper.questions ? paper.questions.length : 0} Questions</span>
                     </div>
                 `;
