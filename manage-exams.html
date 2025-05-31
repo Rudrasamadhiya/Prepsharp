@@ -304,7 +304,7 @@
                     <td>${subjectBadges}</td>
                     <td class="actions">
                         <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
-                        <a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>
+                        ${getAddQuestionLink(paper)}
                         <a href="pdf-viewer.html?id=${paper.id}" class="btn accent">PDF</a>
                         <button class="btn danger" onclick="deletePaper('${paper.id}')">Delete</button>
                     </td>
@@ -336,6 +336,43 @@
                 default:
                     return type.toUpperCase();
             }
+        }
+        
+        // Function to get the appropriate Add Questions link based on paper type and year
+        function getAddQuestionLink(paper) {
+            // Default link
+            let defaultLink = `<a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>`;
+            
+            // Check if it's JEE Advanced
+            if (paper.type === 'jee-advanced') {
+                // Check year and paper number
+                if (paper.year === '2023' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2023-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2023' && paper.paperNumber === '2') {
+                    return `<a href="jee-advanced-2023-paper2.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2022' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2022-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2022' && paper.paperNumber === '2') {
+                    return `<a href="jee-advanced-2022-paper2.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2021' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2021-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2020' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2020-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2020' && paper.paperNumber === '2') {
+                    return `<a href="jee-advanced-2020-paper2.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2019' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2019-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2019' && paper.paperNumber === '2') {
+                    return `<a href="jee-advanced-2019-paper2.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2018' && paper.paperNumber === '1') {
+                    return `<a href="jee-advanced-2018-paper1.html" class="btn primary">Add Questions</a>`;
+                } else if (paper.year === '2018' && paper.paperNumber === '2') {
+                    return `<a href="jee-advanced-2018-paper2.html" class="btn primary">Add Questions</a>`;
+                }
+            }
+            
+            // Return default link for all other cases
+            return defaultLink;
         }
         
         // Function to delete a paper
