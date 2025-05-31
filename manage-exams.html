@@ -283,11 +283,31 @@
             // Clear existing content
             examsListElement.innerHTML = '';
             
-            // We'll display papers from the papers.json file instead of hardcoding
+            // Add JEE Advanced 2024 Paper 1 at the top
+            const jeeAdvanced2024Row = document.createElement('tr');
+            jeeAdvanced2024Row.className = 'highlight';
+            jeeAdvanced2024Row.innerHTML = `
+                <td>JEE Advanced 2024 - Paper 1</td>
+                <td>JEE Advanced</td>
+                <td>2024</td>
+                <td>6</td>
+                <td>
+                    <span class="badge physics">Physics</span>
+                    <span class="badge chemistry">Chemistry</span>
+                    <span class="badge mathematics">Mathematics</span>
+                </td>
+                <td class="actions">
+                    <a href="exam.html?id=1007" class="btn secondary">View</a>
+                    <a href="add-question.html?paperId=1007" class="btn primary">Add Questions</a>
+                    <a href="pdf-viewer.html" class="btn accent">View PDF</a>
+                </td>
+            `;
+            examsListElement.appendChild(jeeAdvanced2024Row);
             
             // Render each paper
             papers.forEach(paper => {
-                // Display all papers
+                // Skip the JEE Advanced 2024 Paper 1 as we've already added it
+                if (paper.id === '1007') return;
                 
                 const row = document.createElement('tr');
                 
@@ -296,26 +316,15 @@
                     return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
                 }).join('');
                 
-                // Highlight 2024 papers
-                if (paper.year === 2024) {
-                    row.className = 'highlight';
-                }
-                
-                // Add PDF viewer link if available
-                const pdfLink = paper.pdfPath ? 
-                    `<a href="pdf-viewer.html${paper.paperNumber === 1 ? '' : '?paper=2'}" class="btn accent">View PDF</a>` : 
-                    '';
-                
                 row.innerHTML = `
                     <td>${paper.name}</td>
                     <td>${getExamTypeDisplay(paper.type)}</td>
                     <td>${paper.year}</td>
-                    <td>${paper.totalQuestions || (paper.questions ? paper.questions.length : 0)}</td>
+                    <td>${paper.questions ? paper.questions.length : 0}</td>
                     <td>${subjectBadges}</td>
                     <td class="actions">
                         <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
                         <a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>
-                        ${pdfLink}
                         <button class="btn danger" onclick="deletePaper('${paper.id}')">Delete</button>
                     </td>
                 `;
