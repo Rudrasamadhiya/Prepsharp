@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add JEE Advanced 2021 Paper 1 - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .option-group {
+            margin-top: 10px;
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="checkbox"],
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .option-container input[type="text"] {
+            flex-grow: 1;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .question-type {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        .marking-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1976d2;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .question-count {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .question-type-count {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .count-item {
+            text-align: center;
+        }
+        .count-value {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .count-label {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - Add JEE Advanced 2021 Paper 1</h2>
+        <div>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>JEE Advanced 2021: Paper 1</h1>
+            
+            <div class="marking-info">
+                <h3>Paper Pattern:</h3>
+                <ul>
+                    <li>Subjects: Physics, Chemistry, Mathematics</li>
+                    <li>Questions per Subject: 19</li>
+                    <li>Total Questions: 57</li>
+                </ul>
+                <h3>Question Types:</h3>
+                <ul>
+                    <li>MCQs with single correct option (4 questions/per subject)</li>
+                    <li>MCQs with multiple correct options (6 questions/per subject)</li>
+                    <li>Numerical Value Answer Type questions (3 questions/per subject)</li>
+                    <li>Paragraph-based Numerical Value questions (6 questions/per subject)</li>
+                </ul>
+                <h3>Marking Scheme:</h3>
+                <ul>
+                    <li>Single correct: +3 for correct, -1 for incorrect</li>
+                    <li>Multiple correct: +4 for all correct, partial marks for partially correct, -2 for incorrect</li>
+                    <li>Numerical Value: +4 for correct, 0 for incorrect</li>
+                    <li>Paragraph-based: +2 for correct, 0 for incorrect</li>
+                </ul>
+            </div>
+            
+            <div class="progress-container">
+                <h3>Progress</h3>
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+                <div class="question-count">
+                    <span id="questions-added">0</span>
+                    <span>of 57 questions added</span>
+                </div>
+            </div>
+            
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="tab-container">
+                <div class="tab active" data-subject="physics">Physics</div>
+                <div class="tab" data-subject="chemistry">Chemistry</div>
+                <div class="tab" data-subject="mathematics">Mathematics</div>
+            </div>
+            
+            <!-- Physics Tab -->
+            <div id="physics-tab" class="tab-content active">
+                <h2>Physics Questions</h2>
+                
+                <div class="question-type-count">
+                    <div class="count-item">
+                        <div id="physics-scq-count" class="count-value">0/4</div>
+                        <div class="count-label">Single Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="physics-mcq-count" class="count-value">0/6</div>
+                        <div class="count-label">Multiple Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="physics-numerical-count" class="count-value">0/3</div>
+                        <div class="count-label">Numerical</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="physics-paragraph-count" class="count-value">0/6</div>
+                        <div class="count-label">Paragraph</div>
+                    </div>
+                </div>
+                
+                <div id="physics-questions"></div>
+                <button id="add-physics-question" class="btn">Add Physics Question</button>
+            </div>
+            
+            <!-- Chemistry Tab -->
+            <div id="chemistry-tab" class="tab-content">
+                <h2>Chemistry Questions</h2>
+                
+                <div class="question-type-count">
+                    <div class="count-item">
+                        <div id="chemistry-scq-count" class="count-value">0/4</div>
+                        <div class="count-label">Single Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="chemistry-mcq-count" class="count-value">0/6</div>
+                        <div class="count-label">Multiple Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="chemistry-numerical-count" class="count-value">0/3</div>
+                        <div class="count-label">Numerical</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="chemistry-paragraph-count" class="count-value">0/6</div>
+                        <div class="count-label">Paragraph</div>
+                    </div>
+                </div>
+                
+                <div id="chemistry-questions"></div>
+                <button id="add-chemistry-question" class="btn">Add Chemistry Question</button>
+            </div>
+            
+            <!-- Mathematics Tab -->
+            <div id="mathematics-tab" class="tab-content">
+                <h2>Mathematics Questions</h2>
+                
+                <div class="question-type-count">
+                    <div class="count-item">
+                        <div id="mathematics-scq-count" class="count-value">0/4</div>
+                        <div class="count-label">Single Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="mathematics-mcq-count" class="count-value">0/6</div>
+                        <div class="count-label">Multiple Choice</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="mathematics-numerical-count" class="count-value">0/3</div>
+                        <div class="count-label">Numerical</div>
+                    </div>
+                    <div class="count-item">
+                        <div id="mathematics-paragraph-count" class="count-value">0/6</div>
+                        <div class="count-label">Paragraph</div>
+                    </div>
+                </div>
+                
+                <div id="mathematics-questions"></div>
+                <button id="add-mathematics-question" class="btn">Add Mathematics Question</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button id="save-paper" class="btn">Save Paper</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="add-question-jee-advanced-2021.js"></script>
+    <script>
+        // Initialize paper
+        const paper = jeeAdvanced2021.initPaper('paper1');
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                const subject = this.getAttribute('data-subject');
+                document.getElementById(`${subject}-tab`).classList.add('active');
+            });
+        });
+        
+        // Add question buttons
+        document.getElementById('add-physics-question').addEventListener('click', () => addQuestion('physics'));
+        document.getElementById('add-chemistry-question').addEventListener('click', () => addQuestion('chemistry'));
+        document.getElementById('add-mathematics-question').addEventListener('click', () => addQuestion('mathematics'));
+        
+        // Function to add a new question
+        function addQuestion(subject) {
+            // Get available question types
+            const availableTypes = jeeAdvanced2021.getAvailableTypes(subject);
+            
+            if (availableTypes.length === 0) {
+                alert(`Maximum questions reached for ${subject}. You cannot add more questions.`);
+                return;
+            }
+            
+            // Create question container
+            const questionContainer = document.createElement('div');
+            questionContainer.className = 'question-container';
+            
+            // Generate question ID
+            const questionId = `q${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            
+            // Create question type selector
+            const typeOptions = availableTypes.map(typeInfo => {
+                const typeLabels = {
+                    scq: 'Single Correct Option',
+                    mcq: 'Multiple Correct Options',
+                    numerical: 'Numerical Value',
+                    paragraph: 'Paragraph-based Numerical'
+                };
+                return `<option value="${typeInfo.type}">${typeLabels[typeInfo.type]} (${typeInfo.remaining} remaining)</option>`;
+            }).join('');
+            
+            // Create question HTML
+            questionContainer.innerHTML = `
+                <div class="form-group">
+                    <label for="type-${questionId}">Question Type</label>
+                    <select id="type-${questionId}" class="question-type-select">
+                        ${typeOptions}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="text-${questionId}">Question Text</label>
+                    <textarea id="text-${questionId}" rows="3" placeholder="Enter question text"></textarea>
+                </div>
+                
+                <div id="options-${questionId}" class="option-group">
+                    <!-- Options will be added dynamically based on question type -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="explanation-${questionId}">Explanation (Optional)</label>
+                    <textarea id="explanation-${questionId}" rows="2" placeholder="Enter explanation"></textarea>
+                </div>
+                
+                <button type="button" class="btn btn-secondary remove-question" data-id="${questionId}" data-subject="${subject}">Remove Question</button>
+            `;
+            
+            // Add to subject questions container
+            document.getElementById(`${subject}-questions`).appendChild(questionContainer);
+            
+            // Set up question type change handler
+            const typeSelect = questionContainer.querySelector(`#type-${questionId}`);
+            typeSelect.addEventListener('change', () => updateQuestionType(questionId, typeSelect.value));
+            
+            // Initialize question type
+            updateQuestionType(questionId, typeSelect.value);
+            
+            // Set up remove button handler
+            questionContainer.querySelector('.remove-question').addEventListener('click', function() {
+                questionContainer.remove();
+                updateProgress();
+            });
+        }
+        
+        // Function to update question type
+        function updateQuestionType(questionId, type) {
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            
+            // Clear existing options
+            optionsContainer.innerHTML = '';
+            
+            if (type === 'scq') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+3 for correct, -1 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add options
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(65 + i); // A, B, C, D
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option-container';
+                    
+                    optionDiv.innerHTML = `
+                        <input type="radio" id="correct-${questionId}-${i}" name="correct-${questionId}" value="${i}">
+                        <label for="correct-${questionId}-${i}" style="display:inline; margin-right: 10px;">${letter}.</label>
+                        <input type="text" id="option-${questionId}-${i}" placeholder="Option ${letter}">
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                }
+            } else if (type === 'mcq') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+4 for all correct, partial marks for partially correct, -2 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add options
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(65 + i); // A, B, C, D
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option-container';
+                    
+                    optionDiv.innerHTML = `
+                        <input type="checkbox" id="correct-${questionId}-${i}" name="correct-${questionId}" value="${i}">
+                        <label for="correct-${questionId}-${i}" style="display:inline; margin-right: 10px;">${letter}.</label>
+                        <input type="text" id="option-${questionId}-${i}" placeholder="Option ${letter}">
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                }
+            } else if (type === 'numerical') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+4 for correct, 0 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add numerical input
+                const numericalDiv = document.createElement('div');
+                numericalDiv.className = 'form-group';
+                numericalDiv.innerHTML = `
+                    <label for="answer-${questionId}">Correct Answer (Numerical Value)</label>
+                    <input type="number" id="answer-${questionId}" step="0.01">
+                `;
+                
+                optionsContainer.appendChild(numericalDiv);
+            } else if (type === 'paragraph') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+2 for correct, 0 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add paragraph input
+                const paragraphDiv = document.createElement('div');
+                paragraphDiv.className = 'form-group';
+                paragraphDiv.innerHTML = `
+                    <label for="paragraph-${questionId}">Paragraph Text</label>
+                    <textarea id="paragraph-${questionId}" rows="3" placeholder="Enter paragraph text"></textarea>
+                `;
+                optionsContainer.appendChild(paragraphDiv);
+                
+                // Add numerical input
+                const numericalDiv = document.createElement('div');
+                numericalDiv.className = 'form-group';
+                numericalDiv.innerHTML = `
+                    <label for="answer-${questionId}">Correct Answer (Numerical Value)</label>
+                    <input type="number" id="answer-${questionId}" step="0.01">
+                `;
+                
+                optionsContainer.appendChild(numericalDiv);
+            }
+        }
+        
+        // Function to update progress
+        function updateProgress() {
+            // Count questions
+            const subjects = ['physics', 'chemistry', 'mathematics'];
+            let totalQuestions = 0;
+            
+            subjects.forEach(subject => {
+                const count = document.querySelectorAll(`#${subject}-questions .question-container`).length;
+                totalQuestions += count;
+            });
+            
+            // Update progress bar
+            const progress = (totalQuestions / 57) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('questions-added').textContent = totalQuestions;
+            
+            // Update question type counts
+            subjects.forEach(subject => {
+                const questionContainers = document.querySelectorAll(`#${subject}-questions .question-container`);
+                const counts = { scq: 0, mcq: 0, numerical: 0, paragraph: 0 };
+                
+                questionContainers.forEach(container => {
+                    const typeSelect = container.querySelector('.question-type-select');
+                    if (typeSelect) {
+                        counts[typeSelect.value]++;
+                    }
+                });
+                
+                document.getElementById(`${subject}-scq-count`).textContent = `${counts.scq}/4`;
+                document.getElementById(`${subject}-mcq-count`).textContent = `${counts.mcq}/6`;
+                document.getElementById(`${subject}-numerical-count`).textContent = `${counts.numerical}/3`;
+                document.getElementById(`${subject}-paragraph-count`).textContent = `${counts.paragraph}/6`;
+            });
+        }
+        
+        // Save paper button
+        document.getElementById('save-paper').addEventListener('click', function() {
+            // Reset paper
+            jeeAdvanced2021.initPaper('paper1');
+            
+            // Collect all questions
+            const subjects = ['physics', 'chemistry', 'mathematics'];
+            let allValid = true;
+            
+            // Process each subject
+            subjects.forEach(subject => {
+                const questionContainers = document.querySelectorAll(`#${subject}-questions .question-container`);
+                
+                questionContainers.forEach(container => {
+                    // Get question ID from type select
+                    const typeSelect = container.querySelector('.question-type-select');
+                    if (!typeSelect) return;
+                    
+                    const questionId = typeSelect.id.replace('type-', '');
+                    const questionType = typeSelect.value;
+                    const questionText = container.querySelector(`#text-${questionId}`).value;
+                    const explanation = container.querySelector(`#explanation-${questionId}`).value;
+                    
+                    if (!questionText) {
+                        alert(`Please enter text for a ${subject} question`);
+                        allValid = false;
+                        return;
+                    }
+                    
+                    try {
+                        if (questionType === 'scq') {
+                            const options = [];
+                            let hasCorrectOption = false;
+                            
+                            for (let i = 0; i < 4; i++) {
+                                const optionText = container.querySelector(`#option-${questionId}-${i}`).value;
+                                
+                                if (!optionText) {
+                                    alert(`Please enter text for option ${String.fromCharCode(65 + i)} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                
+                                const radioButton = container.querySelector(`input[name="correct-${questionId}"]:checked`);
+                                const isCorrect = radioButton && parseInt(radioButton.value) === i;
+                                
+                                if (isCorrect) {
+                                    hasCorrectOption = true;
+                                }
+                                
+                                options.push({
+                                    text: optionText,
+                                    correct: isCorrect
+                                });
+                            }
+                            
+                            if (!hasCorrectOption) {
+                                alert(`Please select a correct option for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2021.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                options: options
+                            });
+                            
+                        } else if (questionType === 'mcq') {
+                            const options = [];
+                            let hasCorrectOption = false;
+                            
+                            for (let i = 0; i < 4; i++) {
+                                const optionText = container.querySelector(`#option-${questionId}-${i}`).value;
+                                
+                                if (!optionText) {
+                                    alert(`Please enter text for option ${String.fromCharCode(65 + i)} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                
+                                const isCorrect = container.querySelector(`#correct-${questionId}-${i}`).checked;
+                                
+                                if (isCorrect) {
+                                    hasCorrectOption = true;
+                                }
+                                
+                                options.push({
+                                    text: optionText,
+                                    correct: isCorrect
+                                });
+                            }
+                            
+                            if (!hasCorrectOption) {
+                                alert(`Please select at least one correct option for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2021.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                options: options
+                            });
+                            
+                        } else if (questionType === 'numerical') {
+                            const answer = container.querySelector(`#answer-${questionId}`).value;
+                            
+                            if (!answer || isNaN(parseFloat(answer))) {
+                                alert(`Please enter a valid numerical value for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2021.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                answer: parseFloat(answer)
+                            });
+                            
+                        } else if (questionType === 'paragraph') {
+                            const paragraph = container.querySelector(`#paragraph-${questionId}`).value;
+                            const answer = container.querySelector(`#answer-${questionId}`).value;
+                            
+                            if (!paragraph) {
+                                alert(`Please enter paragraph text for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            if (!answer || isNaN(parseFloat(answer))) {
+                                alert(`Please enter a valid numerical value for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2021.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                paragraph: paragraph,
+                                answer: parseFloat(answer)
+                            });
+                        }
+                    } catch (error) {
+                        alert(error.message);
+                        allValid = false;
+                    }
+                });
+            });
+            
+            if (!allValid) return;
+            
+            // Save paper
+            jeeAdvanced2021.savePaper();
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = `Paper "${paper.name}" saved with ${paper.questions.length} questions!`;
+            successMessage.style.display = 'block';
+            
+            // Attempt to save to server if available
+            try {
+                fetch('/api/papers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paper)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successMessage.textContent += ' Saved to server successfully!';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving to server:', error);
+                    successMessage.textContent += ' (Saved locally only, server save failed)';
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+        
+        // Dashboard button
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+        
+        // Initialize with one question per subject
+        addQuestion('physics');
+        addQuestion('chemistry');
+        addQuestion('mathematics');
+        
+        // Update progress
+        updateProgress();
+        
+        // Try to load existing paper
+        if (jeeAdvanced2021.loadPaper()) {
+            updateProgress();
+        }
+    </script>
+</body>
+</html>
