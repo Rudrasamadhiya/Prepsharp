@@ -1,67 +1,47 @@
-# PrepSharp - Exam Preparation Platform
+# JEE Advanced Image Uploader
 
-## Email Verification System
+This tool allows you to upload images and save them directly to specific folders on your computer.
 
-PrepSharp now includes an email verification system that allows users to:
+## Setup Instructions
 
-1. Register with email verification
-2. Login with either password or OTP
-3. Verify their email address for first-time users
+1. **Install Node.js**
+   - Download and install Node.js from [nodejs.org](https://nodejs.org/)
 
-### Setup Instructions
+2. **Install Dependencies**
+   - Open a command prompt in the project folder
+   - Run: `npm install`
 
-1. Configure your email settings in the `.env` file:
-   ```
-   EMAIL_SERVICE=Gmail
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-   ```
+3. **Start the Server**
+   - Run: `npm start`
+   - The server will start on http://localhost:3000
 
-   Note: For Gmail, use an App Password instead of your regular password.
-   Generate one at https://myaccount.google.com/apppasswords
+4. **Use the Upload Tool**
+   - Open `screenshot-saver-simple.html` in your web browser
+   - Select the exam year and paper number
+   - Upload an image file
+   - Click "Upload Image" to save it to the specified folder
 
-2. Install the required dependencies:
-   ```
-   npm install
-   ```
+## Features
 
-3. Start the server:
-   ```
-   npm start
-   ```
+- Upload images directly to specific folders
+- Preview images before uploading
+- Save images with sequential naming
+- Track uploaded files
 
-### Login Methods
+## Folder Structure
 
-Users can login using two methods:
-- **Password Login**: Traditional email and password login
-- **OTP Login**: One-time password sent to their email
+Images are saved to:
+```
+C:\Users\HP\myproject\jeeapp\src\webapp\Prepsharp\papers\[YEAR] paper [NUMBER]\
+```
 
-### Registration Flow
+For example:
+```
+C:\Users\HP\myproject\jeeapp\src\webapp\Prepsharp\papers\2024 paper 1\
+```
 
-1. User enters registration details (name, email, mobile, password)
-2. System sends a verification code to the user's email
-3. User enters the verification code to complete registration
-4. After verification, user is redirected to profile setup
+## Troubleshooting
 
-### Security Features
-
-- OTPs are hashed before storage
-- OTPs expire after 10 minutes
-- Rate limiting on resend functionality
-- Email verification required for new accounts
-
-## Admin Dashboard
-
-### How to Access the Admin Dashboard
-
-There are two ways to access the admin dashboard:
-
-#### Option 1: Using the Fixed Version (Recommended)
-1. Open `admin-dashboard-fixed.html` directly in your browser
-2. This version works without requiring Firebase authentication
-3. All data is pre-populated for demonstration purposes
-
-#### Option 2: Using the Original Version
-1. Open `admin-login.html` in your browser
-2. Enter any email and password
-3. You will be redirected to `admin-dashboard.html`
+- If images aren't saving, make sure the server is running
+- Check the console for any error messages
+- Ensure the papers directory exists and is writable
