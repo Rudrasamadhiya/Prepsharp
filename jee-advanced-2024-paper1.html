@@ -623,6 +623,9 @@
                 
                 // Save back to localStorage
                 localStorage.setItem('papers', JSON.stringify(papers));
+                
+                // Also save to specialized storage for backward compatibility
+                localStorage.setItem('jeeAdvanced2024Paper1', JSON.stringify(paper));
             } catch (error) {
                 console.error('Error saving to papers storage:', error);
             }
