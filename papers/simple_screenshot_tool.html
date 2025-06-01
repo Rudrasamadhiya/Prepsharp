@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Screenshot Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .controls > div { display: flex; align-items: center; gap: 5px; }
+        button { padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #pdfContainer { position: relative; width: 100%; height: 600px; border: 1px solid #ddd; overflow: auto; }
+        #pdfViewer { width: 100%; }
+        .info { background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin: 10px 0; }
+        #saveInfo { font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Simple Screenshot Tool</h1>
+    
+    <div class="info">
+        <p>This tool helps you view a PDF and take screenshots for JEE papers.</p>
+        <p>Use your system's screenshot tool (like Snipping Tool or Screenshot) to capture the content.</p>
+    </div>
+    
+    <div class="controls">
+        <div>
+            <label for="paperName">Paper:</label>
+            <input type="text" id="paperName" placeholder="e.g., 2024-2" value="2024-2">
+        </div>
+        
+        <div>
+            <label for="pdfFile">PDF:</label>
+            <input type="file" id="pdfFile" accept="application/pdf">
+        </div>
+        
+        <div>
+            <button id="createFolders">Create Folders</button>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div>
+            <label for="subject">Subject:</label>
+            <select id="subject">
+                <option value="Chemistry">Chemistry</option>
+                <option value="Maths">Maths</option>
+                <option value="Physics">Physics</option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="question">Question:</label>
+            <select id="question"></select>
+        </div>
+        
+        <div>
+            <label for="type">Type:</label>
+            <select id="type">
+                <option value="question">Question</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+                <option value="option4">Option 4</option>
+            </select>
+        </div>
+        
+        <div>
+            <button id="nextItem">Next Item</button>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div>
+            <label for="page">Page:</label>
+            <input type="number" id="page" min="1" value="1" style="width: 50px;">
+            <span id="pageCount">/ 1</span>
+        </div>
+        
+        <div>
+            <button id="prevPage">Previous</button>
+            <button id="nextPage">Next</button>
+        </div>
+        
+        <div>
+            <button id="zoomIn">Zoom In</button>
+            <button id="zoomOut">Zoom Out</button>
+        </div>
+    </div>
+    
+    <div id="saveInfo"></div>
+    
+    <div id="pdfContainer">
+        <iframe id="pdfViewer" src="about:blank"></iframe>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        
+        // Global variables
+        let pdfDoc = null;
+        let pageNum = 1;
+        let scale = 1.5;
+        let pdfViewer = document.getElementById('pdfViewer');
+        
+        // Questions with options (default: 1-7 and 14-17)
+        let questionsWithOptions = [];
+        for (let i = 1; i <= 17; i++) {
+            if (i <= 7 || i >= 14) {
+                questionsWithOptions.push(i);
+            }
+        }
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize question dropdown
+            updateQuestionDropdown();
+            
+            // Set up event listeners
+            document.getElementById('pdfFile').addEventListener('change', loadPDF);
+            document.getElementById('subject').addEventListener('change', updateSaveInfo);
+            document.getElementById('question').addEventListener('change', updateCaptureTypeOptions);
+            document.getElementById('type').addEventListener('change', updateSaveInfo);
+            document.getElementById('page').addEventListener('change', goToPage);
+            document.getElementById('prevPage').addEventListener('click', prevPage);
+            document.getElementById('nextPage').addEventListener('click', nextPage);
+            document.getElementById('zoomIn').addEventListener('click', zoomIn);
+            document.getElementById('zoomOut').addEventListener('click', zoomOut);
+            document.getElementById('nextItem').addEventListener('click', nextItem);
+            document.getElementById('createFolders').addEventListener('click', createFolders);
+            
+            // Update save info
+            updateSaveInfo();
+            
+            // Set up keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    nextPage();
+                } else if (e.key === 'ArrowLeft') {
+                    prevPage();
+                } else if (e.key === 'Enter') {
+                    nextItem();
+                }
+            });
+        });
+        
+        // Load PDF
+        function loadPDF() {
+            const file = document.getElementById('pdfFile').files[0];
+            if (!file) return;
+            
+            const fileReader = new FileReader();
+            fileReader.onload = function() {
+                const typedarray = new Uint8Array(this.result);
+                
+                // Load PDF document
+                pdfjsLib.getDocument({data: typedarray}).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    document.getElementById('pageCount').textContent = `/ ${pdf.numPages}`;
+                    renderPage(pageNum);
+                });
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+        
+        // Render page
+        function renderPage(num) {
+            if (!pdfDoc) return;
+            
+            pageNum = num;
+            
+            // Update page input
+            document.getElementById('page').value = pageNum;
+            
+            // Create PDF URL with page and zoom
+            const url = URL.createObjectURL(document.getElementById('pdfFile').files[0]);
+            pdfViewer.src = url + '#page=' + pageNum + '&zoom=' + scale;
+        }
+        
+        // Go to previous page
+        function prevPage() {
+            if (!pdfDoc || pageNum <= 1) return;
+            pageNum--;
+            renderPage(pageNum);
+        }
+        
+        // Go to next page
+        function nextPage() {
+            if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            renderPage(pageNum);
+        }
+        
+        // Go to specific page
+        function goToPage() {
+            if (!pdfDoc) return;
+            
+            const num = parseInt(document.getElementById('page').value);
+            if (isNaN(num)) return;
+            
+            if (num >= 1 && num <= pdfDoc.numPages) {
+                renderPage(num);
+            }
+        }
+        
+        // Zoom in
+        function zoomIn() {
+            scale += 0.25;
+            renderPage(pageNum);
+        }
+        
+        // Zoom out
+        function zoomOut() {
+            if (scale <= 0.5) return;
+            scale -= 0.25;
+            renderPage(pageNum);
+        }
+        
+        // Update question dropdown
+        function updateQuestionDropdown() {
+            const dropdown = document.getElementById('question');
+            dropdown.innerHTML = '';
+            
+            // Add 17 questions by default
+            for (let i = 1; i <= 17; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Question ${i}`;
+                dropdown.appendChild(option);
+            }
+            
+            // Update capture type options
+            updateCaptureTypeOptions();
+        }
+        
+        // Update capture type options
+        function updateCaptureTypeOptions() {
+            const dropdown = document.getElementById('type');
+            const question = parseInt(document.getElementById('question').value);
+            
+            // Check if this question has options
+            const hasOptions = questionsWithOptions.includes(question);
+            
+            // Enable/disable option selections
+            const optionElements = dropdown.querySelectorAll('option[value^="option"]');
+            optionElements.forEach(opt => {
+                opt.disabled = !hasOptions;
+            });
+            
+            // If current selection is an option but question doesn't have options, switch to question
+            if (dropdown.value.startsWith('option') && !hasOptions) {
+                dropdown.value = 'question';
+            }
+            
+            // Update save info
+            updateSaveInfo();
+        }
+        
+        // Update save info
+        function updateSaveInfo() {
+            const paperName = document.getElementById('paperName').value.trim() || '2024-2';
+            const subject = document.getElementById('subject').value;
+            const question = document.getElementById('question').value;
+            const type = document.getElementById('type').value;
+            
+            let filename;
+            if (type === 'question') {
+                filename = `Question-${question}.png`;
+            } else {
+                const optionNum = type.replace('option', '');
+                filename = `Question-${question} Option-${optionNum}.png`;
+            }
+            
+            const path = `C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}\\${subject}\\${filename}`;
+            document.getElementById('saveInfo').textContent = `Save screenshot as: ${path}`;
+        }
+        
+        // Next item
+        function nextItem() {
+            const subject = document.getElementById('subject').value;
+            const question = parseInt(document.getElementById('question').value);
+            const type = document.getElementById('type').value;
+            
+            // Check if this question has options
+            const hasOptions = questionsWithOptions.includes(question);
+            
+            // Logic to move to next item
+            if (type === 'question' && hasOptions) {
+                // Move to option 1
+                document.getElementById('type').value = 'option1';
+            } else if (type === 'option1') {
+                // Move to option 2
+                document.getElementById('type').value = 'option2';
+            } else if (type === 'option2') {
+                // Move to option 3
+                document.getElementById('type').value = 'option3';
+            } else if (type === 'option3') {
+                // Move to option 4
+                document.getElementById('type').value = 'option4';
+            } else {
+                // Move to next question or subject
+                if (question < 17) {
+                    // Next question
+                    document.getElementById('question').value = question + 1;
+                    document.getElementById('type').value = 'question';
+                } else {
+                    // Next subject
+                    if (subject === 'Chemistry') {
+                        document.getElementById('subject').value = 'Maths';
+                        document.getElementById('question').value = 1;
+                        document.getElementById('type').value = 'question';
+                    } else if (subject === 'Maths') {
+                        document.getElementById('subject').value = 'Physics';
+                        document.getElementById('question').value = 1;
+                        document.getElementById('type').value = 'question';
+                    } else {
+                        // Finished all subjects
+                        alert('You have completed all items!');
+                    }
+                }
+            }
+            
+            // Update capture type options
+            updateCaptureTypeOptions();
+        }
+        
+        // Create folders
+        function createFolders() {
+            const paperName = document.getElementById('paperName').value.trim() || '2024-2';
+            
+            // Generate batch commands
+            let commands = [];
+            
+            // Create main paper directory
+            commands.push(`mkdir "C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}"`);
+            
+            // Create section files
+            for (let i = 1; i <= 4; i++) {
+                commands.push(`echo. > "C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}\\Section-${i}.png"`);
+            }
+            
+            // Create subject folders and their contents
+            const subjects = ["Chemistry", "Maths", "Physics"];
+            for (const subject of subjects) {
+                commands.push(`mkdir "C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}\\${subject}"`);
+                
+                // Create question files
+                for (let q = 1; q <= 17; q++) {
+                    // Create main question file
+                    commands.push(`echo. > "C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}\\${subject}\\Question-${q}.png"`);
+                    
+                    // Create option files for questions with options
+                    if (questionsWithOptions.includes(q)) {
+                        for (let opt = 1; opt <= 4; opt++) {
+                            commands.push(`echo. > "C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\${paperName}\\${subject}\\Question-${q} Option-${opt}.png"`);
+                        }
+                    }
+                }
+            }
+            
+            // Create batch file
+            const batchContent = commands.join('\n');
+            const blob = new Blob([batchContent], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            
+            // Create download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `create_${paperName}_folders.bat`;
+            a.click();
+            
+            alert(`Batch file downloaded. Run it to create the folder structure for ${paperName}.`);
+        }
+    </script>
+</body>
+</html>
