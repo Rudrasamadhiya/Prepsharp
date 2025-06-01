@@ -198,6 +198,26 @@
                 </ul>
             </div>
             
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Upload PDF for Question Images</h3>
+                <div class="form-group">
+                    <label for="pdf-upload">Upload PDF with question images:</label>
+                    <input type="file" id="pdf-upload" accept="application/pdf" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button id="upload-pdf-btn" class="btn" style="background-color: #FF5722; color: white;">Upload PDF</button>
+                </div>
+                <div id="pdf-preview" style="margin-top: 15px; display: none;">
+                    <h4>PDF Preview</h4>
+                    <div id="pdf-container" style="border: 1px solid #ddd; min-height: 300px;"></div>
+                    <div style="margin-top: 10px;">
+                        <button id="prev-page" class="btn btn-secondary">Previous Page</button>
+                        <span id="page-num" style="margin: 0 10px;">Page: 1 / 1</span>
+                        <button id="next-page" class="btn btn-secondary">Next Page</button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="success-message" id="successMessage"></div>
             
             <div class="tab-container">
@@ -235,6 +255,7 @@
 
     <script src="add-question-jee-advanced-2024.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script>
         // Initialize paper
         const paper = jeeAdvanced2024.initPaper('paper1');
@@ -313,6 +334,7 @@
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button type="button" class="btn btn-secondary remove-question" data-id="${questionId}" data-subject="${subject}">Remove Question</button>
                     <button type="button" class="btn" style="background-color: #4CAF50; color: white;" onclick="takeScreenshot('question-${questionId}')">Take Screenshot</button>
+                    <button type="button" class="btn" style="background-color: #FF9800; color: white;" onclick="takeOptionsScreenshot('options-${questionId}')">Screenshot Options</button>
                 </div>
             `;
             
@@ -699,6 +721,149 @@
                 element.classList.remove('screenshot-highlight');
             });
         }
+        
+        // Function to take screenshot of options only
+        function takeOptionsScreenshot(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                alert('Options element not found');
+                return;
+            }
+            
+            // Add a class to highlight the element being captured
+            element.classList.add('screenshot-highlight');
+            
+            html2canvas(element).then(canvas => {
+                // Remove the highlight class
+                element.classList.remove('screenshot-highlight');
+                
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `options-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+                element.classList.remove('screenshot-highlight');
+            });
+        }
+        
+        // PDF handling
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        // Function to render a specific page of the PDF
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Get the page
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Clear previous content
+                const container = document.getElementById('pdf-container');
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                // Render PDF page into canvas context
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    // Update page counters
+                    document.getElementById('page-num').textContent = `Page: ${num} / ${pdfDoc.numPages}`;
+                    
+                    if (pageNumPending !== null) {
+                        // New page rendering is pending
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+        }
+        
+        // Function to display previous page
+        function onPrevPage() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        
+        // Function to display next page
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+        
+        // Function to queue rendering of a page
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        // Handle PDF upload
+        document.getElementById('upload-pdf-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('pdf-upload');
+            const file = fileInput.files[0];
+            
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const typedarray = new Uint8Array(e.target.result);
+                
+                // Load the PDF
+                pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    pageNum = 1;
+                    
+                    // Show PDF preview
+                    document.getElementById('pdf-preview').style.display = 'block';
+                    
+                    // Render first page
+                    renderPage(pageNum);
+                    
+                    // Show success message with screenshot prompt
+                    alert('PDF uploaded successfully! You can now take screenshots of questions and options from the PDF.');
+                }).catch(function(error) {
+                    console.error('Error loading PDF:', error);
+                    alert('Failed to load PDF. Please check console for details.');
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+        
+        // Set up page navigation buttons
+        document.getElementById('prev-page').addEventListener('click', onPrevPage);
+        document.getElementById('next-page').addEventListener('click', onNextPage);
         
         // Initialize with one question per subject
         addQuestion('physics');
