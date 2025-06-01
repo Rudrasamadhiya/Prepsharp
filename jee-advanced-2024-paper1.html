@@ -261,6 +261,68 @@
         document.getElementById('add-chemistry-question').addEventListener('click', () => addQuestion('chemistry'));
         document.getElementById('add-mathematics-question').addEventListener('click', () => addQuestion('mathematics'));
         
+        // Load available question images
+        const questionImages = {
+            physics: [],
+            chemistry: [],
+            mathematics: []
+        };
+        
+        // Function to initialize question images
+        function initQuestionImages() {
+            // Physics images path
+            for (let i = 1; i <= 17; i++) {
+                questionImages.physics.push(`papers/2024-1/Physics/Question-${i}.png`);
+            }
+            
+            // Chemistry images path
+            for (let i = 1; i <= 17; i++) {
+                questionImages.chemistry.push(`papers/2024-1/Chemistry/Question-${i}.png`);
+            }
+            
+            // Mathematics images path (using Maths folder)
+            for (let i = 1; i <= 17; i++) {
+                questionImages.mathematics.push(`papers/2024-1/Maths/Question-${i}.png`);
+            }
+        }
+        
+        // Function to get option image paths
+        function getOptionImageOptions(subject, questionId, optionNum) {
+            const questionNum = parseInt(document.getElementById(`image-select-${questionId}`).selectedIndex);
+            if (!questionNum) return '';
+            
+            let subjectFolder = subject;
+            if (subject === 'mathematics') subjectFolder = 'Maths';
+            
+            const optionPath = `papers/2024-1/${subjectFolder}/Question-${questionNum} Option-${optionNum}.png`;
+            return `<option value="${optionPath}">Option ${optionNum}</option>`;
+        }
+        
+        // Function to load option image
+        function loadOptionImage(imagePath, optionId) {
+            const imgElement = document.getElementById(`option-image-${optionId}`);
+            if (imagePath) {
+                imgElement.src = imagePath;
+                imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
+            }
+        }
+        
+        // Initialize images
+        initQuestionImages();
+        
+        // Function to load question image
+        function loadQuestionImage(imagePath, questionId) {
+            const imgElement = document.getElementById(`image-${questionId}`);
+            if (imagePath) {
+                imgElement.src = imagePath;
+                imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
+            }
+        }
+        
         // Function to add a new question
         function addQuestion(subject) {
             // Get available question types
@@ -300,8 +362,14 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="text-${questionId}">Question Text</label>
-                    <textarea id="text-${questionId}" rows="3" placeholder="Enter question text"></textarea>
+                    <label for="image-${questionId}">Question Image</label>
+                    <div class="question-image-container">
+                        <img id="image-${questionId}" src="" style="max-width: 100%; display: none;">
+                    </div>
+                    <select id="image-select-${questionId}" class="image-selector" onchange="loadQuestionImage(this.value, '${questionId}')">
+                        <option value="">Select Question Image</option>
+                        ${questionImages[subject].map((path, index) => `<option value="${path}">Question ${index + 1}</option>`).join('')}
+                    </select>
                 </div>
                 
                 <div id="options-${questionId}" class="option-group">
@@ -338,9 +406,11 @@
             });
         }
         
-        // Function to update question type
+        // Function to update question type and load option images if needed
         function updateQuestionType(questionId, type) {
             const optionsContainer = document.getElementById(`options-${questionId}`);
+            const imageSelect = document.getElementById(`image-select-${questionId}`);
+            const subject = imageSelect.closest('.tab-content').id.replace('-tab', '');
             
             // Clear existing options
             optionsContainer.innerHTML = '';
@@ -366,7 +436,13 @@
                     optionDiv.innerHTML = `
                         <input type="${inputType}" id="${inputName}" name="correct-${questionId}" value="${i}">
                         <label for="${inputName}" style="display:inline; margin-right: 10px;">${letter}.</label>
-                        <input type="text" id="option-${questionId}-${i}" placeholder="Option ${letter}">
+                        <div class="option-image-container" style="flex-grow: 1;">
+                            <img id="option-image-${questionId}-${i}" src="" style="max-width: 100%; display: none;">
+                            <select id="option-${questionId}-${i}" class="option-image-selector" onchange="loadOptionImage(this.value, '${questionId}-${i}')">
+                                <option value="">Select Option Image</option>
+                                ${getOptionImageOptions(subject, questionId, i+1)}
+                            </select>
+                        </div>
                     `;
                     
                     optionsContainer.appendChild(optionDiv);
@@ -487,11 +563,12 @@
                     
                     const questionId = typeSelect.id.replace('type-', '');
                     const questionType = typeSelect.value;
-                    const questionText = container.querySelector(`#text-${questionId}`).value;
+                    const imageSelect = container.querySelector(`#image-select-${questionId}`);
+                    const questionImage = imageSelect ? imageSelect.value : '';
                     const explanation = container.querySelector(`#explanation-${questionId}`).value;
                     
-                    if (!questionText) {
-                        alert(`Please enter text for a ${subject} question`);
+                    if (!questionImage) {
+                        alert(`Please select an image for a ${subject} question`);
                         allValid = false;
                         return;
                     }
@@ -502,7 +579,8 @@
                             let hasCorrectOption = false;
                             
                             for (let i = 0; i < 4; i++) {
-                                const optionText = container.querySelector(`#option-${questionId}-${i}`).value;
+                                const optionSelect = container.querySelector(`#option-${questionId}-${i}`);
+                                const optionText = optionSelect ? optionSelect.value : '';
                                 
                                 if (!optionText) {
                                     alert(`Please enter text for option ${String.fromCharCode(65 + i)} in a ${subject} question`);
@@ -535,7 +613,7 @@
                             }
                             
                             jeeAdvanced2024.addQuestion(subject, questionType, {
-                                text: questionText,
+                                text: questionImage, // Using image path instead of text
                                 explanation: explanation,
                                 options: options
                             });
@@ -550,7 +628,7 @@
                             }
                             
                             jeeAdvanced2024.addQuestion(subject, questionType, {
-                                text: questionText,
+                                text: questionImage, // Using image path instead of text
                                 explanation: explanation,
                                 answer: parseInt(answer)
                             });
@@ -603,7 +681,7 @@
                             const correctOption = parseInt(selectedOption.value);
                             
                             jeeAdvanced2024.addQuestion(subject, questionType, {
-                                text: questionText,
+                                text: questionImage, // Using image path instead of text
                                 explanation: explanation,
                                 matchItems: {
                                     list1: list1Items,
@@ -992,6 +1070,19 @@
                 alert('Failed to take screenshot. Please check console for details.');
             });
         }
+        
+        // Add event listener to update option images when question image changes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('image-selector')) {
+                const questionId = e.target.id.replace('image-select-', '');
+                const type = document.getElementById(`type-${questionId}`).value;
+                
+                if (type === 'mcq' || type === 'scq') {
+                    // Update option selectors
+                    updateQuestionType(questionId, type);
+                }
+            }
+        });
         
         // Initialize with one question per subject
         addQuestion('physics');
