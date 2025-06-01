@@ -242,6 +242,20 @@
         // Initialize paper
         const paper = jeeAdvanced2024.initPaper('paper1');
         
+        // Add tracking method to jeeAdvanced2024 if not exists
+        if (!jeeAdvanced2024.trackQuestionType) {
+            jeeAdvanced2024.trackQuestionType = function(subject, type) {
+                // Find the type in available types and decrement its count
+                const availableTypes = this.getAvailableTypes(subject);
+                for (let i = 0; i < availableTypes.length; i++) {
+                    if (availableTypes[i].type === type) {
+                        availableTypes[i].remaining--;
+                        break;
+                    }
+                }
+            };
+        }
+        
         // Tab switching
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
@@ -284,6 +298,13 @@
             for (let i = 1; i <= 17; i++) {
                 questionImages.mathematics.push(`papers/2024-1/Maths/Question-${i}.png`);
             }
+            
+            // Log available images for debugging
+            console.log("Available question images initialized:", {
+                physics: questionImages.physics.length,
+                chemistry: questionImages.chemistry.length,
+                mathematics: questionImages.mathematics.length
+            });
         }
         
         // Function to get option image paths
@@ -317,22 +338,38 @@
         function loadQuestionImage(imagePath, questionId) {
             const imgElement = document.getElementById(`image-${questionId}`);
             if (imagePath) {
-                imgElement.src = imagePath;
-                imgElement.style.display = 'block';
-                
-                // Get the question type and subject
-                const typeSelect = document.getElementById(`type-${questionId}`);
-                if (typeSelect) {
-                    const type = typeSelect.value;
-                    if (type === 'mcq' || type === 'scq') {
-                        const subject = imgElement.closest('.tab-content').id.replace('-tab', '');
-                        
-                        // Auto-load option images with a delay to ensure DOM is ready
-                        setTimeout(() => {
-                            autoLoadOptionImages(questionId, subject);
-                        }, 300);
+                // Create a new image to verify the path works
+                const testImg = new Image();
+                testImg.onload = function() {
+                    // Image loaded successfully
+                    imgElement.src = imagePath;
+                    imgElement.style.display = 'block';
+                    console.log(`Loaded question image: ${imagePath}`);
+                    
+                    // Get the question type and subject
+                    const typeSelect = document.getElementById(`type-${questionId}`);
+                    if (typeSelect) {
+                        const type = typeSelect.value;
+                        if (type === 'mcq' || type === 'scq') {
+                            const tabContent = imgElement.closest('.tab-content');
+                            if (tabContent) {
+                                const subject = tabContent.id.replace('-tab', '');
+                                
+                                // Auto-load option images with a delay to ensure DOM is ready
+                                setTimeout(() => {
+                                    autoLoadOptionImages(questionId, subject);
+                                }, 300);
+                            }
+                        }
                     }
-                }
+                };
+                
+                testImg.onerror = function() {
+                    console.error(`Failed to load image: ${imagePath}`);
+                    imgElement.style.display = 'none';
+                };
+                
+                testImg.src = imagePath;
             } else {
                 imgElement.style.display = 'none';
             }
@@ -584,6 +621,9 @@
                         allValid = false;
                         return;
                     }
+                    
+                    // Track this question type to ensure counts are updated
+                    jeeAdvanced2024.trackQuestionType(subject, questionType);
                     
                     try {
                         if (questionType === 'mcq' || questionType === 'scq') {
@@ -1097,13 +1137,19 @@
             let subjectFolder = subject;
             if (subject === 'mathematics') subjectFolder = 'Maths';
             
+            console.log(`Loading options for ${subjectFolder} question ${questionNum}`);
+            
             // Load each option image
             for (let i = 0; i < 4; i++) {
                 const optionPath = `papers/2024-1/${subjectFolder}/Question-${questionNum} Option-${i+1}.png`;
                 const optionSelect = document.getElementById(`option-${questionId}-${i}`);
-                if (optionSelect) {
+                const optionImg = document.getElementById(`option-image-${questionId}-${i}`);
+                
+                if (optionSelect && optionImg) {
                     optionSelect.value = optionPath;
-                    loadOptionImage(optionPath, `${questionId}-${i}`);
+                    optionImg.src = optionPath;
+                    optionImg.style.display = 'block';
+                    console.log(`Set option ${i+1} to ${optionPath}`);
                 }
             }
         }
