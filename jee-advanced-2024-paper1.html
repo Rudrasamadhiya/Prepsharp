@@ -382,7 +382,7 @@
             
             if (availableTypes.length === 0) {
                 alert(`Maximum questions reached for ${subject}. You cannot add more questions.`);
-                return null;
+                return;
             }
             
             // Generate question ID
@@ -456,25 +456,13 @@
                 const subject = this.getAttribute('data-subject');
                 removeQuestion(id, subject);
             });
-            
-            // Return the question ID so it can be used for further operations
-            return questionId;
         }
         
         // Function to update question type and load option images if needed
         function updateQuestionType(questionId, type) {
             const optionsContainer = document.getElementById(`options-${questionId}`);
             const imageSelect = document.getElementById(`image-select-${questionId}`);
-            let subject = '';
-            
-            if (imageSelect && imageSelect.closest('.tab-content')) {
-                subject = imageSelect.closest('.tab-content').id.replace('-tab', '');
-            } else if (document.getElementById(`question-${questionId}`)) {
-                const questionContainer = document.getElementById(`question-${questionId}`);
-                if (questionContainer.closest('.tab-content')) {
-                    subject = questionContainer.closest('.tab-content').id.replace('-tab', '');
-                }
-            }
+            const subject = imageSelect.closest('.tab-content').id.replace('-tab', '');
             
             // Clear existing options
             optionsContainer.innerHTML = '';
@@ -1162,22 +1150,6 @@
                     optionImg.src = optionPath;
                     optionImg.style.display = 'block';
                     console.log(`Set option ${i+1} to ${optionPath}`);
-                    
-                    // For MCQ, randomly select some options as correct
-                    const questionType = document.getElementById(`type-${questionId}`).value;
-                    if (questionType === 'mcq') {
-                        const checkbox = document.getElementById(`correct-${questionId}-${i}`);
-                        if (checkbox) {
-                            // Randomly check some options (about 50% chance)
-                            checkbox.checked = Math.random() > 0.5;
-                        }
-                    } else if (questionType === 'scq' && i === 0) {
-                        // For SCQ, select the first option as correct
-                        const radio = document.getElementById(`correct-${questionId}-${i}`);
-                        if (radio) {
-                            radio.checked = true;
-                        }
-                    }
                 }
             }
         }
@@ -1201,97 +1173,10 @@
             }
         });
         
-        // Function to automatically add and configure questions
-        function autoAddQuestions() {
-            // Add questions for each subject
-            const subjects = ['physics', 'chemistry', 'mathematics'];
-            const questionTypes = ['scq', 'mcq', 'integer', 'matchList'];
-            
-            subjects.forEach(subject => {
-                // Clear existing questions
-                document.getElementById(`${subject}-questions`).innerHTML = '';
-                
-                // Add questions of each type
-                for (let i = 0; i < 4; i++) {
-                    // Add single correct questions
-                    const scqId = addQuestion(subject);
-                    const scqSelect = document.getElementById(`type-${scqId}`);
-                    if (scqSelect) {
-                        scqSelect.value = 'scq';
-                        scqSelect.dispatchEvent(new Event('change'));
-                        
-                        // Set question image
-                        const imageSelect = document.getElementById(`image-select-${scqId}`);
-                        if (imageSelect && imageSelect.options.length > i+1) {
-                            imageSelect.selectedIndex = i+1;
-                            imageSelect.dispatchEvent(new Event('change'));
-                        }
-                    }
-                }
-                
-                for (let i = 0; i < 3; i++) {
-                    // Add multiple correct questions
-                    const mcqId = addQuestion(subject);
-                    const mcqSelect = document.getElementById(`type-${mcqId}`);
-                    if (mcqSelect) {
-                        mcqSelect.value = 'mcq';
-                        mcqSelect.dispatchEvent(new Event('change'));
-                        
-                        // Set question image
-                        const imageSelect = document.getElementById(`image-select-${mcqId}`);
-                        if (imageSelect && imageSelect.options.length > i+5) {
-                            imageSelect.selectedIndex = i+5;
-                            imageSelect.dispatchEvent(new Event('change'));
-                        }
-                    }
-                }
-                
-                for (let i = 0; i < 6; i++) {
-                    // Add integer questions
-                    const intId = addQuestion(subject);
-                    const intSelect = document.getElementById(`type-${intId}`);
-                    if (intSelect) {
-                        intSelect.value = 'integer';
-                        intSelect.dispatchEvent(new Event('change'));
-                        
-                        // Set question image
-                        const imageSelect = document.getElementById(`image-select-${intId}`);
-                        if (imageSelect && imageSelect.options.length > i+8) {
-                            imageSelect.selectedIndex = i+8;
-                            imageSelect.dispatchEvent(new Event('change'));
-                            
-                            // Set integer answer
-                            setTimeout(() => {
-                                const answerInput = document.getElementById(`answer-${intId}`);
-                                if (answerInput) {
-                                    answerInput.value = Math.floor(Math.random() * 100);
-                                }
-                            }, 300);
-                        }
-                    }
-                }
-                
-                for (let i = 0; i < 4; i++) {
-                    // Add match list questions
-                    const matchId = addQuestion(subject);
-                    const matchSelect = document.getElementById(`type-${matchId}`);
-                    if (matchSelect) {
-                        matchSelect.value = 'matchList';
-                        matchSelect.dispatchEvent(new Event('change'));
-                        
-                        // Set question image
-                        const imageSelect = document.getElementById(`image-select-${matchId}`);
-                        if (imageSelect && imageSelect.options.length > i+14) {
-                            imageSelect.selectedIndex = i+14;
-                            imageSelect.dispatchEvent(new Event('change'));
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Run auto-add after a short delay to ensure everything is loaded
-        setTimeout(autoAddQuestions, 500);
+        // Initialize with one question per subject
+        addQuestion('physics');
+        addQuestion('chemistry');
+        addQuestion('mathematics');
     </script>
 </body>
 </html>
