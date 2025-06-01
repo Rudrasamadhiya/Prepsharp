@@ -75,6 +75,10 @@
             margin-bottom: 15px;
             border-radius: 4px;
         }
+        .screenshot-highlight {
+            box-shadow: 0 0 10px 5px rgba(76, 175, 80, 0.5);
+            transition: box-shadow 0.3s;
+        }
         .option-group {
             margin-top: 10px;
         }
@@ -230,6 +234,7 @@
     </div>
 
     <script src="add-question-jee-advanced-2024.js"></script>
+    <script src="https://html2canvas.min.js"></script>
     <script>
         // Initialize paper
         const paper = jeeAdvanced2024.initPaper('paper1');
@@ -266,6 +271,7 @@
             // Create question container
             const questionContainer = document.createElement('div');
             questionContainer.className = 'question-container';
+            questionContainer.id = `question-${questionId}`;
             
             // Generate question ID
             const questionId = `q${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -304,7 +310,10 @@
                     <textarea id="explanation-${questionId}" rows="2" placeholder="Enter explanation"></textarea>
                 </div>
                 
-                <button type="button" class="btn btn-secondary remove-question" data-id="${questionId}" data-subject="${subject}">Remove Question</button>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="btn btn-secondary remove-question" data-id="${questionId}" data-subject="${subject}">Remove Question</button>
+                    <button type="button" class="btn" style="background-color: #4CAF50; color: white;" onclick="takeScreenshot('question-${questionId}')">Take Screenshot</button>
+                </div>
             `;
             
             // Add to subject questions container
@@ -663,6 +672,33 @@
         document.getElementById('dashboard-btn').addEventListener('click', function() {
             window.location.href = 'dashboard.html';
         });
+        
+        // Function to take screenshot of a question
+        function takeScreenshot(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                alert('Element not found');
+                return;
+            }
+            
+            // Add a class to highlight the element being captured
+            element.classList.add('screenshot-highlight');
+            
+            html2canvas(element).then(canvas => {
+                // Remove the highlight class
+                element.classList.remove('screenshot-highlight');
+                
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `question-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+                element.classList.remove('screenshot-highlight');
+            });
+        }
         
         // Initialize with one question per subject
         addQuestion('physics');
