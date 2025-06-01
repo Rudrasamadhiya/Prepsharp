@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Paper Creator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+        .step { display: none; margin-bottom: 20px; }
+        .active { display: block; }
+        button { padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        input, select { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        #pdfContainer { position: relative; width: 100%; height: 600px; border: 1px solid #ddd; overflow: hidden; }
+        #pdfViewer { width: 100%; height: 100%; }
+        #selectionBox { position: absolute; border: 2px dashed red; background-color: rgba(255, 0, 0, 0.1); display: none; }
+        #controls { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+        .info { background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Simple Paper Creator</h1>
+    
+    <!-- Step 1: Setup -->
+    <div id="step1" class="step active">
+        <h2>Step 1: Setup</h2>
+        <div>
+            <label for="paperName">Paper Name (e.g., 2024-2):</label>
+            <input type="text" id="paperName" placeholder="Enter paper name">
+        </div>
+        <div>
+            <label for="pdfFile">Select PDF File:</label>
+            <input type="file" id="pdfFile" accept="application/pdf">
+        </div>
+        <div class="info">
+            <p><strong>Note:</strong> Due to browser security restrictions, this tool can't automatically save files to your computer. 
+            When you press Enter to capture, the screenshot will open in a new tab where you can right-click and save it with the suggested filename.</p>
+        </div>
+        <button id="startCapture">Start Capturing</button>
+    </div>
+    
+    <!-- Step 2: Capture -->
+    <div id="step2" class="step">
+        <h2>Step 2: Capture Screenshots</h2>
+        
+        <div id="controls">
+            <div>
+                <label for="currentSubject">Subject:</label>
+                <select id="currentSubject">
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Maths">Maths</option>
+                    <option value="Physics">Physics</option>
+                </select>
+                
+                <label for="currentQuestion">Question:</label>
+                <select id="currentQuestion"></select>
+                
+                <label for="captureType">Type:</label>
+                <select id="captureType">
+                    <option value="question">Question</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                    <option value="option4">Option 4</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="pageNum">Page:</label>
+                <input type="number" id="pageNum" min="1" value="1" style="width: 60px;">
+                <span id="pageCount">/ 1</span>
+                
+                <button id="prevPage">Previous Page</button>
+                <button id="nextPage">Next Page</button>
+                <button id="zoomIn">Zoom In</button>
+                <button id="zoomOut">Zoom Out</button>
+            </div>
+        </div>
+        
+        <div class="info">
+            <p><strong>Instructions:</strong> Click and drag to select an area, then press <strong>Enter</strong> to capture. 
+            The screenshot will open in a new tab - right-click and save it with the filename shown below.</p>
+            <p id="saveFilename" style="font-weight: bold;"></p>
+        </div>
+        
+        <div id="pdfContainer">
+            <canvas id="pdfViewer"></canvas>
+            <div id="selectionBox"></div>
+        </div>
+        
+        <div>
+            <button id="nextItem">Next Item</button>
+            <button id="finish">Finish</button>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        
+        // Global variables
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let scale = 1.5;
+        let canvas = document.getElementById('pdfViewer');
+        let ctx = canvas.getContext('2d');
+        
+        let paperData = {
+            name: '',
+            basePath: 'C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\'
+        };
+        
+        let currentState = {
+            subject: 'Chemistry',
+            question: 1,
+            captureType: 'question',
+            hasOptions: true
+        };
+        
+        let selection = {
+            startX: 0,
+            startY: 0,
+            endX: 0,
+            endY: 0,
+            isSelecting: false
+        };
+        
+        // Initialize the application
+        document.getElementById('startCapture').addEventListener('click', function() {
+            const paperName = document.getElementById('paperName').value.trim();
+            const pdfFile = document.getElementById('pdfFile').files[0];
+            
+            if (!paperName) {
+                alert('Please enter a paper name');
+                return;
+            }
+            
+            if (!pdfFile) {
+                alert('Please select a PDF file');
+                return;
+            }
+            
+            paperData.name = paperName;
+            
+            // Load the PDF
+            const fileReader = new FileReader();
+            fileReader.onload = function() {
+                const typedarray = new Uint8Array(this.result);
+                loadPDF(typedarray);
+                
+                // Move to step 2
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+                
+                // Initialize question dropdown
+                updateQuestionDropdown();
+                
+                // Update save filename
+                updateSaveFilename();
+            };
+            fileReader.readAsArrayBuffer(pdfFile);
+        });
+        
+        // Load PDF document
+        function loadPDF(data) {
+            pdfjsLib.getDocument({data: data}).promise.then(function(pdf) {
+                pdfDoc = pdf;
+                document.getElementById('pageCount').textContent = `/ ${pdf.numPages}`;
+                renderPage(pageNum);
+            });
+        }
+        
+        // Render the page
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Using promise to fetch the page
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({scale: scale});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Render PDF page into canvas context
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    if (pageNumPending !== null) {
+                        // New page rendering is pending
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+            
+            // Update page number input
+            document.getElementById('pageNum').value = num;
+        }
+        
+        // Go to previous page
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+        
+        // Go to next page
+        document.getElementById('nextPage').addEventListener('click', function() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+        
+        // Page number input
+        document.getElementById('pageNum').addEventListener('change', function() {
+            const num = parseInt(this.value);
+            if (num > 0 && num <= pdfDoc.numPages) {
+                pageNum = num;
+                queueRenderPage(pageNum);
+            } else {
+                this.value = pageNum;
+            }
+        });
+        
+        // Zoom in
+        document.getElementById('zoomIn').addEventListener('click', function() {
+            scale += 0.25;
+            queueRenderPage(pageNum);
+        });
+        
+        // Zoom out
+        document.getElementById('zoomOut').addEventListener('click', function() {
+            if (scale <= 0.5) return;
+            scale -= 0.25;
+            queueRenderPage(pageNum);
+        });
+        
+        // Queue the page rendering
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        // Update question dropdown
+        function updateQuestionDropdown() {
+            const dropdown = document.getElementById('currentQuestion');
+            dropdown.innerHTML = '';
+            
+            // Add 17 questions by default
+            for (let i = 1; i <= 17; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Question ${i}`;
+                dropdown.appendChild(option);
+            }
+            
+            // Set current question
+            dropdown.value = currentState.question;
+            
+            // Update capture type options
+            updateCaptureTypeOptions();
+        }
+        
+        // Update capture type options
+        function updateCaptureTypeOptions() {
+            const dropdown = document.getElementById('captureType');
+            const question = parseInt(currentState.question);
+            
+            // By default, questions 1-7 and 14-17 have options
+            const hasOptions = (question <= 7 || question >= 14);
+            currentState.hasOptions = hasOptions;
+            
+            // Enable/disable option selections
+            const optionElements = dropdown.querySelectorAll('option[value^="option"]');
+            optionElements.forEach(opt => {
+                opt.disabled = !hasOptions;
+            });
+            
+            // If current selection is an option but question doesn't have options, switch to question
+            if (currentState.captureType.startsWith('option') && !hasOptions) {
+                dropdown.value = 'question';
+                currentState.captureType = 'question';
+            }
+            
+            // Update save filename
+            updateSaveFilename();
+        }
+        
+        // Update save filename
+        function updateSaveFilename() {
+            const subject = currentState.subject;
+            const question = currentState.question;
+            const captureType = currentState.captureType;
+            
+            let filename;
+            if (captureType === 'question') {
+                filename = `Question-${question}.png`;
+            } else {
+                const optionNum = captureType.replace('option', '');
+                filename = `Question-${question} Option-${optionNum}.png`;
+            }
+            
+            const path = `${paperData.basePath}${paperData.name}\\${subject}\\${filename}`;
+            document.getElementById('saveFilename').textContent = `Save as: ${path}`;
+        }
+        
+        // Event listeners for controls
+        document.getElementById('currentSubject').addEventListener('change', function() {
+            currentState.subject = this.value;
+            updateSaveFilename();
+        });
+        
+        document.getElementById('currentQuestion').addEventListener('change', function() {
+            currentState.question = this.value;
+            updateCaptureTypeOptions();
+        });
+        
+        document.getElementById('captureType').addEventListener('change', function() {
+            currentState.captureType = this.value;
+            updateSaveFilename();
+        });
+        
+        // Selection box functionality
+        const pdfContainer = document.getElementById('pdfContainer');
+        const selectionBox = document.getElementById('selectionBox');
+        
+        pdfContainer.addEventListener('mousedown', function(e) {
+            const rect = pdfContainer.getBoundingClientRect();
+            selection.startX = e.clientX - rect.left;
+            selection.startY = e.clientY - rect.top;
+            selection.isSelecting = true;
+            
+            selectionBox.style.left = `${selection.startX}px`;
+            selectionBox.style.top = `${selection.startY}px`;
+            selectionBox.style.width = '0';
+            selectionBox.style.height = '0';
+            selectionBox.style.display = 'block';
+        });
+        
+        pdfContainer.addEventListener('mousemove', function(e) {
+            if (!selection.isSelecting) return;
+            
+            const rect = pdfContainer.getBoundingClientRect();
+            selection.endX = e.clientX - rect.left;
+            selection.endY = e.clientY - rect.top;
+            
+            const width = Math.abs(selection.endX - selection.startX);
+            const height = Math.abs(selection.endY - selection.startY);
+            
+            const left = Math.min(selection.startX, selection.endX);
+            const top = Math.min(selection.startY, selection.endY);
+            
+            selectionBox.style.left = `${left}px`;
+            selectionBox.style.top = `${top}px`;
+            selectionBox.style.width = `${width}px`;
+            selectionBox.style.height = `${height}px`;
+        });
+        
+        pdfContainer.addEventListener('mouseup', function() {
+            selection.isSelecting = false;
+        });
+        
+        // Capture screenshot on Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('step2').classList.contains('active')) {
+                captureScreenshot();
+            }
+        });
+        
+        // Capture screenshot
+        function captureScreenshot() {
+            if (selectionBox.style.display !== 'block') {
+                alert('Please select an area first by clicking and dragging');
+                return;
+            }
+            
+            const left = parseInt(selectionBox.style.left);
+            const top = parseInt(selectionBox.style.top);
+            const width = parseInt(selectionBox.style.width);
+            const height = parseInt(selectionBox.style.height);
+            
+            // Create a new canvas for the cropped image
+            const cropCanvas = document.createElement('canvas');
+            cropCanvas.width = width;
+            cropCanvas.height = height;
+            const cropCtx = cropCanvas.getContext('2d');
+            
+            // Draw the selected portion of the PDF canvas onto the crop canvas
+            cropCtx.drawImage(canvas, left, top, width, height, 0, 0, width, height);
+            
+            // Open the image in a new tab
+            const imageUrl = cropCanvas.toDataURL('image/png');
+            const newTab = window.open();
+            newTab.document.write(`<html><head><title>${document.getElementById('saveFilename').textContent}</title></head><body>`);
+            newTab.document.write(`<h3>${document.getElementById('saveFilename').textContent}</h3>`);
+            newTab.document.write(`<p>Right-click on the image and select "Save image as..." to save with the filename shown above.</p>`);
+            newTab.document.write(`<img src="${imageUrl}" alt="Screenshot">`);
+            newTab.document.write('</body></html>');
+            
+            // Hide selection box
+            selectionBox.style.display = 'none';
+        }
+        
+        // Next item button
+        document.getElementById('nextItem').addEventListener('click', function() {
+            const subject = currentState.subject;
+            const question = parseInt(currentState.question);
+            const captureType = currentState.captureType;
+            const hasOptions = currentState.hasOptions;
+            
+            // Logic to move to next item
+            if (captureType === 'question' && hasOptions) {
+                // Move to option 1
+                currentState.captureType = 'option1';
+            } else if (captureType === 'option1') {
+                // Move to option 2
+                currentState.captureType = 'option2';
+            } else if (captureType === 'option2') {
+                // Move to option 3
+                currentState.captureType = 'option3';
+            } else if (captureType === 'option3') {
+                // Move to option 4
+                currentState.captureType = 'option4';
+            } else {
+                // Move to next question or subject
+                if (question < 17) {
+                    // Next question
+                    currentState.question = question + 1;
+                    currentState.captureType = 'question';
+                } else {
+                    // Next subject
+                    if (subject === 'Chemistry') {
+                        currentState.subject = 'Maths';
+                        currentState.question = 1;
+                        currentState.captureType = 'question';
+                    } else if (subject === 'Maths') {
+                        currentState.subject = 'Physics';
+                        currentState.question = 1;
+                        currentState.captureType = 'question';
+                    } else {
+                        // Finished all subjects
+                        alert('You have completed all items!');
+                    }
+                }
+            }
+            
+            // Update UI
+            document.getElementById('currentSubject').value = currentState.subject;
+            document.getElementById('currentQuestion').value = currentState.question;
+            updateCaptureTypeOptions();
+            document.getElementById('captureType').value = currentState.captureType;
+        });
+        
+        // Finish button
+        document.getElementById('finish').addEventListener('click', function() {
+            alert('Paper creation process completed!');
+        });
+    </script>
+</body>
+</html>

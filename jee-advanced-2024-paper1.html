@@ -3,242 +3,1024 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Advanced 2024 Paper 1</title>
+    <title>Add JEE Advanced 2024 Paper 1 - PrepSharp</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        img { max-width: 100%; height: auto; margin-bottom: 10px; }
-        h2 { margin-top: 30px; }
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .screenshot-highlight {
+            box-shadow: 0 0 10px 5px rgba(76, 175, 80, 0.5);
+            transition: box-shadow 0.3s;
+        }
+        .option-group {
+            margin-top: 10px;
+        }
+        .option-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .option-container input[type="checkbox"],
+        .option-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .option-container input[type="text"] {
+            flex-grow: 1;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .question-type {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        .marking-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1976d2;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .match-list-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .match-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .match-item-label {
+            width: 30px;
+            font-weight: bold;
+        }
+        .match-item-input {
+            flex-grow: 1;
+        }
+        .match-options {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
-    <h1>JEE Advanced 2024 Paper 1</h1>
+    <header>
+        <h2>PrepSharp - Add JEE Advanced 2024 Paper 1</h2>
+        <div>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
     
-    <h2>Sections</h2>
-    <img src="papers/2024-1/Section-1.png" alt="Section 1">
-    <img src="papers/2024-1/Section-2.png" alt="Section 2">
-    <img src="papers/2024-1/Section-3.png" alt="Section 3">
-    <img src="papers/2024-1/Section-4.png" alt="Section 4">
-    
-    <h2>Physics</h2>
-    <img src="papers/2024-1/Physics/Question-1.png" alt="Physics Question 1">
-    <img src="papers/2024-1/Physics/Question-1 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-1 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-1 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-1 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-2.png" alt="Physics Question 2">
-    <img src="papers/2024-1/Physics/Question-2 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-2 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-2 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-2 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-3.png" alt="Physics Question 3">
-    <img src="papers/2024-1/Physics/Question-3 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-3 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-3 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-3 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-4.png" alt="Physics Question 4">
-    <img src="papers/2024-1/Physics/Question-4 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-4 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-4 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-4 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-5.png" alt="Physics Question 5">
-    <img src="papers/2024-1/Physics/Question-5 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-5 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-5 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-5 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-6.png" alt="Physics Question 6">
-    <img src="papers/2024-1/Physics/Question-6 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-6 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-6 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-6 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-7.png" alt="Physics Question 7">
-    <img src="papers/2024-1/Physics/Question-7 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-7 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-7 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-7 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-8.png" alt="Physics Question 8">
-    <img src="papers/2024-1/Physics/Question-9.png" alt="Physics Question 9">
-    <img src="papers/2024-1/Physics/Question-10.png" alt="Physics Question 10">
-    <img src="papers/2024-1/Physics/Question-11.png" alt="Physics Question 11">
-    <img src="papers/2024-1/Physics/Question-12.png" alt="Physics Question 12">
-    <img src="papers/2024-1/Physics/Question-13.png" alt="Physics Question 13">
-    
-    <img src="papers/2024-1/Physics/Question-14.png" alt="Physics Question 14">
-    <img src="papers/2024-1/Physics/Question-14 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-14 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-14 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-14 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-15.png" alt="Physics Question 15">
-    <img src="papers/2024-1/Physics/Question-15 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-15 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-15 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-15 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-16.png" alt="Physics Question 16">
-    <img src="papers/2024-1/Physics/Question-16 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-16 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-16 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-16 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Physics/Question-17.png" alt="Physics Question 17">
-    <img src="papers/2024-1/Physics/Question-17 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Physics/Question-17 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Physics/Question-17 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Physics/Question-17 Option-4.png" alt="Option 4">
-    
-    <h2>Chemistry</h2>
-    <img src="papers/2024-1/Chemistry/Question-1.png" alt="Chemistry Question 1">
-    <img src="papers/2024-1/Chemistry/Question-1 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-1 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-1 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-1 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-2.png" alt="Chemistry Question 2">
-    <img src="papers/2024-1/Chemistry/Question-2 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-2 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-2 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-2 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-3.png" alt="Chemistry Question 3">
-    <img src="papers/2024-1/Chemistry/Question-3 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-3 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-3 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-3 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-4.png" alt="Chemistry Question 4">
-    <img src="papers/2024-1/Chemistry/Question-4 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-4 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-4 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-4 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-5.png" alt="Chemistry Question 5">
-    <img src="papers/2024-1/Chemistry/Question-5 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-5 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-5 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-5 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-6.png" alt="Chemistry Question 6">
-    <img src="papers/2024-1/Chemistry/Question-6 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-6 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-6 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-6 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-7.png" alt="Chemistry Question 7">
-    <img src="papers/2024-1/Chemistry/Question-7 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-7 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-7 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-7 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-8.png" alt="Chemistry Question 8">
-    <img src="papers/2024-1/Chemistry/Question-9.png" alt="Chemistry Question 9">
-    <img src="papers/2024-1/Chemistry/Question-10.png" alt="Chemistry Question 10">
-    <img src="papers/2024-1/Chemistry/Question-11.png" alt="Chemistry Question 11">
-    <img src="papers/2024-1/Chemistry/Question-12.png" alt="Chemistry Question 12">
-    <img src="papers/2024-1/Chemistry/Question-13.png" alt="Chemistry Question 13">
-    
-    <img src="papers/2024-1/Chemistry/Question-14.png" alt="Chemistry Question 14">
-    <img src="papers/2024-1/Chemistry/Question-14 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-14 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-14 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-14 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-15.png" alt="Chemistry Question 15">
-    <img src="papers/2024-1/Chemistry/Question-15 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-15 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-15 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-15 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-16.png" alt="Chemistry Question 16">
-    <img src="papers/2024-1/Chemistry/Question-16 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-16 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-16 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-16 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Chemistry/Question-17.png" alt="Chemistry Question 17">
-    <img src="papers/2024-1/Chemistry/Question-17 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Chemistry/Question-17 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Chemistry/Question-17 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Chemistry/Question-17 Option-4.png" alt="Option 4">
-    
-    <h2>Mathematics</h2>
-    <img src="papers/2024-1/Maths/Question-1.png" alt="Mathematics Question 1">
-    <img src="papers/2024-1/Maths/Question-1 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-1 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-1 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-1 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-2.png" alt="Mathematics Question 2">
-    <img src="papers/2024-1/Maths/Question-2 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-2 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-2 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-2 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-3.png" alt="Mathematics Question 3">
-    <img src="papers/2024-1/Maths/Question-3 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-3 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-3 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-3 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-4.png" alt="Mathematics Question 4">
-    <img src="papers/2024-1/Maths/Question-4 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-4 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-4 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-4 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-5.png" alt="Mathematics Question 5">
-    <img src="papers/2024-1/Maths/Question-5 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-5 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-5 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-5 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-6.png" alt="Mathematics Question 6">
-    <img src="papers/2024-1/Maths/Question-6 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-6 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-6 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-6 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-7.png" alt="Mathematics Question 7">
-    <img src="papers/2024-1/Maths/Question-7 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-7 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-7 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-7 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-8.png" alt="Mathematics Question 8">
-    <img src="papers/2024-1/Maths/Question-9.png" alt="Mathematics Question 9">
-    <img src="papers/2024-1/Maths/Question-10.png" alt="Mathematics Question 10">
-    <img src="papers/2024-1/Maths/Question-11.png" alt="Mathematics Question 11">
-    <img src="papers/2024-1/Maths/Question-12.png" alt="Mathematics Question 12">
-    <img src="papers/2024-1/Maths/Question-13.png" alt="Mathematics Question 13">
-    
-    <img src="papers/2024-1/Maths/Question-14.png" alt="Mathematics Question 14">
-    <img src="papers/2024-1/Maths/Question-14 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-14 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-14 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-14 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-15.png" alt="Mathematics Question 15">
-    <img src="papers/2024-1/Maths/Question-15 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-15 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-15 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-15 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-16.png" alt="Mathematics Question 16">
-    <img src="papers/2024-1/Maths/Question-16 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-16 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-16 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-16 Option-4.png" alt="Option 4">
-    
-    <img src="papers/2024-1/Maths/Question-17.png" alt="Mathematics Question 17">
-    <img src="papers/2024-1/Maths/Question-17 Option-1.png" alt="Option 1">
-    <img src="papers/2024-1/Maths/Question-17 Option-2.png" alt="Option 2">
-    <img src="papers/2024-1/Maths/Question-17 Option-3.png" alt="Option 3">
-    <img src="papers/2024-1/Maths/Question-17 Option-4.png" alt="Option 4">
+    <div class="container">
+        <div class="card">
+            <h1>JEE Advanced 2024: Paper 1</h1>
+            
+            <div class="marking-info">
+                <h3>Paper Pattern:</h3>
+                <ul>
+                    <li>Subjects: Physics, Chemistry, Mathematics</li>
+                    <li>Questions per Subject: 17</li>
+                    <li>Total Questions: 51</li>
+                </ul>
+                <h3>Question Types:</h3>
+                <ul>
+                    <li>Single correct option MCQs (4 questions/per subject)</li>
+                    <li>Multiple correct options MCQs (3 questions/per subject)</li>
+                    <li>Non-Negative Integer Type questions (6 questions/per subject)</li>
+                    <li>Match List type questions (4 questions/per subject)</li>
+                </ul>
+                <h3>Marking Scheme:</h3>
+                <ul>
+                    <li>Single correct: +3 for correct, -1 for incorrect</li>
+                    <li>Multiple correct: +4 for all correct, partial marks for partially correct, -2 for incorrect</li>
+                    <li>Non-Negative Integer: +4 for correct, 0 for incorrect</li>
+                    <li>Match List: +3 for correct, -1 for incorrect</li>
+                </ul>
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Upload PDF for Question Images</h3>
+                <div class="form-group">
+                    <label for="pdf-upload">Upload PDF with question images:</label>
+                    <input type="file" id="pdf-upload" accept="application/pdf" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button id="upload-pdf-btn" class="btn" style="background-color: #FF5722; color: white;">Upload PDF</button>
+                </div>
+                <div id="pdf-preview" style="margin-top: 15px; display: none;">
+                    <h4>PDF Preview</h4>
+                    <div id="pdf-container" style="border: 1px solid #ddd; min-height: 300px;"></div>
+                    <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <button id="prev-page" class="btn btn-secondary">Previous Page</button>
+                            <span id="page-num" style="margin: 0 10px;">Page: 1 / 1</span>
+                            <button id="next-page" class="btn btn-secondary">Next Page</button>
+                        </div>
+                        <div>
+                            <button id="screenshot-pdf" class="btn" style="background-color: #4CAF50; color: white;">Screenshot PDF Page</button>
+                            <button id="screenshot-selection" class="btn" style="background-color: #FF9800; color: white; margin-left: 10px;">Screenshot Selection</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="tab-container">
+                <div class="tab active" data-subject="physics">Physics</div>
+                <div class="tab" data-subject="chemistry">Chemistry</div>
+                <div class="tab" data-subject="mathematics">Mathematics</div>
+            </div>
+            
+            <!-- Physics Tab -->
+            <div id="physics-tab" class="tab-content active">
+                <h2>Physics Questions</h2>
+                <div id="physics-questions"></div>
+                <button id="add-physics-question" class="btn">Add Physics Question</button>
+            </div>
+            
+            <!-- Chemistry Tab -->
+            <div id="chemistry-tab" class="tab-content">
+                <h2>Chemistry Questions</h2>
+                <div id="chemistry-questions"></div>
+                <button id="add-chemistry-question" class="btn">Add Chemistry Question</button>
+            </div>
+            
+            <!-- Mathematics Tab -->
+            <div id="mathematics-tab" class="tab-content">
+                <h2>Mathematics Questions</h2>
+                <div id="mathematics-questions"></div>
+                <button id="add-mathematics-question" class="btn">Add Mathematics Question</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button id="save-paper" class="btn">Save Paper</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="add-question-jee-advanced-2024.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+        // Initialize paper
+        const paper = jeeAdvanced2024.initPaper('paper1');
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                const subject = this.getAttribute('data-subject');
+                document.getElementById(`${subject}-tab`).classList.add('active');
+            });
+        });
+        
+        // Add question buttons
+        document.getElementById('add-physics-question').addEventListener('click', () => addQuestion('physics'));
+        document.getElementById('add-chemistry-question').addEventListener('click', () => addQuestion('chemistry'));
+        document.getElementById('add-mathematics-question').addEventListener('click', () => addQuestion('mathematics'));
+        
+        // Function to add a new question
+        function addQuestion(subject) {
+            // Get available question types
+            const availableTypes = jeeAdvanced2024.getAvailableTypes(subject);
+            
+            if (availableTypes.length === 0) {
+                alert(`Maximum questions reached for ${subject}. You cannot add more questions.`);
+                return;
+            }
+            
+            // Generate question ID
+            const questionId = `q${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            
+            // Create question container
+            const questionContainer = document.createElement('div');
+            questionContainer.className = 'question-container';
+            questionContainer.id = `question-${questionId}`;
+            
+            // Create question type selector
+            const typeOptions = availableTypes.map(typeInfo => {
+                const typeLabels = {
+                    mcq: 'Multiple Correct Options',
+                    scq: 'Single Correct Option',
+                    integer: 'Non-Negative Integer',
+                    matchList: 'Match List'
+                };
+                return `<option value="${typeInfo.type}">${typeLabels[typeInfo.type]} (${typeInfo.remaining} remaining)</option>`;
+            }).join('');
+            
+            // Create question HTML
+            questionContainer.innerHTML = `
+                <div class="form-group">
+                    <label for="type-${questionId}">Question Type</label>
+                    <select id="type-${questionId}" class="question-type-select">
+                        ${typeOptions}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="text-${questionId}">Question Text</label>
+                    <textarea id="text-${questionId}" rows="3" placeholder="Enter question text"></textarea>
+                </div>
+                
+                <div id="options-${questionId}" class="option-group">
+                    <!-- Options will be added dynamically based on question type -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="explanation-${questionId}">Explanation (Optional)</label>
+                    <textarea id="explanation-${questionId}" rows="2" placeholder="Enter explanation"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="btn btn-secondary remove-question" data-id="${questionId}" data-subject="${subject}">Remove Question</button>
+                    <button type="button" class="btn" style="background-color: #4CAF50; color: white;" onclick="takeScreenshot('question-${questionId}')">Take Screenshot</button>
+                    <button type="button" class="btn" style="background-color: #FF9800; color: white;" onclick="takeOptionsScreenshot('options-${questionId}')">Screenshot Options</button>
+                </div>
+            `;
+            
+            // Add to subject questions container
+            document.getElementById(`${subject}-questions`).appendChild(questionContainer);
+            
+            // Set up question type change handler
+            const typeSelect = questionContainer.querySelector(`#type-${questionId}`);
+            typeSelect.addEventListener('change', () => updateQuestionType(questionId, typeSelect.value));
+            
+            // Initialize question type
+            updateQuestionType(questionId, typeSelect.value);
+            
+            // Set up remove button handler
+            questionContainer.querySelector('.remove-question').addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const subject = this.getAttribute('data-subject');
+                removeQuestion(id, subject);
+            });
+        }
+        
+        // Function to update question type
+        function updateQuestionType(questionId, type) {
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            
+            // Clear existing options
+            optionsContainer.innerHTML = '';
+            
+            if (type === 'mcq' || type === 'scq') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = type === 'mcq' 
+                    ? '<p>+4 for all correct, partial marks for partially correct, -2 for incorrect</p>'
+                    : '<p>+3 for correct, -1 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add options
+                for (let i = 0; i < 4; i++) {
+                    const letter = String.fromCharCode(65 + i); // A, B, C, D
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option-container';
+                    
+                    const inputType = type === 'mcq' ? 'checkbox' : 'radio';
+                    const inputName = type === 'mcq' ? `correct-${questionId}-${i}` : `correct-${questionId}`;
+                    
+                    optionDiv.innerHTML = `
+                        <input type="${inputType}" id="${inputName}" name="correct-${questionId}" value="${i}">
+                        <label for="${inputName}" style="display:inline; margin-right: 10px;">${letter}.</label>
+                        <input type="text" id="option-${questionId}-${i}" placeholder="Option ${letter}">
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                }
+            } else if (type === 'integer') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+4 for correct, 0 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add integer input
+                const integerDiv = document.createElement('div');
+                integerDiv.className = 'form-group';
+                integerDiv.innerHTML = `
+                    <label for="answer-${questionId}">Correct Answer (Non-Negative Integer)</label>
+                    <input type="number" id="answer-${questionId}" min="0" step="1">
+                `;
+                
+                optionsContainer.appendChild(integerDiv);
+            } else if (type === 'matchList') {
+                // Add marking scheme info
+                const markingInfo = document.createElement('div');
+                markingInfo.className = 'marking-info';
+                markingInfo.innerHTML = '<p>+3 for correct, -1 for incorrect</p>';
+                optionsContainer.appendChild(markingInfo);
+                
+                // Add match list container
+                const matchListDiv = document.createElement('div');
+                matchListDiv.className = 'match-list-container';
+                
+                // Create List-I (Column 1)
+                let listHTML = '<h4>List-I (Column 1)</h4>';
+                for (let i = 0; i < 4; i++) {
+                    const label = String.fromCharCode(65 + i); // A, B, C, D
+                    listHTML += `
+                        <div class="match-item">
+                            <div class="match-item-label">${label}.</div>
+                            <input type="text" id="list1-${questionId}-${i}" class="match-item-input" placeholder="Item ${label}">
+                        </div>
+                    `;
+                }
+                
+                // Create List-II (Column 2)
+                listHTML += '<h4>List-II (Column 2)</h4>';
+                for (let i = 0; i < 4; i++) {
+                    const label = i + 1; // 1, 2, 3, 4
+                    listHTML += `
+                        <div class="match-item">
+                            <div class="match-item-label">${label}.</div>
+                            <input type="text" id="list2-${questionId}-${i}" class="match-item-input" placeholder="Item ${label}">
+                        </div>
+                    `;
+                }
+                
+                // Create match options
+                listHTML += `
+                    <div class="match-options">
+                        <h4>Match Options</h4>
+                        <p>Each option represents a possible matching of items from List-I to List-II</p>
+                        
+                        <div class="option-container">
+                            <input type="radio" id="match-option-${questionId}-0" name="match-option-${questionId}" value="0" checked>
+                            <label for="match-option-${questionId}-0" style="display:inline; margin-right: 10px;">Option A</label>
+                            <input type="text" id="match-option-text-${questionId}-0" placeholder="A-1, B-2, C-3, D-4">
+                        </div>
+                        
+                        <div class="option-container">
+                            <input type="radio" id="match-option-${questionId}-1" name="match-option-${questionId}" value="1">
+                            <label for="match-option-${questionId}-1" style="display:inline; margin-right: 10px;">Option B</label>
+                            <input type="text" id="match-option-text-${questionId}-1" placeholder="A-2, B-1, C-4, D-3">
+                        </div>
+                        
+                        <div class="option-container">
+                            <input type="radio" id="match-option-${questionId}-2" name="match-option-${questionId}" value="2">
+                            <label for="match-option-${questionId}-2" style="display:inline; margin-right: 10px;">Option C</label>
+                            <input type="text" id="match-option-text-${questionId}-2" placeholder="A-3, B-4, C-1, D-2">
+                        </div>
+                        
+                        <div class="option-container">
+                            <input type="radio" id="match-option-${questionId}-3" name="match-option-${questionId}" value="3">
+                            <label for="match-option-${questionId}-3" style="display:inline; margin-right: 10px;">Option D</label>
+                            <input type="text" id="match-option-text-${questionId}-3" placeholder="A-4, B-3, C-2, D-1">
+                        </div>
+                    </div>
+                `;
+                
+                matchListDiv.innerHTML = listHTML;
+                optionsContainer.appendChild(matchListDiv);
+            }
+        }
+        
+        // Function to remove a question
+        function removeQuestion(questionId, subject) {
+            const questionElement = document.querySelector(`.question-container:has(#type-${questionId})`);
+            if (!questionElement) return;
+            
+            questionElement.remove();
+        }
+        
+        // Save paper button
+        document.getElementById('save-paper').addEventListener('click', function() {
+            // Reset paper
+            jeeAdvanced2024.initPaper('paper1');
+            
+            // Collect all questions
+            const subjects = ['physics', 'chemistry', 'mathematics'];
+            let allValid = true;
+            
+            // Process each subject
+            subjects.forEach(subject => {
+                const questionContainers = document.querySelectorAll(`#${subject}-questions .question-container`);
+                
+                questionContainers.forEach(container => {
+                    // Get question ID from type select
+                    const typeSelect = container.querySelector('.question-type-select');
+                    if (!typeSelect) return;
+                    
+                    const questionId = typeSelect.id.replace('type-', '');
+                    const questionType = typeSelect.value;
+                    const questionText = container.querySelector(`#text-${questionId}`).value;
+                    const explanation = container.querySelector(`#explanation-${questionId}`).value;
+                    
+                    if (!questionText) {
+                        alert(`Please enter text for a ${subject} question`);
+                        allValid = false;
+                        return;
+                    }
+                    
+                    try {
+                        if (questionType === 'mcq' || questionType === 'scq') {
+                            const options = [];
+                            let hasCorrectOption = false;
+                            
+                            for (let i = 0; i < 4; i++) {
+                                const optionText = container.querySelector(`#option-${questionId}-${i}`).value;
+                                
+                                if (!optionText) {
+                                    alert(`Please enter text for option ${String.fromCharCode(65 + i)} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                
+                                let isCorrect = false;
+                                if (questionType === 'mcq') {
+                                    isCorrect = container.querySelector(`#correct-${questionId}-${i}`).checked;
+                                } else {
+                                    const radioButton = container.querySelector(`input[name="correct-${questionId}"]:checked`);
+                                    isCorrect = radioButton && parseInt(radioButton.value) === i;
+                                }
+                                
+                                if (isCorrect) {
+                                    hasCorrectOption = true;
+                                }
+                                
+                                options.push({
+                                    text: optionText,
+                                    correct: isCorrect
+                                });
+                            }
+                            
+                            if (!hasCorrectOption) {
+                                alert(`Please select at least one correct option for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2024.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                options: options
+                            });
+                            
+                        } else if (questionType === 'integer') {
+                            const answer = container.querySelector(`#answer-${questionId}`).value;
+                            
+                            if (!answer || isNaN(parseInt(answer)) || parseInt(answer) < 0) {
+                                alert(`Please enter a valid non-negative integer for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            jeeAdvanced2024.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                answer: parseInt(answer)
+                            });
+                            
+                        } else if (questionType === 'matchList') {
+                            // Collect List-I items
+                            const list1Items = [];
+                            for (let i = 0; i < 4; i++) {
+                                const itemText = container.querySelector(`#list1-${questionId}-${i}`).value;
+                                if (!itemText) {
+                                    alert(`Please enter text for List-I item ${String.fromCharCode(65 + i)} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                list1Items.push(itemText);
+                            }
+                            
+                            // Collect List-II items
+                            const list2Items = [];
+                            for (let i = 0; i < 4; i++) {
+                                const itemText = container.querySelector(`#list2-${questionId}-${i}`).value;
+                                if (!itemText) {
+                                    alert(`Please enter text for List-II item ${i+1} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                list2Items.push(itemText);
+                            }
+                            
+                            // Collect match options
+                            const options = [];
+                            for (let i = 0; i < 4; i++) {
+                                const optionText = container.querySelector(`#match-option-text-${questionId}-${i}`).value;
+                                if (!optionText) {
+                                    alert(`Please enter text for match option ${String.fromCharCode(65 + i)} in a ${subject} question`);
+                                    allValid = false;
+                                    return;
+                                }
+                                options.push(optionText);
+                            }
+                            
+                            // Get correct option
+                            const selectedOption = container.querySelector(`input[name="match-option-${questionId}"]:checked`);
+                            if (!selectedOption) {
+                                alert(`Please select a correct match option for a ${subject} question`);
+                                allValid = false;
+                                return;
+                            }
+                            
+                            const correctOption = parseInt(selectedOption.value);
+                            
+                            jeeAdvanced2024.addQuestion(subject, questionType, {
+                                text: questionText,
+                                explanation: explanation,
+                                matchItems: {
+                                    list1: list1Items,
+                                    list2: list2Items
+                                },
+                                options: options,
+                                correctOption: correctOption
+                            });
+                        }
+                    } catch (error) {
+                        alert(error.message);
+                        allValid = false;
+                    }
+                });
+            });
+            
+            if (!allValid) return;
+            
+            // Save directly to the main papers storage
+            try {
+                // Get existing papers
+                const papersJson = localStorage.getItem('papers');
+                let papers = papersJson ? JSON.parse(papersJson) : [];
+                
+                // Remove any existing version of this paper (if updating)
+                papers = papers.filter(p => p.id !== paper.id);
+                
+                // Add the current paper
+                papers.push(paper);
+                
+                // Save back to localStorage
+                localStorage.setItem('papers', JSON.stringify(papers));
+                
+                // Also save to specialized storage for backward compatibility
+                localStorage.setItem('jeeAdvanced2024Paper1', JSON.stringify(paper));
+            } catch (error) {
+                console.error('Error saving to papers storage:', error);
+            }
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = `Paper "${paper.name}" saved with ${paper.questions.length} questions!`;
+            successMessage.style.display = 'block';
+            
+            // Attempt to save to server if available
+            try {
+                fetch('/api/papers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paper)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successMessage.textContent += ' Saved to server successfully!';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving to server:', error);
+                    successMessage.textContent += ' (Saved locally only, server save failed)';
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+        
+        // Dashboard button
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+        
+        // Function to take screenshot of a question
+        function takeScreenshot(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                alert('Element not found');
+                return;
+            }
+            
+            // Add a class to highlight the element being captured
+            element.classList.add('screenshot-highlight');
+            
+            html2canvas(element).then(canvas => {
+                // Remove the highlight class
+                element.classList.remove('screenshot-highlight');
+                
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `question-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+                element.classList.remove('screenshot-highlight');
+            });
+        }
+        
+        // Function to take screenshot of options only
+        function takeOptionsScreenshot(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                alert('Options element not found');
+                return;
+            }
+            
+            // Add a class to highlight the element being captured
+            element.classList.add('screenshot-highlight');
+            
+            html2canvas(element).then(canvas => {
+                // Remove the highlight class
+                element.classList.remove('screenshot-highlight');
+                
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `options-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+                element.classList.remove('screenshot-highlight');
+            });
+        }
+        
+        // PDF handling
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        
+        // Set up PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        // Function to render a specific page of the PDF
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Get the page
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Clear previous content
+                const container = document.getElementById('pdf-container');
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                // Render PDF page into canvas context
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    // Update page counters
+                    document.getElementById('page-num').textContent = `Page: ${num} / ${pdfDoc.numPages}`;
+                    
+                    if (pageNumPending !== null) {
+                        // New page rendering is pending
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+        }
+        
+        // Function to display previous page
+        function onPrevPage() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        
+        // Function to display next page
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+        
+        // Function to queue rendering of a page
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        // Handle PDF upload
+        document.getElementById('upload-pdf-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('pdf-upload');
+            const file = fileInput.files[0];
+            
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const typedarray = new Uint8Array(e.target.result);
+                
+                // Load the PDF
+                pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    pageNum = 1;
+                    
+                    // Show PDF preview
+                    document.getElementById('pdf-preview').style.display = 'block';
+                    
+                    // Render first page
+                    renderPage(pageNum);
+                    
+                    // Show success message with screenshot prompt
+                    alert('PDF uploaded successfully! You can now take screenshots directly from the PDF.');
+                }).catch(function(error) {
+                    console.error('Error loading PDF:', error);
+                    alert('Failed to load PDF. Please check console for details.');
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+        
+        // Set up page navigation buttons
+        document.getElementById('prev-page').addEventListener('click', onPrevPage);
+        document.getElementById('next-page').addEventListener('click', onNextPage);
+        
+        // Take screenshot of current PDF page
+        document.getElementById('screenshot-pdf').addEventListener('click', function() {
+            const pdfContainer = document.getElementById('pdf-container');
+            if (!pdfContainer || !pdfContainer.firstChild) {
+                alert('No PDF page to screenshot');
+                return;
+            }
+            
+            html2canvas(pdfContainer).then(canvas => {
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `pdf-page-${pageNum}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+            });
+        });
+        
+        // Variables for selection screenshot
+        let isSelecting = false;
+        let selectionStart = { x: 0, y: 0 };
+        let selectionElement = null;
+        
+        // Create selection element
+        function createSelectionElement() {
+            if (selectionElement) {
+                document.body.removeChild(selectionElement);
+            }
+            
+            selectionElement = document.createElement('div');
+            selectionElement.style.position = 'absolute';
+            selectionElement.style.border = '2px dashed #FF9800';
+            selectionElement.style.backgroundColor = 'rgba(255, 152, 0, 0.2)';
+            selectionElement.style.pointerEvents = 'none';
+            selectionElement.style.display = 'none';
+            document.body.appendChild(selectionElement);
+        }
+        
+        // Take screenshot of selected area
+        document.getElementById('screenshot-selection').addEventListener('click', function() {
+            const pdfContainer = document.getElementById('pdf-container');
+            if (!pdfContainer || !pdfContainer.firstChild) {
+                alert('No PDF page to select from');
+                return;
+            }
+            
+            // Create selection element if it doesn't exist
+            if (!selectionElement) {
+                createSelectionElement();
+            }
+            
+            alert('Click and drag on the PDF to select an area for screenshot');
+            
+            // Enable selection mode
+            isSelecting = true;
+            
+            // Set up event listeners for selection
+            pdfContainer.addEventListener('mousedown', startSelection);
+            document.addEventListener('mousemove', updateSelection);
+            document.addEventListener('mouseup', endSelection);
+        });
+        
+        // Start selection
+        function startSelection(e) {
+            if (!isSelecting) return;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            const rect = pdfContainer.getBoundingClientRect();
+            
+            selectionStart = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            
+            selectionElement.style.left = e.clientX + 'px';
+            selectionElement.style.top = e.clientY + 'px';
+            selectionElement.style.width = '0px';
+            selectionElement.style.height = '0px';
+            selectionElement.style.display = 'block';
+        }
+        
+        // Update selection
+        function updateSelection(e) {
+            if (!isSelecting || !selectionElement) return;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            const rect = pdfContainer.getBoundingClientRect();
+            
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            const left = Math.min(selectionStart.x, currentX);
+            const top = Math.min(selectionStart.y, currentY);
+            const width = Math.abs(currentX - selectionStart.x);
+            const height = Math.abs(currentY - selectionStart.y);
+            
+            selectionElement.style.left = (rect.left + left) + 'px';
+            selectionElement.style.top = (rect.top + top) + 'px';
+            selectionElement.style.width = width + 'px';
+            selectionElement.style.height = height + 'px';
+        }
+        
+        // End selection and take screenshot
+        function endSelection() {
+            if (!isSelecting || !selectionElement) return;
+            
+            isSelecting = false;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            pdfContainer.removeEventListener('mousedown', startSelection);
+            document.removeEventListener('mousemove', updateSelection);
+            document.removeEventListener('mouseup', endSelection);
+            
+            // Get selection coordinates
+            const rect = selectionElement.getBoundingClientRect();
+            const pdfRect = pdfContainer.getBoundingClientRect();
+            
+            // Calculate selection within PDF container
+            const left = rect.left - pdfRect.left;
+            const top = rect.top - pdfRect.top;
+            const width = rect.width;
+            const height = rect.height;
+            
+            // Hide selection element
+            selectionElement.style.display = 'none';
+            
+            // Take screenshot of selected area
+            html2canvas(pdfContainer, {
+                x: left,
+                y: top,
+                width: width,
+                height: height
+            }).then(canvas => {
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `pdf-selection-${pageNum}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+            });
+        }
+        
+        // Initialize with one question per subject
+        addQuestion('physics');
+        addQuestion('chemistry');
+        addQuestion('mathematics');
+    </script>
 </body>
 </html>
