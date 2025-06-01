@@ -288,14 +288,15 @@
         
         // Function to get option image paths
         function getOptionImageOptions(subject, questionId, optionNum) {
-            const questionNum = parseInt(document.getElementById(`image-select-${questionId}`).selectedIndex);
+            const questionSelect = document.getElementById(`image-select-${questionId}`);
+            const questionNum = parseInt(questionSelect.selectedIndex);
             if (!questionNum) return '';
             
             let subjectFolder = subject;
             if (subject === 'mathematics') subjectFolder = 'Maths';
             
             const optionPath = `papers/2024-1/${subjectFolder}/Question-${questionNum} Option-${optionNum}.png`;
-            return `<option value="${optionPath}">Option ${optionNum}</option>`;
+            return `<option value="${optionPath}" selected>Option ${optionNum}</option>`;
         }
         
         // Function to load option image
@@ -1076,10 +1077,31 @@
             if (e.target.classList.contains('image-selector')) {
                 const questionId = e.target.id.replace('image-select-', '');
                 const type = document.getElementById(`type-${questionId}`).value;
+                const selectedImage = e.target.value;
                 
-                if (type === 'mcq' || type === 'scq') {
+                if (selectedImage && (type === 'mcq' || type === 'scq')) {
                     // Update option selectors
                     updateQuestionType(questionId, type);
+                    
+                    // Auto-load option images
+                    setTimeout(() => {
+                        const subject = e.target.closest('.tab-content').id.replace('-tab', '');
+                        let subjectFolder = subject;
+                        if (subject === 'mathematics') subjectFolder = 'Maths';
+                        
+                        const questionNum = e.target.selectedIndex;
+                        if (questionNum > 0) {
+                            // Load each option image
+                            for (let i = 0; i < 4; i++) {
+                                const optionPath = `papers/2024-1/${subjectFolder}/Question-${questionNum} Option-${i+1}.png`;
+                                const optionSelect = document.getElementById(`option-${questionId}-${i}`);
+                                if (optionSelect) {
+                                    optionSelect.value = optionPath;
+                                    loadOptionImage(optionPath, `${questionId}-${i}`);
+                                }
+                            }
+                        }
+                    }, 100);
                 }
             }
         });
