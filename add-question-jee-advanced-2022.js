@@ -28,13 +28,14 @@ const jeeAdvanced2022 = {
     // Initialize paper
     initPaper: function(paperKey) {
         const config = this.paperConfig[paperKey];
+        const paperNumber = paperKey === 'paper1' ? '1' : '2';
         
         this.currentPaper = {
-            id: `jee-adv-2022-${paperKey}-${Date.now()}`,
+            id: `jee-adv-2022-p${paperNumber}`,
             type: 'jee-advanced',
             name: config.name,
             year: '2022',
-            paperNumber: paperKey === 'paper1' ? '1' : '2',
+            paperNumber: paperNumber,
             subjects: config.subjects,
             questions: []
         };
