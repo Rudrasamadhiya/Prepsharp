@@ -15,7 +15,7 @@ const jeeAdvanced2018Paper2 = {
     
     // Current paper data
     currentPaper: {
-        id: `jee-adv-2018-paper2-${Date.now()}`,
+        id: `jee-adv-2018-p2`,
         type: 'jee-advanced',
         name: "JEE Advanced 2018: Paper 2",
         year: '2018',
