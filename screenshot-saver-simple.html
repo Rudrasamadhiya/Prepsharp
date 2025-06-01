@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced Screenshot Saver</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        #screenshot-counter {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        #saved-files {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .file-item {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .preview-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>JEE Advanced File Uploader</h2>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Save Files to Specific Folders</h1>
+            
+            <div class="success-message" id="successMessage"></div>
+            <div class="error-message" id="errorMessage"></div>
+            
+            <div class="form-group">
+                <label for="exam-year">Exam Year:</label>
+                <select id="exam-year">
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="paper-number">Paper Number:</label>
+                <select id="paper-number">
+                    <option value="1">Paper 1</option>
+                    <option value="2">Paper 2</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="file-upload">Upload Image:</label>
+                <input type="file" id="file-upload" accept="image/*" class="form-control">
+            </div>
+            
+            <div class="preview-container" id="preview-container" style="display: none;">
+                <h3>Image Preview</h3>
+                <img id="preview-image" class="preview-image" src="" alt="Preview">
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <button id="upload-btn" class="btn">Upload Image</button>
+            </div>
+            
+            <div id="file-info" style="margin-top: 20px;">
+                <h3>File Information</h3>
+                <p>Files will be saved to: <code>C:\Users\HP\myproject\jeeapp\src\webapp\Prepsharp\papers\<span id="folder-path"></span></code></p>
+                <p>File counter: <span id="file-counter">1</span></p>
+                
+                <h3>Saved Files</h3>
+                <div id="saved-files">
+                    <p>No files saved yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables
+        let fileCounter = 1;
+        let savedFiles = [];
+        
+        // DOM elements
+        const examYearSelect = document.getElementById('exam-year');
+        const paperNumberSelect = document.getElementById('paper-number');
+        const folderPathSpan = document.getElementById('folder-path');
+        const fileCounterSpan = document.getElementById('file-counter');
+        const savedFilesDiv = document.getElementById('saved-files');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const fileUpload = document.getElementById('file-upload');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        
+        // Update folder path when selections change
+        function updateFolderPath() {
+            const year = examYearSelect.value;
+            const paperNumber = paperNumberSelect.value;
+            const folderName = `${year} paper ${paperNumber}`;
+            folderPathSpan.textContent = folderName;
+            return folderName;
+        }
+        
+        // Event listeners for select changes
+        examYearSelect.addEventListener('change', updateFolderPath);
+        paperNumberSelect.addEventListener('change', updateFolderPath);
+        
+        // Initialize folder path
+        updateFolderPath();
+        
+        // Preview image when selected
+        fileUpload.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) {
+                previewContainer.style.display = 'none';
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                showError('Please select an image file');
+                previewContainer.style.display = 'none';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Upload button click handler
+        document.getElementById('upload-btn').addEventListener('click', function() {
+            const file = fileUpload.files[0];
+            if (!file) {
+                showError('Please select an image file to upload');
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                showError('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                saveFile(imageData, file.name);
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Function to save file to server
+        function saveFile(imageData, originalFileName) {
+            const folderName = updateFolderPath();
+            const fileName = `question-${Date.now()}.png`;
+            
+            // Send to server
+            fetch('http://localhost:3000/save-screenshot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    imageData: imageData,
+                    folderName: folderName,
+                    fileName: fileName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add to saved files list
+                    savedFiles.push({
+                        fileName: fileName,
+                        originalName: originalFileName,
+                        path: data.path
+                    });
+                    
+                    // Update UI
+                    updateSavedFiles();
+                    
+                    // Increment counter
+                    fileCounter++;
+                    fileCounterSpan.textContent = fileCounter;
+                    
+                    // Clear file input
+                    fileUpload.value = '';
+                    previewContainer.style.display = 'none';
+                    
+                    showSuccess(`File saved as ${fileName}`);
+                } else {
+                    showError(`Failed to save file: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving file:', error);
+                showError('Failed to save file. Is the server running?');
+            });
+        }
+        
+        // Function to update saved files list
+        function updateSavedFiles() {
+            if (savedFiles.length === 0) {
+                savedFilesDiv.innerHTML = '<p>No files saved yet</p>';
+                return;
+            }
+            
+            let html = '';
+            savedFiles.forEach((file, index) => {
+                html += `
+                    <div class="file-item">
+                        ${index + 1}. ${file.fileName} (Original: ${file.originalName})
+                    </div>
+                `;
+            });
+            
+            savedFilesDiv.innerHTML = html;
+        }
+        
+        // Function to show success message
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
