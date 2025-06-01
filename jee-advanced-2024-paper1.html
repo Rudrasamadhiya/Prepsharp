@@ -268,13 +268,13 @@
                 return;
             }
             
+            // Generate question ID
+            const questionId = `q${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            
             // Create question container
             const questionContainer = document.createElement('div');
             questionContainer.className = 'question-container';
             questionContainer.id = `question-${questionId}`;
-            
-            // Generate question ID
-            const questionId = `q${Date.now()}-${Math.floor(Math.random() * 1000)}`;
             
             // Create question type selector
             const typeOptions = availableTypes.map(typeInfo => {
