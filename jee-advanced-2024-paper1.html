@@ -210,10 +210,16 @@
                 <div id="pdf-preview" style="margin-top: 15px; display: none;">
                     <h4>PDF Preview</h4>
                     <div id="pdf-container" style="border: 1px solid #ddd; min-height: 300px;"></div>
-                    <div style="margin-top: 10px;">
-                        <button id="prev-page" class="btn btn-secondary">Previous Page</button>
-                        <span id="page-num" style="margin: 0 10px;">Page: 1 / 1</span>
-                        <button id="next-page" class="btn btn-secondary">Next Page</button>
+                    <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <button id="prev-page" class="btn btn-secondary">Previous Page</button>
+                            <span id="page-num" style="margin: 0 10px;">Page: 1 / 1</span>
+                            <button id="next-page" class="btn btn-secondary">Next Page</button>
+                        </div>
+                        <div>
+                            <button id="screenshot-pdf" class="btn" style="background-color: #4CAF50; color: white;">Screenshot PDF Page</button>
+                            <button id="screenshot-selection" class="btn" style="background-color: #FF9800; color: white; margin-left: 10px;">Screenshot Selection</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -852,7 +858,7 @@
                     renderPage(pageNum);
                     
                     // Show success message with screenshot prompt
-                    alert('PDF uploaded successfully! You can now take screenshots of questions and options from the PDF.');
+                    alert('PDF uploaded successfully! You can now take screenshots directly from the PDF.');
                 }).catch(function(error) {
                     console.error('Error loading PDF:', error);
                     alert('Failed to load PDF. Please check console for details.');
@@ -864,6 +870,152 @@
         // Set up page navigation buttons
         document.getElementById('prev-page').addEventListener('click', onPrevPage);
         document.getElementById('next-page').addEventListener('click', onNextPage);
+        
+        // Take screenshot of current PDF page
+        document.getElementById('screenshot-pdf').addEventListener('click', function() {
+            const pdfContainer = document.getElementById('pdf-container');
+            if (!pdfContainer || !pdfContainer.firstChild) {
+                alert('No PDF page to screenshot');
+                return;
+            }
+            
+            html2canvas(pdfContainer).then(canvas => {
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `pdf-page-${pageNum}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+            });
+        });
+        
+        // Variables for selection screenshot
+        let isSelecting = false;
+        let selectionStart = { x: 0, y: 0 };
+        let selectionElement = null;
+        
+        // Create selection element
+        function createSelectionElement() {
+            if (selectionElement) {
+                document.body.removeChild(selectionElement);
+            }
+            
+            selectionElement = document.createElement('div');
+            selectionElement.style.position = 'absolute';
+            selectionElement.style.border = '2px dashed #FF9800';
+            selectionElement.style.backgroundColor = 'rgba(255, 152, 0, 0.2)';
+            selectionElement.style.pointerEvents = 'none';
+            selectionElement.style.display = 'none';
+            document.body.appendChild(selectionElement);
+        }
+        
+        // Take screenshot of selected area
+        document.getElementById('screenshot-selection').addEventListener('click', function() {
+            const pdfContainer = document.getElementById('pdf-container');
+            if (!pdfContainer || !pdfContainer.firstChild) {
+                alert('No PDF page to select from');
+                return;
+            }
+            
+            // Create selection element if it doesn't exist
+            if (!selectionElement) {
+                createSelectionElement();
+            }
+            
+            alert('Click and drag on the PDF to select an area for screenshot');
+            
+            // Enable selection mode
+            isSelecting = true;
+            
+            // Set up event listeners for selection
+            pdfContainer.addEventListener('mousedown', startSelection);
+            document.addEventListener('mousemove', updateSelection);
+            document.addEventListener('mouseup', endSelection);
+        });
+        
+        // Start selection
+        function startSelection(e) {
+            if (!isSelecting) return;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            const rect = pdfContainer.getBoundingClientRect();
+            
+            selectionStart = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            
+            selectionElement.style.left = e.clientX + 'px';
+            selectionElement.style.top = e.clientY + 'px';
+            selectionElement.style.width = '0px';
+            selectionElement.style.height = '0px';
+            selectionElement.style.display = 'block';
+        }
+        
+        // Update selection
+        function updateSelection(e) {
+            if (!isSelecting || !selectionElement) return;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            const rect = pdfContainer.getBoundingClientRect();
+            
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            const left = Math.min(selectionStart.x, currentX);
+            const top = Math.min(selectionStart.y, currentY);
+            const width = Math.abs(currentX - selectionStart.x);
+            const height = Math.abs(currentY - selectionStart.y);
+            
+            selectionElement.style.left = (rect.left + left) + 'px';
+            selectionElement.style.top = (rect.top + top) + 'px';
+            selectionElement.style.width = width + 'px';
+            selectionElement.style.height = height + 'px';
+        }
+        
+        // End selection and take screenshot
+        function endSelection() {
+            if (!isSelecting || !selectionElement) return;
+            
+            isSelecting = false;
+            
+            const pdfContainer = document.getElementById('pdf-container');
+            pdfContainer.removeEventListener('mousedown', startSelection);
+            document.removeEventListener('mousemove', updateSelection);
+            document.removeEventListener('mouseup', endSelection);
+            
+            // Get selection coordinates
+            const rect = selectionElement.getBoundingClientRect();
+            const pdfRect = pdfContainer.getBoundingClientRect();
+            
+            // Calculate selection within PDF container
+            const left = rect.left - pdfRect.left;
+            const top = rect.top - pdfRect.top;
+            const width = rect.width;
+            const height = rect.height;
+            
+            // Hide selection element
+            selectionElement.style.display = 'none';
+            
+            // Take screenshot of selected area
+            html2canvas(pdfContainer, {
+                x: left,
+                y: top,
+                width: width,
+                height: height
+            }).then(canvas => {
+                // Create a download link
+                const link = document.createElement('a');
+                link.download = `pdf-selection-${pageNum}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot error:', err);
+                alert('Failed to take screenshot. Please check console for details.');
+            });
+        }
         
         // Initialize with one question per subject
         addQuestion('physics');
