@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Paper Creator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .info { background-color: #f8f9fa; padding: 10px; border-left: 4px solid #4CAF50; margin: 15px 0; }
+        #fileInfo { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Basic Paper Creator</h1>
+    
+    <div class="info">
+        <p>This tool helps you create the folder structure for JEE papers and suggests filenames for your screenshots.</p>
+    </div>
+    
+    <div class="form-group">
+        <label for="paperName">Paper Name (e.g., 2024-2):</label>
+        <input type="text" id="paperName" placeholder="Enter paper name">
+    </div>
+    
+    <div class="form-group">
+        <label for="questionCount">Number of Questions per Subject:</label>
+        <input type="number" id="questionCount" min="1" value="17">
+    </div>
+    
+    <div class="form-group">
+        <label>Questions with Options:</label>
+        <div id="optionsContainer">
+            <!-- Will be populated dynamically -->
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="currentSubject">Current Subject:</label>
+        <select id="currentSubject">
+            <option value="Chemistry">Chemistry</option>
+            <option value="Maths">Maths</option>
+            <option value="Physics">Physics</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="currentQuestion">Current Question:</label>
+        <select id="currentQuestion"></select>
+    </div>
+    
+    <div class="form-group">
+        <label for="captureType">Capture Type:</label>
+        <select id="captureType">
+            <option value="question">Question</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+        </select>
+    </div>
+    
+    <div id="fileInfo" class="info">
+        <p><strong>Current File Path:</strong></p>
+        <p id="currentPath"></p>
+    </div>
+    
+    <button id="nextItem">Next Item</button>
+    <button id="createFolders">Create Folder Structure</button>
+    
+    <script>
+        // Global variables
+        let paperData = {
+            name: '',
+            questionCount: 17,
+            questionsWithOptions: [],
+            basePath: 'C:\\Users\\HP\\myproject\\jeeapp\\src\\webapp\\Prepsharp\\papers\\'
+        };
+        
+        let currentState = {
+            subject: 'Chemistry',
+            question: 1,
+            captureType: 'question'
+        };
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up question count change handler
+            document.getElementById('questionCount').addEventListener('change', function() {
+                const count = parseInt(this.value);
+                if (!isNaN(count) && count > 0) {
+                    paperData.questionCount = count;
+                    generateOptionsUI();
+                    updateQuestionDropdown();
+                }
+            });
+            
+            // Set up paper name change handler
+            document.getElementById('paperName').addEventListener('input', function() {
+                paperData.name = this.value.trim();
+                updateCurrentPath();
+            });
+            
+            // Generate options UI initially
+            generateOptionsUI();
+            
+            // Initialize question dropdown
+            updateQuestionDropdown();
+            
+            // Set up event listeners for dropdowns
+            document.getElementById('currentSubject').addEventListener('change', function() {
+                currentState.subject = this.value;
+                updateCurrentPath();
+            });
+            
+            document.getElementById('currentQuestion').addEventListener('change', function() {
+                currentState.question = parseInt(this.value);
+                updateCaptureTypeOptions();
+                updateCurrentPath();
+            });
+            
+            document.getElementById('captureType').addEventListener('change', function() {
+                currentState.captureType = this.value;
+                updateCurrentPath();
+            });
+            
+            // Set up next item button
+            document.getElementById('nextItem').addEventListener('click', moveToNextItem);
+            
+            // Set up create folders button
+            document.getElementById('createFolders').addEventListener('click', function() {
+                const folderStructure = generateFolderStructure();
+                alert('Copy and paste this into a PowerShell or Command Prompt window to create the folder structure:\n\n' + folderStructure);
+            });
+            
+            // Update current path initially
+            updateCurrentPath();
+        });
+        
+        // Generate options UI
+        function generateOptionsUI() {
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= paperData.questionCount; i++) {
+                const checkboxDiv = document.createElement('div');
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `question-${i}`;
+                checkbox.value = i;
+                
+                // Default: questions 1-7 and 14-17 have options
+                if (i <= 7 || i >= 14) {
+                    checkbox.checked = true;
+                    if (!paperData.questionsWithOptions.includes(i)) {
+                        paperData.questionsWithOptions.push(i);
+                    }
+                }
+                
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (!paperData.questionsWithOptions.includes(i)) {
+                            paperData.questionsWithOptions.push(i);
+                        }
+                    } else {
+                        const index = paperData.questionsWithOptions.indexOf(i);
+                        if (index !== -1) {
+                            paperData.questionsWithOptions.splice(index, 1);
+                        }
+                    }
+                    updateCaptureTypeOptions();
+                });
+                
+                const label = document.createElement('label');
+                label.htmlFor = `question-${i}`;
+                label.textContent = `Q${i}`;
+                label.style.display = 'inline-block';
+                label.style.marginRight = '10px';
+                
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(label);
+                checkboxDiv.style.display = 'inline-block';
+                checkboxDiv.style.marginRight = '10px';
+                container.appendChild(checkboxDiv);
+            }
+        }
+        
+        // Update question dropdown
+        function updateQuestionDropdown() {
+            const dropdown = document.getElementById('currentQuestion');
+            dropdown.innerHTML = '';
+            
+            for (let i = 1; i <= paperData.questionCount; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Question ${i}`;
+                dropdown.appendChild(option);
+            }
+            
+            // Set current question
+            dropdown.value = currentState.question;
+            
+            // Update capture type options
+            updateCaptureTypeOptions();
+        }
+        
+        // Update capture type options
+        function updateCaptureTypeOptions() {
+            const dropdown = document.getElementById('captureType');
+            const question = currentState.question;
+            
+            // Check if this question has options
+            const hasOptions = paperData.questionsWithOptions.includes(question);
+            
+            // Enable/disable option selections
+            const optionElements = dropdown.querySelectorAll('option[value^="option"]');
+            optionElements.forEach(opt => {
+                opt.disabled = !hasOptions;
+            });
+            
+            // If current selection is an option but question doesn't have options, switch to question
+            if (currentState.captureType.startsWith('option') && !hasOptions) {
+                dropdown.value = 'question';
+                currentState.captureType = 'question';
+            }
+            
+            // Update current path
+            updateCurrentPath();
+        }
+        
+        // Update current path
+        function updateCurrentPath() {
+            if (!paperData.name) {
+                document.getElementById('currentPath').textContent = 'Please enter a paper name';
+                return;
+            }
+            
+            const subject = currentState.subject;
+            const question = currentState.question;
+            const captureType = currentState.captureType;
+            
+            let filename;
+            if (captureType === 'question') {
+                filename = `Question-${question}.png`;
+            } else {
+                const optionNum = captureType.replace('option', '');
+                filename = `Question-${question} Option-${optionNum}.png`;
+            }
+            
+            const path = `${paperData.basePath}${paperData.name}\\${subject}\\${filename}`;
+            document.getElementById('currentPath').textContent = path;
+        }
+        
+        // Move to next item
+        function moveToNextItem() {
+            const subject = currentState.subject;
+            const question = currentState.question;
+            const captureType = currentState.captureType;
+            const hasOptions = paperData.questionsWithOptions.includes(question);
+            
+            // Logic to move to next item
+            if (captureType === 'question' && hasOptions) {
+                // Move to option 1
+                currentState.captureType = 'option1';
+            } else if (captureType === 'option1') {
+                // Move to option 2
+                currentState.captureType = 'option2';
+            } else if (captureType === 'option2') {
+                // Move to option 3
+                currentState.captureType = 'option3';
+            } else if (captureType === 'option3') {
+                // Move to option 4
+                currentState.captureType = 'option4';
+            } else {
+                // Move to next question or subject
+                if (question < paperData.questionCount) {
+                    // Next question
+                    currentState.question = question + 1;
+                    currentState.captureType = 'question';
+                } else {
+                    // Next subject
+                    if (subject === 'Chemistry') {
+                        currentState.subject = 'Maths';
+                        currentState.question = 1;
+                        currentState.captureType = 'question';
+                    } else if (subject === 'Maths') {
+                        currentState.subject = 'Physics';
+                        currentState.question = 1;
+                        currentState.captureType = 'question';
+                    } else {
+                        // Finished all subjects
+                        alert('You have completed all items!');
+                    }
+                }
+            }
+            
+            // Update UI
+            document.getElementById('currentSubject').value = currentState.subject;
+            document.getElementById('currentQuestion').value = currentState.question;
+            document.getElementById('captureType').value = currentState.captureType;
+            updateCaptureTypeOptions();
+        }
+        
+        // Generate folder structure commands
+        function generateFolderStructure() {
+            if (!paperData.name) {
+                return 'Please enter a paper name first.';
+            }
+            
+            const basePath = paperData.basePath.replace(/\\/g, '\\\\');
+            const paperPath = basePath + paperData.name;
+            
+            let commands = [];
+            
+            // Create main paper directory
+            commands.push(`mkdir "${paperPath}"`);
+            
+            // Create section files
+            for (let i = 1; i <= 4; i++) {
+                commands.push(`echo. > "${paperPath}\\Section-${i}.png"`);
+            }
+            
+            // Create subject folders and their contents
+            const subjects = ["Chemistry", "Maths", "Physics"];
+            for (const subject of subjects) {
+                commands.push(`mkdir "${paperPath}\\${subject}"`);
+                
+                // Create question files
+                for (let q = 1; q <= paperData.questionCount; q++) {
+                    // Create main question file
+                    commands.push(`echo. > "${paperPath}\\${subject}\\Question-${q}.png"`);
+                    
+                    // Create option files for questions with options
+                    if (paperData.questionsWithOptions.includes(q)) {
+                        for (let opt = 1; opt <= 4; opt++) {
+                            commands.push(`echo. > "${paperPath}\\${subject}\\Question-${q} Option-${opt}.png"`);
+                        }
+                    }
+                }
+            }
+            
+            return commands.join('\n');
+        }
+    </script>
+</body>
+</html>
