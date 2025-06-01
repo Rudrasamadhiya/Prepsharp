@@ -310,6 +310,9 @@
                     </td>
                 `;
                 
+                // Debug: Log paper details to console
+                console.log('Paper:', paper.name, 'Type:', paper.type, 'Year:', paper.year, 'Paper Number:', paper.paperNumber);
+                
                 examsListElement.appendChild(row);
             });
         }
@@ -345,33 +348,28 @@
             
             // Check if it's JEE Advanced
             if (paper.type === 'jee-advanced') {
-                // Check year and paper number
-                if (paper.year === '2024' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2024-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2024' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2024-paper2.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2023' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2023-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2023' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2023-paper2.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2022' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2022-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2022' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2022-paper2.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2021' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2021-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2020' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2020-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2020' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2020-paper2.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2019' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2019-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2019' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2019-paper2.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2018' && paper.paperNumber === '1') {
-                    return `<a href="jee-advanced-2018-paper1.html" class="btn primary">Add Questions</a>`;
-                } else if (paper.year === '2018' && paper.paperNumber === '2') {
-                    return `<a href="jee-advanced-2018-paper2.html" class="btn primary">Add Questions</a>`;
+                // Extract paper number from name or ID if not explicitly set
+                let paperNumber = paper.paperNumber;
+                if (!paperNumber) {
+                    // Try to extract from name (e.g., "JEE Advanced 2023: Paper 1")
+                    if (paper.name && paper.name.includes("Paper")) {
+                        paperNumber = paper.name.includes("Paper 1") ? "1" : 
+                                     paper.name.includes("Paper 2") ? "2" : "";
+                    }
+                    // Try to extract from ID (e.g., "jee-adv-2023-p1")
+                    else if (paper.id) {
+                        paperNumber = paper.id.includes("-p1") ? "1" : 
+                                     paper.id.includes("-p2") ? "2" : "";
+                    }
+                }
+                
+                console.log(`Paper: ${paper.name}, Year: ${paper.year}, Number: ${paperNumber}`);
+                
+                // Generate the link based on year and paper number
+                if (paper.year && paperNumber) {
+                    const url = `jee-advanced-${paper.year}-paper${paperNumber}.html`;
+                    console.log(`Generated URL: ${url}`);
+                    return `<a href="${url}" class="btn primary">Add Questions</a>`;
                 }
             }
             
