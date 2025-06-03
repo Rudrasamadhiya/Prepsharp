@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - PrepSharp</title>
+    <title>Admin Dashboard - PrepSharp</title>
+    <script src="admin-functions.js"></script>
     <style>
         :root {
             --primary-color: #1976d2;
             --secondary-color: #42a5f5;
-            --accent-color: #ff9800;
             --background-color: #f5f5f5;
             --text-color: #212121;
-            --sidebar-width: 250px;
         }
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -20,7 +19,6 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
         header {
             background-color: white;
@@ -29,445 +27,121 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 100;
         }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        /* Hamburger menu icon */
-        .menu-icon {
-            display: inline-block;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        .menu-icon:hover {
-            color: var(--primary-color);
-        }
-        .logo {
-            width: 40px;
-            height: 40px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .btn.primary { background-color: var(--primary-color); color: white; }
         .container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
-        .exam-grid {
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
-        .exam-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-        .exam-card:hover {
-            transform: translateY(-5px);
-        }
-        .exam-logo {
-            height: 150px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .exam-logo img {
-            max-width: 80%;
-            max-height: 80%;
-        }
-        .exam-info {
-            padding: 15px;
-        }
-        h1, h2, h3 { color: var(--primary-color); }
-        .welcome-message {
+        .dashboard-item {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 20px;
-            margin-bottom: 30px;
-        }
-        .stream-info {
-            font-weight: 500;
-            color: var(--primary-color);
-            margin-top: 10px;
-        }
-        
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -250px; /* Use fixed value instead of var */
-            width: 250px; /* Use fixed value instead of var */
-            height: 100%;
-            background-color: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .sidebar-header {
-            padding: 20px;
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar-menu li {
-            border-bottom: 1px solid #eee;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-        .sidebar-menu a:hover {
-            background-color: #f5f5f5;
-        }
-        .sidebar-menu .icon {
-            margin-right: 10px;
-            font-size: 18px;
-            width: 24px;
             text-align: center;
         }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
+        .dashboard-item h3 {
+            margin-top: 0;
         }
-        
-        /* Sidebar active state */
-        .sidebar.active {
-            left: 0;
+        .dashboard-item p {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
         }
-        .sidebar-overlay.active {
-            display: block;
-        }
-        
-        /* Floating help button */
-        .help-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-            z-index: 99;
-        }
-        .help-btn:hover {
-            transform: scale(1.1);
-            background-color: var(--secondary-color);
+        .dashboard-item .btn {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-container" id="logo-container">
-            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
-            <h2>PrepSharp</h2>
-        </div>
-        <div class="user-info">
-            <span id="user-name">Welcome, User</span>
-            <button id="logout-btn" class="btn primary">Logout</button>
+        <h2>PrepSharp - Admin Panel</h2>
+        <div>
+            <span style="margin-right: 15px;">Welcome, Admin</span>
+            <button id="logout-btn" class="btn">Logout</button>
         </div>
     </header>
     
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>PrepSharp Menu</h3>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="dashboard.html"><span class="icon">🏠</span> Dashboard</a></li>
-            <li><a href="profile-setup.html"><span class="icon">👤</span> Edit Profile</a></li>
-            <li><a href="#"><span class="icon">❓</span> Ask Question</a></li>
-            <li><a href="#"><span class="icon">📊</span> My Results</a></li>
-            <li><a href="#"><span class="icon">📝</span> My Notes</a></li>
-            <li><a href="#"><span class="icon">⚙️</span> Settings</a></li>
-            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
-        </ul>
-    </div>
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    
-    <!-- Floating help button -->
-    <div class="help-btn" id="help-btn">?</div>
-    
-    <!-- Chatbot container -->
-    <div id="chatbot-container" style="display: none; position: fixed; bottom: 100px; right: 30px; width: 300px; height: 400px; background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 98; overflow: hidden;">
-        <div style="background-color: var(--primary-color); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <div>PrepSharp Support</div>
-            <div id="close-chat" style="cursor: pointer;">✕</div>
-        </div>
-        <div id="chat-messages" style="height: 300px; overflow-y: auto; padding: 10px;"></div>
-        <div style="padding: 10px; border-top: 1px solid #eee; display: flex;">
-            <input id="chat-input" type="text" placeholder="Type your question..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-            <button id="send-chat" style="margin-left: 5px; background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0 10px; cursor: pointer;">Send</button>
-        </div>
-    </div>
-    
     <div class="container">
-        <div class="welcome-message">
-            <h1>Welcome to PrepSharp</h1>
-            <p>Select an exam category below to start practicing with past year papers.</p>
-            <p class="stream-info" id="stream-info"></p>
-        </div>
-        
-        <h2>Exam Categories</h2>
-        
-        <!-- Engineering Exams -->
-        <div class="exam-grid" id="engineering-exams">
-            <div class="exam-card" onclick="window.location.href='exam-list.html?type=jee-advanced'">
-                <div class="exam-logo">
-                    <div style="font-size: 24px; font-weight: bold; color: var(--primary-color);">JEE Advanced</div>
-                </div>
-                <div class="exam-info">
-                    <h3>JEE Advanced</h3>
-                    <p>IIT entrance examination</p>
-                </div>
-            </div>
+        <div class="card">
+            <h1>Admin Dashboard</h1>
             
-            <div class="exam-card" onclick="window.location.href='exam-list.html?type=jee-main'">
-                <div class="exam-logo">
-                    <div style="font-size: 24px; font-weight: bold; color: var(--secondary-color);">JEE Main</div>
+            <div class="dashboard-grid">
+                <div class="dashboard-item">
+                    <h3>Total Exams</h3>
+                    <p id="total-exams">1</p>
+                    <a href="manage-exams.html" class="btn">Manage Exams</a>
                 </div>
-                <div class="exam-info">
-                    <h3>JEE Main</h3>
-                    <p>Engineering entrance examination</p>
+                
+                <div class="dashboard-item">
+                    <h3>Total Students</h3>
+                    <p>0</p>
+                    <a href="#" class="btn">Manage Students</a>
                 </div>
-            </div>
-            
-            <div class="exam-card" onclick="window.location.href='exam-list.html?type=bitsat'">
-                <div class="exam-logo">
-                    <div style="font-size: 24px; font-weight: bold; color: #4caf50;">BITSAT</div>
+                
+                <div class="dashboard-item">
+                    <h3>Total Attempts</h3>
+                    <p>0</p>
+                    <a href="#" class="btn">View Reports</a>
                 </div>
-                <div class="exam-info">
-                    <h3>BITSAT</h3>
-                    <p>BITS Pilani entrance exam</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Medical Exams -->
-        <div class="exam-grid" id="medical-exams">
-            <div class="exam-card" onclick="window.location.href='exam-list.html?type=neet'">
-                <div class="exam-logo">
-                    <div style="font-size: 24px; font-weight: bold; color: var(--accent-color);">NEET</div>
-                </div>
-                <div class="exam-info">
-                    <h3>NEET</h3>
-                    <p>Medical entrance examination</p>
-                </div>
-            </div>
-            
-            <div class="exam-card" onclick="window.location.href='exam-list.html?type=aiims'">
-                <div class="exam-logo">
-                    <div style="font-size: 24px; font-weight: bold; color: #e91e63;">AIIMS</div>
-                </div>
-                <div class="exam-info">
-                    <h3>AIIMS</h3>
-                    <p>All India Institute of Medical Sciences exam</p>
+                
+                <div class="dashboard-item">
+                    <h3>Quick Actions</h3>
+                    <a href="jee-advanced-2024-paper1.html" class="btn" style="display: block; margin-bottom: 10px;">Add New Exam</a>
+                    <a href="#" class="btn" style="display: block;">System Settings</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Check if user is logged in
-        const currentUser = localStorage.getItem('currentUser');
-        if (!currentUser) {
-            window.location.href = 'index.html';
-        } else {
-            const user = JSON.parse(currentUser);
-            // Check if profile is complete
-            if (!user.profileComplete) {
-                window.location.href = 'profile-setup.html';
-            }
-            
-            // Display user name
-            document.getElementById('user-name').textContent = `Welcome, ${user.name || 'User'}`;
-            
-            // Show/hide exam sections based on user stream
-            const engineeringExams = document.getElementById('engineering-exams');
-            const medicalExams = document.getElementById('medical-exams');
-            const streamInfo = document.getElementById('stream-info');
-            
-            if (user.stream === 'engineering') {
-                engineeringExams.style.display = 'grid';
-                medicalExams.style.display = 'none';
-                streamInfo.textContent = 'You are viewing Engineering stream exams';
-            } else if (user.stream === 'medical') {
-                engineeringExams.style.display = 'none';
-                medicalExams.style.display = 'grid';
-                streamInfo.textContent = 'You are viewing Medical stream exams';
-            } else {
-                // For other streams or if stream not set, show all exams
-                engineeringExams.style.display = 'grid';
-                medicalExams.style.display = 'grid';
-                streamInfo.textContent = 'You are viewing all available exams';
-            }
-            
-            // Sidebar functionality
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const logoContainer = document.getElementById('logo-container');
-            
-            // Logo container click handler removed - now only hamburger icon toggles sidebar
-            
-            // Close sidebar when clicking outside
-            sidebarOverlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            // Add hamburger menu icon for better visibility
-            const hamburgerIcon = document.createElement('span');
-            hamburgerIcon.innerHTML = '☰';
-            hamburgerIcon.className = 'menu-icon';
-            hamburgerIcon.style.fontSize = '24px';
-            logoContainer.prepend(hamburgerIcon);
-            
-            // Make only the hamburger icon clickable for sidebar toggle
-            hamburgerIcon.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent event bubbling
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            });
-            
-            // Remove the click event from logo container
-            logoContainer.removeEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            });
-            
-            // Logout functionality (header button)
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            });
-            
-            // Logout functionality (sidebar option)
-            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            });
-            
-            // Help button functionality
-            document.getElementById('help-btn').addEventListener('click', function() {
-                const chatContainer = document.getElementById('chatbot-container');
-                chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
-                
-                // Add welcome message if chat is empty
-                const chatMessages = document.getElementById('chat-messages');
-                if (chatMessages.children.length === 0) {
-                    addChatMessage('Hello! How can I help you today? For direct support, email us at support@prepsharp.in', 'bot');
-                }
-            });
-            
-            // Close chat button
-            document.getElementById('close-chat').addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.getElementById('chatbot-container').style.display = 'none';
-            });
-            
-            // Send chat message
-            document.getElementById('send-chat').addEventListener('click', sendChatMessage);
-            document.getElementById('chat-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendChatMessage();
-                }
-            });
-            
-            // Function to send chat message
-            function sendChatMessage() {
-                const input = document.getElementById('chat-input');
-                const message = input.value.trim();
-                
-                if (message) {
-                    addChatMessage(message, 'user');
-                    input.value = '';
-                    
-                    // Simple bot response
-                    setTimeout(() => {
-                        let response = "Thanks for your message. Our team will get back to you soon. For urgent queries, please email us at support@prepsharp.in";
-                        addChatMessage(response, 'bot');
-                    }, 500);
-                }
-            }
-            
-            // Function to add chat message
-            function addChatMessage(message, sender) {
-                const chatMessages = document.getElementById('chat-messages');
-                const messageDiv = document.createElement('div');
-                messageDiv.style.marginBottom = '10px';
-                messageDiv.style.padding = '8px 12px';
-                messageDiv.style.borderRadius = '8px';
-                messageDiv.style.maxWidth = '80%';
-                
-                if (sender === 'user') {
-                    messageDiv.style.backgroundColor = '#e3f2fd';
-                    messageDiv.style.marginLeft = 'auto';
-                } else {
-                    messageDiv.style.backgroundColor = '#f1f1f1';
-                }
-                
-                messageDiv.textContent = message;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Logout button
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            // In a real application, this would handle logout
+            alert('Logout functionality would be implemented here.');
+        });
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            // In a real application, this would fetch data from a server
+            // For now, we're using the local storage database from admin-functions.js
+            if (window.adminFunctions && window.adminFunctions.database) {
+                const papers = window.adminFunctions.database.getAllPapers();
+                document.getElementById('total-exams').textContent = papers.length + 1; // +1 for the default exam
             }
         }
+        
+        // Initialize
+        loadDashboardData();
     </script>
 </body>
 </html>
