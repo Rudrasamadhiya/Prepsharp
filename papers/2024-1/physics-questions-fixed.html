@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.question-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: white;
+}
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.question-number {
+    font-weight: bold;
+    font-size: 18px;
+}
+.question-type {
+    color: #1976d2;
+    font-weight: 500;
+}
+.question-text {
+    margin-bottom: 20px;
+}
+.question-image {
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.options-container {
+    margin-bottom: 20px;
+}
+.option {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+.option:hover {
+    background-color: #f9f9f9;
+}
+.option-label {
+    margin-right: 10px;
+    font-weight: bold;
+    min-width: 25px;
+}
+.option-image {
+    max-width: 100%;
+}
+.option-text {
+    flex-grow: 1;
+}
+.explanation {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #28a745;
+    display: none;
+}
+.show-explanation {
+    margin-top: 10px;
+    color: #1976d2;
+    cursor: pointer;
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<!-- Physics Questions -->
+<!-- Single Correct Option MCQs (first 4) -->
+<div class="question-container">
+    <div class="question-header">
+        <div class="question-number">Question 1</div>
+        <div class="question-type">Single Correct Option</div>
+    </div>
+    <div class="question-text">
+        <img src="Physics/Question-1.png" class="question-image" alt="Physics Question 1">
+    </div>
+    <div class="options-container">
+        <div class="option">
+            <div class="option-label">A.</div>
+            <div class="option-text">
+                <img src="Physics/Question-1 Option-1.png" class="option-image" alt="Option A">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">B.</div>
+            <div class="option-text">
+                <img src="Physics/Question-1 Option-2.png" class="option-image" alt="Option B">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">C.</div>
+            <div class="option-text">
+                <img src="Physics/Question-1 Option-3.png" class="option-image" alt="Option C">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">D.</div>
+            <div class="option-text">
+                <img src="Physics/Question-1 Option-4.png" class="option-image" alt="Option D">
+            </div>
+        </div>
+    </div>
+    <div class="show-explanation" onclick="toggleExplanation('physics-q1-explanation')">Show Explanation</div>
+    <div id="physics-q1-explanation" class="explanation">
+        Explanation for this question will be provided here.
+    </div>
+</div>
+
+<div class="question-container">
+    <div class="question-header">
+        <div class="question-number">Question 2</div>
+        <div class="question-type">Single Correct Option</div>
+    </div>
+    <div class="question-text">
+        <img src="Physics/Question-2.png" class="question-image" alt="Physics Question 2">
+    </div>
+    <div class="options-container">
+        <div class="option">
+            <div class="option-label">A.</div>
+            <div class="option-text">
+                <img src="Physics/Question-2 Option-1.png" class="option-image" alt="Option A">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">B.</div>
+            <div class="option-text">
+                <img src="Physics/Question-2 Option-2.png" class="option-image" alt="Option B">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">C.</div>
+            <div class="option-text">
+                <img src="Physics/Question-2 Option-3.png" class="option-image" alt="Option C">
+            </div>
+        </div>
+        <div class="option">
+            <div class="option-label">D.</div>
+            <div class="option-text">
+                <img src="Physics/Question-2 Option-4.png" class="option-image" alt="Option D">
+            </div>
+        </div>
+    </div>
+    <div class="show-explanation" onclick="toggleExplanation('physics-q2-explanation')">Show Explanation</div>
+    <div id="physics-q2-explanation" class="explanation">
+        Explanation for this question will be provided here.
+    </div>
+</div>
+
+<script>
+function toggleExplanation(id) {
+    const explanation = document.getElementById(id);
+    if (explanation.style.display === 'block') {
+        explanation.style.display = 'none';
+    } else {
+        explanation.style.display = 'block';
+    }
+}
+</script>
+
+</body>
+</html>

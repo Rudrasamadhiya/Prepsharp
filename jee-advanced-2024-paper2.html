@@ -137,12 +137,86 @@
         .tab-content.active {
             display: block;
         }
+        .image-container {
+            margin-top: 10px;
+            position: relative;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+        }
+        .image-container .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .upload-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .file-input {
+            display: none;
+        }
+        
+        /* PDF viewer styles */
+        #pdf-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+        #pdf-viewer {
+            height: 80%;
+            width: 100%;
+            overflow: auto;
+        }
+        #screenshot-area {
+            height: 20%;
+            background-color: #f5f5f5;
+            border-top: 2px solid #1976d2;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #screenshot-preview {
+            max-height: 80%;
+            max-width: 90%;
+            margin-bottom: 10px;
+        }
+        .pdf-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+        }
     </style>
 </head>
 <body>
     <header>
         <h2>PrepSharp - Add JEE Advanced 2024 Paper 2</h2>
         <div>
+            <button id="pdf-btn" class="btn" style="background-color: #4caf50; margin-right: 10px;">Upload PDF</button>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
     </header>
@@ -208,7 +282,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- PDF Viewer Container -->
+    <div id="pdf-container">
+        <div class="pdf-controls">
+            <button id="close-pdf-btn" class="btn" style="background-color: #f44336;">Close PDF</button>
+        </div>
+        <div id="pdf-viewer"></div>
+        <div id="screenshot-area">
+            <p id="paste-instructions">Press Ctrl+V to paste screenshot here</p>
+            <img id="screenshot-preview" style="display: none;">
+            <div id="screenshot-buttons" style="display: none;">
+                <button id="use-for-question-btn" class="btn">Use for Question</button>
+                <button id="use-for-option-btn" class="btn secondary">Use for Option</button>
+                <button id="cancel-screenshot-btn" class="btn" style="background-color: #f44336;">Cancel</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="html2canvas.min.js"></script>
     <script>
         // Initialize paper data
         const paperData = {
@@ -304,6 +396,11 @@
                 <div class="form-group">
                     <label for="text-${questionId}">Question Text</label>
                     <textarea id="text-${questionId}" rows="3" placeholder="Enter question text"></textarea>
+                    <button class="upload-btn question-capture-btn" data-question="${questionId}">Capture from PDF</button>
+                    <div id="question-image-${questionId}-container" class="image-container" style="display: none;">
+                        <img id="question-image-${questionId}" src="" alt="Question Image">
+                        <button class="remove-btn" onclick="removeQuestionImage('${questionId}')">×</button>
+                    </div>
                 </div>
                 
                 <div id="options-${questionId}" class="option-group">
@@ -313,6 +410,11 @@
                 <div class="form-group">
                     <label for="explanation-${questionId}">Explanation (Optional)</label>
                     <textarea id="explanation-${questionId}" rows="2" placeholder="Enter explanation"></textarea>
+                    <button class="upload-btn explanation-capture-btn" data-question="${questionId}">Capture from PDF</button>
+                    <div id="explanation-image-${questionId}-container" class="image-container" style="display: none;">
+                        <img id="explanation-image-${questionId}" src="" alt="Explanation Image">
+                        <button class="remove-btn" onclick="removeExplanationImage('${questionId}')">×</button>
+                    </div>
                 </div>
                 
                 <button type="button" class="btn btn-secondary" onclick="removeQuestion('${questionId}', '${subject}')">Remove Question</button>
@@ -365,6 +467,11 @@
                         <input type="${inputType}" id="${inputName}" name="correct-${questionId}" value="${i}">
                         <label for="${inputName}" style="display:inline; margin-right: 10px;">${letter}.</label>
                         <input type="text" id="option-${questionId}-${i}" placeholder="Option ${letter}">
+                        <button class="upload-btn option-capture-btn" data-option="${i}" data-question="${questionId}">Capture</button>
+                        <div id="option-image-${questionId}-${i}-container" class="image-container" style="display: none;">
+                            <img id="option-image-${questionId}-${i}" src="" alt="Option ${letter} Image">
+                            <button class="remove-btn" onclick="removeOptionImage('${questionId}', ${i})">×</button>
+                        </div>
                     `;
                     
                     optionsContainer.appendChild(optionDiv);
@@ -555,6 +662,33 @@
                 return;
             }
             
+            // Process images for each question
+            questions.forEach(question => {
+                const questionId = question.id.split('-')[1];
+                
+                // Add question image if exists
+                const questionImageElement = document.getElementById(`question-image-${questionId}`);
+                if (questionImageElement && questionImageElement.src && !questionImageElement.src.endsWith('#')) {
+                    question.questionImage = questionImageElement.src;
+                }
+                
+                // Add explanation image if exists
+                const explanationImageElement = document.getElementById(`explanation-image-${questionId}`);
+                if (explanationImageElement && explanationImageElement.src && !explanationImageElement.src.endsWith('#')) {
+                    question.explanationImage = explanationImageElement.src;
+                }
+                
+                // Add option images if exists
+                if (question.options) {
+                    question.options.forEach((option, index) => {
+                        const optionImageElement = document.getElementById(`option-image-${questionId}-${index}`);
+                        if (optionImageElement && optionImageElement.src && !optionImageElement.src.endsWith('#')) {
+                            option.image = optionImageElement.src;
+                        }
+                    });
+                }
+            });
+            
             // Add questions to paper data
             paperData.questions = questions;
             
@@ -594,6 +728,189 @@
         document.getElementById('dashboard-btn').addEventListener('click', function() {
             window.location.href = 'dashboard.html';
         });
+        
+        // PDF and screenshot handling variables
+        let currentCaptureTarget = null;
+        let currentQuestionId = null;
+        let currentOptionIndex = null;
+        
+        // PDF upload button
+        document.getElementById('pdf-btn').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/pdf';
+            
+            input.onchange = function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    const url = URL.createObjectURL(file);
+                    
+                    // Create iframe for PDF
+                    const iframe = document.createElement('iframe');
+                    iframe.src = url;
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.border = 'none';
+                    
+                    // Clear previous content and add iframe
+                    const pdfViewer = document.getElementById('pdf-viewer');
+                    pdfViewer.innerHTML = '';
+                    pdfViewer.appendChild(iframe);
+                    
+                    // Show PDF container
+                    document.getElementById('pdf-container').style.display = 'flex';
+                    
+                    // Update button
+                    document.getElementById('pdf-btn').textContent = 'PDF Uploaded';
+                    document.getElementById('pdf-btn').style.backgroundColor = '#1976d2';
+                }
+            };
+            
+            input.click();
+        });
+        
+        // Close PDF button
+        document.getElementById('close-pdf-btn').addEventListener('click', function() {
+            document.getElementById('pdf-container').style.display = 'none';
+        });
+        
+        // Set up capture button event delegation
+        document.addEventListener('click', function(e) {
+            // Question capture buttons
+            if (e.target.classList.contains('question-capture-btn')) {
+                currentCaptureTarget = 'question';
+                currentQuestionId = e.target.getAttribute('data-question');
+                document.getElementById('pdf-container').style.display = 'flex';
+            }
+            
+            // Explanation capture buttons
+            if (e.target.classList.contains('explanation-capture-btn')) {
+                currentCaptureTarget = 'explanation';
+                currentQuestionId = e.target.getAttribute('data-question');
+                document.getElementById('pdf-container').style.display = 'flex';
+            }
+            
+            // Option capture buttons
+            if (e.target.classList.contains('option-capture-btn')) {
+                currentCaptureTarget = 'option';
+                currentQuestionId = e.target.getAttribute('data-question');
+                currentOptionIndex = e.target.getAttribute('data-option');
+                document.getElementById('pdf-container').style.display = 'flex';
+            }
+        });
+        
+        // Handle paste events
+        document.addEventListener('paste', function(e) {
+            // Only process if PDF container is visible
+            if (document.getElementById('pdf-container').style.display !== 'flex') return;
+            
+            const items = e.clipboardData.items;
+            
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        const imageData = event.target.result;
+                        
+                        // Show screenshot preview
+                        const screenshotPreview = document.getElementById('screenshot-preview');
+                        screenshotPreview.src = imageData;
+                        screenshotPreview.style.display = 'block';
+                        
+                        // Hide instructions and show buttons
+                        document.getElementById('paste-instructions').style.display = 'none';
+                        document.getElementById('screenshot-buttons').style.display = 'block';
+                    };
+                    
+                    reader.readAsDataURL(blob);
+                    break;
+                }
+            }
+        });
+        
+        // Use screenshot buttons
+        document.getElementById('use-for-question-btn').addEventListener('click', function() {
+            const imageData = document.getElementById('screenshot-preview').src;
+            
+            if (currentCaptureTarget === 'question' && currentQuestionId) {
+                document.getElementById(`question-image-${currentQuestionId}`).src = imageData;
+                document.getElementById(`question-image-${currentQuestionId}-container`).style.display = 'block';
+            } else if (currentCaptureTarget === 'explanation' && currentQuestionId) {
+                document.getElementById(`explanation-image-${currentQuestionId}`).src = imageData;
+                document.getElementById(`explanation-image-${currentQuestionId}-container`).style.display = 'block';
+            } else if (currentCaptureTarget === 'option' && currentQuestionId && currentOptionIndex !== null) {
+                document.getElementById(`option-image-${currentQuestionId}-${currentOptionIndex}`).src = imageData;
+                document.getElementById(`option-image-${currentQuestionId}-${currentOptionIndex}-container`).style.display = 'block';
+                
+                // Set option text to indicate it has an image
+                const letter = String.fromCharCode(65 + parseInt(currentOptionIndex)); // A, B, C, D
+                document.getElementById(`option-${currentQuestionId}-${currentOptionIndex}`).value = `[Image Option ${letter}]`;
+            }
+            
+            // Reset screenshot area
+            resetScreenshotArea();
+            
+            // Close PDF viewer
+            document.getElementById('pdf-container').style.display = 'none';
+        });
+        
+        document.getElementById('use-for-option-btn').addEventListener('click', function() {
+            const imageData = document.getElementById('screenshot-preview').src;
+            
+            if (!currentQuestionId) {
+                alert('No question selected for this option');
+                return;
+            }
+            
+            // Find first empty option
+            for (let i = 0; i < 4; i++) {
+                const optionInput = document.getElementById(`option-${currentQuestionId}-${i}`);
+                if (optionInput && !optionInput.value) {
+                    const letter = String.fromCharCode(65 + i); // A, B, C, D
+                    optionInput.value = `[Image Option ${letter}]`;
+                    document.getElementById(`option-image-${currentQuestionId}-${i}`).src = imageData;
+                    document.getElementById(`option-image-${currentQuestionId}-${i}-container`).style.display = 'block';
+                    break;
+                }
+            }
+            
+            // Reset screenshot area
+            resetScreenshotArea();
+            
+            // Close PDF viewer
+            document.getElementById('pdf-container').style.display = 'none';
+        });
+        
+        document.getElementById('cancel-screenshot-btn').addEventListener('click', function() {
+            resetScreenshotArea();
+        });
+        
+        // Helper function to reset screenshot area
+        function resetScreenshotArea() {
+            document.getElementById('screenshot-preview').style.display = 'none';
+            document.getElementById('screenshot-preview').src = '';
+            document.getElementById('paste-instructions').style.display = 'block';
+            document.getElementById('screenshot-buttons').style.display = 'none';
+        }
+        
+        // Helper functions to remove images
+        function removeQuestionImage(questionId) {
+            document.getElementById(`question-image-${questionId}`).src = '';
+            document.getElementById(`question-image-${questionId}-container`).style.display = 'none';
+        }
+        
+        function removeExplanationImage(questionId) {
+            document.getElementById(`explanation-image-${questionId}`).src = '';
+            document.getElementById(`explanation-image-${questionId}-container`).style.display = 'none';
+        }
+        
+        function removeOptionImage(questionId, optionIndex) {
+            document.getElementById(`option-image-${questionId}-${optionIndex}`).src = '';
+            document.getElementById(`option-image-${questionId}-${optionIndex}-container`).style.display = 'none';
+            document.getElementById(`option-${questionId}-${optionIndex}`).value = '';
+        }
         
         // Initialize with one question per subject
         addQuestion('physics');

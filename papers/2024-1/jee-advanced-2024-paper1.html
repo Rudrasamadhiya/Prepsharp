@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced 2024 Paper 1 - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .question-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .question-number {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .question-type {
+            color: #1976d2;
+            font-weight: 500;
+        }
+        .question-text {
+            margin-bottom: 20px;
+        }
+        .question-image {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+        .options-container {
+            margin-bottom: 20px;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        .option-label {
+            margin-right: 10px;
+            font-weight: bold;
+            min-width: 25px;
+        }
+        .option-image {
+            max-width: 100%;
+        }
+        .option-text {
+            flex-grow: 1;
+        }
+        .match-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .match-list {
+            flex: 1;
+            min-width: 250px;
+        }
+        .match-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .match-item-label {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 25px;
+        }
+        .match-options {
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        .subject-nav {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .subject-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .subject-tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .subject-content {
+            display: none;
+        }
+        .subject-content.active {
+            display: block;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        .show-explanation {
+            margin-top: 10px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - JEE Advanced 2024 Paper 1</h2>
+        <div>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h1>JEE Advanced 2024: Paper 1</h1>
+            
+            <div class="subject-nav">
+                <div class="subject-tab active" data-subject="physics">Physics</div>
+                <div class="subject-tab" data-subject="chemistry">Chemistry</div>
+                <div class="subject-tab" data-subject="mathematics">Mathematics</div>
+            </div>
+            
+            <!-- Physics Section -->
+            <div id="physics-content" class="subject-content active">
+                <h2>Physics Questions</h2>
+                <div id="physics-questions">
+                    <!-- Physics questions will be loaded here -->
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-number">Question 1</div>
+                            <div class="question-type">Single Correct Option</div>
+                        </div>
+                        <div class="question-text">
+                            <img src="papers/2024-1/Physics/Question-1.png" class="question-image" alt="Physics Question 1">
+                        </div>
+                        <div class="options-container">
+                            <div class="option">
+                                <div class="option-label">A.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Physics/Question-1 Option-1.png" class="option-image" alt="Option A">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">B.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Physics/Question-1 Option-2.png" class="option-image" alt="Option B">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">C.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Physics/Question-1 Option-3.png" class="option-image" alt="Option C">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">D.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Physics/Question-1 Option-4.png" class="option-image" alt="Option D">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="show-explanation" onclick="toggleExplanation('physics-q1-explanation')">Show Explanation</div>
+                        <div id="physics-q1-explanation" class="explanation">
+                            Explanation for this question will be provided here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chemistry Section -->
+            <div id="chemistry-content" class="subject-content">
+                <h2>Chemistry Questions</h2>
+                <div id="chemistry-questions">
+                    <!-- Chemistry questions will be loaded here -->
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-number">Question 1</div>
+                            <div class="question-type">Single Correct Option</div>
+                        </div>
+                        <div class="question-text">
+                            <img src="papers/2024-1/Chemistry/Question-1.png" class="question-image" alt="Chemistry Question 1">
+                        </div>
+                        <div class="options-container">
+                            <div class="option">
+                                <div class="option-label">A.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Chemistry/Question-1 Option-1.png" class="option-image" alt="Option A">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">B.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Chemistry/Question-1 Option-2.png" class="option-image" alt="Option B">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">C.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Chemistry/Question-1 Option-3.png" class="option-image" alt="Option C">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">D.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Chemistry/Question-1 Option-4.png" class="option-image" alt="Option D">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="show-explanation" onclick="toggleExplanation('chemistry-q1-explanation')">Show Explanation</div>
+                        <div id="chemistry-q1-explanation" class="explanation">
+                            Explanation for this question will be provided here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mathematics Section -->
+            <div id="mathematics-content" class="subject-content">
+                <h2>Mathematics Questions</h2>
+                <div id="mathematics-questions">
+                    <!-- Mathematics questions will be loaded here -->
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-number">Question 1</div>
+                            <div class="question-type">Single Correct Option</div>
+                        </div>
+                        <div class="question-text">
+                            <img src="papers/2024-1/Maths/Question-1.png" class="question-image" alt="Mathematics Question 1">
+                        </div>
+                        <div class="options-container">
+                            <div class="option">
+                                <div class="option-label">A.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Maths/Question-1 Option-1.png" class="option-image" alt="Option A">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">B.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Maths/Question-1 Option-2.png" class="option-image" alt="Option B">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">C.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Maths/Question-1 Option-3.png" class="option-image" alt="Option C">
+                                </div>
+                            </div>
+                            <div class="option">
+                                <div class="option-label">D.</div>
+                                <div class="option-text">
+                                    <img src="papers/2024-1/Maths/Question-1 Option-4.png" class="option-image" alt="Option D">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="show-explanation" onclick="toggleExplanation('mathematics-q1-explanation')">Show Explanation</div>
+                        <div id="mathematics-q1-explanation" class="explanation">
+                            Explanation for this question will be provided here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.subject-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.subject-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                const subject = this.getAttribute('data-subject');
+                document.getElementById(`${subject}-content`).classList.add('active');
+            });
+        });
+        
+        // Dashboard button
+        document.getElementById('dashboard-btn').addEventListener('click', function() {
+            window.location.href = '../dashboard.html';
+        });
+        
+        // Toggle explanation
+        function toggleExplanation(id) {
+            const explanation = document.getElementById(id);
+            if (explanation.style.display === 'block') {
+                explanation.style.display = 'none';
+            } else {
+                explanation.style.display = 'block';
+            }
+        }
+        
+        // Load questions from localStorage if available
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedPaper = localStorage.getItem('jeeAdvanced2024Paper1');
+            if (savedPaper) {
+                const paper = JSON.parse(savedPaper);
+                // Implementation for loading saved questions would go here
+                console.log('Paper loaded:', paper);
+            }
+        });
+    </script>
+</body>
+</html>
