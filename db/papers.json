@@ -6,7 +6,197 @@
     "year": "2024",
     "paperNumber": "1",
     "subjects": ["physics", "chemistry", "mathematics"],
-    "questions": [],
+    "questions": [
+      {
+        "id": "p1-q1",
+        "number": "1",
+        "type": "Single Correct Option",
+        "subject": "Physics",
+        "imagePath": "papers/2024-1/Physics/Question-1.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Physics/Question-1 Option-1.png",
+            "isCorrect": true
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Physics/Question-1 Option-2.png",
+            "isCorrect": false
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Physics/Question-1 Option-3.png",
+            "isCorrect": false
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Physics/Question-1 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Physics question 1"
+      },
+      {
+        "id": "p1-q2",
+        "number": "2",
+        "type": "Single Correct Option",
+        "subject": "Physics",
+        "imagePath": "papers/2024-1/Physics/Question-2.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Physics/Question-2 Option-1.png",
+            "isCorrect": false
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Physics/Question-2 Option-2.png",
+            "isCorrect": true
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Physics/Question-2 Option-3.png",
+            "isCorrect": false
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Physics/Question-2 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Physics question 2"
+      },
+      {
+        "id": "c1-q1",
+        "number": "1",
+        "type": "Single Correct Option",
+        "subject": "Chemistry",
+        "imagePath": "papers/2024-1/Chemistry/Question-1.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Chemistry/Question-1 Option-1.png",
+            "isCorrect": false
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Chemistry/Question-1 Option-2.png",
+            "isCorrect": true
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Chemistry/Question-1 Option-3.png",
+            "isCorrect": false
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Chemistry/Question-1 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Chemistry question 1"
+      },
+      {
+        "id": "m1-q1",
+        "number": "1",
+        "type": "Single Correct Option",
+        "subject": "Mathematics",
+        "imagePath": "papers/2024-1/Maths/Question-1.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Maths/Question-1 Option-1.png",
+            "isCorrect": true
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Maths/Question-1 Option-2.png",
+            "isCorrect": false
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Maths/Question-1 Option-3.png",
+            "isCorrect": false
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Maths/Question-1 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Mathematics question 1"
+      },
+      {
+        "id": "p1-q5",
+        "number": "5",
+        "type": "Multiple Correct Options",
+        "subject": "Physics",
+        "imagePath": "papers/2024-1/Physics/Question-5.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Physics/Question-5 Option-1.png",
+            "isCorrect": true
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Physics/Question-5 Option-2.png",
+            "isCorrect": false
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Physics/Question-5 Option-3.png",
+            "isCorrect": true
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Physics/Question-5 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Physics question 5 (multiple correct options A and C)"
+      },
+      {
+        "id": "p1-q8",
+        "number": "8",
+        "type": "Non-Negative Integer",
+        "subject": "Physics",
+        "imagePath": "papers/2024-1/Physics/Question-8.png",
+        "correctAnswer": "42",
+        "explanation": "Explanation for Physics question 8 (integer type)"
+      },
+      {
+        "id": "p1-q14",
+        "number": "14",
+        "type": "Match List",
+        "subject": "Physics",
+        "imagePath": "papers/2024-1/Physics/Question-14.png",
+        "options": [
+          {
+            "label": "A",
+            "imagePath": "papers/2024-1/Physics/Question-14 Option-1.png",
+            "isCorrect": true
+          },
+          {
+            "label": "B",
+            "imagePath": "papers/2024-1/Physics/Question-14 Option-2.png",
+            "isCorrect": false
+          },
+          {
+            "label": "C",
+            "imagePath": "papers/2024-1/Physics/Question-14 Option-3.png",
+            "isCorrect": false
+          },
+          {
+            "label": "D",
+            "imagePath": "papers/2024-1/Physics/Question-14 Option-4.png",
+            "isCorrect": false
+          }
+        ],
+        "explanation": "Explanation for Physics question 14 (match list type)"
+      }
+    ],
     "createdAt": "2023-12-15T10:30:00Z",
     "updatedAt": "2023-12-15T10:30:00Z"
   }
