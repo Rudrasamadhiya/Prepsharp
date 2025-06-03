@@ -150,6 +150,15 @@
             border-left: 4px solid #28a745;
             display: none;
         }
+        .explanation-text {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+            resize: vertical;
+        }
         .answer-indicator {
             font-weight: bold;
             margin-top: 10px;
@@ -291,9 +300,9 @@
                             </div>
                         </div>
                         <div class="answer-indicator" id="physics-q2-answer"></div>
-                        <div class="show-explanation" onclick="toggleExplanation('physics-q2-explanation')">Show Explanation</div>
+                        <div class="show-explanation" onclick="toggleExplanation('physics-q2-explanation')">Add Explanation</div>
                         <div id="physics-q2-explanation" class="explanation">
-                            Explanation for this question will be provided here.
+                            <textarea class="explanation-text" placeholder="Enter explanation here" style="width: 100%; min-height: 100px;"></textarea>
                         </div>
                     </div>
                     
@@ -2025,121 +2034,15 @@
             // Add more correct answers
         };
         
-        // Check answers
-        document.getElementById('check-answers-btn').addEventListener('click', function() {
-            // Show all explanations
-            document.querySelectorAll('.explanation').forEach(explanation => {
+        // Toggle explanation textarea
+        function toggleExplanation(id) {
+            const explanation = document.getElementById(id);
+            if (explanation.style.display === 'block') {
+                explanation.style.display = 'none';
+            } else {
                 explanation.style.display = 'block';
-            });
-            
-            // Mark correct and incorrect answers
-            document.querySelectorAll('.question-container').forEach(questionContainer => {
-                const questionHeader = questionContainer.querySelector('.question-header');
-                const questionNumber = questionHeader.querySelector('.question-number').textContent.split(' ')[1];
-                const questionType = questionHeader.querySelector('.question-type').textContent;
-                
-                // Determine subject
-                let subject = '';
-                if (questionContainer.closest('#physics-tab')) {
-                    subject = 'physics';
-                } else if (questionContainer.closest('#chemistry-tab')) {
-                    subject = 'chemistry';
-                } else if (questionContainer.closest('#mathematics-tab')) {
-                    subject = 'mathematics';
-                }
-                
-                const questionId = `${subject}-${questionNumber}`;
-                const correctAnswer = correctAnswers[questionId];
-                
-                if (correctAnswer) {
-                    const options = questionContainer.querySelectorAll('.option');
-                    const answerIndicator = questionContainer.querySelector('.answer-indicator');
-                    
-                    if (questionType === 'Single Correct Option') {
-                        // Find the correct option
-                        let correctOption;
-                        options.forEach((option, index) => {
-                            const optionLabel = option.querySelector('.option-label').textContent.replace('.', '');
-                            if (optionLabel === correctAnswer) {
-                                correctOption = option;
-                                option.classList.add('correct');
-                            }
-                        });
-                        
-                        // Check if user selected the correct answer
-                        let userCorrect = false;
-                        options.forEach(option => {
-                            if (option.classList.contains('selected')) {
-                                if (option === correctOption) {
-                                    userCorrect = true;
-                                } else {
-                                    option.classList.add('incorrect');
-                                }
-                            }
-                        });
-                        
-                        // Show result
-                        if (answerIndicator) {
-                            answerIndicator.style.display = 'block';
-                            if (userCorrect) {
-                                answerIndicator.textContent = 'Correct! +3 points';
-                                answerIndicator.className = 'answer-indicator correct';
-                            } else {
-                                answerIndicator.textContent = 'Incorrect. -1 point';
-                                answerIndicator.className = 'answer-indicator incorrect';
-                            }
-                        }
-                    } else if (questionType === 'Multiple Correct Options' && Array.isArray(correctAnswer)) {
-                        // For multiple correct options
-                        options.forEach((option, index) => {
-                            const optionLabel = option.querySelector('.option-label').textContent.replace('.', '');
-                            if (correctAnswer.includes(optionLabel)) {
-                                option.classList.add('correct');
-                            }
-                        });
-                        
-                        // Check user selections
-                        let allCorrect = true;
-                        let someCorrect = false;
-                        let selectedIncorrect = false;
-                        
-                        options.forEach(option => {
-                            const optionLabel = option.querySelector('.option-label').textContent.replace('.', '');
-                            const isCorrect = correctAnswer.includes(optionLabel);
-                            const isSelected = option.classList.contains('selected');
-                            
-                            if (isSelected && !isCorrect) {
-                                selectedIncorrect = true;
-                                option.classList.add('incorrect');
-                            }
-                            
-                            if (isSelected && isCorrect) {
-                                someCorrect = true;
-                            }
-                            
-                            if (isCorrect && !isSelected) {
-                                allCorrect = false;
-                            }
-                        });
-                        
-                        // Show result
-                        if (answerIndicator) {
-                            answerIndicator.style.display = 'block';
-                            if (allCorrect && !selectedIncorrect) {
-                                answerIndicator.textContent = 'Correct! +4 points';
-                                answerIndicator.className = 'answer-indicator correct';
-                            } else if (someCorrect && !selectedIncorrect) {
-                                answerIndicator.textContent = 'Partially correct. +1 point';
-                                answerIndicator.className = 'answer-indicator correct';
-                            } else {
-                                answerIndicator.textContent = 'Incorrect. -2 points';
-                                answerIndicator.className = 'answer-indicator incorrect';
-                            }
-                        }
-                    }
-                }
-            });
-        });
+            }
+        }
         
         // Save paper button
         document.getElementById('save-paper-btn').addEventListener('click', function() {
@@ -2175,16 +2078,18 @@
                     const optionLabel = option.querySelector('.option-label').textContent.replace('.', '');
                     const optionImageElement = option.querySelector('.option-text img');
                     const optionImagePath = optionImageElement ? optionImageElement.getAttribute('src') : '';
+                    const isCorrect = option.classList.contains('selected');
                     
                     options.push({
                         label: optionLabel,
-                        imagePath: optionImagePath
+                        imagePath: optionImagePath,
+                        isCorrect: isCorrect
                     });
                 });
                 
                 // Get explanation
-                const explanationElement = questionContainer.querySelector('.explanation');
-                const explanation = explanationElement ? explanationElement.textContent.trim() : '';
+                const explanationTextarea = questionContainer.querySelector('.explanation-text');
+                const explanation = explanationTextarea ? explanationTextarea.value.trim() : '';
                 
                 // Add question to paper data
                 paperData.questions.push({
@@ -2197,12 +2102,9 @@
                 });
             });
             
-            // Mark correct answers for each question
-            const paperWithAnswers = window.adminFunctions.markCorrectAnswers(paperData);
-            
             // Save to database
             try {
-                const paperId = window.adminFunctions.savePaperToDatabase(paperWithAnswers);
+                const paperId = window.adminFunctions.savePaperToDatabase(paperData);
                 console.log('Paper saved with ID:', paperId);
                 alert('Paper saved successfully to the database!');
                 
