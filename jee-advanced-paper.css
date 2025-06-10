@@ -1,0 +1,174 @@
+/* JEE Advanced Paper Styling */
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #f9f9f9;
+    color: #000;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+}
+
+.paper-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.paper-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.paper-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.paper-subtitle {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.instructions {
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+
+.instructions h3 {
+    text-align: center;
+    margin-top: 0;
+    text-decoration: underline;
+}
+
+.instructions ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.section-header {
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 5px;
+    margin: 20px 0 10px 0;
+    background-color: #f0f0f0;
+}
+
+.question {
+    margin-bottom: 15px;
+    page-break-inside: avoid;
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 10px;
+}
+
+.question-number {
+    font-weight: bold;
+    display: inline-block;
+    width: 30px;
+    vertical-align: top;
+}
+
+.question-content {
+    display: inline-block;
+    width: calc(100% - 35px);
+    vertical-align: top;
+}
+
+.question-text {
+    margin-bottom: 10px;
+}
+
+.question-image {
+    max-width: 100%;
+    margin: 10px 0;
+}
+
+.options {
+    margin-left: 20px;
+}
+
+.option {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.option-label {
+    margin-right: 10px;
+    min-width: 20px;
+}
+
+.option-text {
+    flex-grow: 1;
+}
+
+.option-image {
+    max-width: 100%;
+    margin: 5px 0;
+}
+
+.option input[type="radio"],
+.option input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.integer-answer {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.integer-answer input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #000;
+}
+
+.timer {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #000;
+    padding: 5px 10px;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.submit-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-btn:hover {
+    background-color: #1565c0;
+}
+
+@media print {
+    .timer, .submit-btn {
+        display: none;
+    }
+    
+    .paper-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .question {
+        page-break-inside: avoid;
+    }
+}
