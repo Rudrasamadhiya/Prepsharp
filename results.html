@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        .results-summary {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .subject-score {
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: var(--success-color);
+        }
+        .incorrect {
+            color: var(--error-color);
+        }
+        .question-result {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .question-status {
+            font-weight: bold;
+        }
+        .status-correct {
+            color: var(--success-color);
+        }
+        .status-incorrect {
+            color: var(--error-color);
+        }
+        .status-unattempted {
+            color: #ff9800;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+        }
+        .error {
+            color: var(--error-color);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--error-color);
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PrepSharp - Exam Results</h2>
+        <div>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="results-container" class="card">
+            <div class="loading">Loading results...</div>
+        </div>
+    </div>
+
+    <div class="container" style="text-align: center; margin-top: 30px;">
+        <a href="dashboard.html" class="btn">Back to Dashboard</a>
+    </div>
+
+    <script>
+        // Get paper ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paperId = urlParams.get('id');
+        
+        // Load results
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!paperId) {
+                showError('No paper ID specified');
+                return;
+            }
+            
+            loadResults(paperId);
+            
+            // Dashboard button
+            document.getElementById('dashboard-btn').addEventListener('click', function() {
+                window.location.href = 'dashboard.html';
+            });
+        });
+        
+        // Load results
+        function loadResults(paperId) {
+            try {
+                // Load paper data
+                const paperData = localStorage.getItem(paperId) || localStorage.getItem('jee-adv-2024-p1');
+                const answersData = localStorage.getItem(`${paperId}-answers`);
+                
+                if (!paperData) {
+                    showError('Paper not found');
+                    return;
+                }
+                
+                const paper = JSON.parse(paperData);
+                const answers = answersData ? JSON.parse(answersData) : { answers: [] };
+                
+                calculateResults(paper, answers);
+            } catch (error) {
+                console.error('Error loading results:', error);
+                showError('Failed to load results');
+            }
+        }
+        
+        // Calculate results
+        function calculateResults(paper, answers) {
+            const resultsContainer = document.getElementById('results-container');
+            
+            // Clear loading message
+            resultsContainer.innerHTML = '';
+            
+            // Add results title
+            const titleElement = document.createElement('h1');
+            titleElement.textContent = 'Exam Results: ' + paper.name;
+            resultsContainer.appendChild(titleElement);
+            
+            // Calculate scores
+            const scores = {
+                total: 0,
+                correct: 0,
+                incorrect: 0,
+                unattempted: 0,
+                subjects: {}
+            };
+            
+            // Initialize subject scores
+            paper.subjects.forEach(subject => {
+                scores.subjects[subject] = {
+                    total: 0,
+                    correct: 0,
+                    incorrect: 0,
+                    unattempted: 0
+                };
+            });
+            
+            // Process each question
+            const questionResults = [];
+            
+            paper.questions.forEach(question => {
+                const subject = question.subject.toLowerCase();
+                const userAnswer = findUserAnswer(answers.answers, question.id);
+                
+                let isCorrect = false;
+                let isAttempted = false;
+                let points = 0;
+                
+                if (userAnswer) {
+                    isAttempted = true;
+                    
+                    if (question.type === 'Non-Negative Integer') {
+                        isCorrect = userAnswer === question.correctAnswer;
+                        points = isCorrect ? 4 : 0;
+                    } else if (question.type === 'Single Correct Option' || question.type === 'Match List') {
+                        const correctOption = findCorrectOption(question.options);
+                        isCorrect = userAnswer.length === 1 && userAnswer[0] === correctOption;
+                        points = isCorrect ? 3 : -1;
+                    } else if (question.type === 'Multiple Correct Options') {
+                        const correctOptions = question.options
+                            .filter(option => option.isCorrect)
+                            .map(option => option.label);
+                        
+                        const allCorrect = correctOptions.every(opt => userAnswer.includes(opt)) && 
+                                          userAnswer.length === correctOptions.length;
+                        
+                        const someCorrect = correctOptions.some(opt => userAnswer.includes(opt)) &&
+                                           !userAnswer.some(opt => !correctOptions.includes(opt));
+                        
+                        if (allCorrect) {
+                            isCorrect = true;
+                            points = 4;
+                        } else if (someCorrect) {
+                            isCorrect = true;
+                            points = 1;
+                        } else {
+                            isCorrect = false;
+                            points = -2;
+                        }
+                    }
+                }
+                
+                // Update scores
+                scores.total += points;
+                if (isAttempted) {
+                    if (isCorrect) {
+                        scores.correct++;
+                        scores.subjects[subject].correct++;
+                    } else {
+                        scores.incorrect++;
+                        scores.subjects[subject].incorrect++;
+                    }
+                } else {
+                    scores.unattempted++;
+                    scores.subjects[subject].unattempted++;
+                }
+                
+                scores.subjects[subject].total += points;
+                
+                // Add to question results
+                questionResults.push({
+                    question: question,
+                    userAnswer: userAnswer,
+                    isCorrect: isCorrect,
+                    isAttempted: isAttempted,
+                    points: points
+                });
+            });
+            
+            // Create results summary
+            const summaryElement = document.createElement('div');
+            summaryElement.className = 'results-summary';
+            
+            const scoreElement = document.createElement('div');
+            scoreElement.className = 'score';
+            scoreElement.textContent = `Total Score: ${scores.total}`;
+            
+            const statsElement = document.createElement('div');
+            statsElement.innerHTML = `
+                <p><span class="correct">Correct: ${scores.correct}</span> | 
+                <span class="incorrect">Incorrect: ${scores.incorrect}</span> | 
+                Unattempted: ${scores.unattempted}</p>
+            `;
+            
+            summaryElement.appendChild(scoreElement);
+            summaryElement.appendChild(statsElement);
+            
+            // Add subject scores
+            const subjectScoresElement = document.createElement('div');
+            subjectScoresElement.innerHTML = '<h3>Subject Scores:</h3>';
+            
+            for (const subject in scores.subjects) {
+                const subjectScore = document.createElement('div');
+                subjectScore.className = 'subject-score';
+                subjectScore.innerHTML = `
+                    <strong>${subject.charAt(0).toUpperCase() + subject.slice(1)}:</strong> 
+                    ${scores.subjects[subject].total} points 
+                    (Correct: ${scores.subjects[subject].correct}, 
+                    Incorrect: ${scores.subjects[subject].incorrect}, 
+                    Unattempted: ${scores.subjects[subject].unattempted})
+                `;
+                subjectScoresElement.appendChild(subjectScore);
+            }
+            
+            summaryElement.appendChild(subjectScoresElement);
+            resultsContainer.appendChild(summaryElement);
+            
+            // Add detailed results
+            const detailedResultsElement = document.createElement('div');
+            detailedResultsElement.innerHTML = '<h2>Detailed Results</h2>';
+            
+            // Group by subject
+            const subjectGroups = {};
+            paper.subjects.forEach(subject => {
+                subjectGroups[subject] = [];
+            });
+            
+            questionResults.forEach(result => {
+                const subject = result.question.subject.toLowerCase();
+                if (subjectGroups[subject]) {
+                    subjectGroups[subject].push(result);
+                }
+            });
+            
+            // Add results for each subject
+            for (const subject in subjectGroups) {
+                const subjectElement = document.createElement('div');
+                subjectElement.innerHTML = `<h3>${subject.charAt(0).toUpperCase() + subject.slice(1)}</h3>`;
+                
+                const results = subjectGroups[subject];
+                results.sort((a, b) => parseInt(a.question.number) - parseInt(b.question.number));
+                
+                results.forEach(result => {
+                    const questionResult = document.createElement('div');
+                    questionResult.className = 'question-result';
+                    
+                    let statusClass = 'status-unattempted';
+                    let statusText = 'Unattempted';
+                    
+                    if (result.isAttempted) {
+                        statusClass = result.isCorrect ? 'status-correct' : 'status-incorrect';
+                        statusText = result.isCorrect ? 'Correct' : 'Incorrect';
+                    }
+                    
+                    questionResult.innerHTML = `
+                        <div class="question-header">
+                            <div>Question ${result.question.number} (${result.question.type})</div>
+                            <div class="question-status ${statusClass}">${statusText} (${result.points > 0 ? '+' : ''}${result.points})</div>
+                        </div>
+                        <div>
+                            <p><strong>Your Answer:</strong> ${formatAnswer(result.userAnswer, result.question.type)}</p>
+                            <p><strong>Correct Answer:</strong> ${formatCorrectAnswer(result.question)}</p>
+                        </div>
+                    `;
+                    
+                    subjectElement.appendChild(questionResult);
+                });
+                
+                detailedResultsElement.appendChild(subjectElement);
+            }
+            
+            resultsContainer.appendChild(detailedResultsElement);
+        }
+        
+        // Find user answer for a question
+        function findUserAnswer(answers, questionId) {
+            const answer = answers.find(a => a.questionId === questionId);
+            return answer ? answer.answer : null;
+        }
+        
+        // Find correct option for a question
+        function findCorrectOption(options) {
+            const correctOption = options.find(option => option.isCorrect);
+            return correctOption ? correctOption.label : null;
+        }
+        
+        // Format answer for display
+        function formatAnswer(answer, questionType) {
+            if (!answer) return 'Not answered';
+            
+            if (questionType === 'Non-Negative Integer') {
+                return answer;
+            } else {
+                return Array.isArray(answer) ? answer.join(', ') : answer;
+            }
+        }
+        
+        // Format correct answer for display
+        function formatCorrectAnswer(question) {
+            if (question.type === 'Non-Negative Integer') {
+                return question.correctAnswer;
+            } else {
+                const correctOptions = question.options
+                    .filter(option => option.isCorrect)
+                    .map(option => option.label);
+                
+                return correctOptions.join(', ');
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = `<div class="error">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
