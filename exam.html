@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Paper - PrepSharp</title>
+    <title>JEE Advanced 2024 Paper 1 - PrepSharp</title>
     <style>
         :root {
             --primary-color: #1976d2;
@@ -40,11 +40,18 @@
             margin-bottom: 20px;
         }
         h1, h2, h3 { color: var(--primary-color); }
+        .section-header {
+            background-color: #f0f0f0;
+            padding: 10px 15px;
+            margin: 20px 0 10px 0;
+            border-left: 4px solid var(--primary-color);
+            font-weight: bold;
+        }
         .question-container {
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             background-color: white;
         }
         .question-header {
@@ -56,7 +63,7 @@
             font-weight: bold;
             font-size: 18px;
         }
-        .question-type {
+        .question-subject {
             color: #1976d2;
             font-weight: 500;
         }
@@ -109,45 +116,6 @@
         .btn:hover {
             background-color: var(--secondary-color);
         }
-        .tab-container {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-        }
-        .tab.active {
-            background-color: white;
-            border-bottom: 1px solid white;
-            margin-bottom: -1px;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .explanation {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-left: 4px solid #28a745;
-            display: none;
-        }
-        .show-explanation {
-            margin-top: 10px;
-            color: var(--primary-color);
-            cursor: pointer;
-            text-decoration: underline;
-        }
         .answer-input {
             margin-top: 15px;
         }
@@ -170,11 +138,28 @@
             border-radius: 5px;
             margin: 20px 0;
         }
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .timer {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-weight: bold;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h2>PrepSharp - Exam Paper</h2>
+        <h2>PrepSharp - JEE Advanced 2024 Paper 1</h2>
         <div>
             <button id="dashboard-btn" class="btn">Dashboard</button>
         </div>
@@ -193,15 +178,10 @@
     <script>
         // Get paper ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const paperId = urlParams.get('id');
+        const paperId = urlParams.get('id') || 'jee-adv-2024-p1';
         
         // Load paper data
         document.addEventListener('DOMContentLoaded', function() {
-            if (!paperId) {
-                showError('No paper ID specified');
-                return;
-            }
-            
             loadPaper(paperId);
             
             // Dashboard button
@@ -258,88 +238,122 @@
             titleElement.textContent = paper.name;
             paperContainer.appendChild(titleElement);
             
-            // Add paper info
-            const infoElement = document.createElement('div');
-            infoElement.className = 'marking-info';
-            infoElement.style = 'background-color: #f8f9fa; border-left: 4px solid #1976d2; padding: 15px; margin-bottom: 20px;';
-            infoElement.innerHTML = `
-                <h3>Paper Information:</h3>
-                <ul>
-                    <li>Type: ${paper.type}</li>
-                    <li>Year: ${paper.year}</li>
-                    <li>Paper Number: ${paper.paperNumber}</li>
-                    <li>Subjects: ${paper.subjects.join(', ')}</li>
-                    <li>Total Questions: ${paper.questions.length}</li>
-                </ul>
+            // Add timer
+            const timerElement = document.createElement('div');
+            timerElement.className = 'timer';
+            timerElement.id = 'exam-timer';
+            timerElement.textContent = 'Time Remaining: 3:00:00';
+            document.body.appendChild(timerElement);
+            
+            // Start timer
+            startTimer(3 * 60 * 60); // 3 hours
+            
+            // Add instructions
+            const instructionsElement = document.createElement('div');
+            instructionsElement.className = 'instructions';
+            instructionsElement.innerHTML = `
+                <h3>General Instructions:</h3>
+                <ol>
+                    <li>This question paper contains 54 questions. All questions are compulsory.</li>
+                    <li>The question paper has three parts:
+                        <ul>
+                            <li>Section 1: Contains 18 multiple choice questions with single correct answer.</li>
+                            <li>Section 2: Contains 12 multiple choice questions with one or more correct answers.</li>
+                            <li>Section 3: Contains 18 numerical value type questions.</li>
+                        </ul>
+                    </li>
+                    <li>Marking scheme:
+                        <ul>
+                            <li>Section 1: +3 for correct answer, -1 for incorrect answer, 0 if not attempted.</li>
+                            <li>Section 2: +4 for correct answer, -2 for incorrect answer, 0 if not attempted.</li>
+                            <li>Section 3: +3 for correct answer, 0 if not attempted or incorrect answer.</li>
+                        </ul>
+                    </li>
+                </ol>
             `;
-            paperContainer.appendChild(infoElement);
+            paperContainer.appendChild(instructionsElement);
             
-            // Create tabs
-            const tabContainer = document.createElement('div');
-            tabContainer.className = 'tab-container';
+            // Group questions by type
+            const questionsByType = {
+                'Single Correct Option': [],
+                'Multiple Correct Options': [],
+                'Non-Negative Integer': []
+            };
             
-            // Group questions by subject
-            const subjectGroups = {};
-            paper.subjects.forEach(subject => {
-                subjectGroups[subject] = [];
-            });
+            // Assign global question numbers
+            let globalQuestionNumber = 1;
             
+            // Process questions
             paper.questions.forEach(question => {
-                const subject = question.subject.toLowerCase();
-                if (subjectGroups[subject]) {
-                    subjectGroups[subject].push(question);
+                // Add to appropriate type group
+                if (questionsByType[question.type]) {
+                    // Add global question number
+                    question.globalNumber = globalQuestionNumber++;
+                    questionsByType[question.type].push(question);
                 }
             });
             
-            // Create tabs for each subject
-            let isFirst = true;
-            for (const subject in subjectGroups) {
-                const tab = document.createElement('div');
-                tab.className = 'tab' + (isFirst ? ' active' : '');
-                tab.setAttribute('data-subject', subject);
-                tab.textContent = subject.charAt(0).toUpperCase() + subject.slice(1);
-                tabContainer.appendChild(tab);
+            // Section 1: Single Correct Option
+            if (questionsByType['Single Correct Option'].length > 0) {
+                const sectionElement = document.createElement('div');
+                sectionElement.innerHTML = `<div class="section-header">SECTION 1: Single Correct Option Type Questions</div>`;
+                paperContainer.appendChild(sectionElement);
                 
-                // Add event listener
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    const subject = this.getAttribute('data-subject');
-                    document.getElementById(`${subject}-tab`).classList.add('active');
+                // Sort by subject and then by number
+                const questions = questionsByType['Single Correct Option'].sort((a, b) => {
+                    if (a.subject !== b.subject) {
+                        const subjects = ['Physics', 'Chemistry', 'Mathematics'];
+                        return subjects.indexOf(a.subject) - subjects.indexOf(b.subject);
+                    }
+                    return parseInt(a.number) - parseInt(b.number);
                 });
-                
-                isFirst = false;
-            }
-            
-            paperContainer.appendChild(tabContainer);
-            
-            // Create tab content for each subject
-            isFirst = true;
-            for (const subject in subjectGroups) {
-                const tabContent = document.createElement('div');
-                tabContent.id = `${subject}-tab`;
-                tabContent.className = 'tab-content' + (isFirst ? ' active' : '');
-                
-                // Add subject heading
-                const subjectHeading = document.createElement('h2');
-                subjectHeading.textContent = subject.charAt(0).toUpperCase() + subject.slice(1) + ' Questions';
-                tabContent.appendChild(subjectHeading);
-                
-                // Add questions
-                const questions = subjectGroups[subject];
-                questions.sort((a, b) => parseInt(a.number) - parseInt(b.number));
                 
                 questions.forEach(question => {
                     const questionElement = createQuestionElement(question);
-                    tabContent.appendChild(questionElement);
+                    paperContainer.appendChild(questionElement);
+                });
+            }
+            
+            // Section 2: Multiple Correct Options
+            if (questionsByType['Multiple Correct Options'].length > 0) {
+                const sectionElement = document.createElement('div');
+                sectionElement.innerHTML = `<div class="section-header">SECTION 2: Multiple Correct Option Type Questions</div>`;
+                paperContainer.appendChild(sectionElement);
+                
+                // Sort by subject and then by number
+                const questions = questionsByType['Multiple Correct Options'].sort((a, b) => {
+                    if (a.subject !== b.subject) {
+                        const subjects = ['Physics', 'Chemistry', 'Mathematics'];
+                        return subjects.indexOf(a.subject) - subjects.indexOf(b.subject);
+                    }
+                    return parseInt(a.number) - parseInt(b.number);
                 });
                 
-                paperContainer.appendChild(tabContent);
-                isFirst = false;
+                questions.forEach(question => {
+                    const questionElement = createQuestionElement(question);
+                    paperContainer.appendChild(questionElement);
+                });
+            }
+            
+            // Section 3: Non-Negative Integer
+            if (questionsByType['Non-Negative Integer'].length > 0) {
+                const sectionElement = document.createElement('div');
+                sectionElement.innerHTML = `<div class="section-header">SECTION 3: Numerical Value Type Questions</div>`;
+                paperContainer.appendChild(sectionElement);
+                
+                // Sort by subject and then by number
+                const questions = questionsByType['Non-Negative Integer'].sort((a, b) => {
+                    if (a.subject !== b.subject) {
+                        const subjects = ['Physics', 'Chemistry', 'Mathematics'];
+                        return subjects.indexOf(a.subject) - subjects.indexOf(b.subject);
+                    }
+                    return parseInt(a.number) - parseInt(b.number);
+                });
+                
+                questions.forEach(question => {
+                    const questionElement = createQuestionElement(question);
+                    paperContainer.appendChild(questionElement);
+                });
             }
         }
         
@@ -355,14 +369,14 @@
             
             const questionNumber = document.createElement('div');
             questionNumber.className = 'question-number';
-            questionNumber.textContent = 'Question ' + question.number;
+            questionNumber.textContent = 'Question ' + question.globalNumber;
             
-            const questionType = document.createElement('div');
-            questionType.className = 'question-type';
-            questionType.textContent = question.type;
+            const questionSubject = document.createElement('div');
+            questionSubject.className = 'question-subject';
+            questionSubject.textContent = question.subject;
             
             questionHeader.appendChild(questionNumber);
-            questionHeader.appendChild(questionType);
+            questionHeader.appendChild(questionSubject);
             questionContainer.appendChild(questionHeader);
             
             // Question text
@@ -431,7 +445,7 @@
                     optionElement.addEventListener('click', function() {
                         const questionType = question.type;
                         
-                        if (questionType === 'Single Correct Option' || questionType === 'Match List') {
+                        if (questionType === 'Single Correct Option') {
                             // Remove selected class from all options in this question
                             optionsContainer.querySelectorAll('.option').forEach(opt => {
                                 opt.classList.remove('selected');
@@ -448,32 +462,34 @@
                 questionContainer.appendChild(optionsContainer);
             }
             
-            // Explanation
-            if (question.explanation) {
-                const showExplanation = document.createElement('div');
-                showExplanation.className = 'show-explanation';
-                showExplanation.textContent = 'Show Explanation';
-                showExplanation.onclick = function() {
-                    const explanation = document.getElementById(`${question.id}-explanation`);
-                    if (explanation.style.display === 'block') {
-                        explanation.style.display = 'none';
-                        this.textContent = 'Show Explanation';
-                    } else {
-                        explanation.style.display = 'block';
-                        this.textContent = 'Hide Explanation';
-                    }
-                };
-                
-                const explanation = document.createElement('div');
-                explanation.id = `${question.id}-explanation`;
-                explanation.className = 'explanation';
-                explanation.textContent = question.explanation;
-                
-                questionContainer.appendChild(showExplanation);
-                questionContainer.appendChild(explanation);
-            }
-            
             return questionContainer;
+        }
+        
+        // Start timer
+        function startTimer(durationInSeconds) {
+            const timerElement = document.getElementById('exam-timer');
+            let timeRemaining = durationInSeconds;
+            
+            const timerInterval = setInterval(function() {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitAnswers();
+                    return;
+                }
+                
+                const hours = Math.floor(timeRemaining / 3600);
+                const minutes = Math.floor((timeRemaining % 3600) / 60);
+                const seconds = timeRemaining % 60;
+                
+                timerElement.textContent = `Time Remaining: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Warning when 15 minutes remaining
+                if (timeRemaining === 15 * 60) {
+                    alert('15 minutes remaining!');
+                }
+            }, 1000);
         }
         
         // Submit answers
@@ -487,10 +503,10 @@
             // Collect answers
             document.querySelectorAll('.question-container').forEach(questionContainer => {
                 const questionId = questionContainer.getAttribute('data-question-id');
-                const questionType = questionContainer.querySelector('.question-type').textContent;
+                const questionType = questionContainer.querySelector('.question-subject').textContent;
                 
                 let answer;
-                if (questionType === 'Non-Negative Integer') {
+                if (questionContainer.querySelector('.integer-answer')) {
                     const input = questionContainer.querySelector('.integer-answer');
                     answer = input ? input.value : '';
                 } else {
