@@ -3,351 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepSharp - Exam</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Exam Paper - PrepSharp</title>
     <style>
-        .numeric-keyboard {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            max-width: 200px;
-            margin: 10px auto;
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
         }
-        .numeric-key {
-            padding: 10px;
-            text-align: center;
-            background-color: #f0f0f0;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 { color: var(--primary-color); }
+        .question-container {
             border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            user-select: none;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: white;
         }
-        .numeric-key:hover {
-            background-color: #e0e0e0;
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
         }
-        .numeric-key.wide {
-            grid-column: span 2;
-        }
-        .numerical-input {
-            text-align: center;
+        .question-number {
+            font-weight: bold;
             font-size: 18px;
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
-            max-width: 200px;
         }
-        .numerical-range {
-            margin: 10px 0;
-            font-size: 14px;
-            color: #666;
+        .question-type {
+            color: #1976d2;
+            font-weight: 500;
+        }
+        .question-text {
+            margin-bottom: 20px;
+        }
+        .question-image {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+        .options-container {
+            margin-bottom: 20px;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        .option.selected {
+            background-color: #e3f2fd;
+            border: 1px solid #1976d2;
+        }
+        .option-label {
+            margin-right: 10px;
+            font-weight: bold;
+            min-width: 25px;
+        }
+        .option-image {
+            max-width: 100%;
+        }
+        .option-text {
+            flex-grow: 1;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        .show-explanation {
+            margin-top: 10px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .answer-input {
+            margin-top: 15px;
+        }
+        .integer-answer {
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+        }
+        .error {
+            color: #f44336;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #f44336;
+            border-radius: 5px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <div class="exam-container">
-            <header class="exam-header">
-                <div class="logo-container">
-                    <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
-                    <h1 id="exam-title">Exam Title</h1>
-                </div>
-                <div class="exam-controls">
-                    <div class="timer" id="timer">03:00:00</div>
-                    <button id="screenshot-btn" class="btn secondary">Take Screenshot</button>
-                    <button id="submit-exam" class="btn primary">Submit Exam</button>
-                </div>
-            </header>
-            
-            <div class="exam-content">
-                <div class="question-navigator">
-                    <div class="question-numbers" id="question-numbers">
-                        <!-- Question numbers will be added dynamically -->
-                    </div>
-                </div>
-                
-                <div class="question-area">
-                    <div id="question-container">
-                        <!-- Question content will be added dynamically -->
-                    </div>
-                    
-                    <div class="navigation-buttons">
-                        <button id="prev-btn" class="btn secondary">Previous</button>
-                        <button id="next-btn" class="btn primary">Next</button>
-                    </div>
-                </div>
-            </div>
+    <header>
+        <h2>PrepSharp - Exam Paper</h2>
+        <div>
+            <button id="dashboard-btn" class="btn">Dashboard</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="paper-container" class="card">
+            <div class="loading">Loading exam paper...</div>
         </div>
     </div>
-    
-    <script src="html2canvas.min.js"></script>
-    <script src="screen-capture.js"></script>
-    <script src="numeric-keyboard.js"></script>
-    <script src="app.js"></script>
+
+    <div class="container" style="text-align: center; margin-top: 30px;">
+        <button id="submit-btn" class="btn" style="background-color: #4caf50;">Submit Answers</button>
+    </div>
+
     <script>
-        // Add support for numerical and integer questions
+        // Get paper ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paperId = urlParams.get('id');
+        
+        // Load paper data
         document.addEventListener('DOMContentLoaded', function() {
-            // Original app.js will handle most functionality
-            // This script adds support for the new question types
-            
-            const originalRenderQuestion = window.renderQuestion;
-            if (originalRenderQuestion) {
-                window.renderQuestion = function(question) {
-                    const questionContainer = document.getElementById('question-container');
-                    
-                    // Clear previous content
-                    questionContainer.innerHTML = '';
-                    
-                    // Add question text/image
-                    const questionText = document.createElement('div');
-                    questionText.className = 'question-text';
-                    
-                    if (question.questionImage) {
-                        const img = document.createElement('img');
-                        img.src = question.questionImage;
-                        img.alt = 'Question Image';
-                        img.className = 'question-image';
-                        questionText.appendChild(img);
-                    }
-                    
-                    if (question.text) {
-                        const text = document.createElement('p');
-                        text.textContent = question.text;
-                        questionText.appendChild(text);
-                    }
-                    
-                    questionContainer.appendChild(questionText);
-                    
-                    // Add section name if available
-                    if (question.section) {
-                        const sectionName = document.createElement('div');
-                        sectionName.className = 'section-name';
-                        sectionName.textContent = `${question.subject.charAt(0).toUpperCase() + question.subject.slice(1)} - ${question.section}`;
-                        questionContainer.appendChild(sectionName);
-                    }
-                    
-                    // Render based on question type
-                    if (question.type === 'scq' || question.type === 'mcq') {
-                        renderOptions(question, questionContainer);
-                    } else if (question.type === 'integer') {
-                        renderIntegerInput(question, questionContainer);
-                    } else if (question.type === 'numerical') {
-                        renderNumericalInput(question, questionContainer);
-                    }
-                };
+            if (!paperId) {
+                showError('No paper ID specified');
+                return;
             }
             
-            // Render options for SCQ/MCQ
-            function renderOptions(question, container) {
+            loadPaper(paperId);
+            
+            // Dashboard button
+            document.getElementById('dashboard-btn').addEventListener('click', function() {
+                window.location.href = 'dashboard.html';
+            });
+            
+            // Submit button
+            document.getElementById('submit-btn').addEventListener('click', function() {
+                submitAnswers();
+            });
+        });
+        
+        // Load paper from localStorage or server
+        function loadPaper(paperId) {
+            try {
+                // Try to load from localStorage first
+                const paperData = localStorage.getItem(paperId);
+                
+                if (paperData) {
+                    renderPaper(JSON.parse(paperData));
+                } else {
+                    // Try to load from papers.json
+                    fetch('db/papers.json')
+                        .then(response => response.json())
+                        .then(papers => {
+                            const paper = papers.find(p => p.id === paperId);
+                            if (paper) {
+                                renderPaper(paper);
+                            } else {
+                                showError('Paper not found');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading paper:', error);
+                            showError('Failed to load paper');
+                        });
+                }
+            } catch (error) {
+                console.error('Error loading paper:', error);
+                showError('Failed to load paper');
+            }
+        }
+        
+        // Render paper
+        function renderPaper(paper) {
+            const paperContainer = document.getElementById('paper-container');
+            
+            // Clear loading message
+            paperContainer.innerHTML = '';
+            
+            // Add paper title
+            const titleElement = document.createElement('h1');
+            titleElement.textContent = paper.name;
+            paperContainer.appendChild(titleElement);
+            
+            // Add paper info
+            const infoElement = document.createElement('div');
+            infoElement.className = 'marking-info';
+            infoElement.style = 'background-color: #f8f9fa; border-left: 4px solid #1976d2; padding: 15px; margin-bottom: 20px;';
+            infoElement.innerHTML = `
+                <h3>Paper Information:</h3>
+                <ul>
+                    <li>Type: ${paper.type}</li>
+                    <li>Year: ${paper.year}</li>
+                    <li>Paper Number: ${paper.paperNumber}</li>
+                    <li>Subjects: ${paper.subjects.join(', ')}</li>
+                    <li>Total Questions: ${paper.questions.length}</li>
+                </ul>
+            `;
+            paperContainer.appendChild(infoElement);
+            
+            // Create tabs
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+            
+            // Group questions by subject
+            const subjectGroups = {};
+            paper.subjects.forEach(subject => {
+                subjectGroups[subject] = [];
+            });
+            
+            paper.questions.forEach(question => {
+                const subject = question.subject.toLowerCase();
+                if (subjectGroups[subject]) {
+                    subjectGroups[subject].push(question);
+                }
+            });
+            
+            // Create tabs for each subject
+            let isFirst = true;
+            for (const subject in subjectGroups) {
+                const tab = document.createElement('div');
+                tab.className = 'tab' + (isFirst ? ' active' : '');
+                tab.setAttribute('data-subject', subject);
+                tab.textContent = subject.charAt(0).toUpperCase() + subject.slice(1);
+                tabContainer.appendChild(tab);
+                
+                // Add event listener
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    const subject = this.getAttribute('data-subject');
+                    document.getElementById(`${subject}-tab`).classList.add('active');
+                });
+                
+                isFirst = false;
+            }
+            
+            paperContainer.appendChild(tabContainer);
+            
+            // Create tab content for each subject
+            isFirst = true;
+            for (const subject in subjectGroups) {
+                const tabContent = document.createElement('div');
+                tabContent.id = `${subject}-tab`;
+                tabContent.className = 'tab-content' + (isFirst ? ' active' : '');
+                
+                // Add subject heading
+                const subjectHeading = document.createElement('h2');
+                subjectHeading.textContent = subject.charAt(0).toUpperCase() + subject.slice(1) + ' Questions';
+                tabContent.appendChild(subjectHeading);
+                
+                // Add questions
+                const questions = subjectGroups[subject];
+                questions.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+                
+                questions.forEach(question => {
+                    const questionElement = createQuestionElement(question);
+                    tabContent.appendChild(questionElement);
+                });
+                
+                paperContainer.appendChild(tabContent);
+                isFirst = false;
+            }
+        }
+        
+        // Create question element
+        function createQuestionElement(question) {
+            const questionContainer = document.createElement('div');
+            questionContainer.className = 'question-container';
+            questionContainer.setAttribute('data-question-id', question.id);
+            
+            // Question header
+            const questionHeader = document.createElement('div');
+            questionHeader.className = 'question-header';
+            
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = 'Question ' + question.number;
+            
+            const questionType = document.createElement('div');
+            questionType.className = 'question-type';
+            questionType.textContent = question.type;
+            
+            questionHeader.appendChild(questionNumber);
+            questionHeader.appendChild(questionType);
+            questionContainer.appendChild(questionHeader);
+            
+            // Question text
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            
+            if (question.imagePath) {
+                const questionImage = document.createElement('img');
+                questionImage.className = 'question-image';
+                questionImage.src = question.imagePath;
+                questionImage.alt = `${question.subject} Question ${question.number}`;
+                questionText.appendChild(questionImage);
+            }
+            
+            questionContainer.appendChild(questionText);
+            
+            // Options or input field
+            if (question.type === 'Non-Negative Integer') {
+                const answerInput = document.createElement('div');
+                answerInput.className = 'answer-input';
+                
+                const label = document.createElement('label');
+                label.setAttribute('for', `${question.id}-answer`);
+                label.style = 'display: block; margin-bottom: 5px; font-weight: bold;';
+                label.textContent = 'Your Answer:';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `${question.id}-answer`;
+                input.className = 'integer-answer';
+                input.min = '0';
+                input.placeholder = 'Enter non-negative integer';
+                
+                answerInput.appendChild(label);
+                answerInput.appendChild(input);
+                questionContainer.appendChild(answerInput);
+            } else if (question.options && question.options.length > 0) {
                 const optionsContainer = document.createElement('div');
                 optionsContainer.className = 'options-container';
                 
-                question.options.forEach((option, index) => {
-                    const optionDiv = document.createElement('div');
-                    optionDiv.className = 'option';
+                question.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.setAttribute('data-option', option.label);
                     
-                    const input = document.createElement('input');
-                    input.type = question.type === 'scq' ? 'radio' : 'checkbox';
-                    input.name = 'answer';
-                    input.id = `option-${index}`;
-                    input.value = index;
+                    const optionLabel = document.createElement('div');
+                    optionLabel.className = 'option-label';
+                    optionLabel.textContent = option.label + '.';
                     
-                    // Check if this option was previously selected
-                    if (question.userAnswer && 
-                        ((Array.isArray(question.userAnswer) && question.userAnswer.includes(index)) || 
-                         question.userAnswer === index)) {
-                        input.checked = true;
+                    const optionText = document.createElement('div');
+                    optionText.className = 'option-text';
+                    
+                    if (option.imagePath) {
+                        const optionImage = document.createElement('img');
+                        optionImage.className = 'option-image';
+                        optionImage.src = option.imagePath;
+                        optionImage.alt = `Option ${option.label}`;
+                        optionText.appendChild(optionImage);
                     }
                     
-                    const label = document.createElement('label');
-                    label.htmlFor = `option-${index}`;
+                    optionElement.appendChild(optionLabel);
+                    optionElement.appendChild(optionText);
+                    optionsContainer.appendChild(optionElement);
                     
-                    const optionLetter = document.createElement('span');
-                    optionLetter.className = 'option-letter';
-                    optionLetter.textContent = String.fromCharCode(65 + index) + '. ';
-                    label.appendChild(optionLetter);
-                    
-                    if (option.image) {
-                        const img = document.createElement('img');
-                        img.src = option.image;
-                        img.alt = `Option ${String.fromCharCode(65 + index)} Image`;
-                        img.className = 'option-image';
-                        label.appendChild(img);
-                    }
-                    
-                    if (option.text) {
-                        const text = document.createElement('span');
-                        text.textContent = option.text;
-                        label.appendChild(text);
-                    }
-                    
-                    optionDiv.appendChild(input);
-                    optionDiv.appendChild(label);
-                    optionsContainer.appendChild(optionDiv);
-                    
-                    // Add event listener to save answer
-                    input.addEventListener('change', function() {
-                        saveAnswer(question);
+                    // Add click event
+                    optionElement.addEventListener('click', function() {
+                        const questionType = question.type;
+                        
+                        if (questionType === 'Single Correct Option' || questionType === 'Match List') {
+                            // Remove selected class from all options in this question
+                            optionsContainer.querySelectorAll('.option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            // Add selected class to clicked option
+                            this.classList.add('selected');
+                        } else if (questionType === 'Multiple Correct Options') {
+                            // Toggle selected class for multiple correct options
+                            this.classList.toggle('selected');
+                        }
                     });
                 });
                 
-                container.appendChild(optionsContainer);
+                questionContainer.appendChild(optionsContainer);
             }
             
-            // Render integer input
-            function renderIntegerInput(question, container) {
-                const inputContainer = document.createElement('div');
-                inputContainer.className = 'integer-container';
-                
-                const label = document.createElement('label');
-                label.textContent = 'Enter your answer (integer):';
-                label.htmlFor = 'integer-answer';
-                
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.id = 'integer-answer';
-                input.className = 'numerical-input';
-                input.min = '0';
-                input.step = '1';
-                input.placeholder = 'Enter integer';
-                
-                // Set previous answer if available
-                if (question.userAnswer !== undefined) {
-                    input.value = question.userAnswer;
-                }
-                
-                // Add numeric keyboard
-                const keyboard = document.createElement('div');
-                keyboard.className = 'numeric-keyboard';
-                
-                for (let i = 1; i <= 9; i++) {
-                    addNumericKey(keyboard, i.toString(), input);
-                }
-                
-                addNumericKey(keyboard, '0', input);
-                addNumericKey(keyboard, 'Clear', input, true);
-                
-                inputContainer.appendChild(label);
-                inputContainer.appendChild(input);
-                inputContainer.appendChild(keyboard);
-                container.appendChild(inputContainer);
-                
-                // Add event listener to save answer
-                input.addEventListener('input', function() {
-                    question.userAnswer = parseInt(this.value);
-                    saveExamState();
-                });
-                
-                // Focus input when clicking on container
-                inputContainer.addEventListener('click', function() {
-                    input.focus();
-                });
-            }
-            
-            // Render numerical input with range
-            function renderNumericalInput(question, container) {
-                const inputContainer = document.createElement('div');
-                inputContainer.className = 'numerical-container';
-                
-                const label = document.createElement('label');
-                label.textContent = 'Enter your answer (numerical):';
-                label.htmlFor = 'numerical-answer';
-                
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.id = 'numerical-answer';
-                input.className = 'numerical-input';
-                input.step = '0.01';
-                input.placeholder = 'Enter value';
-                
-                // Set previous answer if available
-                if (question.userAnswer !== undefined) {
-                    input.value = question.userAnswer;
-                }
-                
-                // Show range if available
-                if (question.minValue !== undefined && question.maxValue !== undefined) {
-                    const rangeInfo = document.createElement('div');
-                    rangeInfo.className = 'numerical-range';
-                    rangeInfo.textContent = `Acceptable range: ${question.minValue} to ${question.maxValue}`;
-                    inputContainer.appendChild(rangeInfo);
-                }
-                
-                // Add numeric keyboard
-                const keyboard = document.createElement('div');
-                keyboard.className = 'numeric-keyboard';
-                
-                for (let i = 1; i <= 9; i++) {
-                    addNumericKey(keyboard, i.toString(), input);
-                }
-                
-                addNumericKey(keyboard, '0', input);
-                addNumericKey(keyboard, '.', input);
-                addNumericKey(keyboard, '⌫', input);
-                
-                inputContainer.appendChild(label);
-                inputContainer.appendChild(input);
-                inputContainer.appendChild(keyboard);
-                container.appendChild(inputContainer);
-                
-                // Add event listener to save answer
-                input.addEventListener('input', function() {
-                    question.userAnswer = parseFloat(this.value);
-                    saveExamState();
-                });
-                
-                // Focus input when clicking on container
-                inputContainer.addEventListener('click', function() {
-                    input.focus();
-                });
-            }
-            
-            // Helper function to add numeric key
-            function addNumericKey(keyboard, value, input, isWide) {
-                const key = document.createElement('div');
-                key.className = 'numeric-key';
-                if (isWide) key.className += ' wide';
-                key.textContent = value;
-                
-                key.addEventListener('click', function() {
-                    if (value === 'Clear') {
-                        input.value = '';
-                    } else if (value === '⌫') {
-                        input.value = input.value.slice(0, -1);
-                    } else if (value === '.') {
-                        if (!input.value.includes('.')) {
-                            input.value += value;
-                        }
+            // Explanation
+            if (question.explanation) {
+                const showExplanation = document.createElement('div');
+                showExplanation.className = 'show-explanation';
+                showExplanation.textContent = 'Show Explanation';
+                showExplanation.onclick = function() {
+                    const explanation = document.getElementById(`${question.id}-explanation`);
+                    if (explanation.style.display === 'block') {
+                        explanation.style.display = 'none';
+                        this.textContent = 'Show Explanation';
                     } else {
-                        input.value += value;
+                        explanation.style.display = 'block';
+                        this.textContent = 'Hide Explanation';
                     }
-                    
-                    // Trigger input event
-                    input.dispatchEvent(new Event('input'));
-                });
+                };
                 
-                keyboard.appendChild(key);
+                const explanation = document.createElement('div');
+                explanation.id = `${question.id}-explanation`;
+                explanation.className = 'explanation';
+                explanation.textContent = question.explanation;
+                
+                questionContainer.appendChild(showExplanation);
+                questionContainer.appendChild(explanation);
             }
             
-            // Save answer based on question type
-            function saveAnswer(question) {
-                if (question.type === 'scq') {
-                    const selectedOption = document.querySelector('input[name="answer"]:checked');
-                    question.userAnswer = selectedOption ? parseInt(selectedOption.value) : undefined;
-                } else if (question.type === 'mcq') {
-                    const selectedOptions = Array.from(document.querySelectorAll('input[name="answer"]:checked'))
-                        .map(input => parseInt(input.value));
-                    question.userAnswer = selectedOptions.length > 0 ? selectedOptions : undefined;
+            return questionContainer;
+        }
+        
+        // Submit answers
+        function submitAnswers() {
+            const answers = {
+                paperId: paperId,
+                timestamp: new Date().toISOString(),
+                answers: []
+            };
+            
+            // Collect answers
+            document.querySelectorAll('.question-container').forEach(questionContainer => {
+                const questionId = questionContainer.getAttribute('data-question-id');
+                const questionType = questionContainer.querySelector('.question-type').textContent;
+                
+                let answer;
+                if (questionType === 'Non-Negative Integer') {
+                    const input = questionContainer.querySelector('.integer-answer');
+                    answer = input ? input.value : '';
+                } else {
+                    const selectedOptions = [];
+                    questionContainer.querySelectorAll('.option.selected').forEach(option => {
+                        selectedOptions.push(option.getAttribute('data-option'));
+                    });
+                    answer = selectedOptions;
                 }
                 
-                saveExamState();
-            }
+                answers.answers.push({
+                    questionId: questionId,
+                    answer: answer
+                });
+            });
             
-            // Save exam state to localStorage
-            function saveExamState() {
-                const examData = JSON.parse(localStorage.getItem('currentExam'));
-                localStorage.setItem('currentExam', JSON.stringify(examData));
+            // Save answers
+            try {
+                // Save to localStorage
+                localStorage.setItem(`${paperId}-answers`, JSON.stringify(answers));
+                alert('Answers submitted successfully!');
+                
+                // Redirect to results page
+                window.location.href = `results.html?id=${paperId}`;
+            } catch (error) {
+                console.error('Error submitting answers:', error);
+                alert('Failed to submit answers. Please try again.');
             }
-        });
+        }
+        
+        // Show error message
+        function showError(message) {
+            const paperContainer = document.getElementById('paper-container');
+            paperContainer.innerHTML = `<div class="error">${message}</div>`;
+        }
     </script>
 </body>
 </html>
