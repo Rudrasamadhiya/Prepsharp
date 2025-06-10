@@ -209,12 +209,16 @@
                     ? new Date(user.createdAt).toLocaleString() 
                     : new Date().toLocaleString();
                 
+                // Get stream and class from user data, checking all possible property names
+                const streamValue = user.stream || user.Stream || 'N/A';
+                const classValue = user.class || user.Class || user.classValue || 'N/A';
+                
                 studentsData.push({
                     name: user.name || 'N/A',
                     email: user.email || 'N/A',
                     mobile: user.mobile || user.phone || 'N/A',
-                    stream: user.stream || 'N/A',
-                    class: user.class || 'N/A',
+                    stream: streamValue,
+                    class: classValue,
                     registrationDate: registrationDate
                 });
                 
@@ -223,8 +227,8 @@
                     <td>${user.name || 'N/A'}</td>
                     <td>${user.email || 'N/A'}</td>
                     <td>${user.mobile || user.phone || 'N/A'}</td>
-                    <td>${user.stream || 'N/A'}</td>
-                    <td>${user.class || 'N/A'}</td>
+                    <td>${streamValue}</td>
+                    <td>${classValue}</td>
                     <td>${registrationDate}</td>
                 `;
                 tbody.appendChild(row);
