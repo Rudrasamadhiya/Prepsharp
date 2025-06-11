@@ -35,6 +35,7 @@ app.use(express.static(path.join(__dirname)));
 const USERS_DB_PATH = path.join(__dirname, 'db', 'users.json');
 const RESULTS_DB_PATH = path.join(__dirname, 'db', 'results.json');
 const PAPERS_DB_PATH = path.join(__dirname, 'db', 'papers.json');
+const SUBSCRIPTIONS_DB_PATH = path.join(__dirname, 'db', 'subscriptions.json');
 
 // Create db directory if it doesn't exist
 try {
@@ -55,6 +56,12 @@ try {
   if (!fs.existsSync(PAPERS_DB_PATH)) {
     fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify([]));
     console.log('Created papers.json file');
+  }
+  
+  // Create subscriptions.json if it doesn't exist
+  if (!fs.existsSync(SUBSCRIPTIONS_DB_PATH)) {
+    fs.writeFileSync(SUBSCRIPTIONS_DB_PATH, JSON.stringify({}));
+    console.log('Created subscriptions.json file');
   }
   
   // Create temp-users.json for storing unverified users
@@ -111,6 +118,25 @@ function getPapers() {
 
 function savePapers(papers) {
   fs.writeFileSync(PAPERS_DB_PATH, JSON.stringify(papers, null, 2));
+}
+
+// Helper functions for subscription operations
+function getSubscriptions() {
+  try {
+    const data = fs.readFileSync(SUBSCRIPTIONS_DB_PATH, 'utf8');
+    return data ? JSON.parse(data) : {};
+  } catch (error) {
+    console.error('Error reading subscriptions database:', error);
+    return {};
+  }
+}
+
+function saveSubscriptions(subscriptions) {
+  try {
+    fs.writeFileSync(SUBSCRIPTIONS_DB_PATH, JSON.stringify(subscriptions, null, 2));
+  } catch (error) {
+    console.error('Error saving subscriptions database:', error);
+  }
 }
 
 // Login endpoint - handles both regular login and OTP login
