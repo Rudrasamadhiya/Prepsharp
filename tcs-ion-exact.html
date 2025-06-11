@@ -29,146 +29,154 @@
         
         <!-- Main content area -->
         <div class="main-content">
-            <!-- Left panel - Question display -->
-            <div class="left-panel">
-                <!-- Section tabs strip -->
-                <div class="sections-strip">
-                    <div class="section-tab">Physics Section 1</div>
-                    <div class="section-tab">Physics Section 2</div>
-                    <div class="section-tab active">Chemistry Section 1</div>
-                    <div class="section-tab">Chemistry Section 2</div>
-                    <div class="section-tab">Mathematics Section 1</div>
-                    <div class="section-tab">Mathematics Section 2</div>
-                </div>
-                
-                <!-- Blue language strip -->
-                <div class="language-strip">
-                    <div class="language-selector">
-                        View in: 
-                        <select>
-                            <option>English</option>
-                            <option>Hindi</option>
-                        </select>
+            <!-- Left container - Question display and its footer -->
+            <div class="left-container">
+                <!-- Left panel - Question display -->
+                <div class="left-panel">
+                    <!-- Section tabs strip -->
+                    <div class="sections-strip">
+                        <div class="section-tab">Physics Section 1</div>
+                        <div class="section-tab">Physics Section 2</div>
+                        <div class="section-tab active">Chemistry Section 1</div>
+                        <div class="section-tab">Chemistry Section 2</div>
+                        <div class="section-tab">Mathematics Section 1</div>
+                        <div class="section-tab">Mathematics Section 2</div>
                     </div>
-                </div>
-                
-                <!-- Question area -->
-                <div class="question-area">
-                    <div class="question-number">Question No. 3</div>
                     
-                    <div class="question-content">
-                        <div class="question-text">
-                            <p>A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. If the angular momentum of the particle is L, then the total energy of the particle is:</p>
+                    <!-- Blue language strip -->
+                    <div class="language-strip">
+                        <div class="language-selector">
+                            View in: 
+                            <select>
+                                <option>English</option>
+                                <option>Hindi</option>
+                            </select>
                         </div>
+                    </div>
+                    
+                    <!-- Question area -->
+                    <div class="question-area">
+                        <div class="question-number">Question No. 3</div>
                         
-                        <div class="options">
-                            <div class="option">
-                                <input type="radio" name="q3" id="q3-a" class="option-radio">
-                                <label for="q3-a" class="option-label">
-                                    <div class="option-letter">a)</div>
-                                    <div class="option-text">L²/2mr² - kr²/2</div>
-                                </label>
+                        <div class="question-content">
+                            <div class="question-text">
+                                <p>A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. If the angular momentum of the particle is L, then the total energy of the particle is:</p>
                             </div>
                             
-                            <div class="option">
-                                <input type="radio" name="q3" id="q3-b" class="option-radio">
-                                <label for="q3-b" class="option-label">
-                                    <div class="option-letter">b)</div>
-                                    <div class="option-text">L²/2mr² + kr²/2</div>
-                                </label>
-                            </div>
-                            
-                            <div class="option">
-                                <input type="radio" name="q3" id="q3-c" class="option-radio">
-                                <label for="q3-c" class="option-label">
-                                    <div class="option-letter">c)</div>
-                                    <div class="option-text">L²/2mr² - kr²</div>
-                                </label>
-                            </div>
-                            
-                            <div class="option">
-                                <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
-                                <label for="q3-d" class="option-label">
-                                    <div class="option-letter">d)</div>
-                                    <div class="option-text">L²/mr² - kr²/2</div>
-                                </label>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-a" class="option-radio">
+                                    <label for="q3-a" class="option-label">
+                                        <div class="option-letter">a)</div>
+                                        <div class="option-text">L²/2mr² - kr²/2</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-b" class="option-radio">
+                                    <label for="q3-b" class="option-label">
+                                        <div class="option-letter">b)</div>
+                                        <div class="option-text">L²/2mr² + kr²/2</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-c" class="option-radio">
+                                    <label for="q3-c" class="option-label">
+                                        <div class="option-letter">c)</div>
+                                        <div class="option-text">L²/2mr² - kr²</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
+                                    <label for="q3-d" class="option-label">
+                                        <div class="option-letter">d)</div>
+                                        <div class="option-text">L²/mr² - kr²/2</div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Left footer with action buttons -->
+                <div class="left-footer">
+                    <button class="action-btn mark-btn">Mark for Review & Next</button>
+                    <button class="action-btn clear-btn">Clear Response</button>
+                    <button class="action-btn prev-btn">Previous</button>
+                    <button class="action-btn save-btn">Save & Next</button>
                 </div>
             </div>
             
-            <!-- Right panel - Navigation -->
-            <div class="right-panel">
-                <!-- Candidate info -->
-                <div class="candidate-info">
-                    <div class="candidate-avatar"></div>
-                    <div class="candidate-name">Candidate</div>
+            <!-- Right container - Navigation and its footer -->
+            <div class="right-container">
+                <!-- Right panel - Navigation -->
+                <div class="right-panel">
+                    <!-- Candidate info -->
+                    <div class="candidate-info">
+                        <div class="candidate-avatar"></div>
+                        <div class="candidate-name">Candidate</div>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color answered"></div>
+                            <span>Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-answered"></div>
+                            <span>Not Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-visited"></div>
+                            <span>Not Visited</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color marked"></div>
+                            <span>Marked for Review</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color answered-marked"></div>
+                            <span>Answered & Marked for Review</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Section blue strip -->
+                    <div class="section-strip">
+                        Chemistry Section 1
+                    </div>
+                    
+                    <!-- Question palette -->
+                    <div class="question-palette">
+                        <div class="question-btn answered" title="Answered">1</div>
+                        <div class="question-btn answered" title="Answered">2</div>
+                        <div class="question-btn not-answered active" title="Not Answered">3</div>
+                        <div class="question-btn not-visited" title="Not Visited">4</div>
+                        <div class="question-btn not-visited" title="Not Visited">5</div>
+                        <div class="question-btn not-visited" title="Not Visited">6</div>
+                        <div class="question-btn not-visited" title="Not Visited">7</div>
+                        <div class="question-btn not-visited" title="Not Visited">8</div>
+                        <div class="question-btn not-visited" title="Not Visited">9</div>
+                        <div class="question-btn not-visited" title="Not Visited">10</div>
+                        <div class="question-btn not-visited" title="Not Visited">11</div>
+                        <div class="question-btn not-visited" title="Not Visited">12</div>
+                        <div class="question-btn not-visited" title="Not Visited">13</div>
+                        <div class="question-btn not-visited" title="Not Visited">14</div>
+                        <div class="question-btn not-visited" title="Not Visited">15</div>
+                        <div class="question-btn marked" title="Marked for Review">16</div>
+                        <div class="question-btn answered-marked" title="Answered & Marked for Review">17</div>
+                        <div class="question-btn not-visited" title="Not Visited">18</div>
+                        <div class="question-btn not-visited" title="Not Visited">19</div>
+                        <div class="question-btn not-visited" title="Not Visited">20</div>
+                    </div>
                 </div>
                 
-                <!-- Legend -->
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color answered"></div>
-                        <span>Answered</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color not-answered"></div>
-                        <span>Not Answered</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color not-visited"></div>
-                        <span>Not Visited</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color marked"></div>
-                        <span>Marked for Review</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color answered-marked"></div>
-                        <span>Answered & Marked for Review</span>
-                    </div>
+                <!-- Right footer with submit button -->
+                <div class="right-footer">
+                    <button class="action-btn submit-btn">Submit</button>
                 </div>
-                
-                <!-- Section blue strip -->
-                <div class="section-strip">
-                    Chemistry Section 1
-                </div>
-                
-                <!-- Question palette -->
-                <div class="question-palette">
-                    <div class="question-btn answered">1</div>
-                    <div class="question-btn answered">2</div>
-                    <div class="question-btn not-answered active">3</div>
-                    <div class="question-btn not-visited">4</div>
-                    <div class="question-btn not-visited">5</div>
-                    <div class="question-btn not-visited">6</div>
-                    <div class="question-btn not-visited">7</div>
-                    <div class="question-btn not-visited">8</div>
-                    <div class="question-btn not-visited">9</div>
-                    <div class="question-btn not-visited">10</div>
-                    <div class="question-btn not-visited">11</div>
-                    <div class="question-btn not-visited">12</div>
-                    <div class="question-btn not-visited">13</div>
-                    <div class="question-btn not-visited">14</div>
-                    <div class="question-btn not-visited">15</div>
-                    <div class="question-btn not-visited">16</div>
-                    <div class="question-btn not-visited">17</div>
-                    <div class="question-btn not-visited">18</div>
-                    <div class="question-btn not-visited">19</div>
-                    <div class="question-btn not-visited">20</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer with action buttons -->
-        <div class="footer">
-            <div class="action-buttons">
-                <button class="action-btn mark-btn">Mark for Review & Next</button>
-                <button class="action-btn clear-btn">Clear Response</button>
-                <button class="action-btn prev-btn">Previous</button>
-                <button class="action-btn save-btn">Save & Next</button>
-                <button class="action-btn submit-btn">Submit</button>
             </div>
         </div>
     </div>
