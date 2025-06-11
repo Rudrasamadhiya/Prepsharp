@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+const dbBackup = require('./db-backup');
 
 // Optional OTP service import
 let sendOTP, verifyOTP;
@@ -49,6 +50,17 @@ try {
   if (!fs.existsSync(TEMP_USERS_PATH)) {
     fs.writeFileSync(TEMP_USERS_PATH, JSON.stringify({}));
     console.log('Created temp-users.json file');
+  }
+  
+  // Try to restore data if files are empty
+  const usersData = fs.readFileSync(USERS_DB_PATH, 'utf8');
+  const resultsData = fs.readFileSync(RESULTS_DB_PATH, 'utf8');
+  const papersData = fs.readFileSync(PAPERS_DB_PATH, 'utf8');
+  
+  if ((usersData === '{}' || resultsData === '[]' || papersData === '[]') && 
+      dbBackup && typeof dbBackup.restoreFromLatestBackup === 'function') {
+    console.log('Detected empty database files, attempting to restore from backup...');
+    dbBackup.restoreFromLatestBackup();
   }
 } catch (error) {
   console.error('Error creating database files:', error);

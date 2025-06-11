@@ -275,6 +275,7 @@ body {
     padding: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .action-buttons {
@@ -309,8 +310,15 @@ body {
     border-color: #bbdefb;
 }
 
+.submit-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
 .submit-btn {
     background-color: #d32f2f;
     color: white;
     border: none;
+    margin-left: 20px;
 }
