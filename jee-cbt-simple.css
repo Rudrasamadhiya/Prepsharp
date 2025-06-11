@@ -1,0 +1,154 @@
+/* Simple JEE Advanced CBT Interface */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subject-tabs {
+    display: flex;
+}
+
+.subject-tab {
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px 4px 0 0;
+}
+
+.subject-tab.active {
+    background-color: #3498db;
+}
+
+.timer {
+    font-weight: bold;
+}
+
+.submit-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Main content */
+.content {
+    display: flex;
+    flex: 1;
+}
+
+/* Question Navigator */
+.question-navigator {
+    width: 200px;
+    background-color: #34495e;
+    color: white;
+    padding: 10px;
+}
+
+.question-palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.question-number {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #95a5a6;
+    cursor: pointer;
+}
+
+.not-visited { background-color: #95a5a6; }
+.not-answered { background-color: white; color: black; }
+.answered { background-color: #2ecc71; }
+.marked { background-color: #9b59b6; }
+.answered-marked { 
+    background-color: #9b59b6; 
+    position: relative;
+}
+.answered-marked::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 6px;
+    height: 6px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+}
+.active { border: 2px solid #f39c12; }
+
+/* Question Display */
+.question-display {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+.question-content {
+    margin-bottom: 20px;
+}
+
+.options {
+    margin-left: 20px;
+}
+
+.option {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.save-next-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.clear-btn {
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.mark-btn {
+    background-color: #9b59b6;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}

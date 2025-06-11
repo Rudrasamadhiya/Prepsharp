@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced 2024 - CBT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .exam-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subject-tabs {
+            display: flex;
+        }
+        
+        .subject-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .subject-tab.active {
+            background-color: #3498db;
+        }
+        
+        .timer {
+            font-weight: bold;
+        }
+        
+        .submit-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            flex: 1;
+        }
+        
+        /* Question Navigator */
+        .question-navigator {
+            width: 200px;
+            background-color: #34495e;
+            color: white;
+            padding: 10px;
+        }
+        
+        .question-palette {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .question-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #95a5a6;
+            cursor: pointer;
+        }
+        
+        .not-visited { background-color: #95a5a6; }
+        .not-answered { background-color: white; color: black; }
+        .answered { background-color: #2ecc71; }
+        .marked { background-color: #9b59b6; }
+        .answered-marked { 
+            background-color: #9b59b6; 
+            position: relative;
+        }
+        .answered-marked::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 6px;
+            height: 6px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+        }
+        .active { border: 2px solid #f39c12; }
+        
+        /* Question Display */
+        .question-display {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+        
+        .question-content {
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .save-next-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        
+        .clear-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        
+        .mark-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="subject-tabs">
+                <div class="subject-tab active" onclick="changeSubject('physics')">Physics</div>
+                <div class="subject-tab" onclick="changeSubject('chemistry')">Chemistry</div>
+                <div class="subject-tab" onclick="changeSubject('mathematics')">Mathematics</div>
+            </div>
+            <div class="timer" id="exam-timer">Time Left: 3:00:00</div>
+            <button class="submit-btn" onclick="showSubmitConfirmation()">Submit</button>
+        </div>
+        
+        <!-- Main content -->
+        <div class="content">
+            <!-- Question Navigator -->
+            <div class="question-navigator">
+                <div>Question Palette</div>
+                <div class="question-palette" id="question-palette">
+                    <!-- Question numbers will be generated here -->
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 12px;">
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #95a5a6; margin-right: 5px;"></span> Not Visited</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: white; margin-right: 5px;"></span> Not Answered</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #2ecc71; margin-right: 5px;"></span> Answered</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; margin-right: 5px;"></span> Marked for Review</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; position: relative; margin-right: 5px;"><span style="position: absolute; width: 6px; height: 6px; background-color: #2ecc71; border-radius: 50%; bottom: 0; right: 0;"></span></span> Answered & Marked</div>
+                </div>
+            </div>
+            
+            <!-- Question Display -->
+            <div class="question-display" id="question-display">
+                <div class="loading">Loading questions...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get paper ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paperId = urlParams.get('id') || 'jee-adv-2024-p1';
+        
+        // Global variables
+        let paperData = null;
+        let currentQuestion = 1;
+        let questionStatus = {};
+        let currentSubject = 'physics';
+        
+        // Load paper when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPaper(paperId);
+            startTimer(3 * 60 * 60); // 3 hours
+        });
+        
+        // Load paper from localStorage or server
+        function loadPaper(paperId) {
+            try {
+                // Try to load from localStorage first
+                const paperDataStr = localStorage.getItem(paperId);
+                
+                if (paperDataStr) {
+                    paperData = JSON.parse(paperDataStr);
+                    initializeExam(paperData);
+                } else {
+                    // Try to load from papers.json
+                    fetch('db/papers.json')
+                        .then(response => response.json())
+                        .then(papers => {
+                            const paper = papers.find(p => p.id === paperId);
+                            if (paper) {
+                                paperData = paper;
+                                initializeExam(paper);
+                            } else {
+                                showError('Paper not found');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading paper:', error);
+                            showError('Failed to load paper');
+                        });
+                }
+            } catch (error) {
+                console.error('Error loading paper:', error);
+                showError('Failed to load paper');
+            }
+        }
+        
+        // Initialize exam
+        function initializeExam(paper) {
+            // Group questions by subject
+            const questionsBySubject = {
+                physics: [],
+                chemistry: [],
+                mathematics: []
+            };
+            
+            // Assign global question numbers
+            let globalQuestionNumber = 1;
+            
+            // Process questions
+            paper.questions.forEach(question => {
+                // Add global question number
+                question.globalNumber = globalQuestionNumber++;
+                
+                // Initialize question status
+                questionStatus[question.globalNumber] = {
+                    visited: false,
+                    answered: false,
+                    marked: false
+                };
+                
+                // Add to appropriate subject group
+                const subject = question.subject.toLowerCase();
+                if (questionsBySubject[subject]) {
+                    questionsBySubject[subject].push(question);
+                }
+            });
+            
+            // Generate question palette
+            generateQuestionPalette(paper.questions);
+            
+            // Show first question
+            showQuestion(1);
+        }
+        
+        // Generate question palette
+        function generateQuestionPalette(questions) {
+            const palette = document.getElementById('question-palette');
+            palette.innerHTML = '';
+            
+            questions.forEach(question => {
+                const questionNumberDiv = document.createElement('div');
+                questionNumberDiv.className = 'question-number not-visited';
+                questionNumberDiv.textContent = question.globalNumber;
+                questionNumberDiv.onclick = function() {
+                    showQuestion(question.globalNumber);
+                };
+                
+                palette.appendChild(questionNumberDiv);
+            });
+        }
+        
+        // Show question
+        function showQuestion(questionNumber) {
+            if (!paperData) return;
+            
+            // Find question
+            const question = paperData.questions.find(q => q.globalNumber === questionNumber);
+            if (!question) return;
+            
+            // Update current question
+            currentQuestion = questionNumber;
+            
+            // Mark as visited
+            questionStatus[questionNumber].visited = true;
+            updateQuestionStatus(questionNumber);
+            
+            // Update subject tabs if needed
+            const questionSubject = question.subject.toLowerCase();
+            if (currentSubject !== questionSubject) {
+                currentSubject = questionSubject;
+                updateSubjectTabs();
+            }
+            
+            // Update question display
+            const questionDisplay = document.getElementById('question-display');
+            questionDisplay.innerHTML = '';
+            
+            // Question content
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            
+            // Question header
+            const questionHeader = document.createElement('div');
+            questionHeader.innerHTML = `<strong>Question ${questionNumber}</strong> (${question.subject})`;
+            questionContent.appendChild(questionHeader);
+            
+            // Question text/image
+            const questionText = document.createElement('div');
+            questionText.style.margin = '15px 0';
+            
+            if (question.imagePath) {
+                const img = document.createElement('img');
+                img.src = question.imagePath;
+                img.style.maxWidth = '100%';
+                questionText.appendChild(img);
+            }
+            
+            questionContent.appendChild(questionText);
+            
+            // Options or input field
+            if (question.type === 'Non-Negative Integer') {
+                const inputDiv = document.createElement('div');
+                inputDiv.style.marginTop = '15px';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.step = '0.01';
+                input.placeholder = 'Enter answer';
+                input.style.padding = '8px';
+                input.style.width = '150px';
+                
+                input.oninput = function() {
+                    questionStatus[questionNumber].answered = this.value.trim() !== '';
+                    updateQuestionStatus(questionNumber);
+                };
+                
+                inputDiv.appendChild(input);
+                questionContent.appendChild(inputDiv);
+            } else if (question.options && question.options.length > 0) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                question.options.forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const input = document.createElement('input');
+                    input.type = question.type === 'Single Correct Option' ? 'radio' : 'checkbox';
+                    input.name = `q${questionNumber}`;
+                    input.id = `q${questionNumber}-${option.label}`;
+                    
+                    input.onchange = function() {
+                        if (question.type === 'Single Correct Option') {
+                            questionStatus[questionNumber].answered = true;
+                        } else {
+                            const checkboxes = optionsDiv.querySelectorAll('input[type="checkbox"]');
+                            questionStatus[questionNumber].answered = Array.from(checkboxes).some(cb => cb.checked);
+                        }
+                        updateQuestionStatus(questionNumber);
+                    };
+                    
+                    const label = document.createElement('label');
+                    label.setAttribute('for', `q${questionNumber}-${option.label}`);
+                    label.innerHTML = `(${option.label}) `;
+                    
+                    if (option.imagePath) {
+                        const img = document.createElement('img');
+                        img.src = option.imagePath;
+                        img.style.maxWidth = '100%';
+                        img.style.display = 'block';
+                        img.style.marginTop = '5px';
+                        label.appendChild(img);
+                    }
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsDiv.appendChild(optionDiv);
+                });
+                
+                questionContent.appendChild(optionsDiv);
+            }
+            
+            questionDisplay.appendChild(questionContent);
+            
+            // Action buttons
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            
+            const saveNextBtn = document.createElement('button');
+            saveNextBtn.className = 'save-next-btn';
+            saveNextBtn.textContent = 'Save & Next';
+            saveNextBtn.onclick = function() {
+                goToNextQuestion();
+            };
+            
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'clear-btn';
+            clearBtn.textContent = 'Clear Response';
+            clearBtn.onclick = function() {
+                clearResponse(questionNumber);
+            };
+            
+            const markBtn = document.createElement('button');
+            markBtn.className = 'mark-btn';
+            markBtn.textContent = 'Mark for Review & Next';
+            markBtn.onclick = function() {
+                markForReview(questionNumber);
+                goToNextQuestion();
+            };
+            
+            actionButtons.appendChild(saveNextBtn);
+            actionButtons.appendChild(clearBtn);
+            actionButtons.appendChild(markBtn);
+            
+            questionDisplay.appendChild(actionButtons);
+            
+            // Update active question in palette
+            updateActiveQuestion(questionNumber);
+        }
+        
+        // Update question status in palette
+        function updateQuestionStatus(questionNumber) {
+            const status = questionStatus[questionNumber];
+            const questionNumberDiv = document.querySelector(`.question-number:nth-child(${questionNumber})`);
+            
+            if (!questionNumberDiv) return;
+            
+            // Remove all status classes
+            questionNumberDiv.classList.remove('not-visited', 'not-answered', 'answered', 'marked', 'answered-marked');
+            
+            // Add appropriate class
+            if (!status.visited) {
+                questionNumberDiv.classList.add('not-visited');
+            } else if (status.answered && status.marked) {
+                questionNumberDiv.classList.add('answered-marked');
+            } else if (status.answered) {
+                questionNumberDiv.classList.add('answered');
+            } else if (status.marked) {
+                questionNumberDiv.classList.add('marked');
+            } else {
+                questionNumberDiv.classList.add('not-answered');
+            }
+        }
+        
+        // Update active question in palette
+        function updateActiveQuestion(questionNumber) {
+            // Remove active class from all question numbers
+            document.querySelectorAll('.question-number').forEach(div => {
+                div.classList.remove('active');
+            });
+            
+            // Add active class to current question
+            const questionNumberDiv = document.querySelector(`.question-number:nth-child(${questionNumber})`);
+            if (questionNumberDiv) {
+                questionNumberDiv.classList.add('active');
+            }
+        }
+        
+        // Update subject tabs
+        function updateSubjectTabs() {
+            document.querySelectorAll('.subject-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.toLowerCase() === currentSubject) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+        
+        // Change subject
+        function changeSubject(subject) {
+            currentSubject = subject;
+            updateSubjectTabs();
+            
+            // Find first question of this subject
+            const question = paperData.questions.find(q => q.subject.toLowerCase() === subject);
+            if (question) {
+                showQuestion(question.globalNumber);
+            }
+        }
+        
+        // Go to next question
+        function goToNextQuestion() {
+            if (currentQuestion < paperData.questions.length) {
+                showQuestion(currentQuestion + 1);
+            }
+        }
+        
+        // Clear response
+        function clearResponse(questionNumber) {
+            const inputs = document.querySelectorAll(`input[name="q${questionNumber}"]`);
+            inputs.forEach(input => {
+                input.checked = false;
+            });
+            
+            const numberInput = document.querySelector(`#question-display input[type="number"]`);
+            if (numberInput) {
+                numberInput.value = '';
+            }
+            
+            questionStatus[questionNumber].answered = false;
+            updateQuestionStatus(questionNumber);
+        }
+        
+        // Mark for review
+        function markForReview(questionNumber) {
+            questionStatus[questionNumber].marked = true;
+            updateQuestionStatus(questionNumber);
+        }
+        
+        // Start timer
+        function startTimer(durationInSeconds) {
+            const timerElement = document.getElementById('exam-timer');
+            let timeRemaining = durationInSeconds;
+            
+            const timerInterval = setInterval(function() {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Your answers will be submitted automatically.');
+                    submitAnswers();
+                    return;
+                }
+                
+                const hours = Math.floor(timeRemaining / 3600);
+                const minutes = Math.floor((timeRemaining % 3600) / 60);
+                const seconds = timeRemaining % 60;
+                
+                timerElement.textContent = `Time Left: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Warning when 15 minutes remaining
+                if (timeRemaining === 15 * 60) {
+                    alert('15 minutes remaining!');
+                }
+            }, 1000);
+        }
+        
+        // Show submit confirmation
+        function showSubmitConfirmation() {
+            if (confirm('Are you sure you want to submit your answers?')) {
+                submitAnswers();
+            }
+        }
+        
+        // Submit answers
+        function submitAnswers() {
+            alert('Your answers have been submitted successfully!');
+            window.location.href = 'results.html?id=' + paperId;
+        }
+        
+        // Show error message
+        function showError(message) {
+            document.getElementById('question-display').innerHTML = `<div style="color: red; padding: 20px;">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
