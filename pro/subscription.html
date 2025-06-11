@@ -255,7 +255,7 @@
 <body>
     <header>
         <div class="logo-container">
-            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
             <h2>PrepSharp</h2>
         </div>
         <div class="user-info">
@@ -350,7 +350,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
             if (!userDataStr) {
-                window.location.href = 'login.html?redirect=subscription.html';
+                window.location.href = '../login.html?redirect=pro/subscription.html';
                 return;
             }
             
@@ -422,7 +422,7 @@
         async function subscribeToPlan(planId) {
             const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
             if (!userDataStr) {
-                window.location.href = 'login.html?redirect=subscription.html';
+                window.location.href = '../login.html?redirect=pro/subscription.html';
                 return;
             }
             
@@ -455,7 +455,7 @@
                     localStorage.setItem('currentUser', JSON.stringify(userData));
                     
                     // Redirect to pro dashboard
-                    window.location.href = 'pro/dashboard.html';
+                    window.location.href = 'dashboard.html';
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -475,7 +475,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(userData));
                 
                 // Redirect to pro dashboard
-                window.location.href = 'pro/dashboard.html';
+                window.location.href = 'dashboard.html';
             }
         }
         
@@ -559,7 +559,7 @@
         document.getElementById('logout-btn').addEventListener('click', function() {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('userData');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
     </script>
 </body>
