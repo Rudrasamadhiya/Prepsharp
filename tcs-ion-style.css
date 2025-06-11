@@ -1,0 +1,316 @@
+/* TCS iON JEE Advanced CBT Interface - Updated */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Top blue strip */
+.top-strip {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Black strip below */
+.black-strip {
+    background-color: #000;
+    color: white;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paper-indicator {
+    color: #ffff00; /* Neon yellow */
+    font-weight: bold;
+}
+
+.strip-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.strip-btn {
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.strip-btn i {
+    margin-right: 5px;
+}
+
+/* Main content area */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Left panel - Question display */
+.left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Section tabs strip */
+.sections-strip {
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    overflow-x: auto;
+}
+
+.section-tab {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #0066cc;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.section-tab.active {
+    background-color: #0066cc;
+    color: white;
+}
+
+/* Blue language strip */
+.language-strip {
+    background-color: #0066cc;
+    color: white;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+}
+
+.language-selector select {
+    margin-left: 8px;
+    padding: 3px;
+    border: 1px solid white;
+    background-color: white;
+}
+
+/* Question area */
+.question-area {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: white;
+}
+
+.question-number {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.question-content {
+    margin-bottom: 20px;
+}
+
+.question-text {
+    margin-bottom: 15px;
+}
+
+/* Options */
+.options {
+    margin-left: 20px;
+}
+
+.option {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.option-radio {
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.option-label {
+    display: flex;
+    align-items: flex-start;
+}
+
+.option-letter {
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 15px;
+}
+
+.option-text {
+    flex-grow: 1;
+}
+
+/* Right panel - Navigation */
+.right-panel {
+    width: 280px;
+    background-color: white;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Candidate info */
+.candidate-info {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.candidate-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #ddd;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.candidate-name {
+    font-weight: bold;
+}
+
+/* Legend */
+.legend {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+
+.answered {
+    background-color: #4caf50; /* Green */
+}
+
+.not-answered {
+    background-color: #f44336; /* Red */
+}
+
+.not-visited {
+    background-color: #e0e0e0; /* Gray */
+}
+
+.marked {
+    background-color: #9c27b0; /* Purple */
+}
+
+.answered-marked {
+    background-color: #9c27b0; /* Purple */
+    border: 2px solid #4caf50; /* Green border */
+}
+
+/* Section blue strip */
+.section-strip {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+
+/* Question palette */
+.question-palette {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.question-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.question-btn.active {
+    border: 2px solid #2196f3;
+}
+
+/* Footer */
+.footer {
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    background-color: #f5f5f5;
+}
+
+.mark-btn {
+    color: #9c27b0;
+}
+
+.clear-btn {
+    color: #ff9800;
+}
+
+.prev-btn {
+    color: #607d8b;
+}
+
+.save-btn {
+    color: #2196f3;
+    background-color: #e3f2fd;
+    border-color: #bbdefb;
+}
+
+.submit-btn {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+}
