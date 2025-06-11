@@ -16,6 +16,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change-this-to-a-long-random-strin
 // Apply security middleware
 require('./security-middleware')(app);
 
+// Import subscription router
+const subscriptionRouter = require('./subscription-api');
+
 // Optional OTP service import
 let sendOTP, verifyOTP;
 try {
@@ -30,6 +33,9 @@ try {
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+
+// Mount subscription router
+app.use('/api/subscription', subscriptionRouter);
 
 // Database file paths
 const USERS_DB_PATH = path.join(__dirname, 'db', 'users.json');
