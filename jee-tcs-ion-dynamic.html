@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced 2024 - TCS iON Format</title>
+    <link rel="stylesheet" href="jee-tcs-ion.css">
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="exam-info">
+                <div class="exam-code">MPT3</div>
+                <div class="exam-tag">JEE Advanced 2024</div>
+            </div>
+            
+            <div class="section-tabs" id="section-tabs">
+                <!-- Section tabs will be generated here -->
+            </div>
+            
+            <div class="user-info">
+                <div class="timer" id="exam-timer">Time Left: 180:00</div>
+                <div class="user-profile">
+                    <div class="avatar"></div>
+                    <span>Candidate</span>
+                </div>
+                <button class="header-btn" onclick="showQuestionPaper()">Question Paper</button>
+                <button class="header-btn" onclick="showInstructions()">View Instructions</button>
+            </div>
+        </div>
+        
+        <!-- Question Display -->
+        <div class="question-display" id="question-display">
+            <div class="loading">Loading questions...</div>
+        </div>
+        
+        <!-- Question Navigator -->
+        <div class="question-navigator">
+            <div class="navigator-header" id="section-title">Section</div>
+            
+            <div class="question-palette" id="question-palette">
+                <!-- Question buttons will be generated here -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color answered"></div>
+                    <span>Answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color not-answered"></div>
+                    <span>Not Answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color not-visited"></div>
+                    <span>Not Visited</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color marked"></div>
+                    <span>Marked for Review</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color answered-marked"></div>
+                    <span>Answered & Marked for Review</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="action-buttons">
+                <button class="action-btn mark-btn" id="mark-btn">Mark for Review & Next</button>
+                <button class="action-btn clear-btn" id="clear-btn">Clear Response</button>
+                <button class="action-btn prev-btn" id="prev-btn">Previous</button>
+                <button class="action-btn save-btn" id="save-btn">Save & Next</button>
+            </div>
+            
+            <button class="action-btn submit-btn" id="submit-btn">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        // Get paper ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paperId = urlParams.get('id') || 'jee-adv-2024-p1';
+        
+        // Global variables
+        let paperData = null;
+        let currentQuestion = 1;
+        let questionStatus = {};
+        let currentSection = 0;
+        let sections = [];
+        
+        // Load paper when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPaper(paperId);
+            startTimer(3 * 60 * 60); // 3 hours
+            
+            // Button event listeners
+            document.getElementById('mark-btn').addEventListener('click', function() {
+                markForReview();
+                goToNextQuestion();
+            });
+            
+            document.getElementById('clear-btn').addEventListener('click', function() {
+                clearResponse();
+            });
+            
+            document.getElementById('prev-btn').addEventListener('click', function() {
+                goToPreviousQuestion();
+            });
+            
+            document.getElementById('save-btn').addEventListener('click', function() {
+                saveResponse();
+                goToNextQuestion();
+            });
+            
+            document.getElementById('submit-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to submit your answers?')) {
+                    submitAnswers();
+                }
+            });
+        });
+        
+        // Load paper from localStorage or server
+        function loadPaper(paperId) {
+            try {
+                // Try to load from localStorage first
+                const paperDataStr = localStorage.getItem(paperId);
+                
+                if (paperDataStr) {
+                    paperData = JSON.parse(paperDataStr);
+                    initializeExam(paperData);
+                } else {
+                    // Try to load from papers.json
+                    fetch('db/papers.json')
+                        .then(response => response.json())
+                        .then(papers => {
+                            const paper = papers.find(p => p.id === paperId);
+                            if (paper) {
+                                paperData = paper;
+                                initializeExam(paper);
+                            } else {
+                                showError('Paper not found');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading paper:', error);
+                            showError('Failed to load paper');
+                        });
+                }
+            } catch (error) {
+                console.error('Error loading paper:', error);
+                showError('Failed to load paper');
+            }
+        }
+        
+        // Initialize exam
+        function initializeExam(paper) {
+            // Create sections based on subjects and question types
+            const subjects = ['Physics', 'Chemistry', 'Mathematics'];
+            const questionTypes = ['Single Correct Option', 'Multiple Correct Options', 'Non-Negative Integer', 'Match List'];
+            
+            // Create sections
+            subjects.forEach(subject => {
+                questionTypes.forEach(type => {
+                    const questions = paper.questions.filter(q => 
+                        q.subject === subject && q.type === type
+                    );
+                    
+                    if (questions.length > 0) {
+                        sections.push({
+                            name: `${subject} - ${getShortTypeName(type)}`,
+                            subject: subject,
+                            type: type,
+                            questions: questions
+                        });
+                    }
+                });
+            });
+            
+            // Initialize question status
+            paper.questions.forEach((question, index) => {
+                questionStatus[index + 1] = {
+                    visited: false,
+                    answered: false,
+                    marked: false
+                };
+            });
+            
+            // Generate section tabs
+            generateSectionTabs();
+            
+            // Show first section
+            showSection(0);
+        }
+        
+        // Generate section tabs
+        function generateSectionTabs() {
+            const tabsContainer = document.getElementById('section-tabs');
+            tabsContainer.innerHTML = '';
+            
+            sections.forEach((section, index) => {
+                const tab = document.createElement('div');
+                tab.className = 'section-tab' + (index === currentSection ? ' active' : '');
+                tab.textContent = section.name;
+                tab.onclick = function() {
+                    showSection(index);
+                };
+                
+                tabsContainer.appendChild(tab);
+            });
+        }
+        
+        // Show section
+        function showSection(sectionIndex) {
+            if (sectionIndex < 0 || sectionIndex >= sections.length) return;
+            
+            // Update current section
+            currentSection = sectionIndex;
+            
+            // Update section tabs
+            document.querySelectorAll('.section-tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index === sectionIndex);
+            });
+            
+            // Update section title
+            document.getElementById('section-title').textContent = sections[sectionIndex].name;
+            
+            // Generate question palette
+            generateQuestionPalette(sectionIndex);
+            
+            // Show first question in section
+            if (sections[sectionIndex].questions.length > 0) {
+                const firstQuestion = sections[sectionIndex].questions[0];
+                showQuestion(firstQuestion.globalNumber || sections[sectionIndex].questions.indexOf(firstQuestion) + 1);
+            }
+        }
+        
+        // Generate question palette
+        function generateQuestionPalette(sectionIndex) {
+            const palette = document.getElementById('question-palette');
+            palette.innerHTML = '';
+            
+            const section = sections[sectionIndex];
+            
+            section.questions.forEach((question, index) => {
+                const questionNumber = section.questions.indexOf(question) + 1;
+                const globalNumber = question.globalNumber || questionNumber;
+                
+                const btn = document.createElement('div');
+                btn.className = 'question-btn not-visited';
+                btn.textContent = questionNumber;
+                btn.onclick = function() {
+                    showQuestion(globalNumber);
+                };
+                
+                // Update button status if already set
+                if (questionStatus[globalNumber]) {
+                    updateQuestionButtonStatus(btn, questionStatus[globalNumber]);
+                }
+                
+                palette.appendChild(btn);
+            });
+        }
+        
+        // Show question
+        function showQuestion(questionNumber) {
+            if (!paperData) return;
+            
+            // Find question
+            const question = paperData.questions.find(q => q.globalNumber === questionNumber) || 
+                             paperData.questions[questionNumber - 1];
+            
+            if (!question) return;
+            
+            // Update current question
+            currentQuestion = questionNumber;
+            
+            // Mark as visited
+            if (questionStatus[questionNumber]) {
+                questionStatus[questionNumber].visited = true;
+                updateQuestionStatus(questionNumber);
+            }
+            
+            // Find section for this question
+            const sectionIndex = sections.findIndex(section => 
+                section.questions.some(q => q === question || q.globalNumber === questionNumber)
+            );
+            
+            // Update section if needed
+            if (sectionIndex !== -1 && sectionIndex !== currentSection) {
+                showSection(sectionIndex);
+            }
+            
+            // Update question display
+            const questionDisplay = document.getElementById('question-display');
+            questionDisplay.innerHTML = '';
+            
+            // Question header
+            const questionHeader = document.createElement('div');
+            questionHeader.className = 'question-header';
+            
+            const questionType = document.createElement('div');
+            questionType.className = 'question-type';
+            questionType.innerHTML = `
+                Question Type: 
+                <select disabled>
+                    <option>${getShortTypeName(question.type)}</option>
+                </select>
+            `;
+            
+            const languageSelector = document.createElement('div');
+            languageSelector.className = 'language-selector';
+            languageSelector.innerHTML = `
+                View in: 
+                <select>
+                    <option>English</option>
+                    <option>Hindi</option>
+                </select>
+            `;
+            
+            questionHeader.appendChild(questionType);
+            questionHeader.appendChild(languageSelector);
+            questionDisplay.appendChild(questionHeader);
+            
+            // Question content
+            const questionContent = document.createElement('div');
+            questionContent.className = 'question-content';
+            
+            // Question number
+            const questionNumberDiv = document.createElement('div');
+            questionNumberDiv.className = 'question-number';
+            
+            // Find the local question number within the section
+            const localQuestionNumber = sections[currentSection].questions.indexOf(question) + 1;
+            questionNumberDiv.textContent = `Question No. ${localQuestionNumber}`;
+            
+            questionContent.appendChild(questionNumberDiv);
+            
+            // Question text
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            
+            if (question.imagePath) {
+                const img = document.createElement('img');
+                img.src = question.imagePath;
+                img.style.maxWidth = '100%';
+                questionText.appendChild(img);
+            }
+            
+            questionContent.appendChild(questionText);
+            
+            // Options or input field
+            if (question.type === 'Non-Negative Integer') {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'options';
+                
+                const inputField = document.createElement('div');
+                inputField.className = 'option';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.step = '0.01';
+                input.placeholder = 'Enter numerical value';
+                input.style.padding = '8px';
+                input.style.width = '200px';
+                
+                input.oninput = function() {
+                    if (questionStatus[questionNumber]) {
+                        questionStatus[questionNumber].answered = this.value.trim() !== '';
+                        updateQuestionStatus(questionNumber);
+                    }
+                };
+                
+                inputField.appendChild(input);
+                inputDiv.appendChild(inputField);
+                questionContent.appendChild(inputDiv);
+            } else if (question.options && question.options.length > 0) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                question.options.forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const input = document.createElement('input');
+                    input.type = question.type === 'Single Correct Option' ? 'radio' : 'checkbox';
+                    input.name = `q${questionNumber}`;
+                    input.id = `q${questionNumber}-${option.label}`;
+                    input.className = 'option-radio';
+                    
+                    input.onchange = function() {
+                        if (questionStatus[questionNumber]) {
+                            if (question.type === 'Single Correct Option') {
+                                questionStatus[questionNumber].answered = true;
+                            } else {
+                                const checkboxes = optionsDiv.querySelectorAll('input[type="checkbox"]');
+                                questionStatus[questionNumber].answered = Array.from(checkboxes).some(cb => cb.checked);
+                            }
+                            updateQuestionStatus(questionNumber);
+                        }
+                    };
+                    
+                    const label = document.createElement('label');
+                    label.setAttribute('for', `q${questionNumber}-${option.label}`);
+                    label.className = 'option-label';
+                    
+                    const optionLetter = document.createElement('div');
+                    optionLetter.className = 'option-letter';
+                    optionLetter.textContent = option.label.toLowerCase() + ')';
+                    
+                    const optionText = document.createElement('div');
+                    optionText.className = 'option-text';
+                    
+                    if (option.imagePath) {
+                        const img = document.createElement('img');
+                        img.src = option.imagePath;
+                        img.style.maxWidth = '100%';
+                        optionText.appendChild(img);
+                    }
+                    
+                    label.appendChild(optionLetter);
+                    label.appendChild(optionText);
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsDiv.appendChild(optionDiv);
+                });
+                
+                questionContent.appendChild(optionsDiv);
+            }
+            
+            questionDisplay.appendChild(questionContent);
+            
+            // Update active question in palette
+            updateActiveQuestion();
+        }
+        
+        // Update question status
+        function updateQuestionStatus(questionNumber) {
+            if (!questionStatus[questionNumber]) return;
+            
+            // Find the question button in the current section
+            const section = sections[currentSection];
+            const question = section.questions.find(q => q.globalNumber === questionNumber || 
+                                                    section.questions.indexOf(q) + 1 === questionNumber);
+            
+            if (!question) return;
+            
+            const localIndex = section.questions.indexOf(question);
+            const questionBtn = document.querySelectorAll('.question-btn')[localIndex];
+            
+            if (!questionBtn) return;
+            
+            updateQuestionButtonStatus(questionBtn, questionStatus[questionNumber]);
+        }
+        
+        // Update question button status
+        function updateQuestionButtonStatus(button, status) {
+            // Remove all status classes
+            button.classList.remove('not-visited', 'not-answered', 'answered', 'marked', 'answered-marked');
+            
+            // Add appropriate class
+            if (!status.visited) {
+                button.classList.add('not-visited');
+            } else if (status.answered && status.marked) {
+                button.classList.add('answered-marked');
+            } else if (status.answered) {
+                button.classList.add('answered');
+            } else if (status.marked) {
+                button.classList.add('marked');
+            } else {
+                button.classList.add('not-answered');
+            }
+        }
+        
+        // Update active question
+        function updateActiveQuestion() {
+            // Find the question in the current section
+            const section = sections[currentSection];
+            const question = section.questions.find(q => q.globalNumber === currentQuestion || 
+                                                    section.questions.indexOf(q) + 1 === currentQuestion);
+            
+            if (!question) return;
+            
+            const localIndex = section.questions.indexOf(question);
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.question-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to current question button
+            const questionBtn = document.querySelectorAll('.question-btn')[localIndex];
+            if (questionBtn) {
+                questionBtn.classList.add('active');
+            }
+        }
+        
+        // Go to next question
+        function goToNextQuestion() {
+            const section = sections[currentSection];
+            const currentIndex = section.questions.findIndex(q => q.globalNumber === currentQuestion || 
+                                                            section.questions.indexOf(q) + 1 === currentQuestion);
+            
+            if (currentIndex < section.questions.length - 1) {
+                // Next question in same section
+                const nextQuestion = section.questions[currentIndex + 1];
+                showQuestion(nextQuestion.globalNumber || currentIndex + 2);
+            } else if (currentSection < sections.length - 1) {
+                // First question in next section
+                showSection(currentSection + 1);
+            }
+        }
+        
+        // Go to previous question
+        function goToPreviousQuestion() {
+            const section = sections[currentSection];
+            const currentIndex = section.questions.findIndex(q => q.globalNumber === currentQuestion || 
+                                                            section.questions.indexOf(q) + 1 === currentQuestion);
+            
+            if (currentIndex > 0) {
+                // Previous question in same section
+                const prevQuestion = section.questions[currentIndex - 1];
+                showQuestion(prevQuestion.globalNumber || currentIndex);
+            } else if (currentSection > 0) {
+                // Last question in previous section
+                const prevSection = sections[currentSection - 1];
+                showSection(currentSection - 1);
+                const lastQuestion = prevSection.questions[prevSection.questions.length - 1];
+                showQuestion(lastQuestion.globalNumber || prevSection.questions.length);
+            }
+        }
+        
+        // Mark for review
+        function markForReview() {
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].marked = true;
+                updateQuestionStatus(currentQuestion);
+            }
+        }
+        
+        // Clear response
+        function clearResponse() {
+            // Clear radio buttons or checkboxes
+            const inputs = document.querySelectorAll(`input[name="q${currentQuestion}"]`);
+            inputs.forEach(input => {
+                input.checked = false;
+            });
+            
+            // Clear number input
+            const numberInput = document.querySelector('#question-display input[type="number"]');
+            if (numberInput) {
+                numberInput.value = '';
+            }
+            
+            // Update status
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].answered = false;
+                updateQuestionStatus(currentQuestion);
+            }
+        }
+        
+        // Save response
+        function saveResponse() {
+            // Just update the status - actual saving happens on submit
+            if (questionStatus[currentQuestion]) {
+                // Check if there's an answer
+                const radioChecked = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+                const checkboxesChecked = document.querySelectorAll(`input[name="q${currentQuestion}"]:checked`).length > 0;
+                const numberInput = document.querySelector('#question-display input[type="number"]');
+                
+                questionStatus[currentQuestion].answered = 
+                    radioChecked || 
+                    checkboxesChecked || 
+                    (numberInput && numberInput.value.trim() !== '');
+                
+                updateQuestionStatus(currentQuestion);
+            }
+        }
+        
+        // Start timer
+        function startTimer(durationInSeconds) {
+            const timerElement = document.getElementById('exam-timer');
+            let timeRemaining = durationInSeconds;
+            
+            const timerInterval = setInterval(function() {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Your answers will be submitted automatically.');
+                    submitAnswers();
+                    return;
+                }
+                
+                const hours = Math.floor(timeRemaining / 3600);
+                const minutes = Math.floor((timeRemaining % 3600) / 60);
+                const seconds = timeRemaining % 60;
+                
+                timerElement.textContent = `Time Left: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Warning when 15 minutes remaining
+                if (timeRemaining === 15 * 60) {
+                    alert('15 minutes remaining!');
+                }
+            }, 1000);
+        }
+        
+        // Submit answers
+        function submitAnswers() {
+            alert('Your answers have been submitted successfully!');
+            window.location.href = 'results.html?id=' + paperId;
+        }
+        
+        // Show question paper
+        function showQuestionPaper() {
+            alert('Question paper view not implemented in this demo.');
+        }
+        
+        // Show instructions
+        function showInstructions() {
+            alert('Instructions view not implemented in this demo.');
+        }
+        
+        // Get short type name
+        function getShortTypeName(type) {
+            switch (type) {
+                case 'Single Correct Option': return 'MCQ';
+                case 'Multiple Correct Options': return 'MSQ';
+                case 'Non-Negative Integer': return 'NAT';
+                case 'Match List': return 'MTF';
+                default: return type;
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            document.getElementById('question-display').innerHTML = `<div style="color: red; padding: 20px;">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
