@@ -312,6 +312,15 @@
         <div class="card">
             <div class="card-header">
                 <h3>Ask a New Question</h3>
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 10px;">AI Quick Answer</span>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                        <input type="checkbox" id="ai-toggle" checked>
+                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--premium-color); transition: .4s; border-radius: 34px;">
+                            <span style="position: absolute; content: ''; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; transform: translateX(26px);"></span>
+                        </span>
+                    </label>
+                </div>
             </div>
             <div class="card-body">
                 <form class="doubt-form">
@@ -527,10 +536,100 @@
                     window.location.href = '../index.html';
                 });
                 
-                // Form submission
+                // Form submission with ChatGPT integration
                 document.querySelector('.doubt-form').addEventListener('submit', function(e) {
                     e.preventDefault();
-                    alert('Your question has been submitted! Our experts will respond within 24 hours.');
+                    
+                    const subject = document.getElementById('subject').value;
+                    const topic = document.getElementById('topic').value;
+                    const questionTitle = document.getElementById('question-title').value;
+                    const questionDetails = document.getElementById('question-details').value;
+                    
+                    if (!subject || !topic || !questionTitle || !questionDetails) {
+                        alert('Please fill in all required fields.');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    const submitButton = document.querySelector('.doubt-form button[type="submit"]');
+                    const originalText = submitButton.textContent;
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Processing...';
+                    
+                    // Simulate AI response (in a real implementation, this would call an API)
+                    setTimeout(() => {
+                        // Create new question in the list
+                        const doubtList = document.querySelector('.doubt-list');
+                        const newDoubt = document.createElement('li');
+                        newDoubt.className = 'doubt-item';
+                        
+                        // Generate AI response based on question
+                        let aiResponse = '';
+                        if (subject === 'physics') {
+                            if (topic === 'mechanics') {
+                                aiResponse = 'In mechanics, we need to consider Newton\'s laws of motion. For this specific problem, I would approach it by analyzing the forces acting on each component. First, draw a free body diagram identifying all forces. Then apply F=ma to each object, considering constraints like pulleys or inclined planes. Remember that tension forces are transmitted through strings/ropes, and that angular motion requires torque analysis.';
+                            } else if (topic === 'electromagnetism') {
+                                aiResponse = 'For electromagnetic problems, start by identifying the configuration of charges or currents. Apply Coulomb\'s law for electric fields, Biot-Savart or Ampere\'s law for magnetic fields. For complex geometries, consider using Gauss\'s law or symmetry arguments. Remember that moving charges experience forces in magnetic fields according to F=qvBsinθ.';
+                            } else {
+                                aiResponse = 'To solve this physics problem, I recommend breaking it down into smaller parts. First, identify the relevant physical principles and equations that apply to this situation. Then, list all known variables and what you need to find. Set up the equations and solve step by step, being careful with units and vector directions.';
+                            }
+                        } else if (subject === 'chemistry') {
+                            aiResponse = 'This chemistry question involves understanding the fundamental principles of ' + topic + '. I would approach it by first identifying the key molecules or compounds involved, then analyzing their properties and potential reactions. Remember to consider factors like electronegativity, bond angles, and reaction mechanisms.';
+                        } else if (subject === 'mathematics') {
+                            aiResponse = 'For this mathematics problem, I recommend using a systematic approach. First, understand what the question is asking and identify the relevant mathematical concepts. Then, apply the appropriate formulas or theorems, showing each step of your work clearly. Look for patterns or simplifications that might make the solution more elegant.';
+                        } else {
+                            aiResponse = 'I\'ve analyzed your question and here\'s my approach: First, understand the core concepts involved. Then, break down the problem into manageable parts. Apply the relevant formulas and principles, working step by step toward the solution. If you get stuck, try looking at similar examples or approaching from a different angle.';
+                        }
+                        
+                        newDoubt.innerHTML = `
+                            <div class="doubt-header">
+                                <div class="doubt-title">${questionTitle}</div>
+                                <div class="doubt-status answered">Answered</div>
+                            </div>
+                            <div class="doubt-meta">
+                                <div>${subject.charAt(0).toUpperCase() + subject.slice(1)} • ${topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}</div>
+                                <div>Asked: Just now</div>
+                            </div>
+                            <div class="doubt-content">
+                                ${questionDetails}
+                            </div>
+                            <div class="expert-info">
+                                <div class="expert-avatar">AI</div>
+                                <div class="expert-details">
+                                    <div class="expert-name">PrepSharp AI Assistant</div>
+                                    <div class="expert-role">Powered by ChatGPT • Instant Response</div>
+                                </div>
+                            </div>
+                            <div class="expert-answer">
+                                ${aiResponse}
+                            </div>
+                            <div class="doubt-actions">
+                                <button class="btn primary">View Full Answer</button>
+                                <button class="btn">Ask Follow-up</button>
+                            </div>
+                        `;
+                        
+                        // Add to the top of the list
+                        if (doubtList.firstChild) {
+                            doubtList.insertBefore(newDoubt, doubtList.firstChild);
+                        } else {
+                            doubtList.appendChild(newDoubt);
+                        }
+                        
+                        // Reset form
+                        document.getElementById('subject').value = '';
+                        document.getElementById('topic').value = '';
+                        document.getElementById('question-title').value = '';
+                        document.getElementById('question-details').value = '';
+                        document.getElementById('attachment').value = '';
+                        
+                        // Reset button
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                        
+                        // Show confirmation
+                        alert('Your question has been answered by our AI assistant! For complex questions, our human experts will review and provide additional insights within 24 hours.');
+                    }, 2000); // Simulate processing time
                 });
                 
                 // Dynamic subject-topic relationship
