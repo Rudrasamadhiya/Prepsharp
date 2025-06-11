@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Doubt Solving - PrepSharp Pro</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --premium-color: #8e24aa;
+            --premium-light: #b39ddb;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .premium-badge {
+            background-color: var(--premium-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .btn.premium { background-color: var(--premium-color); color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--premium-color);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-header .crown {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f5f5f5;
+        }
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .doubt-form {
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-upload input {
+            flex: 1;
+        }
+        .doubt-list {
+            list-style: none;
+            padding: 0;
+        }
+        .doubt-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .doubt-item:last-child {
+            border-bottom: none;
+        }
+        .doubt-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .doubt-title {
+            font-weight: 500;
+            font-size: 18px;
+        }
+        .doubt-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .doubt-status.pending {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        .doubt-status.answered {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .doubt-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .doubt-content {
+            margin-bottom: 15px;
+        }
+        .doubt-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .expert-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .expert-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--premium-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--premium-color);
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .expert-details {
+            flex: 1;
+        }
+        .expert-name {
+            font-weight: 500;
+        }
+        .expert-role {
+            font-size: 14px;
+            color: var(--premium-color);
+        }
+        .expert-answer {
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--premium-color);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="menu-icon" id="menu-toggle">☰</span>
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp Pro</h2>
+        </div>
+        <div class="user-info">
+            <div class="premium-badge">
+                <span>👑</span> PRO
+            </div>
+            <span id="user-name">Welcome, User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="crown">👑</span>
+            <h3>PrepSharp Pro</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="pro-dashboard.html"><span class="icon">🏠</span> Pro Dashboard</a></li>
+            <li><a href="practice-exams.html"><span class="icon">📝</span> Practice Exams</a></li>
+            <li><a href="performance-analytics.html"><span class="icon">📊</span> Performance Analytics</a></li>
+            <li><a href="study-plan.html"><span class="icon">🎯</span> Personalized Study Plan</a></li>
+            <li><a href="study-resources.html"><span class="icon">📚</span> Study Resources</a></li>
+            <li><a href="expert-doubt.html"><span class="icon">💬</span> Expert Doubt Solving</a></li>
+            <li><a href="profile.html"><span class="icon">👤</span> Edit Profile</a></li>
+            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
+            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="container">
+        <h1>Expert Doubt Solving</h1>
+        <p>Get your doubts solved by our expert educators within 24 hours.</p>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Ask a New Question</h3>
+            </div>
+            <div class="card-body">
+                <form class="doubt-form">
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject">
+                            <option value="">Select Subject</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="mathematics">Mathematics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="topic">Topic</label>
+                        <select id="topic">
+                            <option value="">Select Topic</option>
+                            <option value="mechanics">Mechanics</option>
+                            <option value="electromagnetism">Electromagnetism</option>
+                            <option value="optics">Optics</option>
+                            <option value="thermodynamics">Thermodynamics</option>
+                            <option value="modern-physics">Modern Physics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="question-title">Question Title</label>
+                        <input type="text" id="question-title" placeholder="Enter a brief title for your question">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="question-details">Question Details</label>
+                        <textarea id="question-details" placeholder="Describe your doubt in detail..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Attachments (Optional)</label>
+                        <div class="file-upload">
+                            <input type="file" id="attachment">
+                            <button type="button" class="btn primary">Add File</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn premium">Submit Question</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Your Questions</h3>
+                <select>
+                    <option>All Questions</option>
+                    <option>Pending</option>
+                    <option>Answered</option>
+                </select>
+            </div>
+            <div class="card-body">
+                <ul class="doubt-list">
+                    <li class="doubt-item">
+                        <div class="doubt-header">
+                            <div class="doubt-title">Understanding Rotational Dynamics Problem</div>
+                            <div class="doubt-status answered">Answered</div>
+                        </div>
+                        <div class="doubt-meta">
+                            <div>Physics • Mechanics</div>
+                            <div>Asked: Yesterday</div>
+                        </div>
+                        <div class="doubt-content">
+                            I'm having trouble understanding how to solve this rotational dynamics problem involving a pulley system with varying masses...
+                        </div>
+                        <div class="expert-info">
+                            <div class="expert-avatar">DR</div>
+                            <div class="expert-details">
+                                <div class="expert-name">Dr. Rajesh Kumar</div>
+                                <div class="expert-role">Physics Expert • IIT Delhi</div>
+                            </div>
+                        </div>
+                        <div class="expert-answer">
+                            The key to solving this problem is to analyze the torque at each point in the system. Let's start by identifying all the forces acting on the pulley...
+                        </div>
+                        <div class="doubt-actions">
+                            <button class="btn primary">View Full Answer</button>
+                            <button class="btn">Ask Follow-up</button>
+                        </div>
+                    </li>
+                    
+                    <li class="doubt-item">
+                        <div class="doubt-header">
+                            <div class="doubt-title">Coordination Compounds Nomenclature</div>
+                            <div class="doubt-status pending">Pending</div>
+                        </div>
+                        <div class="doubt-meta">
+                            <div>Chemistry • Inorganic</div>
+                            <div>Asked: Today</div>
+                        </div>
+                        <div class="doubt-content">
+                            I'm confused about the naming convention for coordination compounds, especially when there are multiple ligands involved...
+                        </div>
+                        <div class="doubt-actions">
+                            <button class="btn primary">View Details</button>
+                            <button class="btn">Edit Question</button>
+                        </div>
+                    </li>
+                    
+                    <li class="doubt-item">
+                        <div class="doubt-header">
+                            <div class="doubt-title">Differential Equations Application Problem</div>
+                            <div class="doubt-status answered">Answered</div>
+                        </div>
+                        <div class="doubt-meta">
+                            <div>Mathematics • Calculus</div>
+                            <div>Asked: 3 days ago</div>
+                        </div>
+                        <div class="doubt-content">
+                            I need help with this differential equation that models a spring-mass system with damping...
+                        </div>
+                        <div class="expert-info">
+                            <div class="expert-avatar">SP</div>
+                            <div class="expert-details">
+                                <div class="expert-name">Prof. Sunita Patel</div>
+                                <div class="expert-role">Mathematics Expert • BITS Pilani</div>
+                            </div>
+                        </div>
+                        <div class="expert-answer">
+                            This is a second-order differential equation with constant coefficients. To solve it, we need to find the characteristic equation...
+                        </div>
+                        <div class="doubt-actions">
+                            <button class="btn primary">View Full Answer</button>
+                            <button class="btn">Ask Follow-up</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Upcoming Live Doubt Sessions</h3>
+            </div>
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <th style="text-align: left; padding: 10px;">Topic</th>
+                            <th style="text-align: left; padding: 10px;">Expert</th>
+                            <th style="text-align: center; padding: 10px;">Date</th>
+                            <th style="text-align: center; padding: 10px;">Time</th>
+                            <th style="text-align: center; padding: 10px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">JEE Advanced Physics Problem Solving</td>
+                            <td style="padding: 10px;">Dr. Rajesh Kumar</td>
+                            <td style="text-align: center; padding: 10px;">Tomorrow</td>
+                            <td style="text-align: center; padding: 10px;">6:00 PM</td>
+                            <td style="text-align: center; padding: 10px;"><button class="btn premium">Register</button></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">Organic Chemistry Reaction Mechanisms</td>
+                            <td style="padding: 10px;">Dr. Meena Sharma</td>
+                            <td style="text-align: center; padding: 10px;">June 15</td>
+                            <td style="text-align: center; padding: 10px;">5:00 PM</td>
+                            <td style="text-align: center; padding: 10px;"><button class="btn premium">Register</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">Calculus Tips and Tricks</td>
+                            <td style="padding: 10px;">Prof. Sunita Patel</td>
+                            <td style="text-align: center; padding: 10px;">June 18</td>
+                            <td style="text-align: center; padding: 10px;">7:00 PM</td>
+                            <td style="text-align: center; padding: 10px;"><button class="btn premium">Register</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = '../index.html';
+            } else {
+                const user = JSON.parse(currentUser);
+                document.getElementById('user-name').textContent = `${user.name || 'User'}`;
+                
+                // Sidebar functionality
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                const menuToggle = document.getElementById('menu-toggle');
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+                
+                // Logout functionality
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                // Form submission
+                document.querySelector('.doubt-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Your question has been submitted! Our experts will respond within 24 hours.');
+                });
+                
+                // Dynamic subject-topic relationship
+                document.getElementById('subject').addEventListener('change', function() {
+                    const subject = this.value;
+                    const topicSelect = document.getElementById('topic');
+                    
+                    // Clear existing options
+                    topicSelect.innerHTML = '<option value="">Select Topic</option>';
+                    
+                    // Add new options based on subject
+                    if (subject === 'physics') {
+                        const topics = ['Mechanics', 'Electromagnetism', 'Optics', 'Thermodynamics', 'Modern Physics'];
+                        topics.forEach(topic => {
+                            const option = document.createElement('option');
+                            option.value = topic.toLowerCase().replace(' ', '-');
+                            option.textContent = topic;
+                            topicSelect.appendChild(option);
+                        });
+                    } else if (subject === 'chemistry') {
+                        const topics = ['Organic', 'Inorganic', 'Physical', 'Coordination Compounds', 'Electrochemistry'];
+                        topics.forEach(topic => {
+                            const option = document.createElement('option');
+                            option.value = topic.toLowerCase().replace(' ', '-');
+                            option.textContent = topic;
+                            topicSelect.appendChild(option);
+                        });
+                    } else if (subject === 'mathematics') {
+                        const topics = ['Calculus', 'Algebra', 'Coordinate Geometry', 'Trigonometry', 'Probability'];
+                        topics.forEach(topic => {
+                            const option = document.createElement('option');
+                            option.value = topic.toLowerCase().replace(' ', '-');
+                            option.textContent = topic;
+                            topicSelect.appendChild(option);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
