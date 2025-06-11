@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam List - PrepSharp</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .exam-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .exam-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .exam-card:hover {
+            transform: translateY(-5px);
+        }
+        .exam-header {
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .exam-body {
+            padding: 15px;
+        }
+        .exam-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn.primary { 
+            background-color: var(--primary-color); 
+            color: white; 
+        }
+        .btn.secondary { 
+            background-color: var(--secondary-color); 
+            color: white; 
+        }
+        .btn.accent { 
+            background-color: var(--accent-color); 
+            color: white; 
+        }
+        .back-link {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-icon {
+            margin-right: 5px;
+        }
+        .exam-meta {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+        .badge.physics {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge.chemistry {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge.mathematics {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        .badge.biology {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .highlight {
+            border: 2px solid var(--accent-color);
+            position: relative;
+        }
+        .highlight::after {
+            content: "FREE";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .no-exams {
+            text-align: center;
+            padding: 50px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+        }
+        .lock-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .pro-banner {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .pro-banner-content {
+            flex: 1;
+            min-width: 200px;
+        }
+        .pro-banner-button {
+            background: linear-gradient(to right, #ff9800, #f57c00);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+            display: inline-block;
+        }
+        .category-locked {
+            position: relative;
+            opacity: 0.7;
+        }
+        .category-locked::after {
+            content: "PRO";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f57c00;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp</h2>
+        </div>
+        <div class="user-info">
+            <span id="user-name">Welcome, User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <a href="dashboard.html" class="back-link">
+            <span class="back-icon">←</span> Back to Dashboard
+        </a>
+        
+        <!-- Pro Banner -->
+        <div class="pro-banner">
+            <div class="pro-banner-content">
+                <h2 style="margin-top: 0;">
+                    <span style="color: #ffd700; margin-right: 8px;">⭐</span> Upgrade to PrepSharp Pro
+                </h2>
+                <p>Get unlimited access to all exam papers and premium features for just ₹200/year</p>
+            </div>
+            <a href="subscription.html" class="pro-banner-button">Get Pro Now</a>
+        </div>
+        
+        <h1 id="exam-type-title">Exam Papers</h1>
+        <p id="exam-type-description">Select a paper to start practicing</p>
+        
+        <div id="exam-list" class="exam-list">
+            <!-- Exam cards will be loaded here -->
+            <div class="no-exams" id="no-exams">
+                <h2>Loading exam papers...</h2>
+                <p>Please wait while we fetch the available papers.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get exam type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const examType = urlParams.get('type');
+        
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        } else {
+            const user = JSON.parse(currentUser);
+            document.getElementById('user-name').textContent = `Welcome, ${user.name || 'User'}`;
+        }
+        
+        // Set page title and description based on exam type
+        const examTypeTitle = document.getElementById('exam-type-title');
+        const examTypeDescription = document.getElementById('exam-type-description');
+        
+        switch(examType) {
+            case 'jee-main':
+                examTypeTitle.textContent = 'JEE Main Papers (Pro Only)';
+                examTypeDescription.textContent = 'Upgrade to Pro to access JEE Main papers';
+                break;
+            case 'jee-advanced':
+                examTypeTitle.textContent = 'JEE Advanced Papers';
+                examTypeDescription.textContent = 'Practice with previous year JEE Advanced papers';
+                break;
+            case 'neet':
+                examTypeTitle.textContent = 'NEET Papers (Pro Only)';
+                examTypeDescription.textContent = 'Upgrade to Pro to access NEET papers';
+                break;
+            case 'bitsat':
+                examTypeTitle.textContent = 'BITSAT Papers (Pro Only)';
+                examTypeDescription.textContent = 'Upgrade to Pro to access BITSAT papers';
+                break;
+            case 'aiims':
+                examTypeTitle.textContent = 'AIIMS Papers (Pro Only)';
+                examTypeDescription.textContent = 'Upgrade to Pro to access AIIMS papers';
+                break;
+            default:
+                examTypeTitle.textContent = 'All Exam Papers';
+                examTypeDescription.textContent = 'Select a paper to start practicing';
+        }
+        
+        // Load exam papers
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExamPapers();
+        });
+        
+        // Function to load exam papers
+        async function loadExamPapers() {
+            try {
+                // Try to fetch papers from server
+                const response = await fetch('/api/papers');
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderPapers(data.papers);
+                } else {
+                    throw new Error('Failed to fetch papers from server');
+                }
+            } catch (error) {
+                console.error('Error fetching papers:', error);
+                
+                // Fallback to local storage
+                const papersJson = localStorage.getItem('papers');
+                if (papersJson) {
+                    try {
+                        const papers = JSON.parse(papersJson);
+                        renderPapers(papers);
+                    } catch (e) {
+                        showNoPapers('Error parsing papers data');
+                    }
+                } else {
+                    // Try to load from papers.json directly
+                    fetch('db/papers.json')
+                        .then(response => response.json())
+                        .then(papers => {
+                            renderPapers(papers);
+                            // Save to localStorage for future use
+                            localStorage.setItem('papers', JSON.stringify(papers));
+                        })
+                        .catch(error => {
+                            console.error('Error loading papers.json:', error);
+                            showNoPapers('No papers available for this exam type');
+                        });
+                }
+            }
+        }
+        
+        // Function to render papers
+        function renderPapers(papers) {
+            const examListElement = document.getElementById('exam-list');
+            const noExamsElement = document.getElementById('no-exams');
+            
+            // Filter papers by exam type if specified
+            let filteredPapers = papers;
+            if (examType) {
+                filteredPapers = papers.filter(paper => paper.type === examType);
+            }
+            
+            // Sort papers by year (newest first)
+            filteredPapers.sort((a, b) => {
+                const yearA = parseInt(a.year) || 0;
+                const yearB = parseInt(b.year) || 0;
+                return yearB - yearA;
+            });
+            
+            if (filteredPapers.length === 0) {
+                showNoPapers('No papers available for this exam type');
+                return;
+            }
+            
+            // Remove loading message
+            noExamsElement.style.display = 'none';
+            
+            // Clear existing content
+            examListElement.innerHTML = '';
+            
+            // Render each paper
+            filteredPapers.forEach(paper => {
+                const examCard = document.createElement('div');
+                examCard.className = 'exam-card';
+                
+                // Check if paper is free (JEE Advanced 2024 Paper 1 or 2)
+                const isFree = paper.type === 'jee-advanced' && 
+                              paper.year === '2024' && 
+                              (paper.paperNumber === '1' || paper.paperNumber === '2');
+                
+                if (isFree) {
+                    examCard.classList.add('highlight');
+                }
+                
+                // Create badges for subjects
+                const subjectBadges = (paper.subjects || []).map(subject => {
+                    return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
+                }).join('');
+                
+                // Format date if available
+                let dateInfo = '';
+                if (paper.date && paper.month) {
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const monthName = monthNames[parseInt(paper.month) - 1] || paper.month;
+                    dateInfo = `<span>Date: ${paper.date}/${monthName} ${paper.year}</span>`;
+                } else {
+                    dateInfo = `<span>Year: ${paper.year}</span>`;
+                }
+                
+                // Add shift info if available
+                const shiftInfo = paper.shift ? `<span> | Shift: ${paper.shift}</span>` : '';
+                
+                // Add PDF viewer button only for JEE Advanced papers
+                const pdfViewerButton = examType === 'jee-advanced' ? 
+                    `<a href="pdf-viewer.html?paper=${paper.id}" class="btn secondary">View PDF</a>` : '';
+                
+                examCard.innerHTML = `
+                    <div class="exam-header">
+                        <h3>${paper.name}</h3>
+                    </div>
+                    <div class="exam-body">
+                        <p>${getExamTypeDescription(paper.type)}</p>
+                        <div class="exam-meta">
+                            ${dateInfo}
+                            ${shiftInfo}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            ${subjectBadges}
+                        </div>
+                    </div>
+                    <div class="exam-footer">
+                        <a href="exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
+                        ${pdfViewerButton}
+                        <span>${paper.questions ? paper.questions.length : 0} Questions</span>
+                    </div>
+                `;
+                
+                // Add locked overlay for non-free papers
+                if (!isFree) {
+                    const lockedOverlay = document.createElement('div');
+                    lockedOverlay.className = 'locked-overlay';
+                    lockedOverlay.innerHTML = `
+                        <div class="lock-icon">🔒</div>
+                        <p>Upgrade to Pro to unlock</p>
+                        <a href="subscription.html" class="btn accent">Get Pro</a>
+                    `;
+                    examCard.appendChild(lockedOverlay);
+                }
+                
+                examListElement.appendChild(examCard);
+            });
+        }
+        
+        // Function to show no papers message
+        function showNoPapers(message) {
+            const noExamsElement = document.getElementById('no-exams');
+            noExamsElement.innerHTML = `
+                <h2>No Papers Available</h2>
+                <p>${message}</p>
+                <a href="dashboard.html" class="btn primary">Back to Dashboard</a>
+            `;
+            noExamsElement.style.display = 'block';
+        }
+        
+        // Function to get exam type description
+        function getExamTypeDescription(type) {
+            switch(type) {
+                case 'jee-main':
+                    return 'JEE Main Examination';
+                case 'jee-advanced':
+                    return 'JEE Advanced Examination';
+                case 'neet':
+                    return 'NEET Examination';
+                case 'bitsat':
+                    return 'BITSAT Examination';
+                case 'aiims':
+                    return 'AIIMS Examination';
+                default:
+                    return 'Entrance Examination';
+            }
+        }
+        
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
