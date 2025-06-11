@@ -195,28 +195,12 @@
             margin: 10px;
             display: inline-block;
         }
-        .category-locked {
-            position: relative;
-            opacity: 0.7;
-        }
-        .category-locked::after {
-            content: "PRO";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #f57c00;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
     <header>
         <div class="logo-container">
-            <img src="prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
             <h2>PrepSharp</h2>
         </div>
         <div class="user-info">
@@ -226,7 +210,7 @@
     </header>
     
     <div class="container">
-        <a href="dashboard.html" class="back-link">
+        <a href="free-dashboard.html" class="back-link">
             <span class="back-icon">←</span> Back to Dashboard
         </a>
         
@@ -261,7 +245,7 @@
         // Check if user is logged in
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) {
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         } else {
             const user = JSON.parse(currentUser);
             document.getElementById('user-name').textContent = `Welcome, ${user.name || 'User'}`;
@@ -328,7 +312,7 @@
                     }
                 } else {
                     // Try to load from papers.json directly
-                    fetch('db/papers.json')
+                    fetch('../db/papers.json')
                         .then(response => response.json())
                         .then(papers => {
                             renderPapers(papers);
@@ -406,7 +390,7 @@
                 
                 // Add PDF viewer button only for JEE Advanced papers
                 const pdfViewerButton = examType === 'jee-advanced' ? 
-                    `<a href="pdf-viewer.html?paper=${paper.id}" class="btn secondary">View PDF</a>` : '';
+                    `<a href="../pdf-viewer.html?paper=${paper.id}" class="btn secondary">View PDF</a>` : '';
                 
                 examCard.innerHTML = `
                     <div class="exam-header">
@@ -423,7 +407,7 @@
                         </div>
                     </div>
                     <div class="exam-footer">
-                        <a href="exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
+                        <a href="../exam.html?id=${paper.id}" class="btn primary">Start Exam</a>
                         ${pdfViewerButton}
                         <span>${paper.questions ? paper.questions.length : 0} Questions</span>
                     </div>
@@ -451,7 +435,7 @@
             noExamsElement.innerHTML = `
                 <h2>No Papers Available</h2>
                 <p>${message}</p>
-                <a href="dashboard.html" class="btn primary">Back to Dashboard</a>
+                <a href="free-dashboard.html" class="btn primary">Back to Dashboard</a>
             `;
             noExamsElement.style.display = 'block';
         }
@@ -477,7 +461,7 @@
         // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', function() {
             localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
     </script>
 </body>
