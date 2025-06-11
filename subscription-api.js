@@ -51,6 +51,18 @@ router.get('/plans', (req, res) => {
   // Define subscription plans
   const plans = [
     {
+      id: 'yearly',
+      name: 'Yearly Plan',
+      price: 200,
+      duration: 365, // days
+      features: [
+        'Access to all exam papers',
+        'Performance analytics',
+        'Complete question bank access',
+        'Personalized study plan'
+      ]
+    },
+    {
       id: 'basic',
       name: 'Basic Plan',
       price: 499,
@@ -121,6 +133,12 @@ router.post('/subscribe', (req, res) => {
     
     // Get available plans
     const plans = [
+      {
+        id: 'yearly',
+        name: 'Yearly Plan',
+        price: 200,
+        duration: 365 // days
+      },
       {
         id: 'basic',
         name: 'Basic Plan',
