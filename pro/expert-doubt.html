@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expert Doubt Solving - PrepSharp Pro</title>
+    <script src="config.js"></script>
     <style>
         :root {
             --primary-color: #1976d2;
@@ -573,14 +574,14 @@
                         
                         if (aiEnabled) {
                             try {
-                                // This would be replaced with your actual API call
-                                // For example:
-                                /*
+                                // Load API key from config
+                                const apiKey = config.OPENAI_API_KEY;
+                                
                                 const response = await fetch('https://api.openai.com/v1/chat/completions', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer YOUR_API_KEY'
+                                        'Authorization': `Bearer ${apiKey}`
                                     },
                                     body: JSON.stringify({
                                         model: 'gpt-3.5-turbo',
@@ -593,10 +594,14 @@
                                 });
                                 
                                 const data = await response.json();
-                                aiResponse = data.choices[0].message.content;
-                                */
-                                
-                                // For now, we'll use a placeholder response based on the subject
+                                if (data.choices && data.choices[0] && data.choices[0].message) {
+                                    aiResponse = data.choices[0].message.content;
+                                } else {
+                                    throw new Error('Invalid response from OpenAI API');
+                                }
+                            } catch (error) {
+                                console.error('Error calling OpenAI API:', error);
+                                // Fallback to placeholder response if API call fails
                                 if (subject === 'physics') {
                                     aiResponse = `I'll help you understand this ${topic} problem in physics.
                                     
