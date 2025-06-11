@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Study Plan - PrepSharp Pro</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --premium-color: #8e24aa;
+            --premium-light: #b39ddb;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .premium-badge {
+            background-color: var(--premium-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .btn.premium { background-color: var(--premium-color); color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--premium-color);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-header .crown {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f5f5f5;
+        }
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        .calendar-header {
+            grid-column: span 7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar-day {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .calendar-day.today {
+            border: 2px solid var(--premium-color);
+        }
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .day-name {
+            font-weight: bold;
+        }
+        .day-date {
+            color: #666;
+        }
+        .task {
+            background-color: white;
+            border-left: 3px solid var(--premium-color);
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .task.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+        .task-time {
+            font-size: 12px;
+            color: #666;
+        }
+        .progress-container {
+            margin-bottom: 15px;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--premium-color);
+        }
+        .topic-list {
+            list-style: none;
+            padding: 0;
+        }
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        .topic-name {
+            font-weight: 500;
+        }
+        .topic-status {
+            color: var(--premium-color);
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="menu-icon" id="menu-toggle">☰</span>
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp Pro</h2>
+        </div>
+        <div class="user-info">
+            <div class="premium-badge">
+                <span>👑</span> PRO
+            </div>
+            <span id="user-name">Welcome, User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="crown">👑</span>
+            <h3>PrepSharp Pro</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="pro-dashboard.html"><span class="icon">🏠</span> Pro Dashboard</a></li>
+            <li><a href="practice-exams.html"><span class="icon">📝</span> Practice Exams</a></li>
+            <li><a href="performance-analytics.html"><span class="icon">📊</span> Performance Analytics</a></li>
+            <li><a href="study-plan.html"><span class="icon">🎯</span> Personalized Study Plan</a></li>
+            <li><a href="study-resources.html"><span class="icon">📚</span> Study Resources</a></li>
+            <li><a href="expert-doubt.html"><span class="icon">💬</span> Expert Doubt Solving</a></li>
+            <li><a href="profile.html"><span class="icon">👤</span> Edit Profile</a></li>
+            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
+            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="container">
+        <h1>Your Personalized Study Plan</h1>
+        <p>AI-generated study plan based on your performance and goals.</p>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Study Progress</h3>
+                <button class="btn premium">Update Goals</button>
+            </div>
+            <div class="card-body">
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Overall Progress</span>
+                        <span>68%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%;"></div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+                    <div>
+                        <h4>Physics</h4>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4>Chemistry</h4>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4>Mathematics</h4>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span>68%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 68%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Weekly Study Calendar</h3>
+                <div>
+                    <button class="btn primary" style="margin-right: 10px;">Previous Week</button>
+                    <button class="btn primary">Next Week</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <h3>June 10 - June 16, 2024</h3>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Monday</div>
+                            <div class="day-date">10</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Physics: Mechanics</div>
+                            <div class="task-time">2 hours</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Chemistry: Organic</div>
+                            <div class="task-time">1.5 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Tuesday</div>
+                            <div class="day-date">11</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Mathematics: Calculus</div>
+                            <div class="task-time">2.5 hours</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Mock Test: JEE Main</div>
+                            <div class="task-time">3 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Wednesday</div>
+                            <div class="day-date">12</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Physics: Electromagnetism</div>
+                            <div class="task-time">2 hours</div>
+                        </div>
+                        <div class="task completed">
+                            <div>Chemistry: Inorganic</div>
+                            <div class="task-time">1.5 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day today">
+                        <div class="day-header">
+                            <div class="day-name">Thursday</div>
+                            <div class="day-date">13</div>
+                        </div>
+                        <div class="task">
+                            <div>Mathematics: Algebra</div>
+                            <div class="task-time">2 hours</div>
+                        </div>
+                        <div class="task">
+                            <div>Physics: Optics</div>
+                            <div class="task-time">1.5 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Friday</div>
+                            <div class="day-date">14</div>
+                        </div>
+                        <div class="task">
+                            <div>Chemistry: Physical</div>
+                            <div class="task-time">2 hours</div>
+                        </div>
+                        <div class="task">
+                            <div>Mathematics: Geometry</div>
+                            <div class="task-time">1.5 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Saturday</div>
+                            <div class="day-date">15</div>
+                        </div>
+                        <div class="task">
+                            <div>Mock Test: JEE Advanced</div>
+                            <div class="task-time">3 hours</div>
+                        </div>
+                        <div class="task">
+                            <div>Review: Weak Areas</div>
+                            <div class="task-time">2 hours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="day-header">
+                            <div class="day-name">Sunday</div>
+                            <div class="day-date">16</div>
+                        </div>
+                        <div class="task">
+                            <div>Rest Day</div>
+                            <div class="task-time">All day</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Focus Areas</h3>
+            </div>
+            <div class="card-body">
+                <ul class="topic-list">
+                    <li class="topic-item">
+                        <div class="topic-name">Physics: Rotational Dynamics</div>
+                        <div class="topic-status">Needs Improvement</div>
+                    </li>
+                    <li class="topic-item">
+                        <div class="topic-name">Chemistry: Coordination Compounds</div>
+                        <div class="topic-status">Needs Improvement</div>
+                    </li>
+                    <li class="topic-item">
+                        <div class="topic-name">Mathematics: Differential Equations</div>
+                        <div class="topic-status">Needs Improvement</div>
+                    </li>
+                    <li class="topic-item">
+                        <div class="topic-name">Physics: Thermodynamics</div>
+                        <div class="topic-status">Good Progress</div>
+                    </li>
+                    <li class="topic-item">
+                        <div class="topic-name">Chemistry: Organic Reactions</div>
+                        <div class="topic-status">Good Progress</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = '../index.html';
+            } else {
+                const user = JSON.parse(currentUser);
+                document.getElementById('user-name').textContent = `${user.name || 'User'}`;
+                
+                // Sidebar functionality
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                const menuToggle = document.getElementById('menu-toggle');
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+                
+                // Logout functionality
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
