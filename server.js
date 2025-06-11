@@ -1,8 +1,20 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const app = express();
 const dbBackup = require('./db-backup');
+
+// Load environment variables
+dotenv.config();
+
+// Set JWT secret from environment or use a default (in production, always use environment variable)
+const JWT_SECRET = process.env.JWT_SECRET || 'change-this-to-a-long-random-string-in-production';
+
+// Apply security middleware
+require('./security-middleware')(app);
 
 // Optional OTP service import
 let sendOTP, verifyOTP;
