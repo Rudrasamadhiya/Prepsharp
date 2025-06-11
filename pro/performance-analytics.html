@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analytics - PrepSharp Pro</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --premium-color: #8e24aa;
+            --premium-light: #b39ddb;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .premium-badge {
+            background-color: var(--premium-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .btn.premium { background-color: var(--premium-color); color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--premium-color);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-header .crown {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f5f5f5;
+        }
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--premium-color);
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="menu-icon" id="menu-toggle">☰</span>
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp Pro</h2>
+        </div>
+        <div class="user-info">
+            <div class="premium-badge">
+                <span>👑</span> PRO
+            </div>
+            <span id="user-name">Welcome, User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="crown">👑</span>
+            <h3>PrepSharp Pro</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="pro-dashboard.html"><span class="icon">🏠</span> Pro Dashboard</a></li>
+            <li><a href="practice-exams.html"><span class="icon">📝</span> Practice Exams</a></li>
+            <li><a href="performance-analytics.html"><span class="icon">📊</span> Performance Analytics</a></li>
+            <li><a href="study-plan.html"><span class="icon">🎯</span> Personalized Study Plan</a></li>
+            <li><a href="study-resources.html"><span class="icon">📚</span> Study Resources</a></li>
+            <li><a href="expert-doubt.html"><span class="icon">💬</span> Expert Doubt Solving</a></li>
+            <li><a href="profile.html"><span class="icon">👤</span> Edit Profile</a></li>
+            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
+            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="container">
+        <h1>Performance Analytics</h1>
+        <p>Track your progress and identify areas for improvement with detailed analytics.</p>
+        
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value">78%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Tests Completed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Study Hours</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Weak Areas Improved</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Performance Trend</h3>
+                <select>
+                    <option>Last 30 Days</option>
+                    <option>Last 3 Months</option>
+                    <option>Last 6 Months</option>
+                    <option>All Time</option>
+                </select>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart-placeholder">Performance Trend Chart</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analytics-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Subject Performance</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart-placeholder">Subject Performance Chart</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Topic Mastery</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart-placeholder">Topic Mastery Chart</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Test Results</h3>
+            </div>
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <th style="text-align: left; padding: 10px;">Test Name</th>
+                            <th style="text-align: center; padding: 10px;">Date</th>
+                            <th style="text-align: center; padding: 10px;">Score</th>
+                            <th style="text-align: center; padding: 10px;">Percentile</th>
+                            <th style="text-align: center; padding: 10px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">JEE Advanced 2023 Paper 1</td>
+                            <td style="text-align: center; padding: 10px;">Today</td>
+                            <td style="text-align: center; padding: 10px;">82%</td>
+                            <td style="text-align: center; padding: 10px;">94th</td>
+                            <td style="text-align: center; padding: 10px;"><a href="#" style="color: var(--premium-color);">View</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">JEE Main 2024 Paper 2</td>
+                            <td style="text-align: center; padding: 10px;">Yesterday</td>
+                            <td style="text-align: center; padding: 10px;">75%</td>
+                            <td style="text-align: center; padding: 10px;">88th</td>
+                            <td style="text-align: center; padding: 10px;"><a href="#" style="color: var(--premium-color);">View</a></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px;">BITSAT 2023 Mock Test</td>
+                            <td style="text-align: center; padding: 10px;">3 days ago</td>
+                            <td style="text-align: center; padding: 10px;">79%</td>
+                            <td style="text-align: center; padding: 10px;">91st</td>
+                            <td style="text-align: center; padding: 10px;"><a href="#" style="color: var(--premium-color);">View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = '../index.html';
+            } else {
+                const user = JSON.parse(currentUser);
+                document.getElementById('user-name').textContent = `${user.name || 'User'}`;
+                
+                // Sidebar functionality
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                const menuToggle = document.getElementById('menu-toggle');
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+                
+                // Logout functionality
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
