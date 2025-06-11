@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced CBT</title>
+    <link rel="stylesheet" href="jee-cbt-simple.css">
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="subject-tabs">
+                <div class="subject-tab active">Physics</div>
+                <div class="subject-tab">Chemistry</div>
+                <div class="subject-tab">Mathematics</div>
+            </div>
+            <div class="timer">Time Left: 2:59:45</div>
+            <button class="submit-btn">Submit</button>
+        </div>
+        
+        <!-- Main content -->
+        <div class="content">
+            <!-- Question Navigator -->
+            <div class="question-navigator">
+                <div>Question Palette</div>
+                <div class="question-palette">
+                    <div class="question-number active">1</div>
+                    <div class="question-number answered">2</div>
+                    <div class="question-number not-answered">3</div>
+                    <div class="question-number not-visited">4</div>
+                    <div class="question-number marked">5</div>
+                    <div class="question-number answered-marked">6</div>
+                    <div class="question-number not-visited">7</div>
+                    <div class="question-number not-visited">8</div>
+                    <div class="question-number not-visited">9</div>
+                    <div class="question-number not-visited">10</div>
+                    <div class="question-number not-visited">11</div>
+                    <div class="question-number not-visited">12</div>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 12px;">
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #95a5a6; margin-right: 5px;"></span> Not Visited</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: white; margin-right: 5px;"></span> Not Answered</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #2ecc71; margin-right: 5px;"></span> Answered</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; margin-right: 5px;"></span> Marked for Review</div>
+                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; position: relative; margin-right: 5px;"><span style="position: absolute; width: 6px; height: 6px; background-color: #2ecc71; border-radius: 50%; bottom: 0; right: 0;"></span></span> Answered & Marked</div>
+                </div>
+            </div>
+            
+            <!-- Question Display -->
+            <div class="question-display">
+                <div class="question-content">
+                    <div><strong>Question 1</strong> (Physics)</div>
+                    <div style="margin: 15px 0;">
+                        <img src="papers/2024-1/Physics/Question-1.png" style="max-width: 100%;">
+                    </div>
+                    
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1-A"> 
+                            <label for="q1-A">(A) <img src="papers/2024-1/Physics/Question-1 Option-1.png" style="max-width: 100%;"></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1-B"> 
+                            <label for="q1-B">(B) <img src="papers/2024-1/Physics/Question-1 Option-2.png" style="max-width: 100%;"></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1-C"> 
+                            <label for="q1-C">(C) <img src="papers/2024-1/Physics/Question-1 Option-3.png" style="max-width: 100%;"></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1-D"> 
+                            <label for="q1-D">(D) <img src="papers/2024-1/Physics/Question-1 Option-4.png" style="max-width: 100%;"></label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="save-next-btn">Save & Next</button>
+                    <button class="clear-btn">Clear Response</button>
+                    <button class="mark-btn">Mark for Review & Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
