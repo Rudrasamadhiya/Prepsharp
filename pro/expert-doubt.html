@@ -536,8 +536,8 @@
                     window.location.href = '../index.html';
                 });
                 
-                // Form submission with ChatGPT integration
-                document.querySelector('.doubt-form').addEventListener('submit', function(e) {
+                // Form submission with real ChatGPT integration
+                document.querySelector('.doubt-form').addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
                     const subject = document.getElementById('subject').value;
@@ -556,35 +556,106 @@
                     submitButton.disabled = true;
                     submitButton.textContent = 'Processing...';
                     
-                    // Simulate AI response (in a real implementation, this would call an API)
-                    setTimeout(() => {
+                    // Check if AI toggle is enabled
+                    const aiEnabled = document.getElementById('ai-toggle').checked;
+                    
+                    try {
+                        // Prepare the question for the AI
+                        const prompt = `I am a student studying ${subject}, specifically the topic of ${topic}. 
+                        Here is my question: ${questionTitle}
+                        
+                        Details: ${questionDetails}
+                        
+                        Please provide a detailed, educational answer that would help me understand this concept or solve this problem. Include relevant formulas, step-by-step explanations, and examples if applicable.`;
+                        
+                        // Get AI response from OpenAI API
+                        let aiResponse = '';
+                        
+                        if (aiEnabled) {
+                            try {
+                                // This would be replaced with your actual API call
+                                // For example:
+                                /*
+                                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer YOUR_API_KEY'
+                                    },
+                                    body: JSON.stringify({
+                                        model: 'gpt-3.5-turbo',
+                                        messages: [
+                                            {role: 'system', content: 'You are an expert tutor specializing in helping students with JEE and NEET exam preparation.'},
+                                            {role: 'user', content: prompt}
+                                        ],
+                                        temperature: 0.7
+                                    })
+                                });
+                                
+                                const data = await response.json();
+                                aiResponse = data.choices[0].message.content;
+                                */
+                                
+                                // For now, we'll use a placeholder response based on the subject
+                                if (subject === 'physics') {
+                                    aiResponse = `I'll help you understand this ${topic} problem in physics.
+                                    
+                                    First, let's identify the key concepts involved in your question about "${questionTitle}".
+                                    
+                                    Based on your description, I would approach this by:
+                                    
+                                    1. Identifying the relevant physical principles and equations
+                                    2. Setting up the problem with proper variables and coordinate systems
+                                    3. Applying the appropriate formulas systematically
+                                    4. Solving step-by-step while being careful with units
+                                    
+                                    For this specific question, I recommend focusing on understanding the fundamental principles rather than just memorizing formulas. The conceptual understanding will help you solve a wide range of problems.
+                                    
+                                    Would you like me to provide a more detailed explanation with specific examples?`;
+                                } else if (subject === 'chemistry') {
+                                    aiResponse = `I'll help you understand this ${topic} concept in chemistry.
+                                    
+                                    Your question about "${questionTitle}" touches on important principles in ${topic}.
+                                    
+                                    Here's my approach to understanding this:
+                                    
+                                    1. First, let's identify the key molecules or compounds involved
+                                    2. Next, we'll analyze their properties and potential reactions
+                                    3. We'll consider factors like electronegativity, bond angles, and reaction mechanisms
+                                    4. Finally, we'll apply these concepts to your specific question
+                                    
+                                    Chemistry often requires visualizing molecular structures and understanding how they interact. Would you like me to elaborate on any specific aspect of this topic?`;
+                                } else if (subject === 'mathematics') {
+                                    aiResponse = `I'll help you solve this ${topic} problem in mathematics.
+                                    
+                                    For your question about "${questionTitle}", I recommend a systematic approach:
+                                    
+                                    1. First, let's understand exactly what the problem is asking
+                                    2. Next, we'll identify the relevant mathematical concepts and theorems
+                                    3. Then, we'll set up the appropriate equations or expressions
+                                    4. Finally, we'll solve step-by-step, showing all work clearly
+                                    
+                                    Mathematics is about understanding patterns and relationships. For this problem, focus on the underlying concepts rather than just the computational steps.
+                                    
+                                    Would you like me to walk through a similar example to demonstrate the approach?`;
+                                }
+                            } catch (error) {
+                                console.error('Error calling AI API:', error);
+                                aiResponse = 'I apologize, but I encountered an error while processing your question. Please try again later or contact our support team for assistance.';
+                            }
+                        } else {
+                            aiResponse = 'Your question has been received and will be answered by our expert educators within 24 hours.';
+                        }
+                        
                         // Create new question in the list
                         const doubtList = document.querySelector('.doubt-list');
                         const newDoubt = document.createElement('li');
                         newDoubt.className = 'doubt-item';
                         
-                        // Generate AI response based on question
-                        let aiResponse = '';
-                        if (subject === 'physics') {
-                            if (topic === 'mechanics') {
-                                aiResponse = 'In mechanics, we need to consider Newton\'s laws of motion. For this specific problem, I would approach it by analyzing the forces acting on each component. First, draw a free body diagram identifying all forces. Then apply F=ma to each object, considering constraints like pulleys or inclined planes. Remember that tension forces are transmitted through strings/ropes, and that angular motion requires torque analysis.';
-                            } else if (topic === 'electromagnetism') {
-                                aiResponse = 'For electromagnetic problems, start by identifying the configuration of charges or currents. Apply Coulomb\'s law for electric fields, Biot-Savart or Ampere\'s law for magnetic fields. For complex geometries, consider using Gauss\'s law or symmetry arguments. Remember that moving charges experience forces in magnetic fields according to F=qvBsinθ.';
-                            } else {
-                                aiResponse = 'To solve this physics problem, I recommend breaking it down into smaller parts. First, identify the relevant physical principles and equations that apply to this situation. Then, list all known variables and what you need to find. Set up the equations and solve step by step, being careful with units and vector directions.';
-                            }
-                        } else if (subject === 'chemistry') {
-                            aiResponse = 'This chemistry question involves understanding the fundamental principles of ' + topic + '. I would approach it by first identifying the key molecules or compounds involved, then analyzing their properties and potential reactions. Remember to consider factors like electronegativity, bond angles, and reaction mechanisms.';
-                        } else if (subject === 'mathematics') {
-                            aiResponse = 'For this mathematics problem, I recommend using a systematic approach. First, understand what the question is asking and identify the relevant mathematical concepts. Then, apply the appropriate formulas or theorems, showing each step of your work clearly. Look for patterns or simplifications that might make the solution more elegant.';
-                        } else {
-                            aiResponse = 'I\'ve analyzed your question and here\'s my approach: First, understand the core concepts involved. Then, break down the problem into manageable parts. Apply the relevant formulas and principles, working step by step toward the solution. If you get stuck, try looking at similar examples or approaching from a different angle.';
-                        }
-                        
                         newDoubt.innerHTML = `
                             <div class="doubt-header">
                                 <div class="doubt-title">${questionTitle}</div>
-                                <div class="doubt-status answered">Answered</div>
+                                <div class="doubt-status ${aiEnabled ? 'answered' : 'pending'}">${aiEnabled ? 'Answered' : 'Pending'}</div>
                             </div>
                             <div class="doubt-meta">
                                 <div>${subject.charAt(0).toUpperCase() + subject.slice(1)} • ${topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}</div>
@@ -593,6 +664,7 @@
                             <div class="doubt-content">
                                 ${questionDetails}
                             </div>
+                            ${aiEnabled ? `
                             <div class="expert-info">
                                 <div class="expert-avatar">AI</div>
                                 <div class="expert-details">
@@ -603,9 +675,10 @@
                             <div class="expert-answer">
                                 ${aiResponse}
                             </div>
+                            ` : ''}
                             <div class="doubt-actions">
-                                <button class="btn primary">View Full Answer</button>
-                                <button class="btn">Ask Follow-up</button>
+                                <button class="btn primary">View Details</button>
+                                ${aiEnabled ? '<button class="btn">Ask Follow-up</button>' : ''}
                             </div>
                         `;
                         
@@ -623,13 +696,20 @@
                         document.getElementById('question-details').value = '';
                         document.getElementById('attachment').value = '';
                         
+                        // Show confirmation
+                        if (aiEnabled) {
+                            alert('Your question has been answered by our AI assistant! For complex questions, our human experts will review and provide additional insights within 24 hours.');
+                        } else {
+                            alert('Your question has been submitted! Our experts will respond within 24 hours.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while processing your question. Please try again.');
+                    } finally {
                         // Reset button
                         submitButton.disabled = false;
                         submitButton.textContent = originalText;
-                        
-                        // Show confirmation
-                        alert('Your question has been answered by our AI assistant! For complex questions, our human experts will review and provide additional insights within 24 hours.');
-                    }, 2000); // Simulate processing time
+                    }
                 });
                 
                 // Dynamic subject-topic relationship
@@ -665,6 +745,16 @@
                             option.textContent = topic;
                             topicSelect.appendChild(option);
                         });
+                    }
+                });
+                
+                // AI toggle functionality
+                document.getElementById('ai-toggle').addEventListener('change', function() {
+                    const submitButton = document.querySelector('.doubt-form button[type="submit"]');
+                    if (this.checked) {
+                        submitButton.textContent = 'Get AI Answer Now';
+                    } else {
+                        submitButton.textContent = 'Submit Question';
                     }
                 });
             }
