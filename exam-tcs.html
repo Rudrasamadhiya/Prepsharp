@@ -195,26 +195,38 @@
         
         // Initialize exam
         function initializeExam(paper) {
-            // Create sections based on subjects and question types
+            // Create sections based on subjects
             const subjects = ['Physics', 'Chemistry', 'Mathematics'];
-            const questionTypes = ['Single Correct Option', 'Multiple Correct Options', 'Non-Negative Integer', 'Match List'];
             
-            // Create sections
+            // Create sections (one section per subject)
+            let sectionCounter = 1;
             subjects.forEach(subject => {
-                questionTypes.forEach(type => {
-                    const questions = paper.questions.filter(q => 
-                        q.subject === subject && q.type === type
-                    );
+                const questions = paper.questions.filter(q => q.subject === subject);
+                
+                if (questions.length > 0) {
+                    // Split into two sections per subject
+                    const halfLength = Math.ceil(questions.length / 2);
+                    const firstHalf = questions.slice(0, halfLength);
+                    const secondHalf = questions.slice(halfLength);
                     
-                    if (questions.length > 0) {
+                    sections.push({
+                        name: `${subject} Section 1`,
+                        subject: subject,
+                        sectionNumber: 1,
+                        questions: firstHalf
+                    });
+                    
+                    if (secondHalf.length > 0) {
                         sections.push({
-                            name: `${subject} - ${getShortTypeName(type)}`,
+                            name: `${subject} Section 2`,
                             subject: subject,
-                            type: type,
-                            questions: questions
+                            sectionNumber: 2,
+                            questions: secondHalf
                         });
                     }
-                });
+                    
+                    sectionCounter++;
+                }
             });
             
             // Initialize question status
@@ -242,8 +254,10 @@
                 const tab = document.createElement('div');
                 tab.className = 'section-tab' + (index === currentSection ? ' active' : '');
                 tab.textContent = section.name;
+                tab.setAttribute('data-section-index', index);
                 tab.onclick = function() {
-                    showSection(index);
+                    const sectionIndex = parseInt(this.getAttribute('data-section-index'));
+                    showSection(sectionIndex);
                 };
                 
                 tabsContainer.appendChild(tab);
@@ -272,6 +286,14 @@
             if (sections[sectionIndex].questions.length > 0) {
                 const firstQuestion = sections[sectionIndex].questions[0];
                 showQuestion(firstQuestion.globalNumber || sections[sectionIndex].questions.indexOf(firstQuestion) + 1);
+            }
+        }
+        
+        // Jump to a specific section
+        function jumpToSection(sectionName) {
+            const sectionIndex = sections.findIndex(section => section.name === sectionName);
+            if (sectionIndex !== -1) {
+                showSection(sectionIndex);
             }
         }
         
