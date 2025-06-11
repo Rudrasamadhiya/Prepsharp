@@ -567,7 +567,7 @@
                         
                         Details: ${questionDetails}
                         
-                        Please provide a detailed, educational answer that would help me understand this concept or solve this problem. Include relevant formulas, step-by-step explanations, and examples if applicable.`;
+                        Please provide a direct, specific answer to my question first, then follow with a detailed educational explanation. Include relevant formulas, step-by-step explanations, and examples if applicable. Do not use generic templates - address my specific question directly.`;
                         
                         // Get AI response from OpenAI API
                         let aiResponse = '';
@@ -586,10 +586,10 @@
                                     body: JSON.stringify({
                                         model: 'gpt-3.5-turbo',
                                         messages: [
-                                            {role: 'system', content: 'You are an expert tutor specializing in helping students with JEE and NEET exam preparation.'},
+                                            {role: 'system', content: 'You are an expert tutor specializing in helping students with JEE and NEET exam preparation. Always provide direct, specific answers to questions first, then follow with explanations. Avoid generic templates.'},
                                             {role: 'user', content: prompt}
                                         ],
-                                        temperature: 0.7
+                                        temperature: 0.3
                                     })
                                 });
                                 
