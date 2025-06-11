@@ -280,7 +280,7 @@ body {
 
 .action-buttons {
     display: flex;
-    gap: 10px;
+    width: 100%;
 }
 
 .action-btn {
@@ -294,31 +294,30 @@ body {
 
 .mark-btn {
     color: #9c27b0;
+    margin-left: 10px;
 }
 
 .clear-btn {
     color: #ff9800;
+    margin-left: 20%;
 }
 
 .prev-btn {
     color: #607d8b;
+    margin-left: 20%;
 }
 
 .save-btn {
     color: #2196f3;
     background-color: #e3f2fd;
     border-color: #bbdefb;
-}
-
-.submit-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+    margin-left: 20%;
 }
 
 .submit-btn {
     background-color: #d32f2f;
     color: white;
     border: none;
-    margin-left: 20px;
+    margin-left: auto;
+    margin-right: 10px;
 }
