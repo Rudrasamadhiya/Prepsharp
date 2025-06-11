@@ -3,86 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Advanced CBT</title>
-    <link rel="stylesheet" href="jee-cbt-simple.css">
+    <title>JEE Advanced 2024 - TCS iON Format</title>
+    <link rel="stylesheet" href="tcs-ion-style.css">
+    <style>
+        /* Additional styles for section tabs */
+        .sections-strip {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="exam-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="subject-tabs">
-                <div class="subject-tab active">Physics</div>
-                <div class="subject-tab">Chemistry</div>
-                <div class="subject-tab">Mathematics</div>
-            </div>
-            <div class="timer">Time Left: 2:59:45</div>
-            <button class="submit-btn">Submit</button>
+        <!-- Top blue strip with paper name -->
+        <div class="top-strip">
+            JEE Advanced 2024
         </div>
         
-        <!-- Main content -->
-        <div class="content">
-            <!-- Question Navigator -->
-            <div class="question-navigator">
-                <div>Question Palette</div>
-                <div class="question-palette">
-                    <div class="question-number active">1</div>
-                    <div class="question-number answered">2</div>
-                    <div class="question-number not-answered">3</div>
-                    <div class="question-number not-visited">4</div>
-                    <div class="question-number marked">5</div>
-                    <div class="question-number answered-marked">6</div>
-                    <div class="question-number not-visited">7</div>
-                    <div class="question-number not-visited">8</div>
-                    <div class="question-number not-visited">9</div>
-                    <div class="question-number not-visited">10</div>
-                    <div class="question-number not-visited">11</div>
-                    <div class="question-number not-visited">12</div>
+        <!-- Black strip with paper indicator and buttons -->
+        <div class="black-strip">
+            <div class="paper-indicator">Paper 1</div>
+            <div class="strip-buttons">
+                <div class="strip-btn">
+                    <i class="fas fa-file-alt"></i> Question Paper
+                </div>
+                <div class="strip-btn">
+                    <i class="fas fa-info-circle"></i> View Instructions
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Left container - Question display and its footer -->
+            <div class="left-container">
+                <!-- Left panel - Question display -->
+                <div class="left-panel">
+                    <!-- Section tabs strip -->
+                    <div class="sections-strip">
+                        <div class="section-tab active" onclick="changeSection('Physics Section 1')">Physics Section 1</div>
+                        <div class="section-tab" onclick="changeSection('Physics Section 2')">Physics Section 2</div>
+                        <div class="section-tab" onclick="changeSection('Chemistry Section 1')">Chemistry Section 1</div>
+                        <div class="section-tab" onclick="changeSection('Chemistry Section 2')">Chemistry Section 2</div>
+                        <div class="section-tab" onclick="changeSection('Mathematics Section 1')">Mathematics Section 1</div>
+                        <div class="section-tab" onclick="changeSection('Mathematics Section 2')">Mathematics Section 2</div>
+                    </div>
+                    
+                    <!-- Blue language strip -->
+                    <div class="language-strip">
+                        <div class="language-selector">
+                            View in: 
+                            <select>
+                                <option>English</option>
+                                <option>Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Question area -->
+                    <div class="question-area">
+                        <div class="question-number">Question No. 3</div>
+                        
+                        <div class="question-content">
+                            <div class="question-text">
+                                <p>A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. If the angular momentum of the particle is L, then the total energy of the particle is:</p>
+                            </div>
+                            
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-a" class="option-radio">
+                                    <label for="q3-a" class="option-label">
+                                        <div class="option-letter">a)</div>
+                                        <div class="option-text">L²/2mr² - kr²/2</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-b" class="option-radio">
+                                    <label for="q3-b" class="option-label">
+                                        <div class="option-letter">b)</div>
+                                        <div class="option-text">L²/2mr² + kr²/2</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-c" class="option-radio">
+                                    <label for="q3-c" class="option-label">
+                                        <div class="option-letter">c)</div>
+                                        <div class="option-text">L²/2mr² - kr²</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="option">
+                                    <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
+                                    <label for="q3-d" class="option-label">
+                                        <div class="option-letter">d)</div>
+                                        <div class="option-text">L²/mr² - kr²/2</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div style="margin-top: 20px; font-size: 12px;">
-                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #95a5a6; margin-right: 5px;"></span> Not Visited</div>
-                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: white; margin-right: 5px;"></span> Not Answered</div>
-                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #2ecc71; margin-right: 5px;"></span> Answered</div>
-                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; margin-right: 5px;"></span> Marked for Review</div>
-                    <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; position: relative; margin-right: 5px;"><span style="position: absolute; width: 6px; height: 6px; background-color: #2ecc71; border-radius: 50%; bottom: 0; right: 0;"></span></span> Answered & Marked</div>
+                <!-- Left footer with action buttons -->
+                <div class="left-footer">
+                    <button class="action-btn mark-btn" onclick="markQuestion()">Mark for Review & Next</button>
+                    <button class="action-btn clear-btn" onclick="clearResponse()">Clear Response</button>
+                    <button class="action-btn prev-btn" onclick="previousQuestion()">Previous</button>
+                    <button class="action-btn save-btn" onclick="saveAndNext()">Save & Next</button>
                 </div>
             </div>
             
-            <!-- Question Display -->
-            <div class="question-display">
-                <div class="question-content">
-                    <div><strong>Question 1</strong> (Physics)</div>
-                    <div style="margin: 15px 0;">
-                        <img src="papers/2024-1/Physics/Question-1.png" style="max-width: 100%;">
+            <!-- Right container - Navigation and its footer -->
+            <div class="right-container">
+                <!-- Right panel - Navigation -->
+                <div class="right-panel">
+                    <!-- Candidate info -->
+                    <div class="candidate-info">
+                        <div class="candidate-avatar"></div>
+                        <div class="candidate-name">Candidate</div>
                     </div>
                     
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" name="q1" id="q1-A"> 
-                            <label for="q1-A">(A) <img src="papers/2024-1/Physics/Question-1 Option-1.png" style="max-width: 100%;"></label>
+                    <!-- Legend -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color answered"></div>
+                            <span>Answered</span>
                         </div>
-                        <div class="option">
-                            <input type="radio" name="q1" id="q1-B"> 
-                            <label for="q1-B">(B) <img src="papers/2024-1/Physics/Question-1 Option-2.png" style="max-width: 100%;"></label>
+                        <div class="legend-item">
+                            <div class="legend-color not-answered"></div>
+                            <span>Not Answered</span>
                         </div>
-                        <div class="option">
-                            <input type="radio" name="q1" id="q1-C"> 
-                            <label for="q1-C">(C) <img src="papers/2024-1/Physics/Question-1 Option-3.png" style="max-width: 100%;"></label>
+                        <div class="legend-item">
+                            <div class="legend-color not-visited"></div>
+                            <span>Not Visited</span>
                         </div>
-                        <div class="option">
-                            <input type="radio" name="q1" id="q1-D"> 
-                            <label for="q1-D">(D) <img src="papers/2024-1/Physics/Question-1 Option-4.png" style="max-width: 100%;"></label>
+                        <div class="legend-item">
+                            <div class="legend-color marked"></div>
+                            <span>Marked for Review</span>
                         </div>
+                        <div class="legend-item">
+                            <div class="legend-color answered-marked"></div>
+                            <span>Answered & Marked for Review</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Section blue strip -->
+                    <div class="section-strip">
+                        Chemistry Section 1
+                    </div>
+                    
+                    <!-- Question palette -->
+                    <div class="question-palette">
+                        <div class="question-btn answered" title="Answered" onclick="showQuestion(1)">1</div>
+                        <div class="question-btn answered" title="Answered" onclick="showQuestion(2)">2</div>
+                        <div class="question-btn not-answered active" title="Not Answered" onclick="showQuestion(3)">3</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(4)">4</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(5)">5</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(6)">6</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(7)">7</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(8)">8</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(9)">9</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(10)">10</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(11)">11</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(12)">12</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(13)">13</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(14)">14</div>
+                        <div class="question-btn not-visited" title="Not Visited" onclick="showQuestion(15)">15</div>
+                        <div class="question-btn marked" title="Marked for Review" onclick="showQuestion(16)">16</div>
+                        <div class="question-btn answered-marked" title="Answered & Marked for Review" onclick="showQuestion(17)">17</div>
                     </div>
                 </div>
                 
-                <div class="action-buttons">
-                    <button class="save-next-btn">Save & Next</button>
-                    <button class="clear-btn">Clear Response</button>
-                    <button class="mark-btn">Mark for Review & Next</button>
+                <!-- Right footer with submit button -->
+                <div class="right-footer">
+                    <button class="action-btn submit-btn" onclick="submitExam()">Submit</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Simple functions for the demo
+        let currentQuestion = 3;
+        let currentSection = "Chemistry Section 1";
+        
+        // Question status tracking
+        const questionStatus = {
+            1: { visited: true, answered: true, marked: false },
+            2: { visited: true, answered: true, marked: false },
+            3: { visited: true, answered: false, marked: false },
+            16: { visited: true, answered: false, marked: true },
+            17: { visited: true, answered: true, marked: true }
+        };
+        
+        // Change section
+        function changeSection(sectionName) {
+            // Update current section
+            currentSection = sectionName;
+            
+            // Update section tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent === sectionName);
+            });
+            
+            // Update section title
+            document.querySelector('.section-strip').textContent = sectionName;
+            
+            // In a real implementation, we would update the question palette here
+            console.log(`Changed to section: ${sectionName}`);
+        }
+        
+        // Show question
+        function showQuestion(questionNumber) {
+            // Update current question
+            currentQuestion = questionNumber;
+            
+            // Update question number display
+            document.querySelector('.question-number').textContent = `Question No. ${questionNumber}`;
+            
+            // Mark as visited
+            if (!questionStatus[questionNumber]) {
+                questionStatus[questionNumber] = { visited: true, answered: false, marked: false };
+            } else {
+                questionStatus[questionNumber].visited = true;
+            }
+            
+            // Update question button status
+            updateQuestionStatus(questionNumber);
+            
+            // Update active question
+            updateActiveQuestion();
+            
+            // In a real implementation, we would load the question content here
+            console.log(`Showing question: ${questionNumber}`);
+        }
+        
+        // Mark question for review
+        function markQuestion() {
+            if (!questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion] = { visited: true, answered: false, marked: true };
+            } else {
+                questionStatus[currentQuestion].marked = true;
+            }
+            
+            updateQuestionStatus(currentQuestion);
+            nextQuestion();
+        }
+        
+        // Clear response
+        function clearResponse() {
+            // Clear radio buttons
+            document.querySelectorAll(`input[name="q${currentQuestion}"]`).forEach(input => {
+                input.checked = false;
+            });
+            
+            // Update status
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].answered = false;
+                updateQuestionStatus(currentQuestion);
+            }
+        }
+        
+        // Save and next
+        function saveAndNext() {
+            // Check if any option is selected
+            const isAnswered = document.querySelector(`input[name="q${currentQuestion}"]:checked`) !== null;
+            
+            // Update status
+            if (!questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion] = { visited: true, answered: isAnswered, marked: false };
+            } else {
+                questionStatus[currentQuestion].answered = isAnswered;
+            }
+            
+            updateQuestionStatus(currentQuestion);
+            nextQuestion();
+        }
+        
+        // Next question
+        function nextQuestion() {
+            if (currentQuestion < 17) {
+                showQuestion(currentQuestion + 1);
+            }
+        }
+        
+        // Previous question
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+        
+        // Submit exam
+        function submitExam() {
+            if (confirm('Are you sure you want to submit your answers?')) {
+                alert('Your answers have been submitted successfully!');
+            }
+        }
+        
+        // Update question status
+        function updateQuestionStatus(questionNumber) {
+            const status = questionStatus[questionNumber];
+            if (!status) return;
+            
+            const btn = document.querySelector(`.question-btn:nth-child(${questionNumber})`);
+            if (!btn) return;
+            
+            // Remove all status classes
+            btn.classList.remove('not-visited', 'not-answered', 'answered', 'marked', 'answered-marked');
+            
+            // Add appropriate class
+            if (!status.visited) {
+                btn.classList.add('not-visited');
+            } else if (status.answered && status.marked) {
+                btn.classList.add('answered-marked');
+            } else if (status.answered) {
+                btn.classList.add('answered');
+            } else if (status.marked) {
+                btn.classList.add('marked');
+            } else {
+                btn.classList.add('not-answered');
+            }
+        }
+        
+        // Update active question
+        function updateActiveQuestion() {
+            // Remove active class from all question buttons
+            document.querySelectorAll('.question-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to current question button
+            const btn = document.querySelector(`.question-btn:nth-child(${currentQuestion})`);
+            if (btn) {
+                btn.classList.add('active');
+            }
+        }
+    </script>
 </body>
 </html>
