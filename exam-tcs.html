@@ -185,6 +185,52 @@
             }
         });
         
+        // Function to load paper data
+        function loadPaper(paperId) {
+            fetch(`db/papers.json`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load paper data');
+                    }
+                    return response.json();
+                })
+                .then(papers => {
+                    const paper = papers.find(p => p.id === paperId);
+                    if (!paper) {
+                        throw new Error(`Paper with ID ${paperId} not found`);
+                    }
+                    
+                    // Update paper title and information
+                    document.querySelector('.top-strip').textContent = paper.name;
+                    document.querySelector('.paper-indicator').textContent = `Paper ${paper.paperNumber}`;
+                    
+                    // Load questions
+                    loadQuestions(paper);
+                })
+                .catch(error => {
+                    console.error('Error loading paper:', error);
+                    alert('Failed to load exam paper. Please try again.');
+                });
+        }
+        
+        // Function to load questions
+        function loadQuestions(paper) {
+            // Group questions by subject
+            const questionsBySubject = {};
+            paper.questions.forEach(question => {
+                const subject = question.subject;
+                if (!questionsBySubject[subject]) {
+                    questionsBySubject[subject] = [];
+                }
+                questionsBySubject[subject].push(question);
+            });
+            
+            // Update the question display with the first question
+            if (paper.questions.length > 0) {
+                showQuestionById(paper.questions[0].id, paper);
+            }
+        });
+        
         // Generate question buttons
         function generateQuestionButtons(count) {
             const palette = document.getElementById('question-palette');
@@ -207,3 +253,275 @@
                     marked: false
                 };
             }
+        }
+        
+        // Function to show a question by its ID
+        function showQuestionById(questionId, paper) {
+            const question = paper.questions.find(q => q.id === questionId);
+            if (!question) return;
+            
+            const questionDisplay = document.getElementById('question-display');
+            
+            // Update question number
+            const questionNumberElement = questionDisplay.querySelector('.question-number');
+            questionNumberElement.textContent = `Question No. ${question.number}`;
+            
+            // Update question content
+            const questionContent = questionDisplay.querySelector('.question-content');
+            const questionText = questionContent.querySelector('.question-text');
+            
+            // Clear previous content
+            questionText.innerHTML = '';
+            
+            // Add question image if available
+            if (question.imagePath) {
+                const img = document.createElement('img');
+                img.src = question.imagePath;
+                img.alt = `Question ${question.number}`;
+                img.className = 'question-image';
+                questionText.appendChild(img);
+            }
+            
+            // Update options based on question type
+            const optionsContainer = questionContent.querySelector('.options');
+            optionsContainer.innerHTML = '';
+            
+            if (question.type === 'Single Correct Option' || question.type === 'Multiple Correct Options') {
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const inputType = question.type === 'Single Correct Option' ? 'radio' : 'checkbox';
+                    const inputId = `q${question.number}-${option.label.toLowerCase()}`;
+                    
+                    optionDiv.innerHTML = `
+                        <input type="${inputType}" name="q${question.number}" id="${inputId}" class="option-radio">
+                        <label for="${inputId}" class="option-label">
+                            <div class="option-letter">${option.label})</div>
+                            <div class="option-text">
+                                ${option.imagePath ? `<img src="${option.imagePath}" alt="Option ${option.label}">` : option.text || ''}
+                            </div>
+                        </label>
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            } else if (question.type === 'Non-Negative Integer') {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'integer-input';
+                inputDiv.innerHTML = `
+                    <label for="q${question.number}-integer">Enter your answer (non-negative integer):</label>
+                    <input type="number" min="0" step="1" id="q${question.number}-integer" name="q${question.number}">
+                `;
+                optionsContainer.appendChild(inputDiv);
+            }
+            
+            // Update current question
+            currentQuestion = parseInt(question.number);
+            
+            // Mark as visited
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].visited = true;
+                updateQuestionStatus(currentQuestion);
+            }
+        }
+        
+        // Function to show question by number
+        function showQuestion(number) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paperId = urlParams.get('id');
+            
+            if (paperId) {
+                fetch(`db/papers.json`)
+                    .then(response => response.json())
+                    .then(papers => {
+                        const paper = papers.find(p => p.id === paperId);
+                        if (paper) {
+                            // Find question by number and subject
+                            const sectionTitle = document.getElementById('section-title').textContent.trim();
+                            const subject = sectionTitle.split(' ')[0]; // Extract subject name
+                            
+                            const question = paper.questions.find(q => 
+                                parseInt(q.number) === number && 
+                                q.subject.toLowerCase() === subject.toLowerCase()
+                            );
+                            
+                            if (question) {
+                                showQuestionById(question.id, paper);
+                            } else {
+                                // If question not found in current section, show first question with this number
+                                const anyQuestion = paper.questions.find(q => parseInt(q.number) === number);
+                                if (anyQuestion) {
+                                    showQuestionById(anyQuestion.id, paper);
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error loading question:', error));
+            }
+        }
+        
+        // Function to update question status
+        function updateQuestionStatus(number) {
+            const status = questionStatus[number];
+            if (!status) return;
+            
+            const buttons = document.querySelectorAll('.question-btn');
+            const btn = buttons[number - 1]; // Adjust for zero-based index
+            if (!btn) return;
+            
+            // Remove all status classes
+            btn.classList.remove('not-visited', 'not-answered', 'answered', 'marked', 'answered-marked');
+            
+            // Add appropriate class
+            if (!status.visited) {
+                btn.classList.add('not-visited');
+            } else if (status.answered && status.marked) {
+                btn.classList.add('answered-marked');
+            } else if (status.answered) {
+                btn.classList.add('answered');
+            } else if (status.marked) {
+                btn.classList.add('marked');
+            } else {
+                btn.classList.add('not-answered');
+            }
+        }
+        
+        // Function to change section
+        function changeSection(tab, sectionName) {
+            // Update active tab
+            document.querySelectorAll('.section-tab').forEach(t => {
+                t.classList.remove('active');
+            });
+            tab.classList.add('active');
+            
+            // Update section title
+            document.getElementById('section-title').textContent = sectionName;
+            
+            // Load first question from this section
+            const urlParams = new URLSearchParams(window.location.search);
+            const paperId = urlParams.get('id');
+            
+            if (paperId) {
+                fetch(`db/papers.json`)
+                    .then(response => response.json())
+                    .then(papers => {
+                        const paper = papers.find(p => p.id === paperId);
+                        if (paper) {
+                            const subject = sectionName.split(' ')[0]; // Extract subject name
+                            const sectionQuestions = paper.questions.filter(q => 
+                                q.subject.toLowerCase() === subject.toLowerCase()
+                            );
+                            
+                            if (sectionQuestions.length > 0) {
+                                showQuestionById(sectionQuestions[0].id, paper);
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error changing section:', error));
+            }
+        }
+        
+        // Function to mark question for review
+        function markQuestion() {
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].marked = true;
+                updateQuestionStatus(currentQuestion);
+            }
+            
+            // Go to next question
+            const nextQuestion = currentQuestion + 1;
+            if (nextQuestion <= 20) {
+                showQuestion(nextQuestion);
+            }
+        }
+        
+        // Function to clear response
+        function clearResponse() {
+            if (questionStatus[currentQuestion]) {
+                questionStatus[currentQuestion].answered = false;
+                updateQuestionStatus(currentQuestion);
+            }
+            
+            // Clear radio buttons or checkboxes
+            document.querySelectorAll(`input[name="q${currentQuestion}"]`).forEach(input => {
+                input.checked = false;
+            });
+            
+            // Clear integer input if present
+            const integerInput = document.getElementById(`q${currentQuestion}-integer`);
+            if (integerInput) {
+                integerInput.value = '';
+            }
+        }
+        
+        // Function to go to previous question
+        function previousQuestion() {
+            const prevQuestion = currentQuestion - 1;
+            if (prevQuestion >= 1) {
+                showQuestion(prevQuestion);
+            }
+        }
+        
+        // Function to save and go to next question
+        function saveAndNext() {
+            // Mark as answered if any option is selected
+            if (questionStatus[currentQuestion]) {
+                const isAnswered = document.querySelector(`input[name="q${currentQuestion}"]:checked`) !== null ||
+                                  (document.getElementById(`q${currentQuestion}-integer`) && 
+                                   document.getElementById(`q${currentQuestion}-integer`).value !== '');
+                
+                questionStatus[currentQuestion].answered = isAnswered;
+                updateQuestionStatus(currentQuestion);
+            }
+            
+            // Go to next question
+            const nextQuestion = currentQuestion + 1;
+            if (nextQuestion <= 20) {
+                showQuestion(nextQuestion);
+            }
+        }
+        
+        // Function to submit exam
+        function submitExam() {
+            if (confirm('Are you sure you want to submit your exam? This action cannot be undone.')) {
+                // Count answered questions
+                let answeredCount = 0;
+                let totalQuestions = 0;
+                
+                for (const key in questionStatus) {
+                    if (questionStatus.hasOwnProperty(key)) {
+                        totalQuestions++;
+                        if (questionStatus[key].answered) {
+                            answeredCount++;
+                        }
+                    }
+                }
+                
+                alert(`Exam submitted successfully!\nYou answered ${answeredCount} out of ${totalQuestions} questions.`);
+                
+                // Redirect to results page or show summary
+                // window.location.href = 'exam-summary.html';
+            }
+        }
+        
+        // Function to start timer
+        function startTimer() {
+            let timeLeft = 180 * 60; // 180 minutes in seconds
+            const timerElement = document.getElementById('exam-timer');
+            
+            const timerInterval = setInterval(function() {
+                timeLeft--;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Your exam will be submitted automatically.');
+                    submitExam();
+                    return;
+                }
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `Time Left: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }

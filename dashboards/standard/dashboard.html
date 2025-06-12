@@ -456,50 +456,156 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/dashboard-data.js"></script>
     <script>
-        // Initialize performance chart
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        const performanceChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Score %',
-                    data: [60, 65, 68, 72, 75, 78],
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
+        // Load data and render the standard dashboard
+        async function loadStandardDashboardData() {
+            try {
+                // Get user data and exam data
+                const userData = await dashboardData.getUserData();
+                const examData = await dashboardData.getExamData();
+                const studyData = await dashboardData.getStudyPlanData();
+                
+                // Update user info
+                document.querySelector('.user-name').textContent = userData.name;
+                document.querySelector('.notification-count').textContent = userData.notifications;
+                document.querySelector('.welcome-section h1').textContent = `Welcome, ${userData.name.split(' ')[0]}`;
+                
+                // Update stats
+                document.querySelectorAll('.stat-info')[0].querySelector('p').textContent = '24 Available';
+                document.querySelectorAll('.stat-info')[1].querySelector('p').textContent = userData.stats.papersCompleted;
+                document.querySelectorAll('.stat-info')[2].querySelector('p').textContent = userData.stats.overallProgress + '%';
+                document.querySelectorAll('.stat-info')[3].querySelector('p').textContent = userData.stats.planAdherence + '%';
+                
+                // Update subject scores
+                const subjectScores = document.querySelectorAll('.subject-score');
+                const physicsData = examData.performanceTrends.datasets.find(d => d.label === 'Physics');
+                const chemistryData = examData.performanceTrends.datasets.find(d => d.label === 'Chemistry');
+                const mathsData = examData.performanceTrends.datasets.find(d => d.label === 'Mathematics');
+                
+                if (physicsData && subjectScores[0]) {
+                    const latestScore = physicsData.data[physicsData.data.length - 1];
+                    subjectScores[0].querySelector('.progress').style.width = `${latestScore}%`;
+                    subjectScores[0].querySelector('.score-value').textContent = `${latestScore}%`;
                 }
+                
+                if (chemistryData && subjectScores[1]) {
+                    const latestScore = chemistryData.data[chemistryData.data.length - 1];
+                    subjectScores[1].querySelector('.progress').style.width = `${latestScore}%`;
+                    subjectScores[1].querySelector('.score-value').textContent = `${latestScore}%`;
+                }
+                
+                if (mathsData && subjectScores[2]) {
+                    const latestScore = mathsData.data[mathsData.data.length - 1];
+                    subjectScores[2].querySelector('.progress').style.width = `${latestScore}%`;
+                    subjectScores[2].querySelector('.score-value').textContent = `${latestScore}%`;
+                }
+                
+                // Create performance chart
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                const performanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: examData.performanceTrends.labels,
+                        datasets: [{
+                            label: 'Score %',
+                            data: examData.performanceTrends.datasets.reduce((acc, dataset) => {
+                                // Average of all subjects for each month
+                                return dataset.data.map((val, i) => {
+                                    acc[i] = (acc[i] || 0) + val / examData.performanceTrends.datasets.length;
+                                    return acc[i];
+                                });
+                            }, []),
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+                
+                // Update paper list
+                const paperList = document.querySelector('.paper-list');
+                if (paperList) {
+                    paperList.innerHTML = '';
+                    
+                    // Show all exams for standard plan
+                    examData.upcomingExams.forEach(exam => {
+                        const item = document.createElement('li');
+                        item.className = 'paper-item';
+                        item.innerHTML = `
+                            <div class="paper-info">
+                                <h3>${exam.title}</h3>
+                                <p>${exam.date} • ${exam.questions} questions</p>
+                            </div>
+                            <a href="#" class="start-btn">Start</a>
+                        `;
+                        paperList.appendChild(item);
+                    });
+                }
+                
+                // Update tasks
+                const taskList = document.querySelector('.task-list');
+                if (taskList) {
+                    taskList.innerHTML = '';
+                    
+                    // Show today's tasks
+                    studyData.tasks.forEach((task, index) => {
+                        const item = document.createElement('li');
+                        item.className = 'task-item';
+                        item.innerHTML = `
+                            <div class="task-checkbox ${task.completed ? 'checked' : ''}">
+                                ${task.completed ? '<i class="fas fa-check" style="font-size: 12px;"></i>' : ''}
+                            </div>
+                            <div class="task-content">
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-time">${task.startTime} - ${task.endTime}</div>
+                            </div>
+                        `;
+                        taskList.appendChild(item);
+                    });
+                }
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Error loading standard dashboard data:', error);
             }
-        });
+        }
         
-        // Task checkbox functionality
-        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('click', function() {
-                this.classList.toggle('checked');
-                if (this.classList.contains('checked')) {
-                    this.innerHTML = '<i class="fas fa-check" style="font-size: 12px;"></i>';
-                } else {
-                    this.innerHTML = '';
-                }
+        function setupEventListeners() {
+            // Task checkbox functionality
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    if (this.classList.contains('checked')) {
+                        this.innerHTML = '<i class="fas fa-check" style="font-size: 12px;"></i>';
+                    } else {
+                        this.innerHTML = '';
+                    }
+                });
             });
-        });
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadStandardDashboardData);
+    </script>
     </script>
 </body>
 </html>
