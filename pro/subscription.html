@@ -144,7 +144,7 @@
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-md);
-            padding: 32px;
+            padding: 0;
             width: 320px;
             transition: all 0.3s ease;
             position: relative;
@@ -154,8 +154,15 @@
         }
         
         .plan-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
+            transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
+        }
+        
+        .plan-header {
+            padding: 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background-color: #f8fafc;
         }
         
         .plan-name {
@@ -166,16 +173,17 @@
         }
         
         .plan-price {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 800;
-            margin-bottom: 16px;
             color: var(--text-color);
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
         }
         
         .plan-price span {
-            font-size: 16px;
+            font-size: 18px;
             color: var(--text-light);
             margin-left: 4px;
             font-weight: 500;
@@ -184,8 +192,11 @@
         .plan-duration {
             font-size: 16px;
             color: var(--text-light);
-            margin-bottom: 24px;
             font-weight: 500;
+        }
+        
+        .plan-content {
+            padding: 24px;
         }
         
         .plan-features {
@@ -226,7 +237,7 @@
             color: white;
             border: none;
             border-radius: 30px;
-            padding: 14px 0;
+            padding: 16px 0;
             font-size: 16px;
             cursor: pointer;
             width: 100%;
@@ -256,13 +267,43 @@
         }
         
         .yearly-plan {
-            border: 2px solid var(--accent-color);
+            border: 3px solid var(--accent-color);
             transform: scale(1.05);
             z-index: 10;
         }
         
+        .yearly-plan .plan-header {
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .yearly-plan .plan-header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: translate(30%, -30%);
+        }
+        
         .yearly-plan .plan-name {
-            color: var(--accent-color);
+            color: white;
+        }
+        
+        .yearly-plan .plan-price {
+            color: white;
+        }
+        
+        .yearly-plan .plan-price span {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .yearly-plan .plan-duration {
+            color: rgba(255, 255, 255, 0.8);
         }
         
         .yearly-plan .subscribe-btn {
@@ -403,6 +444,49 @@
             font-size: 24px;
         }
         
+        .popular-tag {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 5;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .price-tag {
+            display: inline-block;
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .yearly-plan .price-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .save-text {
+            display: block;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        .yearly-plan .save-text {
+            color: white;
+        }
+        
         @media (max-width: 768px) {
             .plans-container {
                 flex-direction: column;
@@ -447,49 +531,63 @@
         
         <div class="plans-container">
             <div class="plan-card yearly-plan">
+                <div class="popular-tag">MOST POPULAR</div>
                 <div class="best-value">BEST VALUE</div>
-                <div class="plan-name">Yearly Plan</div>
-                <div class="plan-price">₹200 <span>/year</span></div>
-                <div class="plan-duration">365 days of full access</div>
-                <ul class="plan-features">
-                    <li>Access to all exam papers</li>
-                    <li>Performance analytics</li>
-                    <li>Complete question bank access</li>
-                    <li>Personalized study plan</li>
-                    <li>Ad-free experience</li>
-                </ul>
-                <button class="subscribe-btn" onclick="subscribeToPlan('yearly')">
-                    Subscribe Now
-                </button>
+                <div class="plan-header">
+                    <div class="price-tag">YEARLY PLAN</div>
+                    <div class="plan-price">₹200 <span>/year</span></div>
+                    <div class="plan-duration">365 days of full access</div>
+                    <div class="save-text">Save 83% compared to monthly plan</div>
+                </div>
+                <div class="plan-content">
+                    <ul class="plan-features">
+                        <li>Access to all exam papers</li>
+                        <li>Performance analytics</li>
+                        <li>Complete question bank access</li>
+                        <li>Personalized study plan</li>
+                        <li>Ad-free experience</li>
+                    </ul>
+                    <button class="subscribe-btn" onclick="subscribeToPlan('yearly')">
+                        Subscribe Now
+                    </button>
+                </div>
             </div>
             
             <div class="plan-card">
-                <div class="plan-name">Basic Plan</div>
-                <div class="plan-price">₹499 <span>/month</span></div>
-                <div class="plan-duration">30 days of access</div>
-                <ul class="plan-features">
-                    <li>Access to JEE Main practice papers</li>
-                    <li>Basic performance analytics</li>
-                    <li>Limited question bank access</li>
-                </ul>
-                <button class="subscribe-btn" onclick="subscribeToPlan('basic')">
-                    Subscribe Now
-                </button>
+                <div class="plan-header">
+                    <div class="price-tag">MONTHLY PLAN</div>
+                    <div class="plan-price">₹499 <span>/month</span></div>
+                    <div class="plan-duration">30 days of access</div>
+                </div>
+                <div class="plan-content">
+                    <ul class="plan-features">
+                        <li>Access to JEE Main practice papers</li>
+                        <li>Basic performance analytics</li>
+                        <li>Limited question bank access</li>
+                    </ul>
+                    <button class="subscribe-btn" onclick="subscribeToPlan('basic')">
+                        Subscribe Now
+                    </button>
+                </div>
             </div>
             
             <div class="plan-card">
-                <div class="plan-name">Standard Plan</div>
-                <div class="plan-price">₹999 <span>/quarter</span></div>
-                <div class="plan-duration">90 days of access</div>
-                <ul class="plan-features">
-                    <li>Access to JEE Main & Advanced papers</li>
-                    <li>Detailed performance analytics</li>
-                    <li>Full question bank access</li>
-                    <li>Personalized study plan</li>
-                </ul>
-                <button class="subscribe-btn" onclick="subscribeToPlan('standard')">
-                    Subscribe Now
-                </button>
+                <div class="plan-header">
+                    <div class="price-tag">QUARTERLY PLAN</div>
+                    <div class="plan-price">₹999 <span>/quarter</span></div>
+                    <div class="plan-duration">90 days of access</div>
+                </div>
+                <div class="plan-content">
+                    <ul class="plan-features">
+                        <li>Access to JEE Main & Advanced papers</li>
+                        <li>Detailed performance analytics</li>
+                        <li>Full question bank access</li>
+                        <li>Personalized study plan</li>
+                    </ul>
+                    <button class="subscribe-btn" onclick="subscribeToPlan('standard')">
+                        Subscribe Now
+                    </button>
+                </div>
             </div>
         </div>
         
