@@ -266,56 +266,6 @@
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         
-        .yearly-plan {
-            border: 3px solid var(--accent-color);
-            transform: scale(1.05);
-            z-index: 10;
-        }
-        
-        .yearly-plan .plan-header {
-            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .yearly-plan .plan-header::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
-            transform: translate(30%, -30%);
-        }
-        
-        .yearly-plan .plan-name {
-            color: white;
-        }
-        
-        .yearly-plan .plan-price {
-            color: white;
-        }
-        
-        .yearly-plan .plan-price span {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .yearly-plan .plan-duration {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .yearly-plan .subscribe-btn {
-            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
-        }
-        
-        .yearly-plan .subscribe-btn:hover {
-            background: linear-gradient(to right, var(--accent-dark), #b45309);
-            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
-        }
-        
-        /* Rename to popular-plan for clarity since it's not yearly anymore */
         .popular-plan {
             border: 3px solid var(--accent-color);
             transform: scale(1.05);
@@ -592,7 +542,7 @@
                         <li>Basic performance analytics</li>
                         <li>Limited question bank access</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('basic')" type="button">
+                    <button class="subscribe-btn" id="monthly-btn">
                         Subscribe Now
                     </button>
                 </div>
@@ -614,7 +564,7 @@
                         <li>Full question bank access</li>
                         <li>Personalized study plan</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('standard')" type="button">
+                    <button class="subscribe-btn" id="quarterly-btn">
                         Subscribe Now
                     </button>
                 </div>
@@ -635,7 +585,7 @@
                         <li>Personalized study plan</li>
                         <li>Ad-free experience</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('yearly')" type="button">
+                    <button class="subscribe-btn" id="yearly-btn">
                         Subscribe Now
                     </button>
                 </div>
@@ -664,40 +614,74 @@
     </div>
 
     <script>
-        // Check if user is logged in
         document.addEventListener('DOMContentLoaded', function() {
-            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
+            // Initialize subscription status
+            updateSubscriptionStatus();
             
-            // Create a demo user if none exists
-            if (!userDataStr) {
-                const demoUser = {
-                    id: 'demo-user-' + Date.now(),
-                    name: 'Demo User',
-                    email: 'demo@example.com',
-                    hasActiveSubscription: false
-                };
-                localStorage.setItem('userData', JSON.stringify(demoUser));
-                localStorage.setItem('currentUser', JSON.stringify(demoUser));
-                document.getElementById('user-name').textContent = `Welcome, ${demoUser.name}`;
-                fetchSubscriptionStatus(demoUser.id);
-            } else {
-                const userData = JSON.parse(userDataStr);
-                document.getElementById('user-name').textContent = `Welcome, ${userData.name || 'User'}`;
-                fetchSubscriptionStatus(userData.id);
-            }
+            // Set up button event listeners
+            document.getElementById('monthly-btn').addEventListener('click', function() {
+                subscribe('basic', 'Basic Plan', 30);
+            });
+            
+            document.getElementById('quarterly-btn').addEventListener('click', function() {
+                subscribe('standard', 'Quarterly Plan', 90);
+            });
+            
+            document.getElementById('yearly-btn').addEventListener('click', function() {
+                subscribe('yearly', 'Yearly Plan', 365);
+            });
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('userData');
+                window.location.href = '../index.html';
+            });
         });
         
-        // Fetch subscription status
-        function fetchSubscriptionStatus(userId) {
-            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-            const userData = userDataStr ? JSON.parse(userDataStr) : null;
-            const subscriptionContainer = document.getElementById('current-subscription-container');
+        // Simple subscription function
+        function subscribe(planId, planName, days) {
+            alert('Processing payment...');
             
-            if (userData && userData.hasActiveSubscription && userData.currentSubscription) {
+            // Create user data if it doesn't exist
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            if (!userData.name) {
+                userData.name = 'Demo User';
+                userData.id = 'user-' + Date.now();
+            }
+            
+            // Set subscription data
+            userData.hasActiveSubscription = true;
+            userData.currentSubscription = {
+                id: 'sub-' + Date.now(),
+                planId: planId,
+                planName: planName,
+                expiryDate: new Date(Date.now() + (days * 24 * 60 * 60 * 1000)).toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            alert('Subscription activated successfully!');
+            updateSubscriptionStatus();
+        }
+        
+        // Update subscription status display
+        function updateSubscriptionStatus() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const container = document.getElementById('current-subscription-container');
+            
+            // Update user name
+            if (userData.name) {
+                document.getElementById('user-name').textContent = 'Welcome, ' + userData.name;
+            }
+            
+            // Check if user has active subscription
+            if (userData.hasActiveSubscription && userData.currentSubscription) {
                 const subscription = userData.currentSubscription;
                 const expiryDate = new Date(subscription.expiryDate);
                 
-                subscriptionContainer.innerHTML = `
+                container.innerHTML = `
                     <div class="current-subscription">
                         <div class="subscription-status">
                             <span class="active-status">Active Subscription</span>
@@ -705,14 +689,19 @@
                         <div class="subscription-details">
                             <p><strong>Plan:</strong> ${subscription.planName}</p>
                             <p><strong>Expires on:</strong> ${expiryDate.toLocaleDateString()}</p>
-                            <button class="cancel-btn" onclick="cancelSubscription('${userId}', '${subscription.id}')">
+                            <button class="cancel-btn" id="cancel-btn">
                                 Cancel Subscription
                             </button>
                         </div>
                     </div>
                 `;
+                
+                // Add cancel button event listener
+                setTimeout(() => {
+                    document.getElementById('cancel-btn').addEventListener('click', cancelSubscription);
+                }, 100);
             } else {
-                subscriptionContainer.innerHTML = `
+                container.innerHTML = `
                     <div class="current-subscription">
                         <div class="subscription-status">
                             <span class="inactive-status">No Active Subscription</span>
@@ -724,104 +713,28 @@
                 `;
             }
         }
-        }
-        
-        // Subscribe to plan
-        function subscribeToPlan(planId) {
-            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-            let userData = {};
-            
-            if (userDataStr) {
-                userData = JSON.parse(userDataStr);
-            } else {
-                userData = {
-                    id: 'user-' + Date.now(),
-                    name: 'User'
-                };
-            }
-            
-            // Show payment processing message
-            alert('Processing payment...');
-            
-            // For demo purposes, simulate successful subscription
-            userData.hasActiveSubscription = true;
-            userData.currentSubscription = {
-                id: 'demo-' + Date.now(),
-                planId: planId,
-                planName: getPlanName(planId),
-                expiryDate: new Date(Date.now() + getDuration(planId)).toISOString()
-            };
-            
-            localStorage.setItem('userData', JSON.stringify(userData));
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            
-            alert('Subscription activated successfully!');
-            
-            // Refresh the page to show updated subscription status
-            window.location.reload();
-        }
-        
-        // Get duration in milliseconds based on plan
-        function getDuration(planId) {
-            switch(planId) {
-                case 'yearly':
-                    return 365 * 24 * 60 * 60 * 1000;
-                case 'standard': // quarterly
-                    return 90 * 24 * 60 * 60 * 1000;
-                case 'basic': // monthly
-                    return 30 * 24 * 60 * 60 * 1000;
-                default:
-                    return 30 * 24 * 60 * 60 * 1000;
-            }
-        }
-        }
-        
-        // Get plan name
-        function getPlanName(planId) {
-            switch(planId) {
-                case 'yearly':
-                    return 'Yearly Plan';
-                case 'basic':
-                    return 'Basic Plan';
-                case 'standard':
-                    return 'Standard Plan';
-                default:
-                    return 'Premium Plan';
-            }
-        }
         
         // Cancel subscription
-        function cancelSubscription(userId, subscriptionId) {
+        function cancelSubscription() {
             if (!confirm('Are you sure you want to cancel your subscription?')) {
                 return;
             }
             
-            // Show cancellation processing message
             alert('Processing cancellation...');
             
-            // Update user data in localStorage
-            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-            if (userDataStr) {
-                const userData = JSON.parse(userDataStr);
-                userData.hasActiveSubscription = false;
-                delete userData.currentSubscription;
-                localStorage.setItem('userData', JSON.stringify(userData));
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-            }
+            // Get user data
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Remove subscription
+            userData.hasActiveSubscription = false;
+            delete userData.currentSubscription;
+            
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
             
             alert('Subscription cancelled successfully');
-            
-            // Refresh the page to show updated subscription status
-            window.location.reload();
+            updateSubscriptionStatus();
         }
-        }
-        
-        // Logout functionality
-        document.getElementById('logout-btn').addEventListener('click', function() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('userData');
-            window.location.href = '../index.html';
-        });
     </script>
 </body>
 </html>
