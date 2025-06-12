@@ -592,7 +592,7 @@
                         <li>Basic performance analytics</li>
                         <li>Limited question bank access</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('basic')">
+                    <button class="subscribe-btn" onclick="subscribeToPlan('basic')" type="button">
                         Subscribe Now
                     </button>
                 </div>
@@ -614,7 +614,7 @@
                         <li>Full question bank access</li>
                         <li>Personalized study plan</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('standard')">
+                    <button class="subscribe-btn" onclick="subscribeToPlan('standard')" type="button">
                         Subscribe Now
                     </button>
                 </div>
@@ -635,7 +635,7 @@
                         <li>Personalized study plan</li>
                         <li>Ad-free experience</li>
                     </ul>
-                    <button class="subscribe-btn" onclick="subscribeToPlan('yearly')">
+                    <button class="subscribe-btn" onclick="subscribeToPlan('yearly')" type="button">
                         Subscribe Now
                     </button>
                 </div>
@@ -727,43 +727,38 @@
         }
         
         // Subscribe to plan
-        async function subscribeToPlan(planId) {
+        function subscribeToPlan(planId) {
             const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-            if (!userDataStr) {
-                window.location.href = '../login.html?redirect=pro/subscription.html';
-                return;
-            }
+            let userData = {};
             
-            const userData = JSON.parse(userDataStr);
+            if (userDataStr) {
+                userData = JSON.parse(userDataStr);
+            } else {
+                userData = {
+                    id: 'user-' + Date.now(),
+                    name: 'User'
+                };
+            }
             
             // Show payment processing message
             alert('Processing payment...');
             
-            try {
-                // In a real application, you would integrate with a payment gateway here
-                // For this example, we'll simulate a successful payment
-                
-                // Simulate API call with a timeout
-                setTimeout(() => {
-                    // For demo purposes, simulate successful subscription
-                    alert('Subscription activated successfully!');
-                    userData.hasActiveSubscription = true;
-                    userData.currentSubscription = {
-                        id: 'demo-' + Date.now(),
-                        planId: planId,
-                        planName: getPlanName(planId),
-                        expiryDate: new Date(Date.now() + getDuration(planId)).toISOString()
-                    };
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                    localStorage.setItem('currentUser', JSON.stringify(userData));
-                    
-                    // Redirect to pro dashboard
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            } catch (error) {
-                console.error('Error subscribing to plan:', error);
-                alert('Error processing payment. Please try again.');
-            }
+            // For demo purposes, simulate successful subscription
+            userData.hasActiveSubscription = true;
+            userData.currentSubscription = {
+                id: 'demo-' + Date.now(),
+                planId: planId,
+                planName: getPlanName(planId),
+                expiryDate: new Date(Date.now() + getDuration(planId)).toISOString()
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            alert('Subscription activated successfully!');
+            
+            // Refresh the page to show updated subscription status
+            window.location.reload();
         }
         
         // Get duration in milliseconds based on plan
