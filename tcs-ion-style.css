@@ -152,6 +152,29 @@ body {
     margin-bottom: 15px;
 }
 
+.question-image {
+    max-width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Integer input style */
+.integer-input {
+    margin: 15px 0;
+}
+
+.integer-input label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.integer-input input {
+    padding: 8px;
+    width: 100px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 /* Options */
 .options {
     margin-left: 20px;
@@ -181,6 +204,18 @@ body {
 
 .option-text {
     flex-grow: 1;
+}
+
+.option-text img {
+    max-width: 100%;
+    margin-top: 5px;
+}
+
+/* Timer styling */
+.timer {
+    font-weight: bold;
+    color: #ffff00;
+    margin-left: 15px;
 }
 
 /* Right panel - Navigation */
