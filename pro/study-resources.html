@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Resources - PrepSharp Admin</title>
+    <title>Study Resources - PrepSharp Pro</title>
     <style>
         :root {
             --primary-color: #1976d2;
             --secondary-color: #42a5f5;
             --accent-color: #ff9800;
-            --admin-color: #e91e63;
-            --admin-light: #f8bbd0;
-            --success-color: #4caf50;
-            --danger-color: #f44336;
+            --premium-color: #8e24aa;
+            --premium-light: #b39ddb;
             --background-color: #f5f5f5;
             --text-color: #212121;
-            --sidebar-width: 250px;
         }
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -24,7 +21,6 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
         header {
             background-color: white;
@@ -33,32 +29,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 100;
         }
         .logo-container {
             display: flex;
             align-items: center;
-            cursor: pointer;
-            user-select: none;
         }
-        
-        /* Hamburger menu icon */
         .menu-icon {
-            display: inline-block;
             margin-right: 15px;
             cursor: pointer;
-        }
-        .menu-icon:hover {
-            color: var(--primary-color);
+            font-size: 24px;
         }
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        .admin-badge {
-            background-color: var(--admin-color);
+        .premium-badge {
+            background-color: var(--premium-color);
             color: white;
             padding: 4px 10px;
             border-radius: 20px;
@@ -66,10 +53,6 @@
             font-weight: bold;
             display: flex;
             align-items: center;
-        }
-        .admin-badge .icon {
-            margin-right: 4px;
-            font-size: 14px;
         }
         .btn {
             padding: 8px 16px;
@@ -79,15 +62,12 @@
             font-weight: 500;
         }
         .btn.primary { background-color: var(--primary-color); color: white; }
-        .btn.admin { background-color: var(--admin-color); color: white; }
-        .btn.danger { background-color: var(--danger-color); color: white; }
+        .btn.premium { background-color: var(--premium-color); color: white; }
         .container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
-        
-        /* Card styles */
         .card {
             background-color: white;
             border-radius: 8px;
@@ -105,50 +85,6 @@
         .card-body {
             padding: 20px;
         }
-        
-        /* Table styles */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .data-table th {
-            text-align: left;
-            padding: 12px;
-            background-color: #f5f5f5;
-            border-bottom: 2px solid #ddd;
-        }
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-        .data-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        .action-btn {
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .action-btn.edit {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .action-btn.delete {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        .action-btn.view {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        /* Sidebar styles */
         .sidebar {
             position: fixed;
             top: 0;
@@ -163,12 +99,12 @@
         }
         .sidebar-header {
             padding: 20px;
-            background-color: var(--admin-color);
+            background-color: var(--premium-color);
             color: white;
             display: flex;
             align-items: center;
         }
-        .sidebar-header .admin-icon {
+        .sidebar-header .crown {
             margin-right: 10px;
             font-size: 20px;
         }
@@ -191,11 +127,6 @@
         .sidebar-menu a:hover {
             background-color: #f5f5f5;
         }
-        .sidebar-menu a.active {
-            background-color: var(--admin-light);
-            color: var(--admin-color);
-            font-weight: bold;
-        }
         .sidebar-menu .icon {
             margin-right: 10px;
             font-size: 18px;
@@ -212,165 +143,120 @@
             z-index: 999;
             display: none;
         }
-        
-        /* Sidebar active state */
         .sidebar.active {
             left: 0;
         }
         .sidebar-overlay.active {
             display: block;
         }
-        
-        /* Search bar */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .resource-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+        .resource-image {
+            height: 160px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 24px;
+        }
+        .resource-info {
+            padding: 15px;
+        }
+        .resource-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .resource-meta {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .resource-description {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .resource-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .premium-tag {
+            background-color: var(--premium-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-item:hover, .filter-item.active {
+            background-color: var(--premium-color);
+            color: white;
+            border-color: var(--premium-color);
+        }
         .search-bar {
             display: flex;
             margin-bottom: 20px;
         }
-        .search-input {
+        .search-bar input {
             flex: 1;
-            padding: 10px;
+            padding: 10px 15px;
             border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
             font-size: 16px;
         }
-        .search-btn {
-            padding: 10px 15px;
-            background-color: var(--admin-color);
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: var(--premium-color);
             color: white;
             border: none;
             border-radius: 0 4px 4px 0;
             cursor: pointer;
         }
-        
-        /* Resource category pills */
-        .category-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .category-pill {
-            padding: 6px 12px;
-            background-color: #e0e0e0;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .category-pill.active {
-            background-color: var(--admin-color);
-            color: white;
-        }
-        
-        /* Resource form */
-        .resource-form {
-            display: none;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        .form-row .form-group {
-            flex: 1;
-        }
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-        select.form-control {
-            height: 42px;
-        }
-        
-        /* Resource cards */
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .resource-card {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .resource-card-header {
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-bottom: 1px solid #eee;
-        }
-        .resource-card-body {
-            padding: 15px;
-        }
-        .resource-card-footer {
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .resource-type {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-        .resource-type.pdf {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-        .resource-type.video {
-            background-color: #e3f2fd;
-            color: #1565c0;
-        }
-        .resource-type.link {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .resource-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-        }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-container" id="logo-container">
+        <div class="logo-container">
             <span class="menu-icon" id="menu-toggle">☰</span>
             <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
-            <h2>PrepSharp Admin</h2>
+            <h2>PrepSharp Pro</h2>
         </div>
         <div class="user-info">
-            <div class="admin-badge">
-                <span class="icon">⚙️</span> ADMIN
+            <div class="premium-badge">
+                <span>👑</span> PRO
             </div>
-            <span id="user-name">Admin User</span>
+            <span id="user-name">Welcome, User</span>
             <button id="logout-btn" class="btn primary">Logout</button>
         </div>
     </header>
@@ -378,17 +264,17 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="admin-icon">⚙️</span>
-            <h3>PrepSharp Admin</h3>
+            <span class="crown">👑</span>
+            <h3>PrepSharp Pro</h3>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="admin-dashboard.html"><span class="icon">🏠</span> Dashboard</a></li>
-            <li><a href="manage-users.html"><span class="icon">👥</span> Manage Users</a></li>
-            <li><a href="manage-exams.html"><span class="icon">📝</span> Manage Exams</a></li>
-            <li><a href="manage-questions.html"><span class="icon">❓</span> Manage Questions</a></li>
-            <li><a href="study-resources.html" class="active"><span class="icon">📚</span> Manage Resources</a></li>
-            <li><a href="expert-doubt.html"><span class="icon">💬</span> Manage Doubts</a></li>
-            <li><a href="performance-analytics.html"><span class="icon">📊</span> Analytics</a></li>
+            <li><a href="pro-dashboard.html"><span class="icon">🏠</span> Pro Dashboard</a></li>
+            <li><a href="practice-exams.html"><span class="icon">📝</span> Practice Exams</a></li>
+            <li><a href="performance-analytics.html"><span class="icon">📊</span> Performance Analytics</a></li>
+            <li><a href="study-plan.html"><span class="icon">🎯</span> Personalized Study Plan</a></li>
+            <li><a href="study-resources.html"><span class="icon">📚</span> Study Resources</a></li>
+            <li><a href="expert-doubt.html"><span class="icon">💬</span> Expert Doubt Solving</a></li>
+            <li><a href="profile.html"><span class="icon">👤</span> Edit Profile</a></li>
             <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
             <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
         </ul>
@@ -396,189 +282,141 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
     <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h2>Manage Study Resources</h2>
-                <button id="add-resource-btn" class="btn admin">Add New Resource</button>
+        <h1>Premium Study Resources</h1>
+        <p>Access exclusive study materials, video lectures, and practice problems.</p>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Search for resources...">
+            <button>Search</button>
+        </div>
+        
+        <div class="filter-bar">
+            <div class="filter-item active">All Resources</div>
+            <div class="filter-item">Physics</div>
+            <div class="filter-item">Chemistry</div>
+            <div class="filter-item">Mathematics</div>
+            <div class="filter-item">Video Lectures</div>
+            <div class="filter-item">PDF Notes</div>
+            <div class="filter-item">Practice Problems</div>
+        </div>
+        
+        <div class="resource-grid">
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>📚</span>
+                </div>
+                <div class="resource-info">
+                    <div class="resource-title">Complete Physics Formula Handbook</div>
+                    <div class="resource-meta">
+                        <span>PDF • 120 pages</span>
+                        <span class="premium-tag">PRO</span>
+                    </div>
+                    <div class="resource-description">
+                        Comprehensive collection of all physics formulas for JEE Advanced with examples and applications.
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Download</button>
+                        <button class="btn primary">Preview</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div id="resource-form" class="resource-form">
-                    <h3>Add New Resource</h3>
-                    <form id="new-resource-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="resource-title">Title</label>
-                                <input type="text" id="resource-title" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="resource-type">Resource Type</label>
-                                <select id="resource-type" class="form-control" required>
-                                    <option value="">Select Type</option>
-                                    <option value="pdf">PDF Document</option>
-                                    <option value="video">Video</option>
-                                    <option value="link">External Link</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="resource-subject">Subject</label>
-                                <select id="resource-subject" class="form-control" required>
-                                    <option value="">Select Subject</option>
-                                    <option value="physics">Physics</option>
-                                    <option value="chemistry">Chemistry</option>
-                                    <option value="mathematics">Mathematics</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="resource-category">Category</label>
-                                <select id="resource-category" class="form-control" required>
-                                    <option value="">Select Category</option>
-                                    <option value="notes">Study Notes</option>
-                                    <option value="formulas">Formula Sheets</option>
-                                    <option value="practice">Practice Material</option>
-                                    <option value="reference">Reference Material</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="resource-url">Resource URL</label>
-                            <input type="url" id="resource-url" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="resource-description">Description</label>
-                            <textarea id="resource-description" class="form-control" required></textarea>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="resource-visibility">Visibility</label>
-                                <select id="resource-visibility" class="form-control" required>
-                                    <option value="all">All Users</option>
-                                    <option value="pro">Pro Users Only</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="resource-featured">Featured</label>
-                                <select id="resource-featured" class="form-control">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                            <button type="button" id="cancel-resource-btn" class="btn danger">Cancel</button>
-                            <button type="submit" class="btn admin">Save Resource</button>
-                        </div>
-                    </form>
+            
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>🎬</span>
                 </div>
-                
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Search resources...">
-                    <button class="search-btn">Search</button>
+                <div class="resource-info">
+                    <div class="resource-title">Organic Chemistry Video Series</div>
+                    <div class="resource-meta">
+                        <span>Video • 15 lectures</span>
+                        <span class="premium-tag">PRO</span>
+                    </div>
+                    <div class="resource-description">
+                        In-depth video lectures covering all organic chemistry topics with 3D visualizations of reactions.
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Watch</button>
+                        <button class="btn primary">Preview</button>
+                    </div>
                 </div>
-                
-                <div class="category-pills">
-                    <div class="category-pill active">All</div>
-                    <div class="category-pill">Physics</div>
-                    <div class="category-pill">Chemistry</div>
-                    <div class="category-pill">Mathematics</div>
-                    <div class="category-pill">Study Notes</div>
-                    <div class="category-pill">Formula Sheets</div>
-                    <div class="category-pill">Practice Material</div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>📝</span>
                 </div>
-                
-                <div class="resource-grid">
-                    <!-- Resource Card 1 -->
-                    <div class="resource-card">
-                        <div class="resource-card-header">
-                            <span class="resource-type pdf">PDF</span>
-                            <h3>JEE Physics Formula Sheet</h3>
-                        </div>
-                        <div class="resource-card-body">
-                            <p>Comprehensive formula sheet covering all important physics concepts for JEE preparation.</p>
-                            <p><strong>Subject:</strong> Physics</p>
-                            <p><strong>Category:</strong> Formula Sheets</p>
-                            <p><strong>Visibility:</strong> <span class="admin-badge" style="font-size: 10px;">PRO</span></p>
-                        </div>
-                        <div class="resource-card-footer">
-                            <span>Added: 15 May 2023</span>
-                            <div class="action-buttons">
-                                <button class="action-btn view">View</button>
-                                <button class="action-btn edit">Edit</button>
-                                <button class="action-btn delete">Delete</button>
-                            </div>
-                        </div>
+                <div class="resource-info">
+                    <div class="resource-title">Advanced Calculus Problem Set</div>
+                    <div class="resource-meta">
+                        <span>Practice • 200 problems</span>
+                        <span class="premium-tag">PRO</span>
                     </div>
-                    
-                    <!-- Resource Card 2 -->
-                    <div class="resource-card">
-                        <div class="resource-card-header">
-                            <span class="resource-type video">VIDEO</span>
-                            <h3>Organic Chemistry Mechanisms</h3>
-                        </div>
-                        <div class="resource-card-body">
-                            <p>Video tutorial explaining important organic chemistry reaction mechanisms for JEE Advanced.</p>
-                            <p><strong>Subject:</strong> Chemistry</p>
-                            <p><strong>Category:</strong> Study Notes</p>
-                            <p><strong>Visibility:</strong> All Users</p>
-                        </div>
-                        <div class="resource-card-footer">
-                            <span>Added: 10 Jun 2023</span>
-                            <div class="action-buttons">
-                                <button class="action-btn view">View</button>
-                                <button class="action-btn edit">Edit</button>
-                                <button class="action-btn delete">Delete</button>
-                            </div>
-                        </div>
+                    <div class="resource-description">
+                        Challenging calculus problems with step-by-step solutions designed for JEE Advanced preparation.
                     </div>
-                    
-                    <!-- Resource Card 3 -->
-                    <div class="resource-card">
-                        <div class="resource-card-header">
-                            <span class="resource-type link">LINK</span>
-                            <h3>Calculus Practice Problems</h3>
-                        </div>
-                        <div class="resource-card-body">
-                            <p>Collection of calculus practice problems with step-by-step solutions for JEE preparation.</p>
-                            <p><strong>Subject:</strong> Mathematics</p>
-                            <p><strong>Category:</strong> Practice Material</p>
-                            <p><strong>Visibility:</strong> <span class="admin-badge" style="font-size: 10px;">PRO</span></p>
-                        </div>
-                        <div class="resource-card-footer">
-                            <span>Added: 22 Jul 2023</span>
-                            <div class="action-buttons">
-                                <button class="action-btn view">View</button>
-                                <button class="action-btn edit">Edit</button>
-                                <button class="action-btn delete">Delete</button>
-                            </div>
-                        </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Solve</button>
+                        <button class="btn primary">Preview</button>
                     </div>
-                    
-                    <!-- Resource Card 4 -->
-                    <div class="resource-card">
-                        <div class="resource-card-header">
-                            <span class="resource-type pdf">PDF</span>
-                            <h3>Chemistry Periodic Table Guide</h3>
-                        </div>
-                        <div class="resource-card-body">
-                            <p>Detailed guide to the periodic table with properties and trends for JEE preparation.</p>
-                            <p><strong>Subject:</strong> Chemistry</p>
-                            <p><strong>Category:</strong> Reference Material</p>
-                            <p><strong>Visibility:</strong> All Users</p>
-                        </div>
-                        <div class="resource-card-footer">
-                            <span>Added: 5 Aug 2023</span>
-                            <div class="action-buttons">
-                                <button class="action-btn view">View</button>
-                                <button class="action-btn edit">Edit</button>
-                                <button class="action-btn delete">Delete</button>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>📊</span>
+                </div>
+                <div class="resource-info">
+                    <div class="resource-title">Physical Chemistry Cheat Sheet</div>
+                    <div class="resource-meta">
+                        <span>PDF • 45 pages</span>
+                        <span class="premium-tag">PRO</span>
+                    </div>
+                    <div class="resource-description">
+                        Quick reference guide for physical chemistry concepts, formulas, and important reactions.
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Download</button>
+                        <button class="btn primary">Preview</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>🎬</span>
+                </div>
+                <div class="resource-info">
+                    <div class="resource-title">Electromagnetism Masterclass</div>
+                    <div class="resource-meta">
+                        <span>Video • 12 lectures</span>
+                        <span class="premium-tag">PRO</span>
+                    </div>
+                    <div class="resource-description">
+                        Comprehensive video series on electromagnetism with interactive simulations and problem solving.
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Watch</button>
+                        <button class="btn primary">Preview</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-image">
+                    <span>📝</span>
+                </div>
+                <div class="resource-info">
+                    <div class="resource-title">Coordinate Geometry Practice Set</div>
+                    <div class="resource-meta">
+                        <span>Practice • 150 problems</span>
+                        <span class="premium-tag">PRO</span>
+                    </div>
+                    <div class="resource-description">
+                        Extensive collection of coordinate geometry problems with detailed solutions and visual aids.
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn premium">Solve</button>
+                        <button class="btn primary">Preview</button>
                     </div>
                 </div>
             </div>
@@ -587,90 +425,49 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar functionality
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const menuToggle = document.getElementById('menu-toggle');
-            
-            // Toggle sidebar
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            });
-            
-            // Close sidebar when clicking outside
-            sidebarOverlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            // Logout functionality (header button)
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('adminUser');
-                window.location.href = '../admin-login.html';
-            });
-            
-            // Logout functionality (sidebar option)
-            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('adminUser');
-                window.location.href = '../admin-login.html';
-            });
-            
-            // Resource form toggle
-            const addResourceBtn = document.getElementById('add-resource-btn');
-            const resourceForm = document.getElementById('resource-form');
-            const cancelResourceBtn = document.getElementById('cancel-resource-btn');
-            
-            addResourceBtn.addEventListener('click', function() {
-                resourceForm.style.display = 'block';
-                addResourceBtn.style.display = 'none';
-            });
-            
-            cancelResourceBtn.addEventListener('click', function() {
-                resourceForm.style.display = 'none';
-                addResourceBtn.style.display = 'block';
-            });
-            
-            // Form submission
-            document.getElementById('new-resource-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Resource added successfully!');
-                resourceForm.style.display = 'none';
-                addResourceBtn.style.display = 'block';
-                this.reset();
-            });
-            
-            // Category pills
-            document.querySelectorAll('.category-pill').forEach(pill => {
-                pill.addEventListener('click', function() {
-                    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-                    this.classList.add('active');
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = '../index.html';
+            } else {
+                const user = JSON.parse(currentUser);
+                document.getElementById('user-name').textContent = `${user.name || 'User'}`;
+                
+                // Sidebar functionality
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                const menuToggle = document.getElementById('menu-toggle');
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
                 });
-            });
-            
-            // Action buttons functionality
-            document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const action = this.classList.contains('edit') ? 'edit' : 
-                                  this.classList.contains('delete') ? 'delete' : 'view';
-                    const card = this.closest('.resource-card');
-                    const title = card.querySelector('h3').textContent;
-                    
-                    if (action === 'edit') {
-                        alert(`Edit ${title}`);
-                    } else if (action === 'delete') {
-                        if (confirm(`Are you sure you want to delete ${title}?`)) {
-                            alert(`${title} deleted successfully`);
-                            card.remove();
-                        }
-                    } else {
-                        alert(`View ${title}`);
-                    }
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
                 });
-            });
+                
+                // Logout functionality
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '../index.html';
+                });
+                
+                // Filter functionality
+                const filterItems = document.querySelectorAll('.filter-item');
+                filterItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        filterItems.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            }
         });
     </script>
 </body>
