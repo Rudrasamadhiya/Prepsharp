@@ -282,30 +282,22 @@
             </div>
             
             <div class="payment-form">
-                <div id="card-payment-form">
-                    <label for="card-number">Card Number</label>
-                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
-                    
-                    <div class="form-row">
-                        <div>
-                            <label for="expiry">Expiry Date</label>
-                            <input type="text" id="expiry" placeholder="MM/YY">
-                        </div>
-                        <div>
-                            <label for="cvv">CVV</label>
-                            <input type="text" id="cvv" placeholder="123">
-                        </div>
-                    </div>
-                    
-                    <label for="card-name">Name on Card</label>
-                    <input type="text" id="card-name" placeholder="John Smith">
-                </div>
+                <p style="margin-bottom: 20px; text-align: center;">
+                    Click the button below to complete your payment securely via Razorpay.
+                </p>
                 
-                <button class="pay-btn" id="pay-btn">Complete Payment</button>
+                <button class="pay-btn" id="pay-btn">Pay with Razorpay</button>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <img src="https://cdn.razorpay.com/static/assets/merchant-badge/badge-dark.png" alt="Razorpay" style="height: 30px;">
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <script>
         // Get plan details from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -338,7 +330,7 @@
             
             // Set up payment button
             document.getElementById('pay-btn').addEventListener('click', function() {
-                processPayment();
+                openRazorpay();
             });
             
             // Logout button
@@ -361,31 +353,69 @@
             element.classList.add('active');
         }
         
-        // Process payment
-        function processPayment() {
-            alert('Processing payment...');
+        // Open Razorpay checkout
+        function openRazorpay() {
+            // Calculate total amount
+            const price = parseInt(planPrice);
+            const tax = Math.round(price * 0.05);
+            const total = price + tax;
             
-            setTimeout(() => {
-                // Get user data
-                let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                
-                // Set subscription data
-                userData.hasActiveSubscription = true;
-                userData.currentSubscription = {
-                    id: 'sub-' + Date.now(),
-                    planId: planId,
-                    planName: planName,
-                    expiryDate: new Date(Date.now() + (parseInt(planDays) * 24 * 60 * 60 * 1000)).toISOString()
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('userData', JSON.stringify(userData));
-                
-                alert('Payment successful! Your subscription is now active.');
-                
-                // Redirect to pro dashboard
-                window.location.href = 'pro-dashboard.html';
-            }, 1500);
+            // Get user data
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Razorpay options
+            const options = {
+                key: "rzp_test_A4Rm6XddloWSsc", // Razorpay test key
+                amount: total * 100, // Amount in paise
+                currency: "INR",
+                name: "PrepSharp",
+                description: planName + " Subscription",
+                image: "../prepsharp-logo.png",
+                handler: function(response) {
+                    // Payment successful
+                    paymentSuccess(response.razorpay_payment_id);
+                },
+                prefill: {
+                    name: userData.name || "",
+                    email: userData.email || "",
+                    contact: userData.phone || ""
+                },
+                theme: {
+                    color: "#2563eb"
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log("Payment cancelled");
+                    }
+                }
+            };
+            
+            // Create Razorpay instance
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+        
+        // Process successful payment
+        function paymentSuccess(paymentId) {
+            // Get user data
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Set subscription data
+            userData.hasActiveSubscription = true;
+            userData.currentSubscription = {
+                id: paymentId,
+                planId: planId,
+                planName: planName,
+                expiryDate: new Date(Date.now() + (parseInt(planDays) * 24 * 60 * 60 * 1000)).toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            alert('Payment successful! Your subscription is now active.');
+            
+            // Redirect to pro dashboard
+            window.location.href = 'pro-dashboard.html';
         }
     </script>
 </body>
