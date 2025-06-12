@@ -4,353 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - PrepSharp</title>
-    <style>
-        :root {
-            --primary-color: #1976d2;
-            --secondary-color: #42a5f5;
-            --accent-color: #ff9800;
-            --admin-color: #e91e63;
-            --admin-light: #f8bbd0;
-            --success-color: #4caf50;
-            --danger-color: #f44336;
-            --background-color: #f5f5f5;
-            --text-color: #212121;
-            --sidebar-width: 250px;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 100;
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        /* Hamburger menu icon */
-        .menu-icon {
-            display: inline-block;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        .menu-icon:hover {
-            color: var(--primary-color);
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .admin-badge {
-            background-color: var(--admin-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        .admin-badge .icon {
-            margin-right: 4px;
-            font-size: 14px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .btn.primary { background-color: var(--primary-color); color: white; }
-        .btn.admin { background-color: var(--admin-color); color: white; }
-        .btn.danger { background-color: var(--danger-color); color: white; }
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        
-        /* Dashboard grid layout */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-        
-        /* Card styles */
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        .stat-card {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-        .stat-value.admin {
-            color: var(--admin-color);
-        }
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        /* Recent activity */
-        .activity-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .activity-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        .activity-icon {
-            width: 36px;
-            height: 36px;
-            background-color: #e3f2fd;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: var(--primary-color);
-        }
-        .activity-icon.admin {
-            background-color: var(--admin-light);
-            color: var(--admin-color);
-        }
-        .activity-content {
-            flex: 1;
-        }
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-        .activity-time {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        /* Table styles */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .data-table th {
-            text-align: left;
-            padding: 12px;
-            background-color: #f5f5f5;
-            border-bottom: 2px solid #ddd;
-        }
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-        .data-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        .action-btn {
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .action-btn.edit {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .action-btn.delete {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100%;
-            background-color: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .sidebar-header {
-            padding: 20px;
-            background-color: var(--admin-color);
-            color: white;
-            display: flex;
-            align-items: center;
-        }
-        .sidebar-header .admin-icon {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar-menu li {
-            border-bottom: 1px solid #eee;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-        .sidebar-menu a:hover {
-            background-color: #f5f5f5;
-        }
-        .sidebar-menu .icon {
-            margin-right: 10px;
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-        }
-        
-        /* Sidebar active state */
-        .sidebar.active {
-            left: 0;
-        }
-        .sidebar-overlay.active {
-            display: block;
-        }
-        
-        /* Search bar */
-        .search-bar {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .search-input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px 0 0 4px;
-            font-size: 16px;
-        }
-        .search-btn {
-            padding: 10px 15px;
-            background-color: var(--admin-color);
-            color: white;
-            border: none;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../styles/admin.css">
 </head>
 <body>
     <header>
-        <div class="logo-container" id="logo-container">
+        <div class="logo-container">
             <span class="menu-icon" id="menu-toggle">☰</span>
-            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px;">
             <h2>PrepSharp Admin</h2>
         </div>
         <div class="user-info">
-            <div class="admin-badge">
-                <span class="icon">⚙️</span> ADMIN
-            </div>
-            <span id="user-name">Admin User</span>
-            <button id="logout-btn" class="btn primary">Logout</button>
+            <div class="admin-badge">ADMIN</div>
+            <span>Admin User</span>
+            <button id="logout-btn">Logout</button>
         </div>
     </header>
     
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="admin-icon">⚙️</span>
             <h3>PrepSharp Admin</h3>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="admin-dashboard.html"><span class="icon">🏠</span> Dashboard</a></li>
-            <li><a href="manage-users.html"><span class="icon">👥</span> Manage Users</a></li>
-            <li><a href="manage-exams.html"><span class="icon">📝</span> Manage Exams</a></li>
-            <li><a href="manage-questions.html"><span class="icon">❓</span> Manage Questions</a></li>
-            <li><a href="study-resources.html"><span class="icon">📚</span> Manage Resources</a></li>
-            <li><a href="expert-doubt.html"><span class="icon">💬</span> Manage Doubts</a></li>
-            <li><a href="performance-analytics.html"><span class="icon">📊</span> Analytics</a></li>
-            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
-            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+            <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="admin-users.html">Manage Users</a></li>
+            <li><a href="admin-exams.html">Manage Exams</a></li>
+            <li><a href="admin-questions.html">Manage Questions</a></li>
+            <li><a href="admin-study-resources.html">Manage Resources</a></li>
+            <li><a href="admin-doubts.html">Manage Doubts</a></li>
+            <li><a href="admin-analytics.html">Analytics</a></li>
+            <li><a href="admin-settings.html">Settings</a></li>
         </ul>
     </div>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -375,15 +58,15 @@
                     <div class="card-body">
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-value admin">1,245</div>
+                                <div class="stat-value">1,245</div>
                                 <div class="stat-label">Total Users</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-value admin">128</div>
+                                <div class="stat-value">128</div>
                                 <div class="stat-label">Pro Subscribers</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-value admin">42</div>
+                                <div class="stat-value">42</div>
                                 <div class="stat-label">Exams Available</div>
                             </div>
                             <div class="stat-card">
@@ -406,12 +89,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Recent Users</h3>
-                        <a href="manage-users.html" style="color: var(--admin-color); text-decoration: none;">View All</a>
+                        <a href="admin-users.html">View All</a>
                     </div>
                     <div class="card-body">
                         <div class="search-bar">
-                            <input type="text" class="search-input" placeholder="Search users...">
-                            <button class="search-btn">Search</button>
+                            <input type="text" placeholder="Search users...">
+                            <button>Search</button>
                         </div>
                         <table class="data-table">
                             <thead>
@@ -427,7 +110,7 @@
                                 <tr>
                                     <td>Rahul Sharma</td>
                                     <td>rahul.sharma@example.com</td>
-                                    <td><span class="admin-badge" style="font-size: 10px;">PRO</span></td>
+                                    <td><span class="badge pro">PRO</span></td>
                                     <td>Today</td>
                                     <td>
                                         <div class="action-buttons">
@@ -451,20 +134,8 @@
                                 <tr>
                                     <td>Amit Kumar</td>
                                     <td>amit.kumar@example.com</td>
-                                    <td><span class="admin-badge" style="font-size: 10px;">PRO</span></td>
+                                    <td><span class="badge pro">PRO</span></td>
                                     <td>2 days ago</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="action-btn edit">Edit</button>
-                                            <button class="action-btn delete">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Sneha Gupta</td>
-                                    <td>sneha.gupta@example.com</td>
-                                    <td>Free</td>
-                                    <td>3 days ago</td>
                                     <td>
                                         <div class="action-buttons">
                                             <button class="action-btn edit">Edit</button>
@@ -481,7 +152,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Recent Exams</h3>
-                        <a href="manage-exams.html" style="color: var(--admin-color); text-decoration: none;">View All</a>
+                        <a href="admin-exams.html">View All</a>
                     </div>
                     <div class="card-body">
                         <table class="data-table">
@@ -545,23 +216,23 @@
                         <h3>Quick Actions</h3>
                     </div>
                     <div class="card-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <button class="btn admin" style="display: flex; flex-direction: column; align-items: center; padding: 15px;">
-                                <span style="font-size: 24px; margin-bottom: 5px;">👤</span>
+                        <div class="quick-actions">
+                            <a href="admin-users.html" class="quick-action-btn">
+                                <span class="icon">👤</span>
                                 Add User
-                            </button>
-                            <button class="btn admin" style="display: flex; flex-direction: column; align-items: center; padding: 15px;">
-                                <span style="font-size: 24px; margin-bottom: 5px;">📝</span>
+                            </a>
+                            <a href="admin-exams.html" class="quick-action-btn">
+                                <span class="icon">📝</span>
                                 Add Exam
-                            </button>
-                            <button class="btn admin" style="display: flex; flex-direction: column; align-items: center; padding: 15px;">
-                                <span style="font-size: 24px; margin-bottom: 5px;">❓</span>
+                            </a>
+                            <a href="admin-questions.html" class="quick-action-btn">
+                                <span class="icon">❓</span>
                                 Add Question
-                            </button>
-                            <button class="btn admin" style="display: flex; flex-direction: column; align-items: center; padding: 15px;">
-                                <span style="font-size: 24px; margin-bottom: 5px;">📊</span>
-                                View Reports
-                            </button>
+                            </a>
+                            <a href="admin-study-resources.html" class="quick-action-btn">
+                                <span class="icon">📚</span>
+                                Add Resource
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -574,21 +245,21 @@
                     <div class="card-body">
                         <ul class="activity-list">
                             <li class="activity-item">
-                                <div class="activity-icon admin">👤</div>
+                                <div class="activity-icon">👤</div>
                                 <div class="activity-content">
                                     <div class="activity-title">New user registered: Rahul Sharma</div>
                                     <div class="activity-time">Today, 10:30 AM</div>
                                 </div>
                             </li>
                             <li class="activity-item">
-                                <div class="activity-icon admin">💰</div>
+                                <div class="activity-icon">💰</div>
                                 <div class="activity-content">
                                     <div class="activity-title">New subscription: Amit Kumar (₹999)</div>
                                     <div class="activity-time">Yesterday, 3:45 PM</div>
                                 </div>
                             </li>
                             <li class="activity-item">
-                                <div class="activity-icon admin">📝</div>
+                                <div class="activity-icon">📝</div>
                                 <div class="activity-content">
                                     <div class="activity-title">New exam added: JEE Advanced Papers</div>
                                     <div class="activity-time">Yesterday, 1:20 PM</div>
@@ -602,7 +273,7 @@
                                 </div>
                             </li>
                             <li class="activity-item">
-                                <div class="activity-icon admin">💬</div>
+                                <div class="activity-icon">💬</div>
                                 <div class="activity-content">
                                     <div class="activity-title">15 new student doubts pending</div>
                                     <div class="activity-time">3 days ago</div>
@@ -618,42 +289,42 @@
                         <h3>System Status</h3>
                     </div>
                     <div class="card-body">
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <div class="status-item">
+                            <div class="status-header">
                                 <span>Server Load</span>
                                 <span>32%</span>
                             </div>
-                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                                <div style="height: 100%; width: 32%; background-color: var(--success-color);"></div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 32%;"></div>
                             </div>
                         </div>
                         
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <div class="status-item">
+                            <div class="status-header">
                                 <span>Database Usage</span>
                                 <span>68%</span>
                             </div>
-                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                                <div style="height: 100%; width: 68%; background-color: var(--accent-color);"></div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 68%;"></div>
                             </div>
                         </div>
                         
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <div class="status-item">
+                            <div class="status-header">
                                 <span>Storage</span>
                                 <span>85%</span>
                             </div>
-                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                                <div style="height: 100%; width: 85%; background-color: var(--danger-color);"></div>
+                            <div class="progress-bar">
+                                <div class="progress warning" style="width: 85%;"></div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <div class="backup-info">
                             <div>
-                                <div style="font-weight: bold;">Last Backup</div>
+                                <div>Last Backup</div>
                                 <div>Today, 03:00 AM</div>
                             </div>
-                            <button class="btn admin">Backup Now</button>
+                            <button class="btn primary">Backup Now</button>
                         </div>
                     </div>
                 </div>
@@ -661,58 +332,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar functionality
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const menuToggle = document.getElementById('menu-toggle');
-            
-            // Toggle sidebar
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-            });
-            
-            // Close sidebar when clicking outside
-            sidebarOverlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            // Logout functionality (header button)
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('adminUser');
-                window.location.href = '../admin-login.html';
-            });
-            
-            // Logout functionality (sidebar option)
-            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('adminUser');
-                window.location.href = '../admin-login.html';
-            });
-            
-            // Action buttons functionality
-            document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const action = this.classList.contains('edit') ? 'edit' : 'delete';
-                    const row = this.closest('tr');
-                    const name = row.cells[0].textContent;
-                    
-                    if (action === 'edit') {
-                        alert(`Edit ${name}`);
-                    } else {
-                        if (confirm(`Are you sure you want to delete ${name}?`)) {
-                            alert(`${name} deleted successfully`);
-                            row.remove();
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="../scripts/admin.js"></script>
 </body>
 </html>
