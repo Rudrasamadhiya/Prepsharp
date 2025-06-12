@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions - PrepSharp Admin</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #42a5f5;
+            --accent-color: #ff9800;
+            --admin-color: #e91e63;
+            --admin-light: #f8bbd0;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --background-color: #f5f5f5;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-badge {
+            background-color: var(--admin-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn.primary { background-color: var(--primary-color); color: white; }
+        .btn.admin { background-color: var(--admin-color); color: white; }
+        .btn.danger { background-color: var(--danger-color); color: white; }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--admin-color);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-header .admin-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f5f5f5;
+        }
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        .search-btn {
+            padding: 10px 15px;
+            background-color: var(--admin-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .action-btn.edit {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .action-btn.delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .action-btn.view {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-item:hover, .filter-item.active {
+            background-color: var(--admin-color);
+            color: white;
+            border-color: var(--admin-color);
+        }
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .question-header {
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .question-body {
+            padding: 15px;
+        }
+        .question-text {
+            margin-bottom: 15px;
+        }
+        .question-options {
+            margin-bottom: 15px;
+        }
+        .question-option {
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .question-option.correct {
+            background-color: #e8f5e9;
+            border-color: var(--success-color);
+        }
+        .question-option-label {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .question-option.correct .question-option-label {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .question-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        .page-item {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .page-item.active {
+            background-color: var(--admin-color);
+            color: white;
+            border-color: var(--admin-color);
+        }
+        .page-item:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="menu-icon" id="menu-toggle">☰</span>
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+            <h2>PrepSharp Admin</h2>
+        </div>
+        <div class="user-info">
+            <div class="admin-badge">⚙️ ADMIN</div>
+            <span id="user-name">Admin User</span>
+            <button id="logout-btn" class="btn primary">Logout</button>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="admin-icon">⚙️</span>
+            <h3>PrepSharp Admin</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="admin-dashboard.html"><span class="icon">🏠</span> Dashboard</a></li>
+            <li><a href="manage-users.html"><span class="icon">👥</span> Manage Users</a></li>
+            <li><a href="manage-exams.html"><span class="icon">📝</span> Manage Exams</a></li>
+            <li><a href="manage-questions.html"><span class="icon">❓</span> Manage Questions</a></li>
+            <li><a href="study-resources.html"><span class="icon">📚</span> Manage Resources</a></li>
+            <li><a href="expert-doubt.html"><span class="icon">💬</span> Manage Doubts</a></li>
+            <li><a href="performance-analytics.html"><span class="icon">📊</span> Analytics</a></li>
+            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
+            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Manage Questions</h2>
+                <button class="btn admin" id="add-question-btn">+ Add New Question</button>
+            </div>
+            <div class="card-body">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search questions...">
+                    <button class="search-btn">Search</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-item active">All Questions</div>
+                    <div class="filter-item">Physics</div>
+                    <div class="filter-item">Chemistry</div>
+                    <div class="filter-item">Mathematics</div>
+                    <div class="filter-item">JEE Advanced</div>
+                    <div class="filter-item">JEE Main</div>
+                </div>
+                
+                <!-- Question List -->
+                <div class="question-list">
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div>
+                                <strong>Question ID:</strong> PHY-001
+                            </div>
+                            <div>
+                                <span style="background-color: var(--primary-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">Physics</span>
+                                <span style="background-color: var(--admin-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 5px;">JEE Advanced</span>
+                            </div>
+                        </div>
+                        <div class="question-body">
+                            <div class="question-text">
+                                <p>A particle of mass m is moving in a circular orbit of radius r under the influence of an attractive central force F = -kr where k is a positive constant. The angular momentum of the particle is:</p>
+                            </div>
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="question-option-label">A</div>
+                                    <div>L = mr²ω</div>
+                                </div>
+                                <div class="question-option correct">
+                                    <div class="question-option-label">B</div>
+                                    <div>L = mr²√(k/m)</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="question-option-label">C</div>
+                                    <div>L = mr√k</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="question-option-label">D</div>
+                                    <div>L = m²r²/k</div>
+                                </div>
+                            </div>
+                            <div class="question-meta">
+                                <div>
+                                    <strong>Difficulty:</strong> Hard
+                                </div>
+                                <div>
+                                    <strong>Topic:</strong> Mechanics
+                                </div>
+                                <div>
+                                    <strong>Added:</strong> 2023-05-15
+                                </div>
+                            </div>
+                            <div class="question-actions">
+                                <button class="btn primary">View</button>
+                                <button class="btn admin">Edit</button>
+                                <button class="btn danger">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div>
+                                <strong>Question ID:</strong> CHEM-002
+                            </div>
+                            <div>
+                                <span style="background-color: var(--accent-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">Chemistry</span>
+                                <span style="background-color: var(--admin-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 5px;">JEE Advanced</span>
+                            </div>
+                        </div>
+                        <div class="question-body">
+                            <div class="question-text">
+                                <p>Which of the following compounds will show geometrical isomerism?</p>
+                            </div>
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="question-option-label">A</div>
+                                    <div>1-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="question-option-label">B</div>
+                                    <div>2-methylpropene</div>
+                                </div>
+                                <div class="question-option correct">
+                                    <div class="question-option-label">C</div>
+                                    <div>2-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="question-option-label">D</div>
+                                    <div>propene</div>
+                                </div>
+                            </div>
+                            <div class="question-meta">
+                                <div>
+                                    <strong>Difficulty:</strong> Medium
+                                </div>
+                                <div>
+                                    <strong>Topic:</strong> Organic Chemistry
+                                </div>
+                                <div>
+                                    <strong>Added:</strong> 2023-06-10
+                                </div>
+                            </div>
+                            <div class="question-actions">
+                                <button class="btn primary">View</button>
+                                <button class="btn admin">Edit</button>
+                                <button class="btn danger">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <div class="page-item">«</div>
+                    <div class="page-item active">1</div>
+                    <div class="page-item">2</div>
+                    <div class="page-item">3</div>
+                    <div class="page-item">4</div>
+                    <div class="page-item">5</div>
+                    <div class="page-item">»</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Question Modal (Hidden by default) -->
+        <div id="add-question-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+            <div style="background-color: white; width: 80%; max-width: 800px; margin: 50px auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;">
+                <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0;">Add New Question</h3>
+                    <span id="close-modal" style="cursor: pointer; font-size: 24px;">&times;</span>
+                </div>
+                <div style="padding: 20px;">
+                    <form id="question-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <select id="subject">
+                                    <option value="">Select Subject</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="mathematics">Mathematics</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="topic">Topic</label>
+                                <select id="topic">
+                                    <option value="">Select Topic</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="exam">Exam</label>
+                                <select id="exam">
+                                    <option value="">Select Exam</option>
+                                    <option value="jee-advanced">JEE Advanced</option>
+                                    <option value="jee-main">JEE Main</option>
+                                    <option value="bitsat">BITSAT</option>
+                                    <option value="neet">NEET</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="difficulty">Difficulty</label>
+                                <select id="difficulty">
+                                    <option value="">Select Difficulty</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="question-text">Question Text</label>
+                            <textarea id="question-text" placeholder="Enter the question text here..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Options</label>
+                            <div style="margin-bottom: 10px;">
+                                <input type="text" placeholder="Option A" style="width: calc(100% - 30px); margin-right: 10px;">
+                                <input type="radio" name="correct-option" value="A">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input type="text" placeholder="Option B" style="width: calc(100% - 30px); margin-right: 10px;">
+                                <input type="radio" name="correct-option" value="B">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input type="text" placeholder="Option C" style="width: calc(100% - 30px); margin-right: 10px;">
+                                <input type="radio" name="correct-option" value="C">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <input type="text" placeholder="Option D" style="width: calc(100% - 30px); margin-right: 10px;">
+                                <input type="radio" name="correct-option" value="D">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="explanation">Solution/Explanation</label>
+                            <textarea id="explanation" placeholder="Enter the solution or explanation here..."></textarea>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                            <button type="button" class="btn danger" id="cancel-add">Cancel</button>
+                            <button type="submit" class="btn admin">Add Question</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar functionality
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const menuToggle = document.getElementById('menu-toggle');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('adminUser');
+                window.location.href = '../admin-login.html';
+            });
+            
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('adminUser');
+                window.location.href = '../admin-login.html';
+            });
+            
+            // Filter functionality
+            document.querySelectorAll('.filter-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            const modal = document.getElementById('add-question-modal');
+            const addQuestionBtn = document.getElementById('add-question-btn');
+            const closeModal = document.getElementById('close-modal');
+            const cancelAdd = document.getElementById('cancel-add');
+            
+            addQuestionBtn.addEventListener('click', function() {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            function closeModalFunc() {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+            
+            closeModal.addEventListener('click', closeModalFunc);
+            cancelAdd.addEventListener('click', closeModalFunc);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModalFunc();
+                }
+            });
+            
+            // Dynamic subject-topic relationship
+            document.getElementById('subject').addEventListener('change', function() {
+                const subject = this.value;
+                const topicSelect = document.getElementById('topic');
+                
+                // Clear existing options
+                topicSelect.innerHTML = '<option value="">Select Topic</option>';
+                
+                // Add new options based on subject
+                if (subject === 'physics') {
+                    const topics = ['Mechanics', 'Electromagnetism', 'Optics', 'Thermodynamics', 'Modern Physics'];
+                    topics.forEach(topic => {
+                        const option = document.createElement('option');
+                        option.value = topic.toLowerCase().replace(' ', '-');
+                        option.textContent = topic;
+                        topicSelect.appendChild(option);
+                    });
+                } else if (subject === 'chemistry') {
+                    const topics = ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Coordination Compounds', 'Electrochemistry'];
+                    topics.forEach(topic => {
+                        const option = document.createElement('option');
+                        option.value = topic.toLowerCase().replace(' ', '-');
+                        option.textContent = topic;
+                        topicSelect.appendChild(option);
+                    });
+                } else if (subject === 'mathematics') {
+                    const topics = ['Calculus', 'Algebra', 'Coordinate Geometry', 'Trigonometry', 'Probability'];
+                    topics.forEach(topic => {
+                        const option = document.createElement('option');
+                        option.value = topic.toLowerCase().replace(' ', '-');
+                        option.textContent = topic;
+                        topicSelect.appendChild(option);
+                    });
+                }
+            });
+            
+            // Form submission
+            document.getElementById('question-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Question added successfully!');
+                closeModalFunc();
+            });
+            
+            // Question actions
+            document.querySelectorAll('.question-actions .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.toLowerCase();
+                    const questionCard = this.closest('.question-card');
+                    const questionId = questionCard.querySelector('.question-header strong').nextSibling.textContent.trim();
+                    
+                    if (action === 'view') {
+                        alert(`View question ${questionId}`);
+                    } else if (action === 'edit') {
+                        alert(`Edit question ${questionId}`);
+                    } else if (action === 'delete') {
+                        if (confirm(`Are you sure you want to delete question ${questionId}?`)) {
+                            alert(`Question ${questionId} deleted successfully`);
+                            questionCard.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
