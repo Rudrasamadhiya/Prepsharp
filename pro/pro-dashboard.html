@@ -6,629 +6,457 @@
     <title>Pro Dashboard - PrepSharp</title>
     <style>
         :root {
-            --primary-color: #1976d2;
-            --secondary-color: #42a5f5;
-            --accent-color: #ff9800;
-            --premium-color: #8e24aa;
-            --premium-light: #b39ddb;
-            --success-color: #4caf50;
-            --background-color: #f5f5f5;
-            --text-color: #212121;
-            --sidebar-width: 250px;
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --accent-dark: #d97706;
+            --background-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            padding-bottom: 40px;
         }
+        
         header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px 30px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
+        
         .logo-container {
             display: flex;
             align-items: center;
-            cursor: pointer;
-            user-select: none;
+            gap: 12px;
         }
         
-        /* Hamburger menu icon */
-        .menu-icon {
-            display: inline-block;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        .menu-icon:hover {
+        .logo-container h2 {
+            font-weight: 600;
+            font-size: 20px;
             color: var(--primary-color);
         }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .premium-badge {
-            background-color: var(--premium-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        .premium-badge .icon {
-            margin-right: 4px;
-            font-size: 14px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .btn.primary { background-color: var(--primary-color); color: white; }
-        .btn.premium { background-color: var(--premium-color); color: white; }
+        
         .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 32px 20px;
         }
         
-        /* Dashboard grid layout */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        
+        .btn.primary { 
+            background-color: var(--primary-color); 
+            color: white; 
+        }
+        
+        .btn.primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        
+        .dashboard-header .subscription-badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .dashboard-header .subscription-badge::before {
+            content: "⭐";
+        }
+        
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
         
-        /* Card styles */
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .dashboard-card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--text-color);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        .card-body {
-            padding: 20px;
+            gap: 8px;
         }
         
-        /* Progress section */
-        .progress-container {
-            margin-bottom: 15px;
-        }
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        .progress-bar {
-            height: 8px;
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary-color);
-        }
-        .progress-fill.premium {
-            background-color: var(--premium-color);
-        }
-        
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        .stat-card {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-        }
-        .stat-value {
+        .dashboard-card h2::before {
             font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-        .stat-value.premium {
-            color: var(--premium-color);
-        }
-        .stat-label {
-            font-size: 14px;
-            color: #666;
         }
         
-        /* Recent activity */
-        .activity-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .dashboard-card.practice h2::before {
+            content: "📝";
         }
-        .activity-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
+        
+        .dashboard-card.analytics h2::before {
+            content: "📊";
+        }
+        
+        .dashboard-card.study h2::before {
+            content: "📚";
+        }
+        
+        .dashboard-card.progress h2::before {
+            content: "🚀";
+        }
+        
+        .dashboard-card p {
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        
+        .card-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+        
+        .card-action .btn {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .recent-activity {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .recent-activity h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--text-color);
             display: flex;
             align-items: center;
+            gap: 8px;
         }
+        
+        .recent-activity h2::before {
+            content: "🕒";
+            font-size: 24px;
+        }
+        
+        .activity-list {
+            list-style-type: none;
+        }
+        
+        .activity-item {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
         .activity-item:last-child {
             border-bottom: none;
         }
+        
         .activity-icon {
-            width: 36px;
-            height: 36px;
-            background-color: #e3f2fd;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(59, 130, 246, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
-            color: var(--primary-color);
+            font-size: 20px;
         }
-        .activity-icon.premium {
-            background-color: var(--premium-light);
-            color: var(--premium-color);
-        }
+        
         .activity-content {
             flex: 1;
         }
+        
         .activity-title {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-        .activity-time {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        /* Recommended exams */
-        .exam-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .exam-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-        .exam-card:hover {
-            transform: translateY(-5px);
-        }
-        .exam-logo {
-            height: 100px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .exam-info {
-            padding: 15px;
-        }
-        .exam-title {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-        .exam-meta {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        /* Premium features */
-        .premium-features {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .premium-feature {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .premium-feature:last-child {
-            border-bottom: none;
-        }
-        .feature-check {
-            color: var(--success-color);
-            margin-right: 10px;
-        }
-        
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100%;
-            background-color: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .sidebar-header {
-            padding: 20px;
-            background-color: var(--premium-color);
-            color: white;
-            display: flex;
-            align-items: center;
-        }
-        .sidebar-header .crown {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar-menu li {
-            border-bottom: 1px solid #eee;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
+            font-weight: 600;
             color: var(--text-color);
-            text-decoration: none;
-            transition: background-color 0.2s;
+            margin-bottom: 4px;
         }
-        .sidebar-menu a:hover {
-            background-color: #f5f5f5;
+        
+        .activity-time {
+            font-size: 14px;
+            color: var(--text-light);
         }
-        .sidebar-menu .icon {
-            margin-right: 10px;
+        
+        .activity-score {
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        .subscription-info {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            margin-bottom: 32px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .subscription-info h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .subscription-info h2::before {
+            content: "🔑";
+            font-size: 24px;
+        }
+        
+        .subscription-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .subscription-detail {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+        
+        .detail-value {
             font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
+            font-weight: 600;
+            color: var(--text-color);
         }
         
-        /* Sidebar active state */
-        .sidebar.active {
-            left: 0;
-        }
-        .sidebar-overlay.active {
-            display: block;
+        .manage-subscription {
+            margin-top: 16px;
+            text-align: right;
         }
         
-        /* Responsive design */
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-container" id="logo-container">
-            <span class="menu-icon" id="menu-toggle">☰</span>
-            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px; margin-right: 10px;">
+        <div class="logo-container">
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 36px;">
             <h2>PrepSharp</h2>
         </div>
         <div class="user-info">
-            <div class="premium-badge">
-                <span class="icon">👑</span> PRO
-            </div>
-            <span id="user-name">Welcome, User</span>
+            <span id="user-name" style="margin-right: 16px; font-weight: 500;">Welcome, User</span>
             <button id="logout-btn" class="btn primary">Logout</button>
         </div>
     </header>
     
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <span class="crown">👑</span>
-            <h3>PrepSharp Pro</h3>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="pro-dashboard.html"><span class="icon">🏠</span> Pro Dashboard</a></li>
-            <li><a href="practice-exams.html"><span class="icon">📝</span> Practice Exams</a></li>
-            <li><a href="performance-analytics.html"><span class="icon">📊</span> Performance Analytics</a></li>
-            <li><a href="study-plan.html"><span class="icon">🎯</span> Personalized Study Plan</a></li>
-            <li><a href="study-resources.html"><span class="icon">📚</span> Study Resources</a></li>
-            <li><a href="expert-doubt.html"><span class="icon">💬</span> Expert Doubt Solving</a></li>
-            <li><a href="ai-chat.html"><span class="icon">🤖</span> AI Study Assistant</a></li>
-            <li><a href="profile.html"><span class="icon">👤</span> Edit Profile</a></li>
-            <li><a href="settings.html"><span class="icon">⚙️</span> Settings</a></li>
-            <li><a href="#" id="sidebar-logout"><span class="icon">🚪</span> Logout</a></li>
-        </ul>
-    </div>
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    
     <div class="container">
+        <div class="dashboard-header">
+            <h1>Pro Dashboard</h1>
+            <div class="subscription-badge" id="plan-badge">Pro Plan</div>
+        </div>
+        
+        <div class="subscription-info">
+            <h2>Your Subscription</h2>
+            <div class="subscription-details">
+                <div class="subscription-detail">
+                    <div class="detail-label">Current Plan</div>
+                    <div class="detail-value" id="current-plan">Loading...</div>
+                </div>
+                <div class="subscription-detail">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value" style="color: var(--success);">Active</div>
+                </div>
+                <div class="subscription-detail">
+                    <div class="detail-label">Expires On</div>
+                    <div class="detail-value" id="expiry-date">Loading...</div>
+                </div>
+            </div>
+            <div class="manage-subscription">
+                <a href="subscription.html" class="btn primary">Manage Subscription</a>
+            </div>
+        </div>
+        
         <div class="dashboard-grid">
-            <!-- Main content area -->
-            <div class="main-content">
-                <!-- Welcome card -->
-                <div class="card">
-                    <div class="card-body">
-                        <h1>Welcome to PrepSharp Pro</h1>
-                        <p>Your premium dashboard for advanced exam preparation and personalized learning.</p>
-                        
-                        <!-- Overall progress -->
-                        <div class="progress-container" style="margin-top: 20px;">
-                            <div class="progress-label">
-                                <span>Your Preparation Progress</span>
-                                <span id="progress-percentage">68%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill premium" style="width: 68%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats overview -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Your Performance Stats</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-value premium">24</div>
-                                <div class="stat-label">Exams Completed</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value premium">78%</div>
-                                <div class="stat-label">Average Score</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">42</div>
-                                <div class="stat-label">Study Hours</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">12</div>
-                                <div class="stat-label">Weak Areas Improved</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Subject performance -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Subject Performance</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Physics</span>
-                                <span>82%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 82%;"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Chemistry</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%;"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Mathematics</span>
-                                <span>68%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 68%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recommended exams -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Recommended Practice Tests</h3>
-                        <a href="#" style="color: var(--premium-color); text-decoration: none;">View All</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="exam-list">
-                            <div class="exam-card" onclick="window.location.href='../exam-list.html?type=jee-advanced'">
-                                <div class="exam-logo">
-                                    <div style="font-size: 24px; font-weight: bold; color: var(--premium-color);">JEE Advanced</div>
-                                </div>
-                                <div class="exam-info">
-                                    <div class="exam-title">JEE Advanced Papers</div>
-                                    <div class="exam-meta">Difficulty: High • 3 hours</div>
-                                </div>
-                            </div>
-                            
-                            <div class="exam-card" onclick="window.location.href='../exam-list.html?type=jee-main'">
-                                <div class="exam-logo">
-                                    <div style="font-size: 24px; font-weight: bold; color: var(--primary-color);">JEE Main</div>
-                                </div>
-                                <div class="exam-info">
-                                    <div class="exam-title">JEE Main Papers</div>
-                                    <div class="exam-meta">Difficulty: Medium • 3 hours</div>
-                                </div>
-                            </div>
-                            
-                            <div class="exam-card" onclick="window.location.href='../exam-list.html?type=bitsat'">
-                                <div class="exam-logo">
-                                    <div style="font-size: 24px; font-weight: bold; color: #4caf50;">BITSAT</div>
-                                </div>
-                                <div class="exam-info">
-                                    <div class="exam-title">BITSAT Papers</div>
-                                    <div class="exam-meta">Difficulty: Medium • 3 hours</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="dashboard-card practice">
+                <h2>Practice Papers</h2>
+                <p>Access all JEE Main and Advanced practice papers with detailed solutions.</p>
+                <div class="card-action">
+                    <span>24 papers available</span>
+                    <a href="#" class="btn primary">Start Practice</a>
                 </div>
             </div>
             
-            <!-- Sidebar content -->
-            <div class="sidebar-content">
-                <!-- Recent activity -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Recent Activity</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="activity-list">
-                            <li class="activity-item">
-                                <div class="activity-icon premium">📝</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Completed JEE Advanced 2022 Paper 1</div>
-                                    <div class="activity-time">Today, 10:30 AM</div>
-                                </div>
-                            </li>
-                            <li class="activity-item">
-                                <div class="activity-icon">📊</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Performance Report Generated</div>
-                                    <div class="activity-time">Yesterday, 3:45 PM</div>
-                                </div>
-                            </li>
-                            <li class="activity-item">
-                                <div class="activity-icon premium">💬</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Doubt Solved by Expert</div>
-                                    <div class="activity-time">Yesterday, 1:20 PM</div>
-                                </div>
-                            </li>
-                            <li class="activity-item">
-                                <div class="activity-icon">📚</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Study Material Downloaded</div>
-                                    <div class="activity-time">2 days ago</div>
-                                </div>
-                            </li>
-                            <li class="activity-item">
-                                <div class="activity-icon premium">🎯</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Study Plan Updated</div>
-                                    <div class="activity-time">3 days ago</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Upcoming events -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Upcoming Events</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="activity-list">
-                            <li class="activity-item">
-                                <div class="activity-icon premium">📅</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Live Doubt Solving Session</div>
-                                    <div class="activity-time">Tomorrow, 6:00 PM</div>
-                                </div>
-                            </li>
-                            <li class="activity-item">
-                                <div class="activity-icon premium">🎓</div>
-                                <div class="activity-content">
-                                    <div class="activity-title">JEE Advanced Strategy Webinar</div>
-                                    <div class="activity-time">June 15, 5:00 PM</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="dashboard-card analytics">
+                <h2>Performance Analytics</h2>
+                <p>Track your progress and identify areas for improvement.</p>
+                <div class="card-action">
+                    <span>Updated today</span>
+                    <a href="#" class="btn primary">View Analytics</a>
                 </div>
             </div>
+            
+            <div class="dashboard-card study">
+                <h2>Study Material</h2>
+                <p>Access comprehensive study materials for all subjects.</p>
+                <div class="card-action">
+                    <span>100+ resources</span>
+                    <a href="#" class="btn primary">Browse Materials</a>
+                </div>
+            </div>
+            
+            <div class="dashboard-card progress">
+                <h2>Progress Tracker</h2>
+                <p>Monitor your preparation journey and set goals.</p>
+                <div class="card-action">
+                    <span>65% complete</span>
+                    <a href="#" class="btn primary">View Progress</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recent-activity">
+            <h2>Recent Activity</h2>
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon">📝</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Completed JEE Main Physics Practice Test</div>
+                        <div class="activity-time">Today, 2:30 PM</div>
+                    </div>
+                    <div class="activity-score">85%</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">📚</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Studied Organic Chemistry Chapter 5</div>
+                        <div class="activity-time">Yesterday, 7:15 PM</div>
+                    </div>
+                    <div class="activity-score">Completed</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">📊</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Reviewed Mathematics Performance</div>
+                        <div class="activity-time">2 days ago, 4:45 PM</div>
+                    </div>
+                    <div class="activity-score">Reviewed</div>
+                </li>
+            </ul>
         </div>
     </div>
 
     <script>
-        // Check if user is logged in
         document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) {
-                window.location.href = '../index.html';
+            // Get user data
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Update user name
+            document.getElementById('user-name').textContent = 'Welcome, ' + (userData.name || 'User');
+            
+            // Check if user has active subscription
+            if (userData.hasActiveSubscription && userData.currentSubscription) {
+                const subscription = userData.currentSubscription;
+                
+                // Update subscription details
+                document.getElementById('current-plan').textContent = subscription.planName;
+                document.getElementById('plan-badge').textContent = subscription.planName;
+                
+                // Format expiry date
+                const expiryDate = new Date(subscription.expiryDate);
+                document.getElementById('expiry-date').textContent = expiryDate.toLocaleDateString();
             } else {
-                const user = JSON.parse(currentUser);
-                
-                // Display user name
-                document.getElementById('user-name').textContent = `${user.name || 'User'}`;
-                
-                // Sidebar functionality
-                const sidebar = document.getElementById('sidebar');
-                const sidebarOverlay = document.getElementById('sidebar-overlay');
-                const menuToggle = document.getElementById('menu-toggle');
-                
-                // Toggle sidebar
-                menuToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                    sidebarOverlay.classList.toggle('active');
-                    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-                });
-                
-                // Close sidebar when clicking outside
-                sidebarOverlay.addEventListener('click', function() {
-                    sidebar.classList.remove('active');
-                    sidebarOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-                
-                // Logout functionality (header button)
-                document.getElementById('logout-btn').addEventListener('click', function() {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = '../index.html';
-                });
-                
-                // Logout functionality (sidebar option)
-                document.getElementById('sidebar-logout').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.removeItem('currentUser');
-                    window.location.href = '../index.html';
-                });
-                
-                // Simulate loading data
-                setTimeout(() => {
-                    // This would be replaced with actual API calls in a real application
-                    console.log('User data loaded for:', user.name);
-                }, 500);
+                // Redirect to subscription page if no active subscription
+                window.location.href = 'subscription.html';
             }
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('userData');
+                    window.location.href = '../index.html';
+                }
+            });
         });
     </script>
 </body>
