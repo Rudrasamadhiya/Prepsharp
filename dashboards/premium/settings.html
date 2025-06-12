@@ -744,85 +744,48 @@
         </main>
     </div>
     
-    <script src="../../assets/js/dashboard-data.js"></script>
     <script>
-        // Load data and render the settings page
-        async function loadSettingsData() {
-            try {
-                // Get user data
-                const userData = await dashboardData.getUserData();
+        // Settings navigation
+        document.querySelectorAll('.settings-nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
                 
-                // Update user info in header
-                document.querySelector('.user-name').textContent = userData.name;
-                document.querySelector('.notification-count').textContent = userData.notifications;
+                // Remove active class from all links
+                document.querySelectorAll('.settings-nav-link').forEach(l => {
+                    l.classList.remove('active');
+                });
                 
-                // Update profile form
-                document.getElementById('fullName').value = userData.name;
-                document.getElementById('email').value = userData.email;
-                document.getElementById('phone').value = userData.phone;
-                document.getElementById('school').value = userData.institution;
+                // Add active class to clicked link
+                this.classList.add('active');
                 
-                // Update subscription info
-                const planStartDate = new Date(userData.planStartDate);
-                const planEndDate = new Date(userData.planEndDate);
+                // Hide all sections
+                document.querySelectorAll('.settings-section').forEach(section => {
+                    section.style.display = 'none';
+                });
                 
-                document.querySelector('.subscription-detail:nth-child(1) .detail-value').textContent = 
-                    planStartDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                
-                document.querySelector('.subscription-detail:nth-child(2) .detail-value').textContent = 
-                    planEndDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                
-                // Set up event listeners
-                setupEventListeners();
-                
-            } catch (error) {
-                console.error('Error loading settings data:', error);
-            }
-        }
+                // Show the corresponding section
+                const sectionId = this.getAttribute('href').substring(1);
+                document.getElementById(sectionId).style.display = 'block';
+            });
+        });
         
-        function setupEventListeners() {
-            // Settings navigation
-            document.querySelectorAll('.settings-nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all links
-                    document.querySelectorAll('.settings-nav-link').forEach(l => {
-                        l.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Hide all sections
-                    document.querySelectorAll('.settings-section').forEach(section => {
-                        section.style.display = 'none';
-                    });
-                    
-                    // Show the corresponding section
-                    const sectionId = this.getAttribute('href').substring(1);
-                    document.getElementById(sectionId).style.display = 'block';
-                });
+        // Form submission handlers
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Show notification
+                showNotification('Changes saved successfully!');
             });
-            
-            // Form submission handlers
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    // Show notification
-                    showNotification('Changes saved successfully!');
-                });
+        });
+        
+        // Toggle switches functionality
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const toggleLabel = this.closest('.notification-option').querySelector('.notification-title').textContent;
+                const status = this.checked ? 'enabled' : 'disabled';
+                showNotification(`${toggleLabel} ${status}!`);
             });
-            
-            // Toggle switches functionality
-            document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-                toggle.addEventListener('change', function() {
-                    const toggleLabel = this.closest('.notification-option').querySelector('.notification-title').textContent;
-                    const status = this.checked ? 'enabled' : 'disabled';
-                    showNotification(`${toggleLabel} ${status}!`);
-                });
-            });
-        }
+        });
         
         // Notification function
         function showNotification(message, type = 'success') {
@@ -857,9 +820,6 @@
                 }, 300);
             }, 3000);
         }
-        
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadSettingsData);
     </script>
 </body>
 </html>

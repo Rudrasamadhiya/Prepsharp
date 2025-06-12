@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Advanced 2024 - TCS iON Format</title>
+    <link rel="stylesheet" href="tcs-ion-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="fix-exam-tcs.js"></script>
+</head>
+<body>
+    <div class="exam-container">
+        <!-- Top blue strip with paper name -->
+        <div class="top-strip">
+            JEE Advanced 2024
+        </div>
+        
+        <!-- Black strip with paper indicator and buttons -->
+        <div class="black-strip">
+            <div class="paper-indicator">Paper 1</div>
+            <div class="strip-buttons">
+                <div class="strip-btn">
+                    <i class="fas fa-file-alt"></i> Question Paper
+                </div>
+                <div class="strip-btn">
+                    <i class="fas fa-info-circle"></i> View Instructions
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Left container - Question display and its footer -->
+            <div class="left-container">
+                <!-- Left panel - Question display -->
+                <div class="left-panel">
+                    <!-- Section tabs strip -->
+                    <div class="sections-strip">
+                        <div class="section-tab active" data-subject="Physics">Physics Section 1</div>
+                        <div class="section-tab" data-subject="Physics">Physics Section 2</div>
+                        <div class="section-tab" data-subject="Chemistry">Chemistry Section 1</div>
+                        <div class="section-tab" data-subject="Chemistry">Chemistry Section 2</div>
+                        <div class="section-tab" data-subject="Mathematics">Mathematics Section 1</div>
+                        <div class="section-tab" data-subject="Mathematics">Mathematics Section 2</div>
+                    </div>
+                    
+                    <!-- Blue language strip -->
+                    <div class="language-strip">
+                        <div class="language-selector">
+                            View in: 
+                            <select>
+                                <option>English</option>
+                                <option>Hindi</option>
+                            </select>
+                        </div>
+                        <div class="timer" id="exam-timer">Time Left: 180:00</div>
+                    </div>
+                    
+                    <!-- Question area -->
+                    <div class="question-area" id="question-display">
+                        <div class="question-number">Question No. 1</div>
+                        
+                        <div class="question-content">
+                            <div class="question-text">
+                                <p>Loading question...</p>
+                            </div>
+                            
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" name="q1" id="q1-a" class="option-radio">
+                                    <label for="q1-a" class="option-label">
+                                        <div class="option-letter">a)</div>
+                                        <div class="option-text">Loading options...</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Left footer with action buttons -->
+                <div class="left-footer">
+                    <button class="action-btn mark-btn">Mark for Review & Next</button>
+                    <button class="action-btn clear-btn">Clear Response</button>
+                    <button class="action-btn prev-btn">Previous</button>
+                    <button class="action-btn save-btn">Save & Next</button>
+                </div>
+            </div>
+            
+            <!-- Right container - Navigation and its footer -->
+            <div class="right-container">
+                <!-- Right panel - Navigation -->
+                <div class="right-panel">
+                    <!-- Candidate info -->
+                    <div class="candidate-info">
+                        <div class="candidate-avatar"></div>
+                        <div class="candidate-name">Candidate</div>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color answered"></div>
+                            <span>Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-answered"></div>
+                            <span>Not Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-visited"></div>
+                            <span>Not Visited</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color marked"></div>
+                            <span>Marked for Review</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color answered-marked"></div>
+                            <span>Answered & Marked for Review</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Section blue strip -->
+                    <div class="section-strip" id="section-title">
+                        Physics Section 1
+                    </div>
+                    
+                    <!-- Question palette -->
+                    <div class="question-palette" id="question-palette">
+                        <!-- Question buttons will be generated here -->
+                        <div class="question-btn not-visited">1</div>
+                        <div class="question-btn not-visited">2</div>
+                        <div class="question-btn not-visited">3</div>
+                        <div class="question-btn not-visited">4</div>
+                        <div class="question-btn not-visited">5</div>
+                    </div>
+                </div>
+                
+                <!-- Right footer with submit button -->
+                <div class="right-footer">
+                    <button class="action-btn submit-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add event listeners for section tabs
+        document.querySelectorAll('.section-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Update active tab
+                document.querySelectorAll('.section-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Update section title
+                document.getElementById('section-title').textContent = this.textContent;
+                
+                // Load questions for this subject
+                const subject = this.getAttribute('data-subject');
+                loadSubjectQuestions(subject);
+            });
+        });
+        
+        // Function to load questions for a subject
+        function loadSubjectQuestions(subject) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paperId = urlParams.get('id');
+            
+            if (paperId) {
+                fetch(`db/papers.json`)
+                    .then(response => response.json())
+                    .then(papers => {
+                        const paper = papers.find(p => p.id === paperId);
+                        if (paper) {
+                            const subjectQuestions = paper.questions.filter(q => 
+                                q.subject === subject
+                            );
+                            
+                            if (subjectQuestions.length > 0) {
+                                // Display first question of this subject
+                                displayQuestion(subjectQuestions[0], paper);
+                                
+                                // Update question palette
+                                updateQuestionPalette(subjectQuestions);
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error loading subject questions:', error));
+            }
+        }
+        
+        // Function to update question palette
+        function updateQuestionPalette(questions) {
+            const palette = document.getElementById('question-palette');
+            palette.innerHTML = '';
+            
+            questions.forEach(question => {
+                const btn = document.createElement('div');
+                btn.className = 'question-btn not-visited';
+                btn.textContent = question.number;
+                btn.onclick = function() {
+                    displayQuestion(question);
+                };
+                
+                palette.appendChild(btn);
+            });
+        }
+        
+        // Function to display a question
+        function displayQuestion(question, paper) {
+            console.log("Displaying question:", question);
+            
+            const questionDisplay = document.getElementById('question-display');
+            if (!questionDisplay) return;
+            
+            // Update question number
+            const questionNumberElement = questionDisplay.querySelector('.question-number');
+            if (questionNumberElement) {
+                questionNumberElement.textContent = `Question No. ${question.number}`;
+            }
+            
+            // Update question content
+            const questionContent = questionDisplay.querySelector('.question-content');
+            if (!questionContent) return;
+            
+            const questionText = questionContent.querySelector('.question-text');
+            if (!questionText) return;
+            
+            // Clear previous content
+            questionText.innerHTML = '';
+            
+            // Add question image if available
+            if (question.imagePath) {
+                const img = document.createElement('img');
+                img.src = question.imagePath;
+                img.alt = `Question ${question.number}`;
+                img.className = 'question-image';
+                img.onerror = function() {
+                    console.error("Failed to load image:", question.imagePath);
+                    this.src = 'assets/images/image-placeholder.png';
+                };
+                questionText.appendChild(img);
+            } else {
+                questionText.innerHTML = '<p>Question text will appear here.</p>';
+            }
+            
+            // Update options
+            const optionsContainer = questionContent.querySelector('.options');
+            if (!optionsContainer) return;
+            
+            optionsContainer.innerHTML = '';
+            
+            if (question.options && question.options.length > 0) {
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const inputType = question.type === 'Multiple Correct Options' ? 'checkbox' : 'radio';
+                    const inputId = `q${question.number}-${option.label.toLowerCase()}`;
+                    
+                    optionDiv.innerHTML = `
+                        <input type="${inputType}" name="q${question.number}" id="${inputId}" class="option-radio">
+                        <label for="${inputId}" class="option-label">
+                            <div class="option-letter">${option.label})</div>
+                            <div class="option-text">
+                                ${option.imagePath ? `<img src="${option.imagePath}" alt="Option ${option.label}" onerror="this.src='assets/images/option-placeholder.png';">` : ''}
+                            </div>
+                        </label>
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            } else if (question.type === 'Non-Negative Integer') {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'integer-input';
+                inputDiv.innerHTML = `
+                    <label for="q${question.number}-integer">Enter your answer (non-negative integer):</label>
+                    <input type="number" min="0" step="1" id="q${question.number}-integer" name="q${question.number}">
+                `;
+                optionsContainer.appendChild(inputDiv);
+            }
+        }
+    </script>
+</body>
+</html>

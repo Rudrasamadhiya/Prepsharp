@@ -168,6 +168,7 @@
         let currentQuestion = 1;
         let currentSection = "Physics Section 1";
         let questionStatus = {};
+        let paperData = null;
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -187,6 +188,7 @@
         
         // Function to load paper data
         function loadPaper(paperId) {
+            console.log("Loading paper:", paperId);
             fetch(`db/papers.json`)
                 .then(response => {
                     if (!response.ok) {
@@ -195,10 +197,14 @@
                     return response.json();
                 })
                 .then(papers => {
+                    console.log("Papers loaded:", papers);
                     const paper = papers.find(p => p.id === paperId);
                     if (!paper) {
                         throw new Error(`Paper with ID ${paperId} not found`);
                     }
+                    
+                    // Store paper data globally
+                    paperData = paper;
                     
                     // Update paper title and information
                     document.querySelector('.top-strip').textContent = paper.name;
@@ -215,6 +221,8 @@
         
         // Function to load questions
         function loadQuestions(paper) {
+            console.log("Loading questions from paper:", paper.name);
+            
             // Group questions by subject
             const questionsBySubject = {};
             paper.questions.forEach(question => {
@@ -224,6 +232,18 @@
                 }
                 questionsBySubject[subject].push(question);
             });
+            
+            console.log("Questions by subject:", questionsBySubject);
+            
+            // Count questions per subject for the palette
+            const physicsCount = questionsBySubject['Physics'] ? questionsBySubject['Physics'].length : 0;
+            const chemistryCount = questionsBySubject['Chemistry'] ? questionsBySubject['Chemistry'].length : 0;
+            const mathsCount = questionsBySubject['Mathematics'] ? questionsBySubject['Mathematics'].length : 0;
+            
+            console.log(`Question counts - Physics: ${physicsCount}, Chemistry: ${chemistryCount}, Mathematics: ${mathsCount}`);
+            
+            // Generate question buttons based on actual question count
+            generateQuestionButtons(Math.max(physicsCount, chemistryCount, mathsCount));
             
             // Update the question display with the first question
             if (paper.questions.length > 0) {
@@ -257,8 +277,15 @@
         
         // Function to show a question by its ID
         function showQuestionById(questionId, paper) {
+            console.log("Showing question by ID:", questionId);
+            
             const question = paper.questions.find(q => q.id === questionId);
-            if (!question) return;
+            if (!question) {
+                console.error("Question not found with ID:", questionId);
+                return;
+            }
+            
+            console.log("Found question:", question);
             
             const questionDisplay = document.getElementById('question-display');
             
@@ -275,37 +302,53 @@
             
             // Add question image if available
             if (question.imagePath) {
+                console.log("Adding question image:", question.imagePath);
                 const img = document.createElement('img');
                 img.src = question.imagePath;
                 img.alt = `Question ${question.number}`;
                 img.className = 'question-image';
+                img.onerror = function() {
+                    console.error("Failed to load image:", question.imagePath);
+                    this.src = 'assets/images/image-placeholder.png';
+                    this.alt = 'Image not found';
+                };
                 questionText.appendChild(img);
+            } else {
+                // If no image, add a placeholder text
+                questionText.innerHTML = '<p>Question text will appear here.</p>';
             }
             
             // Update options based on question type
             const optionsContainer = questionContent.querySelector('.options');
             optionsContainer.innerHTML = '';
             
+            console.log("Question type:", question.type);
+            
             if (question.type === 'Single Correct Option' || question.type === 'Multiple Correct Options') {
-                question.options.forEach((option, index) => {
-                    const optionDiv = document.createElement('div');
-                    optionDiv.className = 'option';
-                    
-                    const inputType = question.type === 'Single Correct Option' ? 'radio' : 'checkbox';
-                    const inputId = `q${question.number}-${option.label.toLowerCase()}`;
-                    
-                    optionDiv.innerHTML = `
-                        <input type="${inputType}" name="q${question.number}" id="${inputId}" class="option-radio">
-                        <label for="${inputId}" class="option-label">
-                            <div class="option-letter">${option.label})</div>
-                            <div class="option-text">
-                                ${option.imagePath ? `<img src="${option.imagePath}" alt="Option ${option.label}">` : option.text || ''}
-                            </div>
-                        </label>
-                    `;
-                    
-                    optionsContainer.appendChild(optionDiv);
-                });
+                if (question.options && question.options.length > 0) {
+                    question.options.forEach((option, index) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+                        
+                        const inputType = question.type === 'Single Correct Option' ? 'radio' : 'checkbox';
+                        const inputId = `q${question.number}-${option.label.toLowerCase()}`;
+                        
+                        optionDiv.innerHTML = `
+                            <input type="${inputType}" name="q${question.number}" id="${inputId}" class="option-radio">
+                            <label for="${inputId}" class="option-label">
+                                <div class="option-letter">${option.label})</div>
+                                <div class="option-text">
+                                    ${option.imagePath ? `<img src="${option.imagePath}" alt="Option ${option.label}" onerror="this.src='assets/images/option-placeholder.png'; this.alt='Image not found';">` : option.text || ''}
+                                </div>
+                            </label>
+                        `;
+                        
+                        optionsContainer.appendChild(optionDiv);
+                    });
+                } else {
+                    console.error("No options found for question:", questionId);
+                    optionsContainer.innerHTML = '<p>Options not available</p>';
+                }
             } else if (question.type === 'Non-Negative Integer') {
                 const inputDiv = document.createElement('div');
                 inputDiv.className = 'integer-input';
@@ -314,6 +357,30 @@
                     <input type="number" min="0" step="1" id="q${question.number}-integer" name="q${question.number}">
                 `;
                 optionsContainer.appendChild(inputDiv);
+            } else if (question.type === 'Match List') {
+                if (question.options && question.options.length > 0) {
+                    question.options.forEach((option, index) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+                        
+                        const inputId = `q${question.number}-${option.label.toLowerCase()}`;
+                        
+                        optionDiv.innerHTML = `
+                            <input type="radio" name="q${question.number}" id="${inputId}" class="option-radio">
+                            <label for="${inputId}" class="option-label">
+                                <div class="option-letter">${option.label})</div>
+                                <div class="option-text">
+                                    ${option.imagePath ? `<img src="${option.imagePath}" alt="Option ${option.label}" onerror="this.src='assets/images/option-placeholder.png'; this.alt='Image not found';">` : option.text || ''}
+                                </div>
+                            </label>
+                        `;
+                        
+                        optionsContainer.appendChild(optionDiv);
+                    });
+                } else {
+                    console.error("No options found for match list question:", questionId);
+                    optionsContainer.innerHTML = '<p>Match options not available</p>';
+                }
             }
             
             // Update current question
@@ -328,36 +395,35 @@
         
         // Function to show question by number
         function showQuestion(number) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paperId = urlParams.get('id');
+            console.log("Showing question number:", number);
             
-            if (paperId) {
-                fetch(`db/papers.json`)
-                    .then(response => response.json())
-                    .then(papers => {
-                        const paper = papers.find(p => p.id === paperId);
-                        if (paper) {
-                            // Find question by number and subject
-                            const sectionTitle = document.getElementById('section-title').textContent.trim();
-                            const subject = sectionTitle.split(' ')[0]; // Extract subject name
-                            
-                            const question = paper.questions.find(q => 
-                                parseInt(q.number) === number && 
-                                q.subject.toLowerCase() === subject.toLowerCase()
-                            );
-                            
-                            if (question) {
-                                showQuestionById(question.id, paper);
-                            } else {
-                                // If question not found in current section, show first question with this number
-                                const anyQuestion = paper.questions.find(q => parseInt(q.number) === number);
-                                if (anyQuestion) {
-                                    showQuestionById(anyQuestion.id, paper);
-                                }
-                            }
-                        }
-                    })
-                    .catch(error => console.error('Error loading question:', error));
+            if (paperData) {
+                // Find question by number and subject
+                const sectionTitle = document.getElementById('section-title').textContent.trim();
+                const subject = sectionTitle.split(' ')[0]; // Extract subject name
+                
+                console.log("Current section:", sectionTitle, "Subject:", subject);
+                
+                const question = paperData.questions.find(q => 
+                    parseInt(q.number) === number && 
+                    q.subject.toLowerCase() === subject.toLowerCase()
+                );
+                
+                if (question) {
+                    console.log("Found question:", question);
+                    showQuestionById(question.id, paperData);
+                } else {
+                    // If question not found in current section, show first question with this number
+                    const anyQuestion = paperData.questions.find(q => parseInt(q.number) === number);
+                    if (anyQuestion) {
+                        console.log("Found question in different section:", anyQuestion);
+                        showQuestionById(anyQuestion.id, paperData);
+                    } else {
+                        console.log("No question found with number:", number);
+                    }
+                }
+            } else {
+                console.error("Paper data not loaded yet");
             }
         }
         
@@ -389,6 +455,8 @@
         
         // Function to change section
         function changeSection(tab, sectionName) {
+            console.log("Changing section to:", sectionName);
+            
             // Update active tab
             document.querySelectorAll('.section-tab').forEach(t => {
                 t.classList.remove('active');
@@ -399,26 +467,21 @@
             document.getElementById('section-title').textContent = sectionName;
             
             // Load first question from this section
-            const urlParams = new URLSearchParams(window.location.search);
-            const paperId = urlParams.get('id');
-            
-            if (paperId) {
-                fetch(`db/papers.json`)
-                    .then(response => response.json())
-                    .then(papers => {
-                        const paper = papers.find(p => p.id === paperId);
-                        if (paper) {
-                            const subject = sectionName.split(' ')[0]; // Extract subject name
-                            const sectionQuestions = paper.questions.filter(q => 
-                                q.subject.toLowerCase() === subject.toLowerCase()
-                            );
-                            
-                            if (sectionQuestions.length > 0) {
-                                showQuestionById(sectionQuestions[0].id, paper);
-                            }
-                        }
-                    })
-                    .catch(error => console.error('Error changing section:', error));
+            if (paperData) {
+                const subject = sectionName.split(' ')[0]; // Extract subject name
+                console.log("Looking for questions in subject:", subject);
+                
+                const sectionQuestions = paperData.questions.filter(q => 
+                    q.subject.toLowerCase() === subject.toLowerCase()
+                );
+                
+                console.log("Found questions for this section:", sectionQuestions.length);
+                
+                if (sectionQuestions.length > 0) {
+                    showQuestionById(sectionQuestions[0].id, paperData);
+                }
+            } else {
+                console.error("Paper data not loaded yet");
             }
         }
         
