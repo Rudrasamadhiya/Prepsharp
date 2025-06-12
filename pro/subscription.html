@@ -315,6 +315,56 @@
             box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
         }
         
+        /* Rename to popular-plan for clarity since it's not yearly anymore */
+        .popular-plan {
+            border: 3px solid var(--accent-color);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .popular-plan .plan-header {
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .popular-plan .plan-header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: translate(30%, -30%);
+        }
+        
+        .popular-plan .plan-name {
+            color: white;
+        }
+        
+        .popular-plan .plan-price {
+            color: white;
+        }
+        
+        .popular-plan .plan-price span {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .popular-plan .plan-duration {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .popular-plan .subscribe-btn {
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+        }
+        
+        .popular-plan .subscribe-btn:hover {
+            background: linear-gradient(to right, var(--accent-dark), #b45309);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        
         .current-subscription {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
