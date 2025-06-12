@@ -38,10 +38,11 @@
             background-color: var(--body-bg);
             color: var(--text-color);
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         .hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #4f46e5, #6366f1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #4f46e5, #60a5fa);
             background-size: 300% 300%;
             animation: gradientShift 15s ease infinite;
             color: white;
@@ -50,7 +51,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 15px 40px rgba(37, 99, 235, 0.4);
-            clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 96%, 0 100%);
             border-bottom: 5px solid rgba(255, 255, 255, 0.3);
         }
         
@@ -346,7 +347,8 @@
         .features {
             padding: 100px 0;
             position: relative;
-            background: linear-gradient(to bottom, #f8fafc, #ffffff);
+            background: linear-gradient(to bottom, #e0f2fe, #f1f5f9);
+            margin-top: -2px;
         }
         
         .features::before {
@@ -552,7 +554,7 @@
         
         .pricing {
             padding: 80px 0;
-            background-color: var(--background-color);
+            background: linear-gradient(to bottom, #f1f5f9, #f8fafc);
         }
         
         .payment-methods {
@@ -1172,7 +1174,7 @@
         
         .testimonials {
             padding: 100px 0;
-            background-color: #f8fafc;
+            background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
         }
         
         .testimonial-grid {
@@ -1250,7 +1252,7 @@
         
         .cta {
             padding: 80px 0;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #4b5563, var(--primary-color), var(--secondary-color));
             color: white;
             text-align: center;
             position: relative;
