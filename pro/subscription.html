@@ -799,25 +799,20 @@
             // Show cancellation processing message
             alert('Processing cancellation...');
             
-            setTimeout(() => {
-                // Update user data in localStorage
-                const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-                if (userDataStr) {
-                    const userData = JSON.parse(userDataStr);
-                    userData.hasActiveSubscription = false;
-                    delete userData.currentSubscription;
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                    localStorage.setItem('currentUser', JSON.stringify(userData));
-                }
-                
-                alert('Subscription cancelled successfully');
-                
-                // Refresh subscription status
-                fetchSubscriptionStatus(userId);
-                
-                // Redirect to free dashboard
-                window.location.href = 'free-dashboard.html';
-            }, 1000);
+            // Update user data in localStorage
+            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
+            if (userDataStr) {
+                const userData = JSON.parse(userDataStr);
+                userData.hasActiveSubscription = false;
+                delete userData.currentSubscription;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+            }
+            
+            alert('Subscription cancelled successfully');
+            
+            // Refresh the page to show updated subscription status
+            window.location.reload();
         }
         }
         
