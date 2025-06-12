@@ -3,64 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Dashboard - PrepSharp</title>
+    <title>Dashboard - PrepSharp Premium</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Premium plan specific styles */
-        
-        .sidebar-nav li.premium-feature {
-            opacity: 1;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         
-        .plan-badge.premium {
-            background-color: var(--premium-color);
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid var(--premium-color);
         }
         
-        .stat-icon {
-            background-color: rgba(139, 92, 246, 0.1);
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
         
-        .stat-icon i {
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, var(--premium-color), var(--premium-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid var(--premium-color);
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .card-actions a {
+            color: var(--premium-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            height: 250px;
+            margin-bottom: 15px;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-right: 15px;
+        }
+        
+        .task-checkbox input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .task-meta {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .task-subject {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+        
+        .subject-physics {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .subject-chemistry {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .subject-mathematics {
+            background-color: rgba(147, 51, 234, 0.1);
             color: var(--premium-color);
         }
         
-        .stat-info p {
+        .ai-insights {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--premium-color);
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .ai-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .insight-list {
+            list-style: none;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+        
+        .insight-icon {
             color: var(--premium-color);
+            margin-top: 2px;
         }
         
-        .progress {
-            background-color: var(--premium-color);
-        }
-        
-        .start-btn, .view-all-btn {
-            background-color: var(--premium-color);
-        }
-        
-        .start-btn:hover, .view-all-btn:hover {
-            background-color: var(--premium-dark);
-        }
-        
-        .premium-tag {
+        .premium-badge {
             display: inline-block;
             background-color: var(--premium-color);
             color: white;
             font-size: 12px;
             font-weight: 600;
             padding: 3px 8px;
-            border-radius: 4px;
-            margin-left: 8px;
-        }
-        
-        .advanced-features {
-            margin-top: 30px;
+            border-radius: 20px;
+            margin-left: 10px;
         }
         
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            margin-top: 20px;
+            margin-bottom: 30px;
         }
         
         .feature-card {
@@ -68,8 +228,9 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm);
             padding: 20px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             border-top: 3px solid var(--premium-color);
+            text-align: center;
         }
         
         .feature-card:hover {
@@ -78,14 +239,14 @@
         }
         
         .feature-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background-color: rgba(139, 92, 246, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(147, 51, 234, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
+            margin: 0 auto 15px;
         }
         
         .feature-icon i {
@@ -93,148 +254,16 @@
             color: var(--premium-color);
         }
         
-        .feature-card h3 {
+        .feature-title {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
         }
         
-        .feature-card p {
+        .feature-description {
             color: var(--text-light);
             font-size: 14px;
-        }
-        
-        .ai-assistant-section {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            padding: 20px;
-            margin-top: 30px;
-            border-left: 4px solid var(--premium-color);
-        }
-        
-        .ai-assistant-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .ai-assistant-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-        
-        .ai-chat-container {
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 8px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .ai-chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-        }
-        
-        .chat-message {
             margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        
-        .user-avatar {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .ai-avatar {
-            background-color: var(--premium-color);
-            color: white;
-        }
-        
-        .message-content {
-            background-color: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 18px;
-            max-width: 80%;
-        }
-        
-        .ai-message .message-content {
-            background-color: rgba(139, 92, 246, 0.1);
-        }
-        
-        .ai-chat-input {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-        
-        .ai-chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 20px;
-            margin-right: 10px;
-        }
-        
-        .ai-chat-input button {
-            background-color: var(--premium-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 15px;
-            cursor: pointer;
-        }
-        
-        .peer-comparison-section {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            padding: 20px;
-            margin-top: 30px;
-        }
-        
-        .peer-comparison-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .peer-comparison-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .comparison-chart {
-            height: 300px;
-        }
-        
-        .premium-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--premium-color);
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-sm);
         }
     </style>
 </head>
@@ -250,31 +279,31 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li class="active">
-                        <a href="#"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                 </ul>
             </nav>
@@ -310,227 +339,174 @@
                 </div>
             </header>
             
-            <!-- Dashboard Content -->
+            <!-- Page Content -->
             <div class="dashboard-content">
                 <div class="welcome-section">
-                    <h1>Welcome to Premium Dashboard</h1>
-                    <p>Access all premium features and personalized coaching</p>
+                    <h1>Welcome back, John <span class="premium-badge">Premium</span></h1>
+                    <p>Your JEE preparation journey is on track. Here's your personalized dashboard.</p>
                 </div>
                 
-                <div class="stats-cards">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Practice Papers</h3>
-                            <p>All Available</p>
-                        </div>
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Overall Progress</div>
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Completed</h3>
-                            <p>15 Papers</p>
-                        </div>
+                        <div class="stat-value">Top 8%</div>
+                        <div class="stat-label">Performance Rank</div>
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Average Score</h3>
-                            <p>82%</p>
-                        </div>
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Papers Completed</div>
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Rank Prediction</h3>
-                            <p>Top 5%</p>
-                        </div>
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">Study Hours</div>
                     </div>
                 </div>
                 
+                <!-- AI Insights -->
+                <div class="ai-insights">
+                    <div class="ai-header">
+                        <div class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="ai-title">AI-Powered Insights</div>
+                    </div>
+                    
+                    <ul class="insight-list">
+                        <li class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-arrow-trend-up"></i>
+                            </div>
+                            <div>Your performance in Physics has improved by 12% in the last month. Keep focusing on Electromagnetism to maintain this trend.</div>
+                        </li>
+                        <li class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>Based on your recent practice tests, we recommend spending more time on Organic Chemistry reactions and mechanisms.</div>
+                        </li>
+                        <li class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>Your average time per question in Mathematics has decreased from 2.5 minutes to 1.8 minutes. This improvement in speed is significant.</div>
+                        </li>
+                    </ul>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="ai-coach.html" class="start-btn">Get Personalized Coaching</a>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Grid -->
                 <div class="dashboard-grid">
-                    <!-- Recent Papers -->
+                    <!-- Performance Trends -->
                     <div class="dashboard-card">
                         <div class="card-header">
-                            <h2>Recent Practice Papers</h2>
-                            <a href="#" class="view-all">View All</a>
+                            <div class="card-title">Performance Trends</div>
+                            <div class="card-actions">
+                                <a href="analytics.html">View Details</a>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <ul class="paper-list">
-                                <li class="paper-item">
-                                    <div class="paper-info">
-                                        <h3>JEE Advanced 2023 Paper 1 <span class="premium-tag">Premium</span></h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
-                                    </div>
-                                    <a href="#" class="start-btn">Start</a>
-                                </li>
-                                <li class="paper-item">
-                                    <div class="paper-info">
-                                        <h3>JEE Advanced 2023 Paper 2 <span class="premium-tag">Premium</span></h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
-                                    </div>
-                                    <a href="#" class="start-btn">Start</a>
-                                </li>
-                                <li class="paper-item">
-                                    <div class="paper-info">
-                                        <h3>JEE Advanced Mock Test <span class="premium-tag">Premium</span></h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
-                                    </div>
-                                    <a href="#" class="start-btn">Start</a>
-                                </li>
-                            </ul>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
                         </div>
                     </div>
                     
-                    <!-- Performance Summary -->
+                    <!-- Today's Tasks -->
                     <div class="dashboard-card">
                         <div class="card-header">
-                            <h2>Advanced Analytics</h2>
-                        </div>
-                        <div class="card-content">
-                            <div class="performance-chart">
-                                <canvas id="performanceChart"></canvas>
+                            <div class="card-title">Today's Tasks</div>
+                            <div class="card-actions">
+                                <a href="study-plan.html">View All</a>
                             </div>
-                            <div class="subject-scores">
-                                <div class="subject-score">
-                                    <span class="subject-name">Physics</span>
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: 85%;"></div>
+                        </div>
+                        
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Complete Kinematics Practice Set</div>
+                                    <div class="task-meta">
+                                        10:00 AM - 12:00 PM
+                                        <span class="task-subject subject-physics">Physics</span>
                                     </div>
-                                    <span class="score-value">85%</span>
                                 </div>
-                                <div class="subject-score">
-                                    <span class="subject-name">Chemistry</span>
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: 88%;"></div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Organic Chemistry Revision</div>
+                                    <div class="task-meta">
+                                        2:00 PM - 4:00 PM
+                                        <span class="task-subject subject-chemistry">Chemistry</span>
                                     </div>
-                                    <span class="score-value">88%</span>
                                 </div>
-                                <div class="subject-score">
-                                    <span class="subject-name">Mathematics</span>
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: 75%;"></div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Mock Interview Session</div>
+                                    <div class="task-meta">
+                                        5:00 PM - 6:00 PM
+                                        <span class="task-subject subject-mathematics">Interview</span>
                                     </div>
-                                    <span class="score-value">75%</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- AI Assistant Section -->
-                <div class="ai-assistant-section">
-                    <div class="ai-assistant-header">
-                        <h2>AI Study Coach</h2>
-                        <span class="premium-tag">Premium</span>
-                    </div>
-                    <div class="ai-chat-container">
-                        <div class="ai-chat-messages">
-                            <div class="chat-message ai-message">
-                                <div class="message-avatar ai-avatar">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="message-content">
-                                    <p>Hello John! Based on your recent performance, I recommend focusing on Organic Chemistry and Calculus. Would you like me to create a personalized study plan for these topics?</p>
-                                </div>
-                            </div>
-                            <div class="chat-message user-message">
-                                <div class="message-avatar user-avatar">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="message-content">
-                                    <p>Yes, please create a study plan for Organic Chemistry.</p>
-                                </div>
-                            </div>
-                            <div class="chat-message ai-message">
-                                <div class="message-avatar ai-avatar">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="message-content">
-                                    <p>I've created a 2-week study plan for Organic Chemistry focusing on reaction mechanisms and named reactions. You can find it in your Study Plan section. Would you like me to explain any specific concept?</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ai-chat-input">
-                            <input type="text" placeholder="Ask your AI coach...">
-                            <button><i class="fas fa-paper-plane"></i> Send</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Peer Comparison Section -->
-                <div class="peer-comparison-section">
-                    <div class="peer-comparison-header">
-                        <h2>Peer Comparison</h2>
-                        <span class="premium-tag">Premium</span>
-                    </div>
-                    <div class="comparison-chart">
-                        <canvas id="comparisonChart"></canvas>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 
                 <!-- Premium Features -->
-                <div class="advanced-features">
-                    <h2>Premium Exclusive Features</h2>
-                    <div class="feature-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <h3>AI Study Coach</h3>
-                            <p>Get personalized guidance and instant answers to your doubts from our AI coach.</p>
+                <h2 style="margin-bottom: 20px;">Premium Features</h2>
+                
+                <div class="feature-grid">
+                    <!-- Feature 1 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
                         </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <h3>Advanced Analytics</h3>
-                            <p>Detailed performance insights with AI-powered recommendations for improvement.</p>
+                        <div class="feature-title">AI Coach</div>
+                        <div class="feature-description">
+                            Get personalized guidance and instant answers to your doubts with our AI-powered coach.
                         </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h3>Peer Comparison</h3>
-                            <p>Compare your performance with top performers and understand where you stand.</p>
+                        <a href="ai-coach.html" class="start-btn">Start Coaching</a>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
                         </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <h3>Mock Interviews</h3>
-                            <p>Practice with simulated interview sessions to prepare for college admissions.</p>
+                        <div class="feature-title">Peer Comparison</div>
+                        <div class="feature-description">
+                            Compare your performance with peers and understand where you stand among top performers.
                         </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-download"></i>
-                            </div>
-                            <h3>Offline Access</h3>
-                            <p>Download study materials and practice papers for offline preparation.</p>
+                        <a href="peer-comparison.html" class="start-btn">Compare Now</a>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-video"></i>
                         </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-headset"></i>
-                            </div>
-                            <h3>Priority Support</h3>
-                            <p>Get priority access to expert doubt solving and technical support.</p>
+                        <div class="feature-title">Mock Interviews</div>
+                        <div class="feature-description">
+                            Practice with simulated interview sessions to prepare for college admissions.
                         </div>
+                        <a href="mock-interviews.html" class="start-btn">Schedule Interview</a>
                     </div>
                 </div>
             </div>
@@ -539,29 +515,42 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Initialize performance chart
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        const performanceChart = new Chart(ctx, {
+        // Performance Chart
+        const perfCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(perfCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Your Score',
-                    data: [65, 68, 72, 75, 78, 82, 85],
-                    borderColor: '#8b5cf6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }]
+                datasets: [
+                    {
+                        label: 'Physics',
+                        data: [65, 68, 72, 75, 82, 85, 88],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Chemistry',
+                        data: [70, 72, 75, 78, 80, 85, 88],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Mathematics',
+                        data: [60, 65, 68, 72, 75, 80, 85],
+                        borderColor: '#9333ea',
+                        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -571,101 +560,18 @@
             }
         });
         
-        // Initialize comparison chart
-        const compCtx = document.getElementById('comparisonChart').getContext('2d');
-        const comparisonChart = new Chart(compCtx, {
-            type: 'radar',
-            data: {
-                labels: ['Physics', 'Chemistry', 'Mathematics', 'Problem Solving', 'Speed', 'Accuracy'],
-                datasets: [
-                    {
-                        label: 'You',
-                        data: [85, 88, 75, 80, 70, 90],
-                        borderColor: '#8b5cf6',
-                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
-                        pointBackgroundColor: '#8b5cf6',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#8b5cf6'
-                    },
-                    {
-                        label: 'Top Performers',
-                        data: [90, 85, 88, 92, 85, 88],
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                        pointBackgroundColor: '#f59e0b',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#f59e0b'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: {
-                            display: true
-                        },
-                        suggestedMin: 50,
-                        suggestedMax: 100
-                    }
+        // Task checkbox functionality
+        document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskItem = this.closest('.task-item');
+                if (this.checked) {
+                    taskItem.style.opacity = '0.6';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
+                } else {
+                    taskItem.style.opacity = '1';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'none';
                 }
-            }
-        });
-        
-        // AI Chat functionality
-        document.querySelector('.ai-chat-input button').addEventListener('click', function() {
-            const input = document.querySelector('.ai-chat-input input');
-            const message = input.value.trim();
-            
-            if (message) {
-                // Add user message
-                const messagesContainer = document.querySelector('.ai-chat-messages');
-                const userMessage = document.createElement('div');
-                userMessage.className = 'chat-message user-message';
-                userMessage.innerHTML = `
-                    <div class="message-avatar user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="message-content">
-                        <p>${message}</p>
-                    </div>
-                `;
-                messagesContainer.appendChild(userMessage);
-                
-                // Clear input
-                input.value = '';
-                
-                // Scroll to bottom
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                // Simulate AI response (in a real app, this would call an API)
-                setTimeout(() => {
-                    const aiMessage = document.createElement('div');
-                    aiMessage.className = 'chat-message ai-message';
-                    aiMessage.innerHTML = `
-                        <div class="message-avatar ai-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>I'll help you with that! Let me analyze your question and provide a detailed response.</p>
-                        </div>
-                    `;
-                    messagesContainer.appendChild(aiMessage);
-                    
-                    // Scroll to bottom
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 1000);
-            }
-        });
-        
-        // Enter key for chat
-        document.querySelector('.ai-chat-input input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.querySelector('.ai-chat-input button').click();
-            }
+            });
         });
     </script>
 </body>

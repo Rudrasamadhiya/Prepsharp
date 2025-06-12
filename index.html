@@ -3,361 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PrepSharp is the ultimate exam preparation platform for JEE, NEET and other competitive exams. Practice with past papers and improve your scores with PrepSharp's personalized learning approach.">
-    <title>PrepSharp - Smart Exam Preparation Platform</title>
+    <title>PrepSharp - JEE Preparation Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1976d2;
-            --secondary-color: #42a5f5;
-            --background-color: #f5f5f5;
-            --text-color: #212121;
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --accent-color: #f97316;
+            --accent-dark: #ea580c;
+            --premium-color: #9333ea;
+            --premium-dark: #7e22ce;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --body-bg: #f9fafb;
+            --border-radius: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
         }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
+        
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-        .login-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .login-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-        }
-        .banner {
-            flex: 1;
-            background-color: var(--primary-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: var(--primary-color);
-            text-align: center;
-        }
-        .banner h1, .banner h2 {
-            color: white;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            background-color: var(--primary-color);
-            color: white;
-            margin-top: 10px;
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            line-height: 1.6;
         }
-        .register-link {
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
             text-align: center;
-            margin-top: 20px;
+            margin-bottom: 40px;
         }
-        .register-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        .error-message {
-            color: #f44336;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-            padding: 8px;
-            border-radius: 4px;
-        }
+        
         .logo {
-            font-size: 48px;
-            font-weight: bold;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .dashboard-header {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .dashboard-content {
+            padding: 0 20px 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
             margin-bottom: 20px;
         }
-        .features {
-            margin-top: 40px;
-        }
-        .feature {
+        
+        .feature-item {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
         .feature-icon {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 20px;
+            color: var(--success);
         }
         
-        /* Responsive design */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            .banner {
-                padding: 40px 20px;
-            }
-        }
-        
-        /* Admin link */
-        .admin-link {
+        .dashboard-footer {
+            padding: 20px;
             text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #999;
         }
-        .admin-link a {
-            color: #999;
+        
+        .dashboard-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
             text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-basic {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-standard {
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+            color: white;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(to right, var(--premium-color), var(--premium-dark));
+            color: white;
+        }
+        
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .basic-card {
+            border-top: 3px solid var(--primary-color);
+        }
+        
+        .standard-card {
+            border-top: 3px solid var(--accent-color);
+        }
+        
+        .premium-card {
+            border-top: 3px solid var(--premium-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-light);
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="banner">
-        <div class="logo">
-            <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px;">
-        </div>
-        <h1>PrepSharp - Prepare Smarter</h1>
-        <h2>Ace Your Entrance Exams</h2>
+    <div class="container">
+        <header>
+            <div class="logo">PrepSharp</div>
+            <div class="tagline">Your Ultimate JEE Preparation Platform</div>
+        </header>
         
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">📝</div>
-                <div>Practice with PrepSharp's past year papers</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📊</div>
-                <div>Track your performance with PrepSharp</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🎯</div>
-                <div>Focus on your weak areas with PrepSharp</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="login-container">
-        <div class="login-card">
-            <h1>Welcome to PrepSharp</h1>
-            <p style="text-align: center;">PrepSharp helps you prepare smarter for your entrance exams. Log in to continue your preparation journey.</p>
-            
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email address" required>
+        <div class="dashboard-grid">
+            <!-- Basic Dashboard -->
+            <div class="dashboard-card basic-card">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">Basic Dashboard</div>
+                    <div class="dashboard-subtitle">Essential preparation tools</div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                <div class="dashboard-content">
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>JEE Main Practice Papers</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Basic Analytics</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Limited Question Bank</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Basic Settings</span>
+                        </li>
+                    </ul>
                 </div>
                 
-                <button type="submit" class="btn primary">Login to PrepSharp</button>
-                
-                <div id="error-message" class="error-message"></div>
-            </form>
-            
-            <div class="register-link">
-                Don't have an account? <a href="register.html">Register with PrepSharp</a>
+                <div class="dashboard-footer">
+                    <a href="dashboards/basic/dashboard.html" class="dashboard-btn btn-basic">View Basic Dashboard</a>
+                </div>
             </div>
             
-            <div class="admin-link">
-                <a href="admin-login.html">Admin Access</a>
+            <!-- Standard Dashboard -->
+            <div class="dashboard-card standard-card">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">Standard Dashboard</div>
+                    <div class="dashboard-subtitle">Enhanced preparation tools</div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>JEE Main & Advanced Papers</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Detailed Analytics</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Full Question Bank</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Personalized Study Plan</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dashboard-footer">
+                    <a href="dashboards/standard/dashboard.html" class="dashboard-btn btn-standard">View Standard Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Premium Dashboard -->
+            <div class="dashboard-card premium-card">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">Premium Dashboard</div>
+                    <div class="dashboard-subtitle">Advanced preparation tools</div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>All Standard Features</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>AI Coach</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Peer Comparison</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Mock Interviews</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon"><i class="fas fa-check"></i></span>
+                            <span>Predictive Analytics</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dashboard-footer">
+                    <a href="dashboards/premium/dashboard.html" class="dashboard-btn btn-premium">View Premium Dashboard</a>
+                </div>
             </div>
         </div>
-    </div>
-
-    <script>
-                // Simple login without OTP
         
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
-            
-            // Clear previous error messages
-            errorMessage.style.display = 'none';
-            
-            // Validate inputs
-            if (!email || !password) {
-                errorMessage.textContent = 'Email and password are required';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            // Show loading state
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            
-            {
-                // Login
-                submitButton.textContent = 'Logging in...';
-                
-                // Try server authentication first
-                fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.requiresVerification) {
-                            // User needs to verify email
-                            window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
-                        } else {
-                            // Store user in localStorage
-                            localStorage.setItem('currentUser', JSON.stringify(data.user));
-                            
-                            // Redirect to dashboard
-                            window.location.href = 'dashboard.html';
-                        }
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Login to PrepSharp';
-                        errorMessage.textContent = data.message || 'Invalid email or password';
-                        errorMessage.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    
-                    // Check if the email matches any registered student in the database
-                    const usersJson = localStorage.getItem('users');
-                    let users = {};
-                    
-                    if (usersJson) {
-                        try {
-                            users = JSON.parse(usersJson);
-                        } catch (e) {
-                            console.error("Error parsing users JSON:", e);
-                        }
-                    }
-                    
-                    // Find user by email
-                    const userId = Object.keys(users).find(id => 
-                        users[id].email && users[id].email.toLowerCase() === email.toLowerCase()
-                    );
-                    
-                    if (userId) {
-                        // User found in database, create session
-                        const user = users[userId];
-                        const userData = {
-                            id: userId,
-                            name: user.name || 'Student',
-                            email: user.email,
-                            mobile: user.mobile || user.phone || '',
-                            stream: user.stream || 'engineering',
-                            profileComplete: true
-                        };
-                        
-                        // Store user in localStorage
-                        localStorage.setItem('currentUser', JSON.stringify(userData));
-                        
-                        // Redirect to dashboard
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Login to PrepSharp';
-                        errorMessage.textContent = 'Invalid email or password. Please register if you don\'t have an account.';
-                        errorMessage.style.display = 'block';
-                    }
-                });
-                
-                /* Fallback to mock user if server is not running
-                if (error.message === "Failed to fetch") {
-                    console.log("Server might be offline, using mock user");
-                    // Create a mock user as fallback
-                    const mockUser = {
-                        id: '12345',
-                        name: 'Test User',
-                        email: email,
-                        mobile: '1234567890',
-                        stream: 'engineering',
-                        profileComplete: true
-                    };
-                    
-                    // Store user in localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(mockUser));
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                }
-                fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.requiresVerification) {
-                            // User needs to verify email
-                            window.location.href = `otp-verification.html?email=${encodeURIComponent(email)}`;
-                        } else {
-                            // Store user in localStorage
-                            localStorage.setItem('currentUser', JSON.stringify(data.user));
-                            
-                            // Redirect to dashboard
-                            window.location.href = 'dashboard.html';
-                        }
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.textContent = 'Login to PrepSharp';
-                        errorMessage.textContent = data.message || 'Invalid email or password';
-                        errorMessage.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Login to PrepSharp';
-                    errorMessage.textContent = 'An error occurred. Please try again.';
-                    errorMessage.style.display = 'block';
-                });
-                */
-            }
-        });
-    </script>
+        <div style="text-align: center; margin-top: 20px;">
+            <p>Click on any dashboard to explore its features and pages.</p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 PrepSharp. All rights reserved.</p>
+        </footer>
+    </div>
 </body>
 </html>

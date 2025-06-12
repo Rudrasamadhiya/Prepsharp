@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Bank - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 0 12px;
+            width: 250px;
+        }
+        
+        .search-box input {
+            border: none;
+            padding: 8px 0;
+            width: 100%;
+            outline: none;
+        }
+        
+        .search-box i {
+            color: var(--text-light);
+        }
+        
+        .question-list {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .question-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background-color 0.2s ease;
+        }
+        
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        
+        .question-item:hover {
+            background-color: rgba(249, 115, 22, 0.02);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .question-tags {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .question-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tag-physics {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .tag-chemistry {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .tag-mathematics {
+            background-color: rgba(147, 51, 234, 0.1);
+            color: var(--premium-color);
+        }
+        
+        .tag-easy {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .tag-medium {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .tag-hard {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .question-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .question-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .question-option:hover {
+            border-color: var(--accent-color);
+            background-color: rgba(249, 115, 22, 0.05);
+        }
+        
+        .option-label {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .question-meta {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .question-action {
+            padding: 6px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .question-action:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .page-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .page-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .tabs-container {
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background-color: rgba(249, 115, 22, 0.05);
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                    </li>
+                    <li>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge standard">Standard Plan</span>
+                    <a href="#" class="upgrade-link">Upgrade to Premium</a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">5</span>
+                    </div>
+                    
+                    <div class="user-profile">
+                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
+                        <span class="user-name">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>Question Bank</h1>
+                    <p>Practice with a comprehensive collection of JEE Main and Advanced questions</p>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all-questions">All Questions</div>
+                        <div class="tab" data-tab="physics">Physics</div>
+                        <div class="tab" data-tab="chemistry">Chemistry</div>
+                        <div class="tab" data-tab="mathematics">Mathematics</div>
+                        <div class="tab" data-tab="bookmarks">Bookmarks</div>
+                    </div>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="all">All Exams</option>
+                            <option value="jee-main">JEE Main</option>
+                            <option value="jee-advanced">JEE Advanced</option>
+                        </select>
+                        
+                        <select class="filter-select">
+                            <option value="all">All Difficulty</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        
+                        <select class="filter-select">
+                            <option value="all">All Years</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search questions...">
+                    </div>
+                </div>
+                
+                <!-- All Questions Tab Content -->
+                <div class="tab-content active" id="all-questions">
+                    <!-- Question List -->
+                    <div class="question-list">
+                        <!-- Question 1 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-physics">Physics</span>
+                                    <span class="question-tag tag-medium">Medium</span>
+                                </div>
+                                <div class="question-id">#PHY-2023-01</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                A particle moves along a straight line with a constant acceleration. If the particle has a velocity of 3 m/s at t = 0 and a velocity of 7 m/s at t = 2 s, what is the position of the particle at t = 5 s if the position at t = 0 is 0 m?
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">25 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">30 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">35 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">40 m</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Main 2023 | Attempted by 1245 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-lightbulb"></i> Hint
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 2 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-chemistry">Chemistry</span>
+                                    <span class="question-tag tag-easy">Easy</span>
+                                </div>
+                                <div class="question-id">#CHM-2023-05</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                Which of the following compounds will show geometrical isomerism?
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">1-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">2-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">2-methylpropene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">propene</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Main 2023 | Attempted by 1532 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-lightbulb"></i> Hint
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 3 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-mathematics">Mathematics</span>
+                                    <span class="question-tag tag-hard">Hard</span>
+                                </div>
+                                <div class="question-id">#MAT-2023-12</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                If the sum of the first 10 terms of the series 1 + 3 + 5 + 7 + ... is equal to n², then the value of n is:
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">5</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">10</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">15</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">20</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Main 2023 | Attempted by 987 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-lightbulb"></i> Hint
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 4 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-physics">Physics</span>
+                                    <span class="question-tag tag-hard">Hard</span>
+                                </div>
+                                <div class="question-id">#PHY-2022-18</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                A uniform magnetic field exists in a region of space along the positive z-axis. An electron enters the region with a velocity v = v₀î + v₀ĵ + v₀k̂. The path of the electron in the magnetic field will be:
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">A straight line</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">A circle</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">A helix</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">A parabola</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Advanced 2022 | Attempted by 856 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-lightbulb"></i> Hint
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 5 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-chemistry">Chemistry</span>
+                                    <span class="question-tag tag-medium">Medium</span>
+                                </div>
+                                <div class="question-id">#CHM-2022-24</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                The hybridization of the central atom in ClF₃, BrF₅, and XeF₄ are respectively:
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">sp³, sp³d², sp³d²</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">sp³d, sp³d², sp³d²</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">sp³, sp³d, sp³d²</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">sp³d, sp³d, sp³d²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Advanced 2022 | Attempted by 1023 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-lightbulb"></i> Hint
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn"><i class="fas fa-ellipsis-h"></i></button>
+                        <button class="page-btn">20</button>
+                        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Other Tab Contents -->
+                <div class="tab-content" id="physics">
+                    <!-- Physics questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="chemistry">
+                    <!-- Chemistry questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="mathematics">
+                    <!-- Mathematics questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="bookmarks">
+                    <!-- Bookmarked questions would go here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Question option selection
+        document.querySelectorAll('.question-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options in this question
+                const questionItem = this.closest('.question-item');
+                questionItem.querySelectorAll('.question-option').forEach(opt => {
+                    opt.style.borderColor = 'rgba(0,0,0,0.1)';
+                    opt.style.backgroundColor = 'transparent';
+                });
+                
+                // Add selected class to clicked option
+                this.style.borderColor = '#f97316';
+                this.style.backgroundColor = 'rgba(249, 115, 22, 0.05)';
+            });
+        });
+        
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                // In a real app, this would filter the questions
+                console.log('Filter changed:', this.value);
+            });
+        });
+        
+        // Search functionality
+        document.querySelector('.search-box input').addEventListener('keyup', function() {
+            // In a real app, this would search the questions
+            console.log('Search term:', this.value);
+        });
+        
+        // Pagination
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.querySelector('.fas')) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // In a real app, this would load the corresponding page
+                }
+            });
+        });
+    </script>
+</body>
+</html>
