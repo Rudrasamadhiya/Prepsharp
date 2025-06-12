@@ -581,71 +581,88 @@
             });
         });
         
+        // Initialize subscription cards - select the first one by default
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select the free plan by default
+            document.querySelector('.subscription-card.free').classList.add('selected');
+        });
+        
         // Handle registration form submission
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const subscription = document.querySelector('input[name="subscription"]:checked').value;
-            
-            // Reset error messages
-            document.getElementById('emailError').style.display = 'none';
-            document.getElementById('passwordError').style.display = 'none';
-            document.getElementById('confirmPasswordError').style.display = 'none';
-            
-            // Validate email
-            if (!validateEmail(email)) {
-                document.getElementById('emailError').style.display = 'block';
-                return;
+            try {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const subscription = document.querySelector('input[name="subscription"]:checked').value;
+                
+                // Reset error messages
+                document.getElementById('emailError').style.display = 'none';
+                document.getElementById('passwordError').style.display = 'none';
+                document.getElementById('confirmPasswordError').style.display = 'none';
+                
+                // Validate email
+                if (!validateEmail(email)) {
+                    document.getElementById('emailError').style.display = 'block';
+                    return;
+                }
+                
+                // Validate password
+                if (password.length < 6) {
+                    document.getElementById('passwordError').style.display = 'block';
+                    return;
+                }
+                
+                // Validate password confirmation
+                if (password !== confirmPassword) {
+                    document.getElementById('confirmPasswordError').style.display = 'block';
+                    return;
+                }
+                
+                // Get existing users or create empty array
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                
+                // Check if email already exists
+                if (users.some(user => user.email === email)) {
+                    alert('Email already registered. Please use a different email or login.');
+                    return;
+                }
+                
+                // Add new user
+                const newUser = {
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    subscription,
+                    registeredDate: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                
+                // Save updated users array
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Set current user as logged in
+                const loggedInUser = {
+                    email,
+                    firstName,
+                    lastName,
+                    subscription
+                };
+                
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                console.log('User registered successfully:', loggedInUser);
+                
+                // Redirect to appropriate dashboard
+                redirectToDashboard(subscription);
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration. Please try again.');
             }
-            
-            // Validate password
-            if (password.length < 6) {
-                document.getElementById('passwordError').style.display = 'block';
-                return;
-            }
-            
-            // Validate password confirmation
-            if (password !== confirmPassword) {
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                return;
-            }
-            
-            // Get existing users or create empty array
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            
-            // Check if email already exists
-            if (users.some(user => user.email === email)) {
-                alert('Email already registered. Please use a different email or login.');
-                return;
-            }
-            
-            // Add new user
-            users.push({
-                firstName,
-                lastName,
-                email,
-                password,
-                subscription
-            });
-            
-            // Save updated users array
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            // Set current user as logged in
-            localStorage.setItem('loggedInUser', JSON.stringify({
-                email,
-                firstName,
-                lastName,
-                subscription
-            }));
-            
-            // Redirect to appropriate dashboard
-            redirectToDashboard(subscription);
         });
         
         // Email validation function
@@ -654,22 +671,31 @@
             return re.test(email);
         }
         
-        // Redirect to appropriate dashboard based on subscription
+        // Redirect to appropriate dashboard or payment page based on subscription
         function redirectToDashboard(subscription) {
-            switch(subscription) {
-                case 'premium':
-                    window.location.href = 'dashboards/premium/dashboard.html';
-                    break;
-                case 'standard':
-                    window.location.href = 'dashboards/standard/dashboard.html';
-                    break;
-                case 'basic':
-                    window.location.href = 'dashboards/basic/dashboard.html';
-                    break;
-                case 'free':
-                default:
-                    window.location.href = 'dashboards/free/dashboard.html';
-                    break;
+            console.log('Processing subscription:', subscription);
+            
+            // If free plan, go directly to dashboard
+            if (subscription === 'free') {
+                console.log('Free plan selected, redirecting to basic dashboard');
+                window.location.href = 'dashboards/basic/dashboard.html';
+                return;
+            }
+            
+            // For paid plans, redirect to payment page with subscription info
+            try {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                
+                // Redirect to payment page with subscription and user details
+                const paymentUrl = `payment.html?subscription=${subscription}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(email)}`;
+                console.log('Redirecting to payment page:', paymentUrl);
+                window.location.href = paymentUrl;
+            } catch (error) {
+                console.error('Navigation error:', error);
+                alert('An error occurred. Please try again.');
+                // Stay on the registration page
             }
         }
     </script>

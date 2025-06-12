@@ -318,9 +318,32 @@
         
         // Check if user is already logged in
         document.addEventListener('DOMContentLoaded', function() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const userData = JSON.parse(loggedInUser);
+                
+                // Check if subscription has expired
+                let isExpired = false;
+                if (userData.subscription !== 'free' && userData.subscriptionEndDate) {
+                    const endDate = new Date(userData.subscriptionEndDate);
+                    const currentDate = new Date();
+                    isExpired = currentDate > endDate;
+                }
+                
+                // If subscription expired, downgrade to free and update storage
+                if (isExpired) {
+                    userData.subscription = 'free';
+                    delete userData.subscriptionStartDate;
+                    delete userData.subscriptionEndDate;
+                    delete userData.planName;
+                    
+                    if (localStorage.getItem('loggedInUser')) {
+                        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                    } else {
+                        sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+                    }
+                }
+                
                 redirectToDashboard(userData.subscription);
             }
         });
@@ -349,25 +372,48 @@
                 return;
             }
             
-            // Check credentials
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Find user by email and password
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
-                // Store user data in localStorage if remember me is checked
+                // Check if subscription has expired
+                let isExpired = false;
+                if (user.subscription !== 'free' && user.subscriptionEndDate) {
+                    const endDate = new Date(user.subscriptionEndDate);
+                    const currentDate = new Date();
+                    isExpired = currentDate > endDate;
+                }
+                
+                // If subscription expired, downgrade to free
+                const activeSubscription = isExpired ? 'free' : user.subscription;
+                
+                // Store user data in localStorage
+                const userData = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    subscription: activeSubscription
+                };
+                
+                // Add subscription details if available and not expired
+                if (!isExpired && user.subscriptionStartDate) {
+                    userData.subscriptionStartDate = user.subscriptionStartDate;
+                    userData.subscriptionEndDate = user.subscriptionEndDate;
+                    userData.planName = user.planName;
+                }
+                
+                // Store in appropriate storage based on remember me
                 if (remember) {
-                    localStorage.setItem('loggedInUser', JSON.stringify({
-                        email: user.email,
-                        subscription: user.subscription
-                    }));
+                    localStorage.setItem('loggedInUser', JSON.stringify(userData));
                 } else {
-                    sessionStorage.setItem('loggedInUser', JSON.stringify({
-                        email: user.email,
-                        subscription: user.subscription
-                    }));
+                    sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
                 }
                 
                 // Redirect to appropriate dashboard
-                redirectToDashboard(user.subscription);
+                redirectToDashboard(activeSubscription);
             } else {
                 alert('Invalid email or password. Please try again.');
             }
@@ -381,6 +427,8 @@
         
         // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
+            console.log('Redirecting to dashboard for subscription:', subscription);
+            
             switch(subscription) {
                 case 'premium':
                     window.location.href = 'dashboards/premium/dashboard.html';
@@ -389,6 +437,9 @@
                     window.location.href = 'dashboards/standard/dashboard.html';
                     break;
                 case 'basic':
+                    window.location.href = 'dashboards/basic/dashboard.html';
+                    break;
+                case 'free':
                 default:
                     window.location.href = 'dashboards/basic/dashboard.html';
                     break;
