@@ -26,19 +26,43 @@
         }
         
         body {
-            background-color: var(--body-bg);
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
             color: var(--text-color);
             line-height: 1.6;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.3;
+            z-index: 0;
         }
         
         .login-container {
             width: 100%;
             max-width: 400px;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
         
         .login-header {
@@ -48,30 +72,66 @@
         
         .logo {
             font-size: 32px;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 10px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+            animation: shimmerText 3s infinite;
+        }
+        
+        @keyframes shimmerText {
+            0% { background-position: -100%; }
+            100% { background-position: 200%; }
         }
         
         .tagline {
             font-size: 16px;
-            color: var(--text-light);
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
         
         .login-card {
-            background-color: var(--card-bg);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
-            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            animation: cardFloat 1s ease-out forwards;
+        }
+        
+        @keyframes cardFloat {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
         
         .login-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 25px;
             text-align: center;
+            color: #4f46e5;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .login-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, #4f46e5, #818cf8);
+            border-radius: 3px;
         }
         
         .form-group {
@@ -86,58 +146,117 @@
         
         .form-input {
             width: 100%;
-            padding: 12px;
+            padding: 14px 16px;
             border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05) inset;
         }
         
         .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px);
         }
         
         .remember-me {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #4f46e5;
+            cursor: pointer;
         }
         
         .login-btn {
             width: 100%;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(to right, #4f46e5, #6366f1, #818cf8);
+            background-size: 200% auto;
             color: white;
             border: none;
-            border-radius: 6px;
-            padding: 12px;
+            border-radius: 30px;
+            padding: 14px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
         
         .login-btn:hover {
-            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
-            transform: translateY(-2px);
+            background-position: right center;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .login-btn:hover::before {
+            left: 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         
         .login-footer {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 14px;
         }
         
         .login-footer a {
-            color: var(--primary-color);
+            color: #4f46e5;
             text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 2px 0;
+        }
+        
+        .login-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #4f46e5, #818cf8);
+            transition: width 0.3s ease;
         }
         
         .login-footer a:hover {
-            text-decoration: underline;
+            color: #6366f1;
+        }
+        
+        .login-footer a:hover::after {
+            width: 100%;
         }
         
         .error-message {
@@ -152,7 +271,7 @@
     <div class="login-container">
         <div class="login-header">
             <div class="logo">
-                <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 40px; vertical-align: middle; margin-right: 10px;">
+                <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 50px; vertical-align: middle; margin-right: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));">
                 <span>PrepSharp</span>
             </div>
             <div class="tagline">Your Ultimate JEE Preparation Platform</div>
