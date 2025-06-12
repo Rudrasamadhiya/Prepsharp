@@ -779,126 +779,41 @@
         </main>
     </div>
     
-    <script src="../../assets/js/dashboard-data.js"></script>
     <script>
-        // Load data and render the study plan page
-        async function loadStudyPlanData() {
-            try {
-                // Get user data and study plan data
-                const userData = await dashboardData.getUserData();
-                const studyData = await dashboardData.getStudyPlanData();
-                
-                // Update user info
-                document.querySelector('.user-name').textContent = userData.name;
-                document.querySelector('.notification-count').textContent = userData.notifications;
-                
-                // Update stats
-                document.querySelectorAll('.stat-value')[0].textContent = userData.stats.studyHours;
-                document.querySelectorAll('.stat-value')[1].textContent = userData.stats.papersCompleted;
-                document.querySelectorAll('.stat-value')[2].textContent = userData.stats.planAdherence + '%';
-                document.querySelectorAll('.stat-value')[3].textContent = userData.stats.dailyAvgHours;
-                
-                // Update calendar title
-                document.querySelector('.calendar-title').textContent = `${studyData.currentMonth} ${studyData.currentYear}`;
-                
-                // Update recommendations
-                const recommendationList = document.querySelector('.recommendation-list');
-                recommendationList.innerHTML = '';
-                
-                studyData.recommendations.forEach(rec => {
-                    const item = document.createElement('li');
-                    item.className = 'recommendation-item';
-                    item.innerHTML = `
-                        <div class="recommendation-icon">
-                            <i class="fas fa-${rec.icon}"></i>
-                        </div>
-                        <div>${rec.text}</div>
-                    `;
-                    recommendationList.appendChild(item);
-                });
-                
-                // Update task list
-                const taskList = document.querySelector('.task-list');
-                taskList.innerHTML = '';
-                
-                studyData.tasks.forEach(task => {
-                    const subjectClass = dashboardData.getSubjectClass(task.subject);
-                    
-                    const item = document.createElement('li');
-                    item.className = 'task-item';
-                    item.innerHTML = `
-                        <div class="task-checkbox">
-                            <input type="checkbox" ${task.completed ? 'checked' : ''}>
-                        </div>
-                        <div class="task-content">
-                            <div class="task-title">${task.title}</div>
-                            <div class="task-meta">
-                                <div class="task-time"><i class="far fa-clock"></i> ${task.startTime} - ${task.endTime}</div>
-                                <span class="task-subject ${subjectClass}">${task.subject}</span>
-                            </div>
-                        </div>
-                        <div class="task-actions">
-                            <button class="task-action-btn"><i class="fas fa-edit"></i></button>
-                            <button class="task-action-btn"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    `;
-                    taskList.appendChild(item);
-                    
-                    // Apply completed style if task is completed
-                    if (task.completed) {
-                        item.style.opacity = '0.6';
-                        item.querySelector('.task-title').style.textDecoration = 'line-through';
+        // Calendar day selection
+        document.querySelectorAll('.calendar-day').forEach(day => {
+            day.addEventListener('click', function() {
+                // Remove active class from all days
+                document.querySelectorAll('.calendar-day').forEach(d => {
+                    if (!d.classList.contains('today')) {
+                        d.classList.remove('active');
                     }
                 });
                 
-                // Set up event listeners after loading data
-                setupEventListeners();
+                // Add active class to clicked day
+                if (!this.classList.contains('today')) {
+                    this.classList.add('active');
+                }
                 
-            } catch (error) {
-                console.error('Error loading study plan data:', error);
-            }
-        }
-        
-        function setupEventListeners() {
-            // Calendar day selection
-            document.querySelectorAll('.calendar-day').forEach(day => {
-                day.addEventListener('click', function() {
-                    // Remove active class from all days
-                    document.querySelectorAll('.calendar-day').forEach(d => {
-                        if (!d.classList.contains('today')) {
-                            d.classList.remove('active');
-                        }
-                    });
-                    
-                    // Add active class to clicked day
-                    if (!this.classList.contains('today')) {
-                        this.classList.add('active');
-                    }
-                    
-                    // Update task list title
-                    const dayNumber = this.querySelector('.day-number').textContent;
-                    const month = document.querySelector('.calendar-title').textContent.split(' ')[0];
-                    document.querySelector('.task-list-title').textContent = `Tasks for ${month} ${dayNumber}`;
-                });
+                // Update task list title (in a real app, this would load tasks for the selected day)
+                const dayNumber = this.querySelector('.day-number').textContent;
+                document.querySelector('.task-list-title').textContent = `Tasks for September ${dayNumber}`;
             });
-            
-            // Task checkbox functionality
-            document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const taskItem = this.closest('.task-item');
-                    if (this.checked) {
-                        taskItem.style.opacity = '0.6';
-                        taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
-                    } else {
-                        taskItem.style.opacity = '1';
-                        taskItem.querySelector('.task-title').style.textDecoration = 'none';
-                    }
-                });
-            });
-        }
+        });
         
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadStudyPlanData);
+        // Task checkbox functionality
+        document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskItem = this.closest('.task-item');
+                if (this.checked) {
+                    taskItem.style.opacity = '0.6';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
+                } else {
+                    taskItem.style.opacity = '1';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'none';
+                }
+            });
+        });
     </script>
 </body>
 </html>

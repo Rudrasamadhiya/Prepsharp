@@ -514,95 +514,65 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../../assets/js/dashboard-data.js"></script>
     <script>
-        // Load data and render the dashboard
-        async function loadDashboardData() {
-            try {
-                // Get user data and exam data
-                const userData = await dashboardData.getUserData();
-                const examData = await dashboardData.getExamData();
-                
-                // Update user info
-                document.querySelector('.user-name').textContent = userData.name;
-                document.querySelector('.notification-count').textContent = userData.notifications;
-                document.querySelector('.welcome-section h1').innerHTML = `Welcome back, ${userData.name.split(' ')[0]} <span class="premium-badge">Premium</span>`;
-                
-                // Update stats
-                document.querySelectorAll('.stat-value')[0].textContent = userData.stats.overallProgress + '%';
-                document.querySelectorAll('.stat-value')[1].textContent = 'Top ' + userData.stats.performanceRank + '%';
-                document.querySelectorAll('.stat-value')[2].textContent = userData.stats.papersCompleted;
-                document.querySelectorAll('.stat-value')[3].textContent = userData.stats.studyHours;
-                
-                // Update insights
-                const insightList = document.querySelector('.insight-list');
-                insightList.innerHTML = '';
-                
-                examData.insights.forEach(insight => {
-                    const item = document.createElement('li');
-                    item.className = 'insight-item';
-                    item.innerHTML = `
-                        <div class="insight-icon">
-                            <i class="fas fa-${insight.icon}"></i>
-                        </div>
-                        <div>${insight.text}</div>
-                    `;
-                    insightList.appendChild(item);
-                });
-                
-                // Create performance chart
-                const perfCtx = document.getElementById('performanceChart').getContext('2d');
-                const performanceChart = new Chart(perfCtx, {
-                    type: 'line',
-                    data: {
-                        labels: examData.performanceTrends.labels,
-                        datasets: examData.performanceTrends.datasets.map(dataset => ({
-                            label: dataset.label,
-                            data: dataset.data,
-                            borderColor: dataset.color,
-                            backgroundColor: `${dataset.color}1A`, // Add 10% opacity
-                            tension: 0.3,
-                            fill: false
-                        }))
+        // Performance Chart
+        const perfCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(perfCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [
+                    {
+                        label: 'Physics',
+                        data: [65, 68, 72, 75, 82, 85, 88],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.3,
+                        fill: false
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        }
+                    {
+                        label: 'Chemistry',
+                        data: [70, 72, 75, 78, 80, 85, 88],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Mathematics',
+                        data: [60, 65, 68, 72, 75, 80, 85],
+                        borderColor: '#9333ea',
+                        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                        tension: 0.3,
+                        fill: false
                     }
-                });
-                
-                // Set up event listeners after loading data
-                setupEventListeners();
-                
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
             }
-        }
+        });
         
-        function setupEventListeners() {
-            // Task checkbox functionality
-            document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const taskItem = this.closest('.task-item');
-                    if (this.checked) {
-                        taskItem.style.opacity = '0.6';
-                        taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
-                    } else {
-                        taskItem.style.opacity = '1';
-                        taskItem.querySelector('.task-title').style.textDecoration = 'none';
-                    }
-                });
+        // Task checkbox functionality
+        document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskItem = this.closest('.task-item');
+                if (this.checked) {
+                    taskItem.style.opacity = '0.6';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
+                } else {
+                    taskItem.style.opacity = '1';
+                    taskItem.querySelector('.task-title').style.textDecoration = 'none';
+                }
             });
-        }
-        
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadDashboardData);
+        });
     </script>
 </body>
 </html>

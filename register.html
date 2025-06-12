@@ -1,368 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register - PrepSharp</title>
-  <style>
-    :root {
-      --primary-color: #1976d2;
-      --secondary-color: #42a5f5;
-      --background-color: #f5f5f5;
-      --text-color: #212121;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      min-height: 100vh;
-    }
-    .register-flex {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-    }
-    .banner {
-      flex: 1;
-      background-color: var(--primary-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      padding: 20px;
-    }
-    .login-container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      background-color: var(--background-color);
-    }
-    .login-card {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-    }
-    h1, h2 {
-      color: var(--primary-color);
-      text-align: center;
-    }
-    .banner h1, .banner h2 {
-      color: white;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      margin-top: 10px;
-    }
-    .register-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .register-link a {
-      color: var(--primary-color);
-      text-decoration: none;
-    }
-    .error-message {
-      color: red;
-      margin-top: 10px;
-      text-align: center;
-      display: none;
-    }
-    .logo {
-      margin-bottom: 60px;
-    }
-    .features {
-      margin-top: 40px;
-    }
-    .feature {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 15px;
-      font-size: 20px;
-    }
-    @media (max-width: 900px) {
-      .banner {
-        display: none;
-      }
-      .register-flex {
-        flex-direction: column;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PrepSharp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --body-bg: #f9fafb;
+            --border-radius: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .register-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+        
+        .register-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+        }
+        
+        .register-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .subscription-options {
+            margin-bottom: 20px;
+        }
+        
+        .subscription-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .subscription-cards {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .subscription-card {
+            flex: 1;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .subscription-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        
+        .subscription-card input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        .subscription-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .subscription-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .subscription-features {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .register-btn {
+            width: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .register-btn:hover {
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .register-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .register-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="register-flex">
-    <div class="banner">
-      <div class="logo">
-        <img src="logo for index (1).png" alt="PrepSharp Logo" style="max-width: 200px; display: block;" />
-      </div>
-      <h1>PrepSharp - Prepare Smarter</h1>
-      <h2>Join the PrepSharp Community</h2>
-      <div class="features">
-        <div class="feature"><div class="feature-icon">📝</div><div>Practice with past year papers</div></div>
-        <div class="feature"><div class="feature-icon">📊</div><div>Track your performance</div></div>
-        <div class="feature"><div class="feature-icon">🎯</div><div>Focus on your weak areas</div></div>
-      </div>
-    </div>
-
-    <div class="login-container">
-      <div class="login-card">
-        <h1>Create Your Account</h1>
-        <p style="text-align: center;">Join PrepSharp to start your preparation journey for competitive exams.</p>
-
-        <form id="register-form">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Enter your full name" required />
-          </div>
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email address" required />
-            <small id="email-error" style="color: red; display: none;">Email already registered</small>
-          </div>
-          <div class="form-group">
-            <label for="mobile">Mobile Number</label>
-            <input type="tel" id="mobile" placeholder="Enter your mobile number" required />
-            <small id="mobile-error" style="color: red; display: none;">Mobile number already registered</small>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Create a password" required />
-          </div>
-          <div class="form-group">
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" placeholder="Confirm your password" required />
-          </div>
-          <button type="submit" class="btn primary">Register with PrepSharp</button>
-          <div id="error-message" class="error-message"></div>
-        </form>
-
-        <div class="register-link">
-          Already have an account? <a href="index.html">Login to PrepSharp</a>
+    <div class="register-container">
+        <div class="register-header">
+            <div class="logo">PrepSharp</div>
+            <div class="tagline">Your Ultimate JEE Preparation Platform</div>
         </div>
-      </div>
+        
+        <div class="register-card">
+            <h2 class="register-title">Create Your Account</h2>
+            
+            <form id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" id="firstName" class="form-input" placeholder="Enter your first name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <div id="emailError" class="error-message">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                    <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                    <div id="confirmPasswordError" class="error-message">Passwords do not match</div>
+                </div>
+                
+                <div class="subscription-options">
+                    <div class="subscription-title">Choose Your Subscription Plan</div>
+                    
+                    <div class="subscription-cards">
+                        <label class="subscription-card selected">
+                            <input type="radio" name="subscription" value="basic" checked>
+                            <div class="subscription-name">Basic</div>
+                            <div class="subscription-price">Free</div>
+                            <div class="subscription-features">JEE Main Papers, Basic Analytics</div>
+                        </label>
+                        
+                        <label class="subscription-card">
+                            <input type="radio" name="subscription" value="standard">
+                            <div class="subscription-name">Standard</div>
+                            <div class="subscription-price">₹499/month</div>
+                            <div class="subscription-features">JEE Main & Advanced, Study Plan</div>
+                        </label>
+                        
+                        <label class="subscription-card">
+                            <input type="radio" name="subscription" value="premium">
+                            <div class="subscription-name">Premium</div>
+                            <div class="subscription-price">₹999/month</div>
+                            <div class="subscription-features">All Features, AI Coach, Mock Interviews</div>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="register-btn">Create Account</button>
+                
+                <div class="register-footer">
+                    Already have an account? <a href="login.html">Login</a>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
-
-  <script>
-    // Add real-time validation for email and mobile
-    const emailInput = document.getElementById('email');
-    const mobileInput = document.getElementById('mobile');
-    const emailError = document.getElementById('email-error');
-    const mobileError = document.getElementById('mobile-error');
     
-    // Debounce function to limit API calls
-    function debounce(func, delay) {
-      let timer;
-      return function() {
-        clearTimeout(timer);
-        timer = setTimeout(() => func.apply(this, arguments), delay);
-      };
-    }
-    
-    // Check if email exists in database
-    emailInput.addEventListener('blur', debounce(function() {
-      const email = emailInput.value.trim();
-      if (email) {
-        fetch(`/api/check-email?email=${encodeURIComponent(email)}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.exists) {
-              emailError.style.display = 'block';
-              emailInput.setCustomValidity('Email already registered');
-            } else {
-              emailError.style.display = 'none';
-              emailInput.setCustomValidity('');
+    <script>
+        // Handle subscription card selection
+        document.querySelectorAll('.subscription-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                document.querySelectorAll('.subscription-card').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                
+                // Check the radio button
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+        
+        // Handle registration form submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const subscription = document.querySelector('input[name="subscription"]:checked').value;
+            
+            // Reset error messages
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmPasswordError').style.display = 'none';
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                return;
             }
-          })
-          .catch(err => {
-            console.error('Error checking email:', err);
-          });
-      }
-    }, 300));
-    
-    // Check if mobile exists in database
-    mobileInput.addEventListener('blur', debounce(function() {
-      const mobile = mobileInput.value.trim();
-      if (mobile) {
-        fetch(`/api/check-mobile?mobile=${encodeURIComponent(mobile)}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.exists) {
-              mobileError.style.display = 'block';
-              mobileInput.setCustomValidity('Mobile number already registered');
-            } else {
-              mobileError.style.display = 'none';
-              mobileInput.setCustomValidity('');
+            
+            // Validate password
+            if (password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                return;
             }
-          })
-          .catch(err => {
-            console.error('Error checking mobile:', err);
-          });
-      }
-    }, 300));
-    
-    document.getElementById('register-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const mobile = document.getElementById('mobile').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
-      const errorMessage = document.getElementById('error-message');
-      errorMessage.style.display = 'none';
-
-      if (!name || !email || !mobile || !password || !confirmPassword) {
-        errorMessage.textContent = 'All fields are required';
-        errorMessage.style.display = 'block';
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        errorMessage.textContent = 'Passwords do not match';
-        errorMessage.style.display = 'block';
-        return;
-      }
-      
-      // Form is valid if no custom validity messages are set
-      if (emailInput.validity.customError || mobileInput.validity.customError) {
-        errorMessage.textContent = 'Please fix the errors above';
-        errorMessage.style.display = 'block';
-        return;
-      }
-      
-      // Show loading state
-      const submitButton = document.querySelector('button[type="submit"]');
-      submitButton.disabled = true;
-      submitButton.textContent = 'Registering...';
-      
-      // Send data to server
-      fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email, mobile, password })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Create local user and redirect
-          const user = {
-            id: data.user ? data.user.id : Date.now().toString(),
-            name,
-            email,
-            mobile,
-            stream: '',
-            profileComplete: false
-          };
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          window.location.href = 'profile-setup.html';
-        } else {
-          submitButton.disabled = false;
-          submitButton.textContent = 'Register with PrepSharp';
-          errorMessage.textContent = data.message || 'Registration failed';
-          errorMessage.style.display = 'block';
-        }
-      })
-      .catch(err => {
-        console.error('Server error:', err);
+            
+            // Validate password confirmation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                return;
+            }
+            
+            // Get existing users or create empty array
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Check if email already exists
+            if (users.some(user => user.email === email)) {
+                alert('Email already registered. Please use a different email or login.');
+                return;
+            }
+            
+            // Add new user
+            users.push({
+                firstName,
+                lastName,
+                email,
+                password,
+                subscription
+            });
+            
+            // Save updated users array
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Set current user as logged in
+            localStorage.setItem('loggedInUser', JSON.stringify({
+                email,
+                firstName,
+                lastName,
+                subscription
+            }));
+            
+            // Redirect to appropriate dashboard
+            redirectToDashboard(subscription);
+        });
         
-        // Get existing users from localStorage or create empty object
-        let users = JSON.parse(localStorage.getItem('users') || '{}');
-        
-        // Check if email already exists
-        if (Object.values(users).some(user => user.email === email)) {
-          submitButton.disabled = false;
-          submitButton.textContent = 'Register with PrepSharp';
-          errorMessage.textContent = 'Email already registered';
-          errorMessage.style.display = 'block';
-          return;
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         }
         
-        // Check if mobile already exists
-        if (Object.values(users).some(user => user.mobile === mobile)) {
-          submitButton.disabled = false;
-          submitButton.textContent = 'Register with PrepSharp';
-          errorMessage.textContent = 'Mobile number already registered';
-          errorMessage.style.display = 'block';
-          return;
+        // Redirect to appropriate dashboard based on subscription
+        function redirectToDashboard(subscription) {
+            switch(subscription) {
+                case 'premium':
+                    window.location.href = 'dashboards/premium/dashboard.html';
+                    break;
+                case 'standard':
+                    window.location.href = 'dashboards/standard/dashboard.html';
+                    break;
+                case 'basic':
+                default:
+                    window.location.href = 'dashboards/basic/dashboard.html';
+                    break;
+            }
         }
-        
-        // Create new user ID
-        const userId = Date.now().toString();
-        
-        // Add user to users object
-        users[userId] = {
-          id: userId,
-          name,
-          email,
-          mobile,
-          password, // In a real app, this should be hashed
-          verified: true,
-          profileComplete: false,
-          createdAt: Date.now()
-        };
-        
-        // Save users to localStorage
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Create current user session
-        const currentUser = {
-          id: userId,
-          name,
-          email,
-          mobile,
-          stream: '',
-          profileComplete: false
-        };
-        
-        // Set current user and redirect
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        window.location.href = 'profile-setup.html';
-      });
-    });
-  </script>
+    </script>
 </body>
 </html>

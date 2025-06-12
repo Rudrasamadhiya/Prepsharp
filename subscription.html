@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Subscription - PrepSharp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --accent-color: #f97316;
+            --accent-dark: #ea580c;
+            --premium-color: #9333ea;
+            --premium-dark: #7e22ce;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --body-bg: #f9fafb;
+            --border-radius: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+        
+        .subscription-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .subscription-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .pricing-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--accent-color);
+        }
+        
+        .pricing-card.current {
+            border: 2px solid var(--success);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .current-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .pricing-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-price {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pricing-features i {
+            color: var(--success);
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .pricing-btn {
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-basic {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-standard {
+            background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+            color: white;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(to right, var(--premium-color), var(--premium-dark));
+            color: white;
+        }
+        
+        .pricing-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .comparison-table th {
+            background-color: rgba(79, 70, 229, 0.05);
+            font-weight: 600;
+        }
+        
+        .comparison-table th:first-child, .comparison-table td:first-child {
+            text-align: left;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table i.fa-check {
+            color: var(--success);
+        }
+        
+        .comparison-table i.fa-times {
+            color: var(--danger);
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .payment-btn {
+            width: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-btn:hover {
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">PrepSharp</div>
+            <div class="tagline">Your Ultimate JEE Preparation Platform</div>
+        </div>
+        
+        <h1 class="subscription-title">Choose Your Subscription Plan</h1>
+        <p class="subscription-subtitle">Upgrade your subscription to access more features and enhance your JEE preparation experience.</p>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card" id="basic-card">
+                <h3 class="pricing-title">Basic</h3>
+                <div class="pricing-price">Free</div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> JEE Main Practice Papers</li>
+                    <li><i class="fas fa-check"></i> Basic Analytics</li>
+                    <li><i class="fas fa-check"></i> Limited Question Bank</li>
+                    <li><i class="fas fa-check"></i> Basic Settings</li>
+                </ul>
+                <button class="pricing-btn btn-basic" id="select-basic">Select Plan</button>
+            </div>
+            
+            <div class="pricing-card popular" id="standard-card">
+                <div class="popular-badge">Most Popular</div>
+                <h3 class="pricing-title">Standard</h3>
+                <div class="pricing-price">₹499 <span>/month</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> JEE Main & Advanced Papers</li>
+                    <li><i class="fas fa-check"></i> Detailed Analytics</li>
+                    <li><i class="fas fa-check"></i> Full Question Bank</li>
+                    <li><i class="fas fa-check"></i> Personalized Study Plan</li>
+                    <li><i class="fas fa-check"></i> Priority Support</li>
+                </ul>
+                <button class="pricing-btn btn-standard" id="select-standard">Select Plan</button>
+            </div>
+            
+            <div class="pricing-card" id="premium-card">
+                <h3 class="pricing-title">Premium</h3>
+                <div class="pricing-price">₹999 <span>/month</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> All Standard Features</li>
+                    <li><i class="fas fa-check"></i> AI Coach</li>
+                    <li><i class="fas fa-check"></i> Peer Comparison</li>
+                    <li><i class="fas fa-check"></i> Mock Interviews</li>
+                    <li><i class="fas fa-check"></i> Predictive Analytics</li>
+                    <li><i class="fas fa-check"></i> 24/7 Priority Support</li>
+                </ul>
+                <button class="pricing-btn btn-premium" id="select-premium">Select Plan</button>
+            </div>
+        </div>
+        
+        <h2 style="text-align: center; margin-bottom: 20px;">Feature Comparison</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Basic</th>
+                    <th>Standard</th>
+                    <th>Premium</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>JEE Main Practice Papers</td>
+                    <td><i class="fas fa-check"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>JEE Advanced Practice Papers</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Question Bank</td>
+                    <td>Limited</td>
+                    <td>Full</td>
+                    <td>Full + AI Solutions</td>
+                </tr>
+                <tr>
+                    <td>Analytics</td>
+                    <td>Basic</td>
+                    <td>Detailed</td>
+                    <td>Predictive</td>
+                </tr>
+                <tr>
+                    <td>Study Plan</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>AI Coach</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Peer Comparison</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Mock Interviews</td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-times"></i></td>
+                    <td><i class="fas fa-check"></i></td>
+                </tr>
+                <tr>
+                    <td>Support</td>
+                    <td>Email</td>
+                    <td>Priority Email</td>
+                    <td>24/7 Priority</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="#" class="back-link" id="back-link">← Back to Dashboard</a>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Complete Your Payment</h2>
+            
+            <form id="payment-form">
+                <div class="form-group">
+                    <label class="form-label" for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" class="form-input" placeholder="Enter name on card" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="card-number">Card Number</label>
+                    <input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="expiry-date">Expiry Date</label>
+                        <input type="text" id="expiry-date" class="form-input" placeholder="MM/YY" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="cvv">CVV</label>
+                        <input type="text" id="cvv" class="form-input" placeholder="123" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="billing-address">Billing Address</label>
+                    <input type="text" id="billing-address" class="form-input" placeholder="Enter your billing address" required>
+                </div>
+                
+                <button type="submit" class="payment-btn" id="complete-payment">Complete Payment</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = getCurrentUser();
+            const currentSubscription = user.subscription;
+            
+            // Mark current subscription
+            const currentCard = document.getElementById(`${currentSubscription}-card`);
+            if (currentCard) {
+                currentCard.classList.add('current');
+                const badge = document.createElement('div');
+                badge.className = 'current-badge';
+                badge.textContent = 'Current Plan';
+                currentCard.appendChild(badge);
+                
+                // Disable the button for current subscription
+                const selectBtn = document.getElementById(`select-${currentSubscription}`);
+                selectBtn.classList.add('btn-disabled');
+                selectBtn.textContent = 'Current Plan';
+                selectBtn.disabled = true;
+            }
+            
+            // Set back link to appropriate dashboard
+            document.getElementById('back-link').href = `dashboards/${currentSubscription}/dashboard.html`;
+            
+            // Handle plan selection
+            document.getElementById('select-basic').addEventListener('click', function() {
+                if (currentSubscription !== 'basic') {
+                    updateSubscription('basic');
+                }
+            });
+            
+            document.getElementById('select-standard').addEventListener('click', function() {
+                if (currentSubscription !== 'standard') {
+                    if (currentSubscription === 'premium') {
+                        // Downgrading from premium to standard
+                        if (confirm('Are you sure you want to downgrade from Premium to Standard? You will lose access to premium features.')) {
+                            updateSubscription('standard');
+                        }
+                    } else {
+                        // Upgrading from basic to standard
+                        showPaymentModal('standard');
+                    }
+                }
+            });
+            
+            document.getElementById('select-premium').addEventListener('click', function() {
+                if (currentSubscription !== 'premium') {
+                    showPaymentModal('premium');
+                }
+            });
+            
+            // Modal functionality
+            const modal = document.getElementById('payment-modal');
+            const closeModal = document.querySelector('.close-modal');
+            
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Handle payment form submission
+            let selectedPlan = '';
+            
+            document.getElementById('payment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real app, this would process the payment
+                // For this demo, we'll just update the subscription
+                updateSubscription(selectedPlan);
+                modal.style.display = 'none';
+            });
+            
+            function showPaymentModal(plan) {
+                selectedPlan = plan;
+                modal.style.display = 'flex';
+                
+                // Update modal title based on selected plan
+                const planName = plan.charAt(0).toUpperCase() + plan.slice(1);
+                const planPrice = plan === 'standard' ? '₹499' : '₹999';
+                document.querySelector('.modal-title').textContent = `Subscribe to ${planName} Plan - ${planPrice}/month`;
+            }
+            
+            function updateSubscription(plan) {
+                // Update user subscription
+                if (updateUserSubscription(plan)) {
+                    alert(`Your subscription has been updated to ${plan.charAt(0).toUpperCase() + plan.slice(1)}!`);
+                    window.location.href = `dashboards/${plan}/dashboard.html`;
+                } else {
+                    alert('Failed to update subscription. Please try again.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
