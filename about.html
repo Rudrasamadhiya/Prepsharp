@@ -72,6 +72,236 @@
             line-height: 1.6;
         }
         
+        /* Enhanced feature cards */
+        .section-intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .intro-badge {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .section-intro p {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .feature-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .feature-hover-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(79, 70, 229, 0.9), rgba(79, 70, 229, 0.7));
+            color: white;
+            padding: 15px;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-hover-info {
+            transform: translateY(0);
+        }
+        
+        /* Feature cards styling */
+        .feature-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .feature-card-large {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+            transform: translateY(0);
+        }
+        
+        .feature-card-large:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(79, 70, 229, 0.2);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+        
+        .feature-card-large::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .feature-card-large:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .feature-card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-icon-glow {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            animation: pulse-glow 3s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+        }
+        
+        .feature-card-header i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: inline-block;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card-header h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .feature-card-body {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .feature-card-body p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .feature-action {
+            margin-top: auto;
+            text-align: center;
+            padding-top: 20px;
+        }
+        
+        .feature-btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .feature-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .feature-stat {
+            padding: 10px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .feature-card-footer {
+            padding: 15px;
+            background-color: #f8fafc;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .feature-tag {
+            display: inline-block;
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 15px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+            animation: pulse-tag 2s infinite;
+        }
+        
+        @keyframes pulse-tag {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -135,17 +365,33 @@
         
         .logo {
             font-size: 28px;
-            font-weight: 800;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            background: linear-gradient(to right, #ffffff, #e0f2fe);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
-            letter-spacing: 1px;
+            color: white;
+            letter-spacing: 0.5px;
             position: relative;
             z-index: 2;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+        
+        .logo-text {
+            font-weight: 700;
+        }
+        
+        .logo-highlight {
+            color: #ffffff;
+            font-weight: 800;
+        }
+        
+        .logo img {
+            height: 35px;
+            margin-right: 10px;
+            vertical-align: middle;
         }
         
         .logo img {
@@ -753,10 +999,10 @@
     <header class="header">
         <div class="container">
             <nav class="nav">
-                <div class="logo">
-                    <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 38px; vertical-align: middle; margin-right: 12px;">
+                <a href="index.html" class="logo" style="text-decoration: none; cursor: pointer;">
+                    <img src="logo for index (1).png" alt="PrepSharp Logo">
                     <span class="logo-text">Prep<span class="logo-highlight">Sharp</span></span>
-                </div>
+                </a>
                 <div class="nav-links">
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
@@ -847,68 +1093,201 @@
             
             <div class="section">
                 <h2 class="section-title">What Sets Us Apart</h2>
+                <div class="section-intro">
+                    <div class="intro-badge">UNIQUE ADVANTAGES</div>
+                    <p>PrepSharp offers features that make your JEE preparation more effective and engaging.</p>
+                </div>
                 <div class="features-grid">
                     <div class="feature-card" data-aos="fade-up">
                         <div class="feature-icon"><i class="fas fa-route"></i></div>
+                        <div class="feature-badge">EXCLUSIVE</div>
                         <h3>Personalized Learning</h3>
                         <p>Learning paths tailored to each student's strengths and weaknesses</p>
+                        <div class="feature-hover-info">
+                            <span>Adaptive question selection based on your performance</span>
+                        </div>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
                         <h3>Expert Content</h3>
                         <p>Questions crafted by top educators from IITs and NITs</p>
+                        <div class="feature-hover-info">
+                            <span>Curated by JEE toppers and experienced faculty</span>
+                        </div>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="feature-badge">POPULAR</div>
                         <h3>Advanced Analytics</h3>
                         <p>Track progress and identify improvement areas with detailed insights</p>
+                        <div class="feature-hover-info">
+                            <span>Visual performance reports and improvement suggestions</span>
+                        </div>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="feature-icon"><i class="fas fa-robot"></i></div>
                         <h3>AI-Powered Support</h3>
                         <p>24/7 doubt resolution using our advanced AI assistant</p>
+                        <div class="feature-hover-info">
+                            <span>Get instant help whenever you're stuck</span>
+                        </div>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
                         <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
                         <h3>Affordable Plans</h3>
                         <p>Quality education accessible to all with flexible subscription options</p>
+                        <div class="feature-hover-info">
+                            <span>Including a free tier for basic preparation</span>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="section">
                 <h2 class="section-title">App Features</h2>
-                <div class="features-showcase" data-aos="fade-up">
-                    <div class="feature-showcase-item">
-                        <div class="feature-icon-large">
+                <div class="section-intro">
+                    <div class="intro-badge">KEY FEATURES</div>
+                    <p>Discover the powerful tools that make PrepSharp the ultimate JEE preparation platform.</p>
+                </div>
+                <div class="feature-cards-container">
+                    <div class="feature-card-large" data-aos="fade-up">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
                             <i class="fas fa-laptop-code"></i>
+                            <h3>Exam Simulation</h3>
                         </div>
-                        <h3>Exam Simulation</h3>
-                        <p>Experience JEE exams in the same format as conducted by NTA, with accurate timing and question patterns.</p>
+                        <div class="feature-card-body">
+                            <p>Experience JEE exams in the same format as conducted by NTA, with accurate timing and question patterns.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">100%</div>
+                                    <div class="stat-label">Exam Accuracy</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">50+</div>
+                                    <div class="stat-label">Mock Tests</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card-footer">
+                            <span class="feature-tag">Most Popular</span>
+                        </div>
                     </div>
                     
-                    <div class="feature-showcase-item">
-                        <div class="feature-icon-large">
+                    <div class="feature-card-large" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
                             <i class="fas fa-brain"></i>
+                            <h3>Smart Analysis</h3>
                         </div>
-                        <h3>Smart Analysis</h3>
-                        <p>Get detailed insights on your performance, strengths, and areas that need improvement.</p>
+                        <div class="feature-card-body">
+                            <p>Get detailed insights on your performance, strengths, and areas that need improvement.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">15+</div>
+                                    <div class="stat-label">Report Types</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">Real-time</div>
+                                    <div class="stat-label">Feedback</div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     
-                    <div class="feature-showcase-item">
-                        <div class="feature-icon-large">
+                    <div class="feature-card-large" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
                             <i class="fas fa-book-open"></i>
+                            <h3>Previous Year Papers</h3>
                         </div>
-                        <h3>Previous Year Papers</h3>
-                        <p>Access a comprehensive collection of JEE previous year questions with detailed solutions.</p>
+                        <div class="feature-card-body">
+                            <p>Access a comprehensive collection of JEE previous year questions with detailed solutions.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">10+</div>
+                                    <div class="stat-label">Years Coverage</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">1000+</div>
+                                    <div class="stat-label">Questions</div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     
-                    <div class="feature-showcase-item">
-                        <div class="feature-icon-large">
+                    <div class="feature-card-large" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
                             <i class="fas fa-user-graduate"></i>
+                            <h3>Personalized Guidance</h3>
                         </div>
-                        <h3>Personalized Guidance</h3>
-                        <p>Receive customized study plans and recommendations based on your performance.</p>
+                        <div class="feature-card-body">
+                            <p>Receive customized study plans and recommendations based on your performance.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">AI</div>
+                                    <div class="stat-label">Powered</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">24/7</div>
+                                    <div class="stat-label">Support</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card-footer">
+                            <span class="feature-tag">New Feature</span>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card-large" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
+                            <i class="fas fa-clock"></i>
+                            <h3>Time Management Tools</h3>
+                        </div>
+                        <div class="feature-card-body">
+                            <p>Master the art of time management with specialized tools designed for JEE's time-critical environment.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">30%</div>
+                                    <div class="stat-label">Speed Improvement</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">Custom</div>
+                                    <div class="stat-label">Timers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card-footer">
+                            <span class="feature-tag">High Impact</span>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card-large" data-aos="fade-up" data-aos-delay="500">
+                        <div class="feature-card-header">
+                            <div class="feature-icon-glow"></div>
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>Customized Study Plans</h3>
+                        </div>
+                        <div class="feature-card-body">
+                            <p>Get personalized daily and weekly study schedules tailored to your strengths, weaknesses, and available study time.</p>
+                            <div class="feature-stats">
+                                <div class="feature-stat">
+                                    <div class="stat-number">100%</div>
+                                    <div class="stat-label">Personalized</div>
+                                </div>
+                                <div class="feature-stat">
+                                    <div class="stat-number">Adaptive</div>
+                                    <div class="stat-label">Scheduling</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card-footer">
+                            <span class="feature-tag">Success Path</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -958,6 +1337,13 @@
                 if (linkHref === currentPage) {
                     link.classList.add('active');
                 }
+            });
+            
+            // Feature card animations
+            const featureCards = document.querySelectorAll('.feature-card-large');
+            
+            featureCards.forEach((card, index) => {
+                card.style.animationDelay = (index * 0.1) + 's';
             });
         });
     </script>
