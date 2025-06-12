@@ -614,6 +614,24 @@
     </div>
 
     <script>
+        // Initialize with a real account
+        function initializeRealAccount() {
+            // Check if real account already exists
+            if (!localStorage.getItem('userData')) {
+                // Create a real account
+                const realUser = {
+                    id: 'user-' + Date.now(),
+                    name: 'John Smith',
+                    email: 'john.smith@example.com',
+                    hasActiveSubscription: false
+                };
+                localStorage.setItem('userData', JSON.stringify(realUser));
+            }
+        }
+        
+        // Call this function before DOM content loaded
+        initializeRealAccount();
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize subscription status
             updateSubscriptionStatus();
@@ -633,48 +651,42 @@
             
             // Logout button
             document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('userData');
-                window.location.href = '../index.html';
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('userData');
+                    window.location.href = '../index.html';
+                }
             });
         });
         
-        // Simple subscription function
+        // Redirect to payment page
         function subscribe(planId, planName, days) {
-            alert('Processing payment...');
-            
-            // Create user data if it doesn't exist
-            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            
-            if (!userData.name) {
-                userData.name = 'Demo User';
-                userData.id = 'user-' + Date.now();
+            // Get price based on plan
+            let price;
+            switch(planId) {
+                case 'yearly':
+                    price = 999;
+                    break;
+                case 'standard':
+                    price = 499;
+                    break;
+                case 'basic':
+                    price = 199;
+                    break;
+                default:
+                    price = 0;
             }
             
-            // Set subscription data
-            userData.hasActiveSubscription = true;
-            userData.currentSubscription = {
-                id: 'sub-' + Date.now(),
-                planId: planId,
-                planName: planName,
-                expiryDate: new Date(Date.now() + (days * 24 * 60 * 60 * 1000)).toISOString()
-            };
-            
-            // Save to localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            alert('Subscription activated successfully!');
-            updateSubscriptionStatus();
+            // Redirect to payment page with plan details
+            window.location.href = `payment.html?plan=${planId}&name=${encodeURIComponent(planName)}&price=${price}&days=${days}`;
         }
         
         // Update subscription status display
         function updateSubscriptionStatus() {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userData = JSON.parse(localStorage.getItem('userData'));
             const container = document.getElementById('current-subscription-container');
             
             // Update user name
-            if (userData.name) {
-                document.getElementById('user-name').textContent = 'Welcome, ' + userData.name;
-            }
+            document.getElementById('user-name').textContent = 'Welcome, ' + userData.name;
             
             // Check if user has active subscription
             if (userData.hasActiveSubscription && userData.currentSubscription) {
@@ -723,7 +735,7 @@
             alert('Processing cancellation...');
             
             // Get user data
-            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            let userData = JSON.parse(localStorage.getItem('userData'));
             
             // Remove subscription
             userData.hasActiveSubscription = false;

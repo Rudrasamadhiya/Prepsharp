@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Doubts - PrepSharp Admin</title>
+    <link rel="stylesheet" href="../styles/admin.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="menu-icon" id="menu-toggle">☰</span>
+            <img src="../prepsharp-logo.png" alt="PrepSharp Logo" style="height: 40px;">
+            <h2>PrepSharp Admin</h2>
+        </div>
+        <div class="user-info">
+            <div class="admin-badge">ADMIN</div>
+            <span>Admin User</span>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>PrepSharp Admin</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="admin-users.html">Manage Users</a></li>
+            <li><a href="admin-exams.html">Manage Exams</a></li>
+            <li><a href="admin-questions.html">Manage Questions</a></li>
+            <li><a href="admin-study-resources.html">Manage Resources</a></li>
+            <li><a href="admin-doubts.html" class="active">Manage Doubts</a></li>
+            <li><a href="admin-analytics.html">Analytics</a></li>
+            <li><a href="admin-settings.html">Settings</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Manage Student Doubts</h2>
+                <div>
+                    <span style="margin-right: 10px;"><strong>156</strong> pending doubts</span>
+                    <button id="assign-experts-btn" class="btn primary">Assign Experts</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="filter-tabs">
+                    <div class="filter-tab active">All Doubts</div>
+                    <div class="filter-tab">Pending</div>
+                    <div class="filter-tab">In Progress</div>
+                    <div class="filter-tab">Resolved</div>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" placeholder="Search doubts...">
+                    <button>Search</button>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Subject</th>
+                            <th>Topic</th>
+                            <th>Student</th>
+                            <th>Posted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>D-2305</td>
+                            <td>Physics</td>
+                            <td>Quantum Mechanics Wave Function</td>
+                            <td>Rahul Sharma</td>
+                            <td>2 days ago</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view">View</button>
+                                    <button class="action-btn assign">Assign</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D-2304</td>
+                            <td>Chemistry</td>
+                            <td>Organic Reaction Mechanisms</td>
+                            <td>Priya Patel</td>
+                            <td>2 days ago</td>
+                            <td><span class="status in-progress">In Progress</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view">View</button>
+                                    <button class="action-btn edit">Edit</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D-2303</td>
+                            <td>Mathematics</td>
+                            <td>Integration by Parts</td>
+                            <td>Amit Kumar</td>
+                            <td>3 days ago</td>
+                            <td><span class="status resolved">Resolved</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view">View</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D-2302</td>
+                            <td>Physics</td>
+                            <td>Rotational Dynamics</td>
+                            <td>Sneha Gupta</td>
+                            <td>3 days ago</td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn view">View</button>
+                                    <button class="action-btn assign">Assign</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <button disabled>Previous</button>
+                    <span>Page 1 of 26</span>
+                    <button>Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/admin.js"></script>
+</body>
+</html>
