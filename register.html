@@ -671,31 +671,38 @@
             return re.test(email);
         }
         
-        // Redirect to appropriate dashboard or payment page based on subscription
+        // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
             console.log('Processing subscription:', subscription);
             
-            // If free plan, go directly to dashboard
-            if (subscription === 'free') {
-                console.log('Free plan selected, redirecting to basic dashboard');
-                window.location.href = 'dashboards/basic/dashboard.html';
-                return;
-            }
-            
-            // For paid plans, redirect to payment page with subscription info
             try {
-                const firstName = document.getElementById('firstName').value;
-                const lastName = document.getElementById('lastName').value;
-                const email = document.getElementById('email').value;
+                // For all plans, go directly to dashboard for now
+                // We'll implement payment flow later
+                let dashboardPath;
                 
-                // Redirect to payment page with subscription and user details
-                const paymentUrl = `payment.html?subscription=${subscription}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(email)}`;
-                console.log('Redirecting to payment page:', paymentUrl);
-                window.location.href = paymentUrl;
+                switch(subscription) {
+                    case 'premium':
+                        dashboardPath = 'dashboards/premium/dashboard.html';
+                        break;
+                    case 'standard':
+                        dashboardPath = 'dashboards/standard/dashboard.html';
+                        break;
+                    case 'basic':
+                        dashboardPath = 'dashboards/basic/dashboard.html';
+                        break;
+                    case 'free':
+                    default:
+                        dashboardPath = 'dashboards/basic/dashboard.html';
+                        break;
+                }
+                
+                console.log('Redirecting to dashboard:', dashboardPath);
+                window.location.href = dashboardPath;
             } catch (error) {
                 console.error('Navigation error:', error);
                 alert('An error occurred. Please try again.');
-                // Stay on the registration page
+                // Fallback to basic dashboard
+                window.location.href = 'dashboards/basic/dashboard.html';
             }
         }
     </script>
