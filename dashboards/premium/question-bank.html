@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Bank - PrepSharp Premium</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 0 12px;
+            width: 250px;
+        }
+        
+        .search-box input {
+            border: none;
+            padding: 8px 0;
+            width: 100%;
+            outline: none;
+        }
+        
+        .search-box i {
+            color: var(--text-light);
+        }
+        
+        .question-list {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .question-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background-color 0.2s ease;
+        }
+        
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        
+        .question-item:hover {
+            background-color: rgba(147, 51, 234, 0.02);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .question-tags {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .question-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tag-physics {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .tag-chemistry {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .tag-mathematics {
+            background-color: rgba(147, 51, 234, 0.1);
+            color: var(--premium-color);
+        }
+        
+        .tag-easy {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .tag-medium {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .tag-hard {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .question-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .question-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .question-option:hover {
+            border-color: var(--premium-color);
+            background-color: rgba(147, 51, 234, 0.05);
+        }
+        
+        .option-label {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(147, 51, 234, 0.1);
+            color: var(--premium-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .question-meta {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .question-action {
+            padding: 6px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .question-action:hover {
+            border-color: var(--premium-color);
+            color: var(--premium-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .page-btn:hover {
+            border-color: var(--premium-color);
+            color: var(--premium-color);
+        }
+        
+        .page-btn.active {
+            background-color: var(--premium-color);
+            color: white;
+            border-color: var(--premium-color);
+        }
+        
+        .tabs-container {
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background-color: rgba(147, 51, 234, 0.05);
+            color: var(--premium-color);
+            border-bottom-color: var(--premium-color);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .premium-badge {
+            display: inline-block;
+            background-color: var(--premium-color);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+        
+        .solution-container {
+            background-color: rgba(147, 51, 234, 0.05);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 3px solid var(--premium-color);
+            display: none;
+        }
+        
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .solution-title {
+            font-weight: 600;
+            color: var(--premium-color);
+        }
+        
+        .solution-content {
+            color: var(--text-color);
+        }
+        
+        .solution-steps {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .solution-step {
+            margin-bottom: 8px;
+        }
+        
+        .ai-explanation {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--premium-color);
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .ai-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .create-question-btn {
+            background-image: linear-gradient(to right, var(--premium-color), var(--premium-dark));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .create-question-btn:hover {
+            box-shadow: 0 4px 8px rgba(147, 51, 234, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                    </li>
+                    <li>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li>
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                    </li>
+                    <li>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                    </li>
+                    <li>
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                    </li>
+                    <li>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge premium">Premium Plan</span>
+                    <span style="font-size: 12px; color: var(--text-light);">Highest tier access</span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">7</span>
+                    </div>
+                    
+                    <div class="user-profile">
+                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
+                        <span class="user-name">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>Question Bank <span class="premium-badge">Premium</span></h1>
+                    <p>Practice with a comprehensive collection of JEE questions with AI-powered solutions</p>
+                </div>
+                
+                <!-- AI Explanation -->
+                <div class="ai-explanation">
+                    <div class="ai-header">
+                        <div class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="ai-title">AI-Recommended Questions</div>
+                    </div>
+                    
+                    <p>Based on your recent performance, we recommend focusing on these topics:</p>
+                    
+                    <ul style="margin-top: 10px; margin-bottom: 15px;">
+                        <li style="margin-bottom: 8px;">Organic Chemistry - Reaction Mechanisms</li>
+                        <li style="margin-bottom: 8px;">Physics - Rotational Dynamics</li>
+                        <li style="margin-bottom: 8px;">Mathematics - Differential Equations</li>
+                    </ul>
+                    
+                    <div style="text-align: center;">
+                        <button class="start-btn">Generate Personalized Question Set</button>
+                    </div>
+                </div>
+                
+                <!-- Create Question Button -->
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <button class="create-question-btn">
+                        <i class="fas fa-plus"></i> Create Custom Question
+                    </button>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all-questions">All Questions</div>
+                        <div class="tab" data-tab="physics">Physics</div>
+                        <div class="tab" data-tab="chemistry">Chemistry</div>
+                        <div class="tab" data-tab="mathematics">Mathematics</div>
+                        <div class="tab" data-tab="bookmarks">Bookmarks</div>
+                        <div class="tab" data-tab="custom">Custom</div>
+                    </div>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="all">All Exams</option>
+                            <option value="jee-main">JEE Main</option>
+                            <option value="jee-advanced">JEE Advanced</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        
+                        <select class="filter-select">
+                            <option value="all">All Difficulty</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        
+                        <select class="filter-select">
+                            <option value="all">All Years</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search questions...">
+                    </div>
+                </div>
+                
+                <!-- All Questions Tab Content -->
+                <div class="tab-content active" id="all-questions">
+                    <!-- Question List -->
+                    <div class="question-list">
+                        <!-- Question 1 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-physics">Physics</span>
+                                    <span class="question-tag tag-medium">Medium</span>
+                                </div>
+                                <div class="question-id">#PHY-2023-01</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                A particle moves along a straight line with a constant acceleration. If the particle has a velocity of 3 m/s at t = 0 and a velocity of 7 m/s at t = 2 s, what is the position of the particle at t = 5 s if the position at t = 0 is 0 m?
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">25 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">30 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">35 m</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">40 m</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Main 2023 | Attempted by 1245 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action solution-btn" data-solution="solution-1">
+                                        <i class="fas fa-lightbulb"></i> Solution
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-robot"></i> AI Explain
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Solution Container -->
+                            <div class="solution-container" id="solution-1">
+                                <div class="solution-header">
+                                    <i class="fas fa-lightbulb" style="color: var(--premium-color);"></i>
+                                    <div class="solution-title">Solution</div>
+                                </div>
+                                <div class="solution-content">
+                                    <p>Given:</p>
+                                    <ul class="solution-steps">
+                                        <li class="solution-step">Initial velocity u = 3 m/s</li>
+                                        <li class="solution-step">Velocity at t = 2s is v = 7 m/s</li>
+                                        <li class="solution-step">Initial position x₀ = 0 m</li>
+                                    </ul>
+                                    
+                                    <p>Step 1: Find the acceleration using v = u + at</p>
+                                    <p>7 = 3 + a(2)</p>
+                                    <p>a = 2 m/s²</p>
+                                    
+                                    <p>Step 2: Use the equation x = x₀ + ut + (1/2)at²</p>
+                                    <p>x = 0 + 3(5) + (1/2)(2)(5)²</p>
+                                    <p>x = 15 + 25 = 40 m</p>
+                                    
+                                    <p>Therefore, the position of the particle at t = 5 s is 40 m.</p>
+                                    <p>The correct answer is D.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 2 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-tags">
+                                    <span class="question-tag tag-chemistry">Chemistry</span>
+                                    <span class="question-tag tag-easy">Easy</span>
+                                </div>
+                                <div class="question-id">#CHM-2023-05</div>
+                            </div>
+                            
+                            <div class="question-text">
+                                Which of the following compounds will show geometrical isomerism?
+                            </div>
+                            
+                            <div class="question-options">
+                                <div class="question-option">
+                                    <div class="option-label">A</div>
+                                    <div class="option-text">1-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">B</div>
+                                    <div class="option-text">2-butene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">C</div>
+                                    <div class="option-text">2-methylpropene</div>
+                                </div>
+                                <div class="question-option">
+                                    <div class="option-label">D</div>
+                                    <div class="option-text">propene</div>
+                                </div>
+                            </div>
+                            
+                            <div class="question-footer">
+                                <div class="question-meta">
+                                    JEE Main 2023 | Attempted by 1532 students
+                                </div>
+                                <div class="question-actions">
+                                    <button class="question-action">
+                                        <i class="fas fa-check"></i> Submit
+                                    </button>
+                                    <button class="question-action solution-btn" data-solution="solution-2">
+                                        <i class="fas fa-lightbulb"></i> Solution
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-bookmark"></i> Bookmark
+                                    </button>
+                                    <button class="question-action">
+                                        <i class="fas fa-robot"></i> AI Explain
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Solution Container -->
+                            <div class="solution-container" id="solution-2">
+                                <div class="solution-header">
+                                    <i class="fas fa-lightbulb" style="color: var(--premium-color);"></i>
+                                    <div class="solution-title">Solution</div>
+                                </div>
+                                <div class="solution-content">
+                                    <p>Geometrical isomerism (cis-trans isomerism) occurs when there is restricted rotation around a double bond, with different groups attached to each carbon of the double bond.</p>
+                                    
+                                    <p>Let's analyze each compound:</p>
+                                    
+                                    <ul class="solution-steps">
+                                        <li class="solution-step">1-butene (CH₂=CH-CH₂-CH₃): Has two identical groups (H) on one of the carbons of the double bond, so no geometrical isomerism.</li>
+                                        <li class="solution-step">2-butene (CH₃-CH=CH-CH₃): Has different groups (H and CH₃) on each carbon of the double bond, so it can show geometrical isomerism (cis and trans forms).</li>
+                                        <li class="solution-step">2-methylpropene ((CH₃)₂C=CH₂): Has two identical groups (CH₃) on one of the carbons of the double bond, so no geometrical isomerism.</li>
+                                        <li class="solution-step">propene (CH₂=CH-CH₃): Has two identical groups (H) on one of the carbons of the double bond, so no geometrical isomerism.</li>
+                                    </ul>
+                                    
+                                    <p>Therefore, only 2-butene shows geometrical isomerism.</p>
+                                    <p>The correct answer is B.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn"><i class="fas fa-ellipsis-h"></i></button>
+                        <button class="page-btn">20</button>
+                        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Other Tab Contents -->
+                <div class="tab-content" id="physics">
+                    <!-- Physics questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="chemistry">
+                    <!-- Chemistry questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="mathematics">
+                    <!-- Mathematics questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="bookmarks">
+                    <!-- Bookmarked questions would go here -->
+                </div>
+                
+                <div class="tab-content" id="custom">
+                    <!-- Custom questions would go here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Question option selection
+        document.querySelectorAll('.question-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options in this question
+                const questionItem = this.closest('.question-item');
+                questionItem.querySelectorAll('.question-option').forEach(opt => {
+                    opt.style.borderColor = 'rgba(0,0,0,0.1)';
+                    opt.style.backgroundColor = 'transparent';
+                });
+                
+                // Add selected class to clicked option
+                this.style.borderColor = '#9333ea';
+                this.style.backgroundColor = 'rgba(147, 51, 234, 0.05)';
+            });
+        });
+        
+        // Solution toggle
+        document.querySelectorAll('.solution-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const solutionId = this.getAttribute('data-solution');
+                const solutionContainer = document.getElementById(solutionId);
+                
+                if (solutionContainer.style.display === 'block') {
+                    solutionContainer.style.display = 'none';
+                } else {
+                    solutionContainer.style.display = 'block';
+                }
+            });
+        });
+        
+        // AI Explain button
+        document.querySelectorAll('.question-action:last-child').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('AI would provide a detailed explanation here');
+            });
+        });
+        
+        // Create custom question button
+        document.querySelector('.create-question-btn').addEventListener('click', function() {
+            alert('Custom question creation feature would open here');
+        });
+        
+        // Filter functionality
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', function() {
+                // In a real app, this would filter the questions
+                console.log('Filter changed:', this.value);
+            });
+        });
+        
+        // Search functionality
+        document.querySelector('.search-box input').addEventListener('keyup', function() {
+            // In a real app, this would search the questions
+            console.log('Search term:', this.value);
+        });
+        
+        // Pagination
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.querySelector('.fas')) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // In a real app, this would load the corresponding page
+                }
+            });
+        });
+    </script>
+</body>
+</html>
