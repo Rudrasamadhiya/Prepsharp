@@ -667,73 +667,63 @@
         // Check if user is logged in
         document.addEventListener('DOMContentLoaded', function() {
             const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
+            
+            // Create a demo user if none exists
             if (!userDataStr) {
-                window.location.href = '../login.html?redirect=pro/subscription.html';
-                return;
+                const demoUser = {
+                    id: 'demo-user-' + Date.now(),
+                    name: 'Demo User',
+                    email: 'demo@example.com',
+                    hasActiveSubscription: false
+                };
+                localStorage.setItem('userData', JSON.stringify(demoUser));
+                localStorage.setItem('currentUser', JSON.stringify(demoUser));
+                document.getElementById('user-name').textContent = `Welcome, ${demoUser.name}`;
+                fetchSubscriptionStatus(demoUser.id);
+            } else {
+                const userData = JSON.parse(userDataStr);
+                document.getElementById('user-name').textContent = `Welcome, ${userData.name || 'User'}`;
+                fetchSubscriptionStatus(userData.id);
             }
-            
-            const userData = JSON.parse(userDataStr);
-            document.getElementById('user-name').textContent = `Welcome, ${userData.name || 'User'}`;
-            
-            // Fetch current subscription status
-            fetchSubscriptionStatus(userData.id);
         });
         
         // Fetch subscription status
-        async function fetchSubscriptionStatus(userId) {
-            try {
-                const response = await fetch(`/api/subscription/status/${userId}`);
-                const data = await response.json();
+        function fetchSubscriptionStatus(userId) {
+            const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
+            const userData = userDataStr ? JSON.parse(userDataStr) : null;
+            const subscriptionContainer = document.getElementById('current-subscription-container');
+            
+            if (userData && userData.hasActiveSubscription && userData.currentSubscription) {
+                const subscription = userData.currentSubscription;
+                const expiryDate = new Date(subscription.expiryDate);
                 
-                const subscriptionContainer = document.getElementById('current-subscription-container');
-                
-                if (data.success) {
-                    if (data.hasActiveSubscription) {
-                        const subscription = data.subscription;
-                        const expiryDate = new Date(subscription.expiryDate);
-                        
-                        subscriptionContainer.innerHTML = `
-                            <div class="current-subscription">
-                                <div class="subscription-status">
-                                    <span class="active-status">Active Subscription</span>
-                                </div>
-                                <div class="subscription-details">
-                                    <p><strong>Plan:</strong> ${subscription.planName}</p>
-                                    <p><strong>Expires on:</strong> ${expiryDate.toLocaleDateString()}</p>
-                                    <button class="cancel-btn" onclick="cancelSubscription('${userId}', '${subscription.id}')">
-                                        Cancel Subscription
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        subscriptionContainer.innerHTML = `
-                            <div class="current-subscription">
-                                <div class="subscription-status">
-                                    <span class="inactive-status">No Active Subscription</span>
-                                </div>
-                                <div class="subscription-details">
-                                    <p>Choose a plan below to get started</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } else {
-                    // If API call fails, just show no subscription
-                    subscriptionContainer.innerHTML = `
-                        <div class="current-subscription">
-                            <div class="subscription-status">
-                                <span class="inactive-status">No Active Subscription</span>
-                            </div>
-                            <div class="subscription-details">
-                                <p>Choose a plan below to get started</p>
-                            </div>
+                subscriptionContainer.innerHTML = `
+                    <div class="current-subscription">
+                        <div class="subscription-status">
+                            <span class="active-status">Active Subscription</span>
                         </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error fetching subscription status:', error);
+                        <div class="subscription-details">
+                            <p><strong>Plan:</strong> ${subscription.planName}</p>
+                            <p><strong>Expires on:</strong> ${expiryDate.toLocaleDateString()}</p>
+                            <button class="cancel-btn" onclick="cancelSubscription('${userId}', '${subscription.id}')">
+                                Cancel Subscription
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                subscriptionContainer.innerHTML = `
+                    <div class="current-subscription">
+                        <div class="subscription-status">
+                            <span class="inactive-status">No Active Subscription</span>
+                        </div>
+                        <div class="subscription-details">
+                            <p>Choose a plan below to get started</p>
+                        </div>
+                    </div>
+                `;
             }
+        }
         }
         
         // Subscribe to plan
@@ -746,55 +736,49 @@
             
             const userData = JSON.parse(userDataStr);
             
+            // Show payment processing message
+            alert('Processing payment...');
+            
             try {
                 // In a real application, you would integrate with a payment gateway here
                 // For this example, we'll simulate a successful payment
                 
-                const response = await fetch('/api/subscription/subscribe', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: userData.id,
-                        planId: planId,
-                        paymentId: 'simulated-payment-' + Date.now()
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
+                // Simulate API call with a timeout
+                setTimeout(() => {
+                    // For demo purposes, simulate successful subscription
                     alert('Subscription activated successfully!');
-                    // Update user data in localStorage
                     userData.hasActiveSubscription = true;
-                    userData.currentSubscription = data.subscription;
+                    userData.currentSubscription = {
+                        id: 'demo-' + Date.now(),
+                        planId: planId,
+                        planName: getPlanName(planId),
+                        expiryDate: new Date(Date.now() + getDuration(planId)).toISOString()
+                    };
                     localStorage.setItem('userData', JSON.stringify(userData));
                     localStorage.setItem('currentUser', JSON.stringify(userData));
                     
                     // Redirect to pro dashboard
                     window.location.href = 'dashboard.html';
-                } else {
-                    alert('Error: ' + data.message);
-                }
+                }, 1500);
             } catch (error) {
                 console.error('Error subscribing to plan:', error);
-                
-                // For demo purposes, simulate successful subscription even if API fails
-                alert('Subscription activated successfully! (Demo Mode)');
-                userData.hasActiveSubscription = true;
-                userData.currentSubscription = {
-                    id: 'demo-' + Date.now(),
-                    planId: planId,
-                    planName: getPlanName(planId),
-                    expiryDate: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000)).toISOString()
-                };
-                localStorage.setItem('userData', JSON.stringify(userData));
-                localStorage.setItem('currentUser', JSON.stringify(userData));
-                
-                // Redirect to pro dashboard
-                window.location.href = 'dashboard.html';
+                alert('Error processing payment. Please try again.');
             }
+        }
+        
+        // Get duration in milliseconds based on plan
+        function getDuration(planId) {
+            switch(planId) {
+                case 'yearly':
+                    return 365 * 24 * 60 * 60 * 1000;
+                case 'standard': // quarterly
+                    return 90 * 24 * 60 * 60 * 1000;
+                case 'basic': // monthly
+                    return 30 * 24 * 60 * 60 * 1000;
+                default:
+                    return 30 * 24 * 60 * 60 * 1000;
+            }
+        }
         }
         
         // Get plan name
@@ -812,52 +796,15 @@
         }
         
         // Cancel subscription
-        async function cancelSubscription(userId, subscriptionId) {
+        function cancelSubscription(userId, subscriptionId) {
             if (!confirm('Are you sure you want to cancel your subscription?')) {
                 return;
             }
             
-            try {
-                const response = await fetch('/api/subscription/cancel', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: userId,
-                        subscriptionId: subscriptionId
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    alert('Subscription cancelled successfully');
-                    
-                    // Update user data in localStorage
-                    const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
-                    if (userDataStr) {
-                        const userData = JSON.parse(userDataStr);
-                        userData.hasActiveSubscription = false;
-                        delete userData.currentSubscription;
-                        localStorage.setItem('userData', JSON.stringify(userData));
-                        localStorage.setItem('currentUser', JSON.stringify(userData));
-                    }
-                    
-                    // Refresh subscription status
-                    fetchSubscriptionStatus(userId);
-                    
-                    // Redirect to free dashboard
-                    window.location.href = 'free-dashboard.html';
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (error) {
-                console.error('Error cancelling subscription:', error);
-                
-                // For demo purposes, simulate successful cancellation even if API fails
-                alert('Subscription cancelled successfully (Demo Mode)');
-                
+            // Show cancellation processing message
+            alert('Processing cancellation...');
+            
+            setTimeout(() => {
                 // Update user data in localStorage
                 const userDataStr = localStorage.getItem('userData') || localStorage.getItem('currentUser');
                 if (userDataStr) {
@@ -868,9 +815,15 @@
                     localStorage.setItem('currentUser', JSON.stringify(userData));
                 }
                 
+                alert('Subscription cancelled successfully');
+                
+                // Refresh subscription status
+                fetchSubscriptionStatus(userId);
+                
                 // Redirect to free dashboard
                 window.location.href = 'free-dashboard.html';
-            }
+            }, 1000);
+        }
         }
         
         // Logout functionality
