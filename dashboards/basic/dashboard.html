@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Dashboard - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-book"></i> Practice Papers</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-question-circle"></i> Question Bank</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge basic">Basic Plan</span>
+                    <a href="#" class="upgrade-link">Upgrade Plan</a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </div>
+                    
+                    <div class="user-profile">
+                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
+                        <span class="user-name">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>Welcome to Basic Dashboard</h1>
+                    <p>Access JEE Main practice papers and track your progress</p>
+                </div>
+                
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Practice Papers</h3>
+                            <p>10 Available</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Completed</h3>
+                            <p>3 Papers</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Average Score</h3>
+                            <p>68%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <!-- Recent Papers -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Recent Practice Papers</h2>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        <div class="card-content">
+                            <ul class="paper-list">
+                                <li class="paper-item">
+                                    <div class="paper-info">
+                                        <h3>JEE Main 2023 Paper 1</h3>
+                                        <p>Physics, Chemistry, Mathematics</p>
+                                    </div>
+                                    <a href="#" class="start-btn">Start</a>
+                                </li>
+                                <li class="paper-item">
+                                    <div class="paper-info">
+                                        <h3>JEE Main 2023 Paper 2</h3>
+                                        <p>Physics, Chemistry, Mathematics</p>
+                                    </div>
+                                    <a href="#" class="start-btn">Start</a>
+                                </li>
+                                <li class="paper-item">
+                                    <div class="paper-info">
+                                        <h3>JEE Main 2022 Paper 1</h3>
+                                        <p>Physics, Chemistry, Mathematics</p>
+                                    </div>
+                                    <a href="#" class="start-btn">Start</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Summary -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Performance Summary</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="performance-chart">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                            <div class="subject-scores">
+                                <div class="subject-score">
+                                    <span class="subject-name">Physics</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 65%;"></div>
+                                    </div>
+                                    <span class="score-value">65%</span>
+                                </div>
+                                <div class="subject-score">
+                                    <span class="subject-name">Chemistry</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 72%;"></div>
+                                    </div>
+                                    <span class="score-value">72%</span>
+                                </div>
+                                <div class="subject-score">
+                                    <span class="subject-name">Mathematics</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 58%;"></div>
+                                    </div>
+                                    <span class="score-value">58%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subscription Info -->
+                <div class="subscription-card">
+                    <div class="subscription-info">
+                        <h2>Basic Plan Features</h2>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Access to JEE Main practice papers</li>
+                            <li><i class="fas fa-check"></i> Basic performance analytics</li>
+                            <li><i class="fas fa-check"></i> Limited question bank access</li>
+                        </ul>
+                    </div>
+                    <div class="upgrade-section">
+                        <h3>Want more features?</h3>
+                        <p>Upgrade to Standard or Premium plan for advanced features</p>
+                        <a href="#" class="upgrade-btn">Upgrade Now</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize performance chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Score %',
+                    data: [55, 60, 58, 65, 68],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
