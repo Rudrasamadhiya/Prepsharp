@@ -636,44 +636,90 @@
             
             // Create user object
             const newUser = {
-                firstName: firstName,
-                lastName: lastName,
+                name: firstName + ' ' + lastName,
                 email: email,
                 password: password,
                 subscription: subscription,
-                registeredDate: new Date().toISOString()
+                createdAt: new Date().toISOString()
             };
             
-            // Get existing users
-            let users = [];
+            // Try to register user with API first
             try {
-                const existingUsers = localStorage.getItem('users');
-                if (existingUsers) {
-                    users = JSON.parse(existingUsers);
-                }
-            } catch (e) {
-                users = [];
+                fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newUser)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // API registration successful
+                        console.log('User registered successfully with API');
+                        
+                        // Set as logged in user
+                        const loggedInUser = {
+                            name: firstName + ' ' + lastName,
+                            email: email,
+                            subscription: subscription
+                        };
+                        
+                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                        
+                        // Redirect to appropriate dashboard
+                        redirectToDashboard(subscription);
+                    } else {
+                        // API registration failed, fallback to localStorage
+                        console.error('API registration failed:', data.message);
+                        saveToLocalStorage();
+                    }
+                })
+                .catch(error => {
+                    // API call failed, fallback to localStorage
+                    console.error('API call failed:', error);
+                    saveToLocalStorage();
+                });
+            } catch (error) {
+                // If fetch fails completely, fallback to localStorage
+                console.error('Error during API registration:', error);
+                saveToLocalStorage();
             }
             
-            // Add new user
-            users.push(newUser);
+            // Function to save user to localStorage as fallback
+            function saveToLocalStorage() {
+                // Get existing users
+                let users = [];
+                try {
+                    const existingUsers = localStorage.getItem('users');
+                    if (existingUsers) {
+                        users = JSON.parse(existingUsers);
+                    }
+                } catch (e) {
+                    users = [];
+                }
+                
+                // Add new user
+                users.push(newUser);
+                
+                // Save to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Set as logged in user
+                const loggedInUser = {
+                    name: firstName + ' ' + lastName,
+                    email: email,
+                    subscription: subscription
+                };
+                
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                
+                // Redirect to appropriate dashboard
+                redirectToDashboard(subscription);
+            }
             
-            // Save to localStorage
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            // Set as logged in user
-            const loggedInUser = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                subscription: subscription
-            };
-            
-            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-            
-            // Determine dashboard path
-            let dashboardPath;
-            if (subscription === 'premium') {
+            // Redirect to appropriate dashboard
+            redirectToDashboard(subscription);ubscription === 'premium') {
                 dashboardPath = 'dashboards/premium/dashboard.html';
             } else if (subscription === 'standard') {
                 dashboardPath = 'dashboards/standard/dashboard.html';

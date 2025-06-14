@@ -57,15 +57,63 @@
                 </div>
                 
                 <div class="user-actions">
-                    <div class="notification-bell">
+                    <div class="notification-bell" id="notificationBell">
                         <i class="fas fa-bell"></i>
                         <span class="notification-count">3</span>
+                        <div class="notification-dropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <a href="#" class="mark-all-read">Mark all as read</a>
+                            </div>
+                            <div class="notification-list">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon new-test">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">New Test Available</div>
+                                        <div class="notification-text">JEE Main 2023 Paper 3 is now available</div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="notification-item unread">
+                                    <div class="notification-icon reminder">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Study Reminder</div>
+                                        <div class="notification-text">Complete your Physics practice test</div>
+                                        <div class="notification-time">Yesterday</div>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon achievement">
+                                        <i class="fas fa-medal"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Achievement Unlocked</div>
+                                        <div class="notification-text">You completed 5 practice tests!</div>
+                                        <div class="notification-time">3 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-footer">
+                                <a href="#" class="view-all-notifications">View All Notifications</a>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="user-profile">
+                    <div class="user-profile" id="userProfile">
                         <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
                         <span class="user-name">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -75,36 +123,41 @@
                 <div class="welcome-section">
                     <h1>Welcome to Basic Dashboard</h1>
                     <p>Access JEE Main practice papers and track your progress</p>
+                    <div class="quick-actions">
+                        <button class="action-btn"><i class="fas fa-plus"></i> New Test</button>
+                        <button class="action-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <button class="action-btn"><i class="fas fa-download"></i> Export</button>
+                    </div>
                 </div>
                 
                 <div class="stats-cards">
-                    <div class="stat-card">
+                    <div class="stat-card" data-value="10">
                         <div class="stat-icon">
                             <i class="fas fa-file-alt"></i>
                         </div>
                         <div class="stat-info">
                             <h3>Practice Papers</h3>
-                            <p>10 Available</p>
+                            <p><span class="counter">0</span> Available</p>
                         </div>
                     </div>
                     
-                    <div class="stat-card">
+                    <div class="stat-card" data-value="3">
                         <div class="stat-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="stat-info">
                             <h3>Completed</h3>
-                            <p>3 Papers</p>
+                            <p><span class="counter">0</span> Papers</p>
                         </div>
                     </div>
                     
-                    <div class="stat-card">
+                    <div class="stat-card" data-value="68">
                         <div class="stat-icon">
                             <i class="fas fa-chart-pie"></i>
                         </div>
                         <div class="stat-info">
                             <h3>Average Score</h3>
-                            <p>68%</p>
+                            <p><span class="counter">0</span>%</p>
                         </div>
                     </div>
                 </div>
@@ -151,28 +204,35 @@
                         <div class="card-content">
                             <div class="performance-chart">
                                 <canvas id="performanceChart"></canvas>
+                                <div class="chart-overlay">
+                                    <div class="chart-tooltip">
+                                        <div class="tooltip-date">May 2023</div>
+                                        <div class="tooltip-score">68%</div>
+                                        <div class="tooltip-change">+3% from previous</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="subject-scores">
-                                <div class="subject-score">
+                                <div class="subject-score" data-score="65">
                                     <span class="subject-name">Physics</span>
                                     <div class="progress-bar">
-                                        <div class="progress" style="width: 65%;"></div>
+                                        <div class="progress" style="width: 0%;"></div>
                                     </div>
-                                    <span class="score-value">65%</span>
+                                    <span class="score-value">0%</span>
                                 </div>
-                                <div class="subject-score">
+                                <div class="subject-score" data-score="72">
                                     <span class="subject-name">Chemistry</span>
                                     <div class="progress-bar">
-                                        <div class="progress" style="width: 72%;"></div>
+                                        <div class="progress" style="width: 0%;"></div>
                                     </div>
-                                    <span class="score-value">72%</span>
+                                    <span class="score-value">0%</span>
                                 </div>
-                                <div class="subject-score">
+                                <div class="subject-score" data-score="58">
                                     <span class="subject-name">Mathematics</span>
                                     <div class="progress-bar">
-                                        <div class="progress" style="width: 58%;"></div>
+                                        <div class="progress" style="width: 0%;"></div>
                                     </div>
-                                    <span class="score-value">58%</span>
+                                    <span class="score-value">0%</span>
                                 </div>
                             </div>
                         </div>
@@ -184,14 +244,18 @@
                     <div class="subscription-info">
                         <h2>Basic Plan Features</h2>
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Access to JEE Main practice papers</li>
-                            <li><i class="fas fa-check"></i> Basic performance analytics</li>
-                            <li><i class="fas fa-check"></i> Limited question bank access</li>
+                            <li class="feature-item"><i class="fas fa-check"></i> Access to JEE Main practice papers</li>
+                            <li class="feature-item"><i class="fas fa-check"></i> Basic performance analytics</li>
+                            <li class="feature-item"><i class="fas fa-check"></i> Limited question bank access</li>
                         </ul>
                     </div>
                     <div class="upgrade-section">
                         <h3>Want more features?</h3>
                         <p>Upgrade to Standard or Premium plan for advanced features</p>
+                        <div class="plan-selector">
+                            <div class="plan-option active" data-plan="standard">Standard</div>
+                            <div class="plan-option" data-plan="premium">Premium</div>
+                        </div>
                         <a href="#" class="upgrade-btn">Upgrade Now</a>
                     </div>
                 </div>
@@ -200,6 +264,7 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
     <script>
         // Initialize performance chart
         const ctx = document.getElementById('performanceChart').getContext('2d');
@@ -300,14 +365,136 @@
         });
         
         // Add animation to chart elements
+        // Counter animation function
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target > 100 ? 5 : 1;
+            const duration = 1500; // ms
+            const steps = Math.ceil(target / increment);
+            const stepTime = Math.floor(duration / steps);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current > target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = current;
+                }
+            }, stepTime);
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Add animation to stat cards
+            // GSAP animations for smoother entrance
+            gsap.from('.welcome-section', {
+                duration: 0.8,
+                y: 30,
+                opacity: 0,
+                ease: "power3.out"
+            });
+            
+            gsap.from('.stat-card', {
+                duration: 0.6,
+                y: 40,
+                opacity: 0,
+                stagger: 0.15,
+                ease: "back.out(1.7)",
+                onComplete: function() {
+                    // Start counter animations after cards appear
+                    document.querySelectorAll('.stat-card').forEach(card => {
+                        const counterElement = card.querySelector('.counter');
+                        const targetValue = parseInt(card.dataset.value);
+                        animateCounter(counterElement, targetValue);
+                    });
+                }
+            });
+            
+            gsap.from('.dashboard-card', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.2,
+                delay: 0.3,
+                ease: "power3.out",
+                onComplete: function() {
+                    // Animate progress bars
+                    document.querySelectorAll('.subject-score').forEach((subject, index) => {
+                        const progressBar = subject.querySelector('.progress');
+                        const scoreValue = subject.querySelector('.score-value');
+                        const targetScore = parseInt(subject.dataset.score);
+                        
+                        // Animate the width
+                        gsap.to(progressBar, {
+                            width: targetScore + '%',
+                            duration: 1.5,
+                            delay: index * 0.2,
+                            ease: 'power2.out'
+                        });
+                        
+                        // Animate the score text
+                        let currentScore = 0;
+                        const scoreInterval = setInterval(() => {
+                            currentScore += 1;
+                            if (currentScore > targetScore) {
+                                clearInterval(scoreInterval);
+                                scoreValue.textContent = targetScore + '%';
+                            } else {
+                                scoreValue.textContent = currentScore + '%';
+                            }
+                        }, 1500 / targetScore);
+                    });
+                }
+            });
+            
+            gsap.from('.subscription-card', {
+                duration: 1,
+                scale: 0.9,
+                opacity: 0,
+                delay: 0.6,
+                ease: "elastic.out(1, 0.5)"
+            });
+            
+            // Make stat cards interactive
             const statCards = document.querySelectorAll('.stat-card');
-            statCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
+            statCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Add a pulse effect when clicked
+                    this.style.animation = 'pulse 0.5s';
+                    
+                    // Show a tooltip or additional info
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'stat-tooltip';
+                    infoDiv.textContent = 'Click for detailed analytics';
+                    infoDiv.style.position = 'absolute';
+                    infoDiv.style.top = '-40px';
+                    infoDiv.style.left = '50%';
+                    infoDiv.style.transform = 'translateX(-50%)';
+                    infoDiv.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                    infoDiv.style.color = 'white';
+                    infoDiv.style.padding = '8px 12px';
+                    infoDiv.style.borderRadius = '6px';
+                    infoDiv.style.fontSize = '14px';
+                    infoDiv.style.zIndex = '100';
+                    infoDiv.style.animation = 'fadeIn 0.3s forwards';
+                    
+                    this.style.position = 'relative';
+                    this.appendChild(infoDiv);
+                    
+                    // Remove the tooltip after 2 seconds
+                    setTimeout(() => {
+                        infoDiv.remove();
+                        this.style.animation = '';
+                    }, 2000);
+                });
+                
+                // Add hover glow effect
+                card.addEventListener('mouseenter', function() {
+                    this.style.animation = 'glow 2s infinite';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.animation = '';
+                });
             });
             
             // Add hover effect to sidebar items
@@ -315,6 +502,306 @@
             sidebarItems.forEach(item => {
                 item.addEventListener('mouseenter', function() {
                     this.style.transition = 'all 0.3s ease';
+                });
+            });
+            
+            // Add interactive paper items
+            const paperItems = document.querySelectorAll('.paper-item');
+            paperItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    gsap.to(this, {
+                        backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                        paddingLeft: '10px',
+                        duration: 0.3
+                    });
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    gsap.to(this, {
+                        backgroundColor: 'transparent',
+                        paddingLeft: '0px',
+                        duration: 0.3
+                    });
+                });
+            });
+            
+            // Add interactivity to subject scores
+            document.querySelectorAll('.subject-name').forEach(subject => {
+                subject.addEventListener('click', function() {
+                    const subjectName = this.textContent;
+                    const scoreValue = this.nextElementSibling.nextElementSibling.textContent;
+                    
+                    // Create modal for detailed view
+                    const modal = document.createElement('div');
+                    modal.className = 'subject-modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>${subjectName} Performance</h3>
+                                <span class="close-modal">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-score">${scoreValue}</div>
+                                <div class="modal-chart">
+                                    <canvas id="subjectDetailChart"></canvas>
+                                </div>
+                                <div class="modal-stats">
+                                    <div class="stat-row">
+                                        <div class="stat-label">Correct Answers</div>
+                                        <div class="stat-value">32/50</div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <div class="stat-label">Time Spent</div>
+                                        <div class="stat-value">45 mins</div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <div class="stat-label">Rank</div>
+                                        <div class="stat-value">#234</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    // Add modal styles
+                    modal.style.position = 'fixed';
+                    modal.style.top = '0';
+                    modal.style.left = '0';
+                    modal.style.width = '100%';
+                    modal.style.height = '100%';
+                    modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                    modal.style.display = 'flex';
+                    modal.style.alignItems = 'center';
+                    modal.style.justifyContent = 'center';
+                    modal.style.zIndex = '1000';
+                    modal.style.opacity = '0';
+                    modal.style.transition = 'opacity 0.3s ease';
+                    
+                    const modalContent = modal.querySelector('.modal-content');
+                    modalContent.style.backgroundColor = 'white';
+                    modalContent.style.borderRadius = '16px';
+                    modalContent.style.width = '90%';
+                    modalContent.style.maxWidth = '600px';
+                    modalContent.style.maxHeight = '80vh';
+                    modalContent.style.overflow = 'auto';
+                    modalContent.style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
+                    modalContent.style.transform = 'scale(0.8)';
+                    modalContent.style.transition = 'transform 0.3s ease';
+                    
+                    const modalHeader = modal.querySelector('.modal-header');
+                    modalHeader.style.padding = '20px';
+                    modalHeader.style.borderBottom = '1px solid rgba(0,0,0,0.1)';
+                    modalHeader.style.display = 'flex';
+                    modalHeader.style.justifyContent = 'space-between';
+                    modalHeader.style.alignItems = 'center';
+                    
+                    const closeModal = modal.querySelector('.close-modal');
+                    closeModal.style.fontSize = '24px';
+                    closeModal.style.cursor = 'pointer';
+                    closeModal.style.color = '#64748b';
+                    
+                    const modalBody = modal.querySelector('.modal-body');
+                    modalBody.style.padding = '20px';
+                    
+                    const modalScore = modal.querySelector('.modal-score');
+                    modalScore.style.fontSize = '48px';
+                    modalScore.style.fontWeight = '700';
+                    modalScore.style.color = '#4f46e5';
+                    modalScore.style.textAlign = 'center';
+                    modalScore.style.marginBottom = '20px';
+                    
+                    const modalChart = modal.querySelector('.modal-chart');
+                    modalChart.style.height = '200px';
+                    modalChart.style.marginBottom = '20px';
+                    
+                    const modalStats = modal.querySelector('.modal-stats');
+                    modalStats.style.display = 'grid';
+                    modalStats.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                    modalStats.style.gap = '15px';
+                    
+                    const statRows = modal.querySelectorAll('.stat-row');
+                    statRows.forEach(row => {
+                        row.style.backgroundColor = 'rgba(79, 70, 229, 0.05)';
+                        row.style.borderRadius = '8px';
+                        row.style.padding = '15px';
+                        row.style.textAlign = 'center';
+                    });
+                    
+                    const statLabels = modal.querySelectorAll('.stat-label');
+                    statLabels.forEach(label => {
+                        label.style.fontSize = '14px';
+                        label.style.color = '#64748b';
+                        label.style.marginBottom = '5px';
+                    });
+                    
+                    const statValues = modal.querySelectorAll('.stat-value');
+                    statValues.forEach(value => {
+                        value.style.fontSize = '18px';
+                        value.style.fontWeight = '600';
+                    });
+                    
+                    // Animate modal entrance
+                    setTimeout(() => {
+                        modal.style.opacity = '1';
+                        modalContent.style.transform = 'scale(1)';
+                    }, 10);
+                    
+                    // Initialize subject detail chart
+                    const subjectCtx = document.getElementById('subjectDetailChart').getContext('2d');
+                    const subjectChart = new Chart(subjectCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                            datasets: [{
+                                label: 'Score %',
+                                data: [45, 52, 58, 62, parseInt(scoreValue)],
+                                backgroundColor: [
+                                    'rgba(79, 70, 229, 0.6)',
+                                    'rgba(79, 70, 229, 0.7)',
+                                    'rgba(79, 70, 229, 0.8)',
+                                    'rgba(79, 70, 229, 0.9)',
+                                    'rgba(79, 70, 229, 1)'
+                                ],
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100
+                                }
+                            },
+                            animation: {
+                                duration: 1500
+                            }
+                        }
+                    });
+                    
+                    // Close modal on click
+                    closeModal.addEventListener('click', function() {
+                        modal.style.opacity = '0';
+                        modalContent.style.transform = 'scale(0.8)';
+                        setTimeout(() => modal.remove(), 300);
+                    });
+                    
+                    // Close modal when clicking outside
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.style.opacity = '0';
+                            modalContent.style.transform = 'scale(0.8)';
+                            setTimeout(() => modal.remove(), 300);
+                        }
+                    });
+                });
+            });
+            
+            // Add interactivity to plan selector
+            const planOptions = document.querySelectorAll('.plan-option');
+            planOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    planOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Update upgrade button text based on selected plan
+                    const planName = this.dataset.plan;
+                    const upgradeBtn = document.querySelector('.upgrade-btn');
+                    upgradeBtn.textContent = `Upgrade to ${planName.charAt(0).toUpperCase() + planName.slice(1)}`;
+                    
+                    // Add pulse animation to button
+                    upgradeBtn.style.animation = 'pulse 0.5s';
+                    setTimeout(() => {
+                        upgradeBtn.style.animation = '';
+                    }, 500);
+                });
+            });
+            
+            // Add interactivity to quick action buttons
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('click', function(event) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${event.clientX - rect.left - size/2}px`;
+                    ripple.style.top = `${event.clientY - rect.top - size/2}px`;
+                    
+                    // Show feedback toast
+                    const toast = document.createElement('div');
+                    toast.classList.add('toast');
+                    toast.textContent = `${this.textContent.trim()} action triggered`;
+                    document.body.appendChild(toast);
+                    
+                    // Animate toast
+                    gsap.fromTo(toast, 
+                        { y: 50, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.3 }
+                    );
+                    
+                    // Create confetti effect
+                    const confettiColors = ['#4f46e5', '#6366f1', '#f97316', '#10b981'];
+                    const confettiContainer = document.createElement('div');
+                    confettiContainer.style.position = 'fixed';
+                    confettiContainer.style.zIndex = '9999';
+                    confettiContainer.style.pointerEvents = 'none';
+                    document.body.appendChild(confettiContainer);
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.style.position = 'absolute';
+                        confetti.style.left = event.clientX + 'px';
+                        confetti.style.top = event.clientY + 'px';
+                        confetti.style.width = Math.random() * 8 + 4 + 'px';
+                        confetti.style.height = Math.random() * 4 + 4 + 'px';
+                        confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                        confetti.style.borderRadius = '2px';
+                        confetti.style.opacity = Math.random() * 0.5 + 0.5;
+                        confettiContainer.appendChild(confetti);
+                        
+                        const angle = Math.random() * Math.PI * 2;
+                        const velocity = Math.random() * 40 + 40;
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity;
+                        
+                        gsap.to(confetti, {
+                            x: vx,
+                            y: vy,
+                            rotation: Math.random() * 360,
+                            opacity: 0,
+                            duration: Math.random() * 1 + 0.5,
+                            ease: 'power1.out',
+                            onComplete: () => confetti.remove()
+                        });
+                    }
+                    
+                    // Remove ripple, toast, and confetti after animation
+                    setTimeout(() => {
+                        ripple.remove();
+                        gsap.to(toast, {
+                            opacity: 0,
+                            y: -20,
+                            duration: 0.3,
+                            onComplete: () => toast.remove()
+                        });
+                        setTimeout(() => confettiContainer.remove(), 500);
+                    }, 1000);
                 });
             });
         });
