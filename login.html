@@ -329,7 +329,7 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <input type="text" id="email" class="form-input" placeholder="Enter your email" required>
                     <div id="emailError" class="error-message">Please enter a valid email address</div>
                 </div>
                 
@@ -425,11 +425,12 @@
                 return;
             }
             
-            // Get users from localStorage
-            const users = JSON.parse(localStorage.getItem('users')) || [];
+            // Get users from localStorage and combine with hardcoded users
+            const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+            const allUsers = [...users, ...storedUsers];
             
             // Find user by email and password
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = allUsers.find(u => u.email === email && u.password === password);
             
             if (user) {
                 // Check if subscription has expired
