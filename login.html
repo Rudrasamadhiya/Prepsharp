@@ -359,7 +359,8 @@
         const users = [
             { email: "user@example.com", password: "password123", subscription: "basic" },
             { email: "standard@example.com", password: "password123", subscription: "standard" },
-            { email: "premium@example.com", password: "password123", subscription: "premium" }
+            { email: "premium@example.com", password: "password123", subscription: "premium" },
+            { email: "admin", password: "6263636696", isAdmin: true }
         ];
         
         // Check if user is already logged in
@@ -406,7 +407,13 @@
             document.getElementById('emailError').style.display = 'none';
             document.getElementById('passwordError').style.display = 'none';
             
-            // Validate email
+            // Check for admin login
+            if (email === "admin" && password === "6263636696") {
+                window.location.href = "admin-dashboard.html";
+                return;
+            }
+            
+            // Validate email for regular users
             if (!validateEmail(email)) {
                 document.getElementById('emailError').style.display = 'block';
                 return;
