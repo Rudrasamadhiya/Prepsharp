@@ -600,104 +600,89 @@
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            try {
-                const firstName = document.getElementById('firstName').value;
-                const lastName = document.getElementById('lastName').value;
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                // Get the selected subscription value directly from the form
-                const subscriptionElement = document.querySelector('input[name="subscription"]:checked');
-                if (!subscriptionElement) {
-                    throw new Error("No subscription plan selected");
-                }
-                const subscription = subscriptionElement.value;
-                
-                // Reset error messages
-                document.getElementById('emailError').style.display = 'none';
-                document.getElementById('passwordError').style.display = 'none';
-                document.getElementById('confirmPasswordError').style.display = 'none';
-                
-                // Validate email
-                if (!validateEmail(email)) {
-                    document.getElementById('emailError').style.display = 'block';
-                    return;
-                }
-                
-                // Validate password
-                if (password.length < 6) {
-                    document.getElementById('passwordError').style.display = 'block';
-                    return;
-                }
-                
-                // Validate password confirmation
-                if (password !== confirmPassword) {
-                    document.getElementById('confirmPasswordError').style.display = 'block';
-                    return;
-                }
-                
-                // Get existing users or create empty array
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                
-                // Check if email already exists
-                if (users.some(user => user.email === email)) {
-                    alert('Email already registered. Please use a different email or login.');
-                    return;
-                }
-                
-                console.log('Creating user with subscription:', subscription);
-                
-                // Add new user
-                const newUser = {
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    subscription,
-                    registeredDate: new Date().toISOString()
-                };
-                
-                users.push(newUser);
-                
-                // Save updated users array
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                // Set current user as logged in
-                const loggedInUser = {
-                    email,
-                    firstName,
-                    lastName,
-                    subscription
-                };
-                
-                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-                console.log('User registered successfully:', loggedInUser);
-                
-                // Use a simple direct approach for redirection
-                let dashboardPath;
-                switch(subscription) {
-                    case 'premium':
-                        dashboardPath = 'dashboards/premium/dashboard.html';
-                        break;
-                    case 'standard':
-                        dashboardPath = 'dashboards/standard/dashboard.html';
-                        break;
-                    case 'basic':
-                        dashboardPath = 'dashboards/basic/dashboard.html';
-                        break;
-                    case 'free':
-                    default:
-                        dashboardPath = 'dashboards/basic/dashboard.html';
-                        break;
-                }
-                
-                console.log('Redirecting to:', dashboardPath);
-                window.location.href = dashboardPath;
-            } catch (error) {
-                console.error('Registration error:', error);
-                alert('An error occurred during registration. Please try again.');
+            // Get form values directly
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Reset error messages
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmPasswordError').style.display = 'none';
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                return;
             }
+            
+            // Validate password
+            if (password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            }
+            
+            // Validate password confirmation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                return;
+            }
+            
+            // Get subscription value
+            const subscriptionInput = document.querySelector('input[name="subscription"]:checked');
+            const subscription = subscriptionInput ? subscriptionInput.value : 'free';
+            
+            // Create user object
+            const newUser = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password,
+                subscription: subscription,
+                registeredDate: new Date().toISOString()
+            };
+            
+            // Get existing users
+            let users = [];
+            try {
+                const existingUsers = localStorage.getItem('users');
+                if (existingUsers) {
+                    users = JSON.parse(existingUsers);
+                }
+            } catch (e) {
+                users = [];
+            }
+            
+            // Add new user
+            users.push(newUser);
+            
+            // Save to localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Set as logged in user
+            const loggedInUser = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                subscription: subscription
+            };
+            
+            localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+            
+            // Determine dashboard path
+            let dashboardPath;
+            if (subscription === 'premium') {
+                dashboardPath = 'dashboards/premium/dashboard.html';
+            } else if (subscription === 'standard') {
+                dashboardPath = 'dashboards/standard/dashboard.html';
+            } else {
+                dashboardPath = 'dashboards/basic/dashboard.html';
+            }
+            
+            // Redirect to dashboard
+            window.location.href = dashboardPath;
         });
         
         // Email validation function
@@ -706,49 +691,15 @@
             return re.test(email);
         }
         
-        // Redirect to appropriate dashboard based on subscription
+        // Simple function to redirect to the appropriate dashboard
         function redirectToDashboard(subscription) {
-            console.log('Processing subscription:', subscription);
-            
-            try {
-                // For all plans, go directly to dashboard for now
-                // We'll implement payment flow later
-                let dashboardPath;
-                
-                // IMPORTANT FIX: Force the subscription to be the one that's actually selected
-                // This ensures we're using the correct value from the form
-                const selectedSubscription = document.querySelector('input[name="subscription"]:checked');
-                if (selectedSubscription) {
-                    subscription = selectedSubscription.value;
-                    console.log('Using selected subscription from form:', subscription);
-                }
-                
-                switch(subscription) {
-                    case 'premium':
-                        dashboardPath = 'dashboards/premium/dashboard.html';
-                        break;
-                    case 'standard':
-                        dashboardPath = 'dashboards/standard/dashboard.html';
-                        break;
-                    case 'basic':
-                        dashboardPath = 'dashboards/basic/dashboard.html';
-                        break;
-                    case 'free':
-                    default:
-                        dashboardPath = 'dashboards/basic/dashboard.html';
-                        break;
-                }
-                
-                // Debug the selected subscription and path
-                console.log('Final subscription value:', subscription);
-                console.log('Redirecting to dashboard:', dashboardPath);
-                
-                // Redirect to the appropriate dashboard
-                window.location.href = dashboardPath;
-            } catch (error) {
-                console.error('Navigation error:', error);
-                alert('An error occurred. Please try again.');
-                // Fallback to basic dashboard
+            if (subscription === 'premium') {
+                window.location.href = 'dashboards/premium/dashboard.html';
+            } else if (subscription === 'standard') {
+                window.location.href = 'dashboards/standard/dashboard.html';
+            } else if (subscription === 'basic') {
+                window.location.href = 'dashboards/basic/dashboard.html';
+            } else {
                 window.location.href = 'dashboards/basic/dashboard.html';
             }
         }
