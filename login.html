@@ -360,7 +360,7 @@
             { email: "user@example.com", password: "password123", subscription: "basic" },
             { email: "standard@example.com", password: "password123", subscription: "standard" },
             { email: "premium@example.com", password: "password123", subscription: "premium" },
-            { email: "admin", password: "6263636696", isAdmin: true }
+            { email: "admin@prepsharp.in", password: "6263636696", isAdmin: true }
         ];
         
         // Check if user is already logged in
@@ -408,7 +408,7 @@
             document.getElementById('passwordError').style.display = 'none';
             
             // Check for admin login
-            if (email === "admin" && password === "6263636696") {
+            if (email === "admin@prepsharp.in" && password === "6263636696") {
                 window.location.href = "admin-dashboard.html";
                 return;
             }
