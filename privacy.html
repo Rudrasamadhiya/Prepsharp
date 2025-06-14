@@ -22,52 +22,6 @@
             --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         }
         
-        .contact-info {
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.05), rgba(16, 185, 129, 0.05));
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-        }
-        
-        .contact-item {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .contact-item i {
-            color: var(--primary-color);
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .contact-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-item a:hover {
-            color: var(--secondary-color);
-            text-decoration: underline;
-        }
-        
-        .last-updated {
-            font-style: italic;
-            color: var(--text-light);
-            margin-top: 40px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .last-updated i {
-            color: var(--primary-color);
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -277,14 +231,13 @@
             margin-bottom: 20px;
             text-align: center;
             padding: 60px 0 30px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             position: relative;
             font-weight: 800;
-            letter-spacing: 1px;
-            text-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.05);
         }
         
         .page-title::after {
@@ -293,11 +246,10 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 80px;
             height: 4px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .page-subtitle {
@@ -383,11 +335,50 @@
             margin-bottom: 8px;
         }
         
+        .contact-info {
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.05), rgba(16, 185, 129, 0.05));
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
+        
+        .contact-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-item i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .contact-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
         .last-updated {
             font-style: italic;
             color: var(--text-light);
             margin-top: 40px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .last-updated i {
+            color: var(--primary-color);
         }
         
         footer {
@@ -538,7 +529,7 @@
                 <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure, and we cannot guarantee absolute security.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="600">
                 <h2 class="section-title">Data Sharing and Disclosure</h2>
                 <p>We may share your information with:</p>
                 <ul>
@@ -549,7 +540,7 @@
                 <p>We do not sell your personal information to third parties.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="700">
                 <h2 class="section-title">Your Rights</h2>
                 <p>Depending on your location, you may have certain rights regarding your personal information, including:</p>
                 <ul>
@@ -562,22 +553,22 @@
                 <p>To exercise these rights, please contact us at privacy@prepsharp.in.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="800">
                 <h2 class="section-title">Cookies and Tracking Technologies</h2>
                 <p>We use cookies and similar tracking technologies to enhance your experience on our website. You can control cookies through your browser settings, but disabling them may affect the functionality of our services.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="900">
                 <h2 class="section-title">Children's Privacy</h2>
                 <p>Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="1000">
                 <h2 class="section-title">Changes to This Privacy Policy</h2>
                 <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
             </div>
             
-            <div class="section">
+            <div class="section" data-aos="fade-up" data-aos-delay="1100">
                 <h2 class="section-title">Contact Us</h2>
                 <p>If you have any questions about this Privacy Policy, please contact us at:</p>
                 <div class="contact-info">
@@ -587,7 +578,7 @@
                 </div>
             </div>
             
-            <p class="last-updated"><i class="far fa-calendar-alt"></i> Last Updated: June 15, 2023</p>
+            <p class="last-updated"><i class="far fa-calendar-alt"></i> Last Updated: June 15, 2025</p>
         </div>
     </div>
     
@@ -601,6 +592,7 @@
                 <a href="terms.html">Terms of Service</a>
                 <a href="faq.html">FAQ</a>
             </div>
+            
             <div class="social-links">
                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -608,6 +600,7 @@
                 <a href="#"><i class="fab fa-youtube"></i></a>
                 <a href="#"><i class="fab fa-linkedin-in"></i></a>
             </div>
+            
             <div class="copyright">
                 &copy; 2025 PrepSharp. All rights reserved.
             </div>
@@ -646,6 +639,15 @@
                     link.classList.add('active');
                 }
             });
+            
+            // Feature card animations
+            const featureCards = document.querySelectorAll('.feature-card-large');
+            
+            if (featureCards.length > 0) {
+                featureCards.forEach((card, index) => {
+                    card.style.animationDelay = (index * 0.1) + 's';
+                });
+            }
             
             // Get the header section to determine when to show login button
             const header = document.querySelector('.header');
