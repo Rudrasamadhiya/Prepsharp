@@ -15,11 +15,23 @@
             --text-color: #1e293b;
             --text-light: #64748b;
             --card-bg: #ffffff;
-            --body-bg: #f8fafc;
-            --border-radius: 12px;
+            --body-bg: #f1f5f9;
+            --border-radius: 16px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
             --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
         }
         
         * {
@@ -227,17 +239,26 @@
         }
         
         .page-title {
-            font-size: 42px;
+            font-size: 48px;
             margin-bottom: 20px;
             text-align: center;
             padding: 60px 0 30px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+            background-size: 200% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             position: relative;
             font-weight: 800;
             text-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+            animation: gradient-text 5s ease infinite;
+            letter-spacing: 1px;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .page-title::after {
@@ -288,19 +309,30 @@
         .content {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
             padding: 40px;
             margin-bottom: 40px;
             position: relative;
             overflow: hidden;
             border-top: 4px solid var(--primary-color);
-            background-image: linear-gradient(to bottom right, rgba(79, 70, 229, 0.03), rgba(16, 185, 129, 0.03));
+            background-image: linear-gradient(to bottom right, rgba(79, 70, 229, 0.05), rgba(16, 185, 129, 0.05));
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg), 0 15px 30px rgba(79, 70, 229, 0.1);
         }
         
         .section {
             margin-bottom: 60px;
             position: relative;
             padding-left: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateX(5px);
         }
         
         .section::before {
@@ -312,6 +344,12 @@
             width: 4px;
             background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .section:hover::before {
+            width: 6px;
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
         }
         
         .section-title {
@@ -320,6 +358,12 @@
             color: var(--primary-color);
             position: relative;
             display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
         
         .section p {
@@ -332,14 +376,49 @@
         }
         
         .section li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 5px;
+            transition: transform 0.2s ease;
+        }
+        
+        .section li:hover {
+            transform: translateX(5px);
+            color: var(--primary-color);
+        }
+        
+        .section ul {
+            list-style-type: none;
+        }
+        
+        .section ul li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+            transition: transform 0.2s ease;
+        }
+        
+        .section ul li:hover:before {
+            transform: scale(1.5);
         }
         
         .contact-info {
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.05), rgba(16, 185, 129, 0.05));
-            padding: 20px;
+            background: linear-gradient(to right, rgba(79, 70, 229, 0.08), rgba(16, 185, 129, 0.08));
+            padding: 25px;
             border-radius: var(--border-radius);
             margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .contact-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
         }
         
         .contact-item {
@@ -589,12 +668,17 @@
                 <p>If you have any questions about these Terms, please contact us at:</p>
                 <div class="contact-info">
                     <div class="contact-item"><i class="fas fa-envelope"></i> Email: <a href="mailto:legal@prepsharp.in">legal@prepsharp.in</a></div>
-                    <div class="contact-item"><i class="fas fa-phone-alt"></i> Phone: <a href="tel:+918643037131">+91 8643037131</a></div>
-                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i> Address: 123 Education Street, Tech Park, Bangalore - 560001</div>
+                    <div class="contact-item"><i class="fas fa-phone-alt" style="transform: scaleX(-1);"></i> Phone: <a href="tel:+918643037131">+91 8643037131</a></div>
                 </div>
             </div>
             
             <p class="last-updated"><i class="far fa-calendar-alt"></i> Last Updated: June 15, 2025</p>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="contact.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; text-decoration: none; border-radius: 30px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+                    <i class="fas fa-question-circle" style="margin-right: 8px;"></i> Have Questions? Contact Us
+                </a>
+            </div>
         </div>
     </div>
     
