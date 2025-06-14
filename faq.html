@@ -12,7 +12,6 @@
             --primary-dark: #4338ca;
             --secondary-color: #6366f1;
             --accent-color: #10b981;
-            --accent-dark: #059669;
             --text-color: #1e293b;
             --text-light: #64748b;
             --card-bg: #ffffff;
@@ -295,6 +294,23 @@
             justify-content: center;
             box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
             z-index: 10;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        
+        .faq-intro::before {
+            animation-duration: 1s;
         }
         
         .faq-intro::after {
@@ -372,19 +388,22 @@
         .faq-categories {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 40px;
             flex-wrap: wrap;
             position: relative;
-            padding: 15px;
-            background: rgba(255,255,255,0.7);
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
             border-radius: 50px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 2px solid rgba(255,255,255,0.9);
             transform: translateY(0);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .faq-categories:hover {
@@ -393,20 +412,21 @@
         }
         
         .category-btn {
-            padding: 12px 30px;
-            background-color: rgba(255,255,255,0.7);
+            padding: 14px 32px;
+            background-color: rgba(255,255,255,0.8);
             border: none;
             border-radius: 30px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             letter-spacing: 0.5px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             position: relative;
             overflow: hidden;
             z-index: 1;
             color: var(--text-color);
+            margin: 0 5px;
         }
         
         .category-btn::before {
@@ -416,10 +436,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #8b5cf6);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.4s ease;
+            border-radius: 30px;
         }
         
         .category-btn::after {
@@ -456,12 +477,32 @@
         
         .category-btn.active {
             animation: glow 2s infinite;
+            transform: translateY(-5px) scale(1.05);
         }
         
         @keyframes glow {
-            0% { box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3); }
-            50% { box-shadow: 0 5px 30px rgba(79, 70, 229, 0.6); }
-            100% { box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3); }
+            0% { box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 10px 30px rgba(79, 70, 229, 0.7); }
+            100% { box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+        }
+        
+        .category-btn i {
+            margin-right: 8px;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-btn:hover i {
+            transform: scale(1.2);
+        }
+        
+        .category-btn.active i {
+            animation: spin 1s ease;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         /* Ripple effect for buttons */
@@ -482,14 +523,27 @@
             }
         }
         
+        .ripple {
+            animation-duration: 0.3s;
+        }
+        
         .faq-item {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             border-bottom: 1px solid rgba(226, 232, 240, 0.5);
             padding-bottom: 20px;
             border-radius: var(--border-radius);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
             overflow: hidden;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            border-left: 3px solid transparent;
+        }
+        
+        .faq-item:hover {
+            border-left: 3px solid var(--primary-color);
+            transform: translateX(5px);
         }
         
         .faq-item::before {
@@ -511,7 +565,7 @@
         }
         
         .faq-item.active {
-            background: linear-gradient(to right, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.01));
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.02));
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
             padding: 25px;
             margin-left: -15px;
@@ -520,6 +574,18 @@
             border-radius: 0 16px 16px 0;
             transform: translateX(5px);
             border-bottom: none;
+            position: relative;
+        }
+        
+        .faq-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.7), transparent);
+            pointer-events: none;
         }
         
         .faq-item.active::before {
@@ -539,6 +605,7 @@
         
         .faq-question:hover .question-text {
             color: var(--primary-color);
+            transform: translateX(5px);
         }
         
         .faq-question::after {
@@ -557,12 +624,13 @@
         }
         
         .question-text {
-            font-weight: 600;
-            font-size: 18px;
+            font-weight: 700;
+            font-size: 20px;
             position: relative;
             display: inline-block;
-            transition: all 0.3s ease;
-            padding-left: 30px;
+            transition: all 0.2s ease;
+            padding-left: 40px;
+            color: var(--primary-dark);
         }
         
         .question-text::before {
@@ -571,23 +639,26 @@
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 22px;
-            height: 22px;
+            width: 30px;
+            height: 30px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #8b5cf6);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 700;
-            opacity: 0.8;
-            transition: all 0.3s ease;
+            opacity: 1;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
         }
         
         .faq-item:hover .question-text::before {
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.1) rotate(15deg);
             opacity: 1;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.5);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color), #8b5cf6);
         }
         
         .faq-item.active .question-text {
@@ -597,6 +668,18 @@
             color: transparent;
             font-weight: 700;
             letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active {
+            animation: slide-in 0.5s ease;
+        }
+        
+        @keyframes slide-in {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(8px); }
+            30% { transform: translateX(5px); }
+            100% { transform: translateX(5px); }
         }
         
         .faq-item.active .question-text::before {
@@ -648,6 +731,14 @@
             box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
         }
         
+        .faq-icon i {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon i {
+            transform: rotate(0deg);
+        }
+        
         .faq-icon:hover {
             transform: scale(1.1);
         }
@@ -657,22 +748,58 @@
         }
         
         .faq-answer {
-            padding: 10px 0 15px 30px;
-            color: var(--text-light);
+            padding: 15px 20px 15px 40px;
+            color: var(--text-color);
             line-height: 1.8;
             opacity: 0;
             transform: translateY(-10px);
-            transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
             position: relative;
             font-size: 16px;
-            border-left: 2px dashed rgba(99, 102, 241, 0.2);
-            margin-left: 10px;
+            border-left: 4px solid var(--primary-color);
+            margin-left: 15px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        @keyframes bounce-once {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .bounce-once {
+            animation: bounce-once 0.3s ease;
         }
         
         .faq-answer p, .faq-answer ul {
             position: relative;
             z-index: 1;
+        }
+        
+        .featured {
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-highlight {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .answer-highlight i {
+            color: var(--primary-color);
+            font-size: 18px;
         }
         
         .faq-answer::before {
@@ -721,7 +848,7 @@
             display: none;
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
         
         .faq-category.active {
@@ -733,15 +860,16 @@
         .contact-cta {
             text-align: center;
             margin-top: 60px;
-            padding: 50px;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(99, 102, 241, 0.15) 100%);
+            padding: 60px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(99, 102, 241, 0.2) 100%);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 15px 30px rgba(79, 70, 229, 0.15);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(79, 70, 229, 0.2);
+            border: 2px solid rgba(79, 70, 229, 0.3);
             transform: translateY(0);
             transition: all 0.3s ease;
+            z-index: 1;
         }
         
         .contact-cta::before {
@@ -773,8 +901,8 @@
         }
         
         .contact-cta h3 {
-            font-size: 28px;
-            margin-bottom: 15px;
+            font-size: 32px;
+            margin-bottom: 20px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             background-clip: text;
@@ -790,10 +918,51 @@
             bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 80px;
             height: 3px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             border-radius: 3px;
+        }
+        
+        .animated-text {
+            animation: textPulse 0.8s infinite;
+        }
+        
+        @keyframes textPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: transparent;
+            border: 3px solid rgba(79, 70, 229, 0.3);
+            animation: pulse-ring 2s infinite;
+            z-index: 0;
+        }
+        
+        @keyframes pulse-ring {
+            0% {
+                width: 200px;
+                height: 200px;
+                opacity: 0.6;
+            }
+            100% {
+                width: 400px;
+                height: 400px;
+                opacity: 0;
+            }
+        }
+        
+        .pulse-ring {
+            animation-duration: 1s;
         }
         
         .contact-cta p {
@@ -803,18 +972,21 @@
         
         .cta-btn {
             display: inline-block;
-            padding: 12px 30px;
+            padding: 15px 35px;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 30px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 0.5px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
             border: none;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            margin-top: 10px;
         }
         
         .cta-btn:hover {
@@ -924,6 +1096,78 @@
             background: var(--primary-color);
             transform: translateY(-3px);
         }
+        
+        .top-right-login {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+        
+        .back-to-top i {
+            font-size: 20px;
+        }
+        
+        .back-to-top:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        }
+        
+        .floating-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: linear-gradient(to right, var(--accent-color, #10b981), var(--accent-dark, #d97706));
+            color: white;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .floating-login i {
+            margin-left: 8px;
+            font-size: 16px;
+        }
+        
+        .floating-login:hover {
+            background: linear-gradient(to right, var(--accent-dark, #d97706), var(--accent-color, #10b981));
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -962,51 +1206,63 @@
             
 
             <div class="faq-categories" data-aos="fade-up" data-aos-delay="100">
-                <button class="category-btn active" data-category="general">General</button>
-                <button class="category-btn" data-category="subscription">Subscription</button>
-                <button class="category-btn" data-category="features">Features</button>
-                <button class="category-btn" data-category="technical">Technical</button>
+                <button class="category-btn active" data-category="general"><i class="fas fa-info-circle"></i> General</button>
+                <button class="category-btn" data-category="subscription"><i class="fas fa-credit-card"></i> Subscription</button>
+                <button class="category-btn" data-category="features"><i class="fas fa-star"></i> Features</button>
+                <button class="category-btn" data-category="technical"><i class="fas fa-cog"></i> Technical</button>
             </div>
             
             <!-- General FAQs -->
             <div class="faq-category active" id="general" data-aos="fade-up" data-aos-delay="200">
-                <div class="faq-item">
+                <div class="faq-item featured">
                     <div class="faq-question">
                         <div class="question-text">What is PrepSharp?</div>
                         <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
                     </div>
                     <div class="faq-answer">
                         <p>PrepSharp is a comprehensive online platform designed specifically for JEE (Joint Entrance Examination) preparation. We offer practice questions, mock tests, personalized analytics, and AI-powered coaching to help students excel in their JEE exams.</p>
+                        <div class="answer-highlight">
+                            <i class="fas fa-rocket"></i> Trusted by 10,000+ JEE aspirants
+                        </div>
                     </div>
                 </div>
                 
-                <div class="faq-item">
+                <div class="faq-item featured">
                     <div class="faq-question">
                         <div class="question-text">Who can use PrepSharp?</div>
                         <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
                     </div>
                     <div class="faq-answer">
                         <p>PrepSharp is designed for students preparing for JEE Main and Advanced exams. It's ideal for students in classes 11, 12, and those taking a gap year for JEE preparation.</p>
+                        <div class="answer-highlight">
+                            <i class="fas fa-users"></i> Perfect for all JEE aspirants
+                        </div>
                     </div>
                 </div>
                 
-                <div class="faq-item">
+                <div class="faq-item featured">
                     <div class="faq-question">
                         <div class="question-text">How do I get started with PrepSharp?</div>
                         <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
                     </div>
                     <div class="faq-answer">
                         <p>Getting started is easy! Simply register for an account, choose a subscription plan that suits your needs, and you'll immediately gain access to our platform. We recommend starting with the diagnostic test to help us personalize your learning experience.</p>
+                        <div class="answer-highlight">
+                            <i class="fas fa-check-circle"></i> Setup takes less than 2 minutes
+                        </div>
                     </div>
                 </div>
                 
-                <div class="faq-item">
+                <div class="faq-item featured">
                     <div class="faq-question">
                         <div class="question-text">Is PrepSharp affiliated with any coaching institutes?</div>
                         <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
                     </div>
                     <div class="faq-answer">
                         <p>No, PrepSharp is an independent platform. However, our content is created by experienced educators, including IIT alumni and subject matter experts who have extensive experience in JEE coaching.</p>
+                        <div class="answer-highlight">
+                            <i class="fas fa-graduation-cap"></i> Created by IIT alumni & experts
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1155,7 +1411,8 @@
             </div>
             
             <div class="contact-cta" data-aos="fade-up">
-                <h3>Still have questions?</h3>
+                <div class="pulse-ring"></div>
+                <h3 class="animated-text">Still have questions?</h3>
                 <p>We're here to help! Contact our support team for personalized assistance.</p>
                 <a href="contact.html" class="cta-btn">Contact Us <i class="fas fa-arrow-right"></i></a>
             </div>
@@ -1187,17 +1444,7 @@
         </div>
     </footer>
     
-    <div class="top-right-login">
-        <a href="login.html" class="floating-login">
-            Login <i class="fas fa-sign-in-alt"></i>
-        </a>
-    </div>
-    
-    <div class="back-to-top-btn">
-        <a href="#" class="back-to-top">
-            <i class="fas fa-arrow-up"></i>
-        </a>
-    </div>
+
     
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
@@ -1245,7 +1492,7 @@
             });
             
             // Back to top functionality
-            document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            document.querySelector('.back-to-top-btn').addEventListener('click', function(e) {
                 e.preventDefault();
                 window.scrollTo({
                     top: 0,
@@ -1253,7 +1500,7 @@
                 });
             });
             
-            // Enhanced FAQ accordion functionality with animation
+            // Enhanced FAQ accordion functionality with slide animation
             document.querySelectorAll('.faq-question').forEach(question => {
                 question.addEventListener('click', () => {
                     const item = question.parentElement;
@@ -1264,21 +1511,31 @@
                     if (item.classList.contains('active')) {
                         item.classList.remove('active');
                         answer.style.maxHeight = '0';
+                        answer.style.opacity = '0';
                         icon.className = 'fas fa-chevron-down';
                     } else {
-                        // Close all other open items first (optional - for accordion effect)
+                        // Close all other open items first (for accordion effect)
                         document.querySelectorAll('.faq-item.active').forEach(activeItem => {
                             if (activeItem !== item) {
                                 activeItem.classList.remove('active');
-                                activeItem.querySelector('.faq-answer').style.maxHeight = '0';
+                                const activeAnswer = activeItem.querySelector('.faq-answer');
+                                activeAnswer.style.maxHeight = '0';
+                                activeAnswer.style.opacity = '0';
                                 activeItem.querySelector('.faq-icon i').className = 'fas fa-chevron-down';
                             }
                         });
                         
-                        // Open this item
+                        // Open this item with a slide-down animation
                         item.classList.add('active');
                         answer.style.maxHeight = answer.scrollHeight + 'px';
-                        icon.className = 'fas fa-chevron-up';
+                        answer.style.opacity = '1';
+                        icon.className = 'fas fa-chevron-down';
+                        
+                        // Add a bounce effect to the question
+                        question.querySelector('.question-text').classList.add('bounce-once');
+                        setTimeout(() => {
+                            question.querySelector('.question-text').classList.remove('bounce-once');
+                        }, 300);
                     }
                 });
             });
@@ -1297,7 +1554,7 @@
                             setTimeout(() => {
                                 category.classList.remove('active');
                                 category.style.display = 'none';
-                            }, 300); // Match this with CSS transition time
+                            }, 150); // Faster transition time
                         }
                     });
                     
@@ -1330,7 +1587,7 @@
                     
                     setTimeout(() => {
                         ripple.remove();
-                    }, 600);
+                    }, 300);
                     
                     button.classList.add('active');
                 });
@@ -1383,7 +1640,7 @@
                         isWaiting = false;
                         isDeleting = true;
                         typeText();
-                    }, 2000);
+                    }, 1000);
                     return;
                 }
                 
@@ -1435,7 +1692,7 @@
                 }
                 
                 // Set typing speed
-                const typingSpeed = isDeleting ? 30 : 80;
+                const typingSpeed = isDeleting ? 15 : 40;
                 setTimeout(typeText, typingSpeed);
             }
             
@@ -1445,3 +1702,14 @@
     </script>
 </body>
 </html>
+    <div class="top-right-login">
+        <a href="login.html" class="floating-login">
+            Login <i class="fas fa-sign-in-alt"></i>
+        </a>
+    </div>
+    
+    <div class="back-to-top-btn">
+        <a href="#" class="back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
