@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basic Dashboard - PrepSharp</title>
+    <meta name="description" content="PrepSharp Dashboard for JEE Main preparation">
+    <meta name="theme-color" content="#4f46e5">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard-container">
@@ -200,6 +203,12 @@
     <script>
         // Initialize performance chart
         const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        // Create gradient for chart
+        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
+        gradient.addColorStop(1, 'rgba(79, 70, 229, 0.05)');
+        
         const performanceChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -207,10 +216,19 @@
                 datasets: [{
                     label: 'Score %',
                     data: [55, 60, 58, 65, 68],
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    tension: 0.3,
-                    fill: true
+                    borderColor: '#4f46e5',
+                    borderWidth: 3,
+                    backgroundColor: gradient,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4f46e5',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointHoverBorderWidth: 3,
+                    pointHoverBackgroundColor: '#ffffff',
+                    pointHoverBorderColor: '#4f46e5'
                 }]
             },
             options: {
@@ -219,15 +237,86 @@
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#0f172a',
+                        bodyColor: '#0f172a',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold',
+                            family: 'Inter'
+                        },
+                        bodyFont: {
+                            size: 13,
+                            family: 'Inter'
+                        },
+                        padding: 12,
+                        borderColor: 'rgba(0, 0, 0, 0.05)',
+                        borderWidth: 1,
+                        displayColors: false,
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 100
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.03)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Inter'
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Inter'
+                            }
+                        }
                     }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeOutQuart'
                 }
             }
+        });
+        
+        // Add animation to chart elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to stat cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // Add hover effect to sidebar items
+            const sidebarItems = document.querySelectorAll('.sidebar-nav a');
+            sidebarItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
         });
     </script>
 </body>
