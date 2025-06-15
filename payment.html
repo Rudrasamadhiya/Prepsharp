@@ -428,6 +428,8 @@
                 description: planName + " Subscription",
                 image: "logo for index (1).png",
                 handler: function(response) {
+                    console.log("Payment successful! Payment ID:", response.razorpay_payment_id);
+                    
                     // Payment successful
                     const paymentId = response.razorpay_payment_id;
                     
@@ -455,20 +457,25 @@
                         localStorage.setItem('users', JSON.stringify(users));
                         
                         // Set current user as logged in with subscription details
-                        localStorage.setItem('loggedInUser', JSON.stringify({
+                        const loggedInUser = {
                             name: firstName + ' ' + lastName,
                             email,
                             subscription,
                             subscriptionStartDate: startDate.toISOString(),
                             subscriptionEndDate: endDate.toISOString(),
                             planName
-                        }));
+                        };
+                        
+                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                        console.log("User data saved:", loggedInUser);
                         
                         // Show success message
                         alert('Payment successful! Your subscription is now active.');
                         
-                        // Redirect to appropriate dashboard
-                        redirectToDashboard(subscription);
+                        // Redirect to appropriate dashboard with a slight delay
+                        setTimeout(function() {
+                            redirectToDashboard(subscription);
+                        }, 500);
                     } else {
                         // User not found in localStorage, create new user
                         const newUser = {
@@ -488,20 +495,25 @@
                         localStorage.setItem('users', JSON.stringify(users));
                         
                         // Set as logged in user
-                        localStorage.setItem('loggedInUser', JSON.stringify({
+                        const loggedInUser = {
                             name: firstName + ' ' + lastName,
                             email,
                             subscription,
                             subscriptionStartDate: new Date().toISOString(),
                             subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
                             planName
-                        }));
+                        };
+                        
+                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                        console.log("New user created:", loggedInUser);
                         
                         // Show success message
                         alert('Payment successful! Your subscription is now active.');
                         
-                        // Redirect to appropriate dashboard
-                        redirectToDashboard(subscription);
+                        // Redirect to appropriate dashboard with a slight delay
+                        setTimeout(function() {
+                            redirectToDashboard(subscription);
+                        }, 500);
                     }
                 },
                 prefill: {
@@ -519,20 +531,26 @@
         }
         
         function redirectToDashboard(subscription) {
+            console.log("Redirecting to dashboard for subscription:", subscription);
+            
+            let dashboardUrl;
             switch(subscription) {
                 case 'premium':
-                    window.location.href = 'dashboards/premium/dashboard.html';
+                    dashboardUrl = 'dashboards/premium/dashboard.html';
                     break;
                 case 'standard':
-                    window.location.href = 'dashboards/standard/dashboard.html';
+                    dashboardUrl = 'dashboards/standard/dashboard.html';
                     break;
                 case 'basic':
-                    window.location.href = 'dashboards/basic/dashboard.html';
+                    dashboardUrl = 'dashboards/basic/dashboard.html';
                     break;
                 default:
-                    window.location.href = 'dashboards/basic/dashboard.html';
+                    dashboardUrl = 'dashboards/basic/dashboard.html';
                     break;
             }
+            
+            console.log("Dashboard URL:", dashboardUrl);
+            window.location.href = dashboardUrl;
         }
     </script>
 </body>
