@@ -310,13 +310,16 @@
                 </div>
             </div>
             
-            <button id="pay-button" class="pay-btn">Complete Payment</button>
+            <button id="pay-button" class="pay-btn">Pay with Razorpay</button>
             
             <div class="secure-badge">
-                <i class="fas fa-lock"></i> Secure Payment Processing
+                <i class="fas fa-lock"></i> Secure Payment Processing via Razorpay
             </div>
         </div>
     </div>
+    
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <script>
         // Create animated particles
@@ -416,89 +419,103 @@
         });
         
         function simulatePayment(subscription, planName, planPrice, planDuration, firstName, lastName, email) {
-            // Show loading state
-            const payButton = document.getElementById('pay-button');
-            payButton.textContent = 'Processing...';
-            payButton.disabled = true;
-            
-            // Simulate payment processing delay
-            setTimeout(function() {
-                // Create payment ID (simulated)
-                const paymentId = 'pay_' + Math.random().toString(36).substr(2, 9);
-                
-                // Get existing users array
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                
-                // Find the user by email
-                const userIndex = users.findIndex(user => user.email === email);
-                
-                if (userIndex !== -1) {
-                    // Calculate subscription dates
-                    const startDate = new Date();
-                    const endDate = new Date();
-                    endDate.setDate(endDate.getDate() + planDuration);
+            // Initialize Razorpay with the provided credentials
+            const options = {
+                key: "rzp_test_YMyOd4SW2Ld9jc", // Razorpay test key
+                amount: planPrice * 100, // Amount in paise
+                currency: "INR",
+                name: "PrepSharp",
+                description: planName + " Subscription",
+                image: "logo for index (1).png",
+                handler: function(response) {
+                    // Payment successful
+                    const paymentId = response.razorpay_payment_id;
                     
-                    // Update user with subscription details
-                    users[userIndex].subscription = subscription;
-                    users[userIndex].paymentId = paymentId;
-                    users[userIndex].subscriptionStartDate = startDate.toISOString();
-                    users[userIndex].subscriptionEndDate = endDate.toISOString();
-                    users[userIndex].planName = planName;
-                    users[userIndex].planPrice = planPrice;
+                    // Get existing users array
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
                     
-                    // Save updated users array
-                    localStorage.setItem('users', JSON.stringify(users));
+                    // Find the user by email
+                    const userIndex = users.findIndex(user => user.email === email);
                     
-                    // Set current user as logged in with subscription details
-                    localStorage.setItem('loggedInUser', JSON.stringify({
-                        name: firstName + ' ' + lastName,
-                        email,
-                        subscription,
-                        subscriptionStartDate: startDate.toISOString(),
-                        subscriptionEndDate: endDate.toISOString(),
-                        planName
-                    }));
-                    
-                    // Show success message
-                    alert('Payment successful! Your subscription is now active.');
-                    
-                    // Redirect to appropriate dashboard
-                    redirectToDashboard(subscription);
-                } else {
-                    // User not found in localStorage, create new user
-                    const newUser = {
-                        name: firstName + ' ' + lastName,
-                        email: email,
-                        subscription: subscription,
-                        paymentId: paymentId,
-                        subscriptionStartDate: new Date().toISOString(),
-                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                        planName: planName,
-                        planPrice: planPrice,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    // Add to users array
-                    users.push(newUser);
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // Set as logged in user
-                    localStorage.setItem('loggedInUser', JSON.stringify({
-                        name: firstName + ' ' + lastName,
-                        email,
-                        subscription,
-                        subscriptionStartDate: new Date().toISOString(),
-                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                        planName
-                    }));
-                    
-                    // Show success message
-                    alert('Payment successful! Your subscription is now active.');
-                    
-                    // Redirect to appropriate dashboard
-                    redirectToDashboard(subscription);
+                    if (userIndex !== -1) {
+                        // Calculate subscription dates
+                        const startDate = new Date();
+                        const endDate = new Date();
+                        endDate.setDate(endDate.getDate() + planDuration);
+                        
+                        // Update user with subscription details
+                        users[userIndex].subscription = subscription;
+                        users[userIndex].paymentId = paymentId;
+                        users[userIndex].subscriptionStartDate = startDate.toISOString();
+                        users[userIndex].subscriptionEndDate = endDate.toISOString();
+                        users[userIndex].planName = planName;
+                        users[userIndex].planPrice = planPrice;
+                        
+                        // Save updated users array
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        // Set current user as logged in with subscription details
+                        localStorage.setItem('loggedInUser', JSON.stringify({
+                            name: firstName + ' ' + lastName,
+                            email,
+                            subscription,
+                            subscriptionStartDate: startDate.toISOString(),
+                            subscriptionEndDate: endDate.toISOString(),
+                            planName
+                        }));
+                        
+                        // Show success message
+                        alert('Payment successful! Your subscription is now active.');
+                        
+                        // Redirect to appropriate dashboard
+                        redirectToDashboard(subscription);
+                    } else {
+                        // User not found in localStorage, create new user
+                        const newUser = {
+                            name: firstName + ' ' + lastName,
+                            email: email,
+                            subscription: subscription,
+                            paymentId: paymentId,
+                            subscriptionStartDate: new Date().toISOString(),
+                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                            planName: planName,
+                            planPrice: planPrice,
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // Add to users array
+                        users.push(newUser);
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        // Set as logged in user
+                        localStorage.setItem('loggedInUser', JSON.stringify({
+                            name: firstName + ' ' + lastName,
+                            email,
+                            subscription,
+                            subscriptionStartDate: new Date().toISOString(),
+                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                            planName
+                        }));
+                        
+                        // Show success message
+                        alert('Payment successful! Your subscription is now active.');
+                        
+                        // Redirect to appropriate dashboard
+                        redirectToDashboard(subscription);
+                    }
+                },
+                prefill: {
+                    name: firstName + ' ' + lastName,
+                    email: email
+                },
+                theme: {
+                    color: "#4f46e5"
                 }
-            }, 2000);
+            };
+            
+            // Create and open Razorpay payment form
+            const rzp = new Razorpay(options);
+            rzp.open();
         }
         
         function redirectToDashboard(subscription) {
