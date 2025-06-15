@@ -477,13 +477,23 @@
                 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                        <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; font-size: 18px; z-index: 10;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                        <button type="button" id="toggleConfirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; font-size: 18px; z-index: 10;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div id="confirmPasswordError" class="error-message">Passwords do not match</div>
                 </div>
                 
@@ -534,6 +544,8 @@
     </div>
     
     <script>
+
+        
         // Create animated particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -594,6 +606,32 @@
             
             // Make sure the radio button is checked
             document.querySelector('.subscription-card.free input[type="radio"]').checked = true;
+            
+                // Function to toggle password visibility
+            function togglePassword(inputId, buttonId) {
+                const input = document.getElementById(inputId);
+                const button = document.getElementById(buttonId);
+                const icon = button.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+            
+            // Add click events to toggle buttons
+            document.getElementById('togglePassword').onclick = function() {
+                togglePassword('password', 'togglePassword');
+            };
+            
+            document.getElementById('toggleConfirmPassword').onclick = function() {
+                togglePassword('confirmPassword', 'toggleConfirmPassword');
+            };
         });
         
         // Handle registration form submission
@@ -719,16 +757,7 @@
             }
             
             // Redirect to appropriate dashboard
-            redirectToDashboard(subscription);ubscription === 'premium') {
-                dashboardPath = 'dashboards/premium/dashboard.html';
-            } else if (subscription === 'standard') {
-                dashboardPath = 'dashboards/standard/dashboard.html';
-            } else {
-                dashboardPath = 'dashboards/basic/dashboard.html';
-            }
-            
-            // Redirect to dashboard
-            window.location.href = dashboardPath;
+            redirectToDashboard(subscription);
         });
         
         // Email validation function
@@ -736,6 +765,8 @@
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
         }
+        
+
         
         // Simple function to redirect to the appropriate dashboard
         function redirectToDashboard(subscription) {

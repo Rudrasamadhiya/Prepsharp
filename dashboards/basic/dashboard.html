@@ -22,19 +22,19 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li class="active">
-                        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-book"></i> Practice Papers</a>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> Practice Papers</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-question-circle"></i> Question Bank</a>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> Question Bank</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
                     </li>
                 </ul>
             </nav>
@@ -51,11 +51,6 @@
         <main class="main-content">
             <!-- Top Navigation -->
             <header class="top-nav">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-                
                 <div class="user-actions">
                     <div class="notification-bell" id="notificationBell">
                         <i class="fas fa-bell"></i>
@@ -166,42 +161,81 @@
                     <!-- Recent Papers -->
                     <div class="dashboard-card">
                         <div class="card-header">
-                            <h2>Recent Practice Papers</h2>
-                            <a href="#" class="view-all">View All</a>
+                            <h2><i class="fas fa-file-alt card-icon"></i> Recent Practice Papers</h2>
+                            <a href="#" class="view-all">View All <i class="fas fa-angle-right"></i></a>
                         </div>
                         <div class="card-content">
                             <ul class="paper-list">
                                 <li class="paper-item">
                                     <div class="paper-info">
+                                        <div class="paper-badge new">NEW</div>
                                         <h3>JEE Main 2023 Paper 1</h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
+                                        <p><i class="fas fa-atom subject-icon"></i> Physics <i class="fas fa-flask subject-icon"></i> Chemistry <i class="fas fa-square-root-alt subject-icon"></i> Mathematics</p>
+                                        <div class="paper-meta">
+                                            <span><i class="fas fa-clock"></i> 3h</span>
+                                            <span><i class="fas fa-star"></i> 4.8</span>
+                                            <span><i class="fas fa-users"></i> 2.4k</span>
+                                        </div>
                                     </div>
-                                    <a href="#" class="start-btn">Start</a>
+                                    <a href="#" class="start-btn">Start <i class="fas fa-arrow-right"></i></a>
                                 </li>
                                 <li class="paper-item">
                                     <div class="paper-info">
                                         <h3>JEE Main 2023 Paper 2</h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
+                                        <p><i class="fas fa-atom subject-icon"></i> Physics <i class="fas fa-flask subject-icon"></i> Chemistry <i class="fas fa-square-root-alt subject-icon"></i> Mathematics</p>
+                                        <div class="paper-meta">
+                                            <span><i class="fas fa-clock"></i> 3h</span>
+                                            <span><i class="fas fa-star"></i> 4.5</span>
+                                            <span><i class="fas fa-users"></i> 1.8k</span>
+                                        </div>
                                     </div>
-                                    <a href="#" class="start-btn">Start</a>
+                                    <a href="#" class="start-btn">Start <i class="fas fa-arrow-right"></i></a>
                                 </li>
                                 <li class="paper-item">
                                     <div class="paper-info">
+                                        <div class="paper-badge popular">POPULAR</div>
                                         <h3>JEE Main 2022 Paper 1</h3>
-                                        <p>Physics, Chemistry, Mathematics</p>
+                                        <p><i class="fas fa-atom subject-icon"></i> Physics <i class="fas fa-flask subject-icon"></i> Chemistry <i class="fas fa-square-root-alt subject-icon"></i> Mathematics</p>
+                                        <div class="paper-meta">
+                                            <span><i class="fas fa-clock"></i> 3h</span>
+                                            <span><i class="fas fa-star"></i> 4.9</span>
+                                            <span><i class="fas fa-users"></i> 3.2k</span>
+                                        </div>
                                     </div>
-                                    <a href="#" class="start-btn">Start</a>
+                                    <a href="#" class="start-btn">Start <i class="fas fa-arrow-right"></i></a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     
                     <!-- Performance Summary -->
-                    <div class="dashboard-card">
+                    <div class="dashboard-card performance-card">
                         <div class="card-header">
-                            <h2>Performance Summary</h2>
+                            <h2><i class="fas fa-chart-line card-icon"></i> Performance Summary</h2>
+                            <div class="time-filter">
+                                <span class="filter-option">Week</span>
+                                <span class="filter-option active">Month</span>
+                                <span class="filter-option">Year</span>
+                            </div>
                         </div>
                         <div class="card-content">
+                            <div class="performance-stats">
+                                <div class="stat-highlight">
+                                    <div class="stat-value">68<span>%</span></div>
+                                    <div class="stat-label">Average Score</div>
+                                    <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3%</div>
+                                </div>
+                                <div class="stat-highlight">
+                                    <div class="stat-value">12<span>hrs</span></div>
+                                    <div class="stat-label">Study Time</div>
+                                    <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 2hrs</div>
+                                </div>
+                                <div class="stat-highlight">
+                                    <div class="stat-value">42<span>/50</span></div>
+                                    <div class="stat-label">Questions</div>
+                                    <div class="stat-change neutral"><i class="fas fa-minus"></i> 0</div>
+                                </div>
+                            </div>
                             <div class="performance-chart">
                                 <canvas id="performanceChart"></canvas>
                                 <div class="chart-overlay">
@@ -214,21 +248,30 @@
                             </div>
                             <div class="subject-scores">
                                 <div class="subject-score" data-score="65">
-                                    <span class="subject-name">Physics</span>
+                                    <div class="subject-info">
+                                        <span class="subject-icon physics"><i class="fas fa-atom"></i></span>
+                                        <span class="subject-name">Physics</span>
+                                    </div>
                                     <div class="progress-bar">
                                         <div class="progress" style="width: 0%;"></div>
                                     </div>
                                     <span class="score-value">0%</span>
                                 </div>
                                 <div class="subject-score" data-score="72">
-                                    <span class="subject-name">Chemistry</span>
+                                    <div class="subject-info">
+                                        <span class="subject-icon chemistry"><i class="fas fa-flask"></i></span>
+                                        <span class="subject-name">Chemistry</span>
+                                    </div>
                                     <div class="progress-bar">
                                         <div class="progress" style="width: 0%;"></div>
                                     </div>
                                     <span class="score-value">0%</span>
                                 </div>
                                 <div class="subject-score" data-score="58">
-                                    <span class="subject-name">Mathematics</span>
+                                    <div class="subject-info">
+                                        <span class="subject-icon math"><i class="fas fa-square-root-alt"></i></span>
+                                        <span class="subject-name">Mathematics</span>
+                                    </div>
                                     <div class="progress-bar">
                                         <div class="progress" style="width: 0%;"></div>
                                     </div>
@@ -242,21 +285,33 @@
                 <!-- Subscription Info -->
                 <div class="subscription-card">
                     <div class="subscription-info">
-                        <h2>Basic Plan Features</h2>
+                        <div class="plan-header">
+                            <div class="plan-icon"><i class="fas fa-rocket"></i></div>
+                            <h2>Basic Plan <span class="plan-tag">Current</span></h2>
+                        </div>
                         <ul class="feature-list">
-                            <li class="feature-item"><i class="fas fa-check"></i> Access to JEE Main practice papers</li>
-                            <li class="feature-item"><i class="fas fa-check"></i> Basic performance analytics</li>
-                            <li class="feature-item"><i class="fas fa-check"></i> Limited question bank access</li>
+                            <li class="feature-item"><i class="fas fa-check-circle"></i> Access to JEE Main practice papers</li>
+                            <li class="feature-item"><i class="fas fa-check-circle"></i> Basic performance analytics</li>
+                            <li class="feature-item"><i class="fas fa-check-circle"></i> Limited question bank access</li>
+                            <li class="feature-item disabled"><i class="fas fa-times-circle"></i> Advanced study planner</li>
+                            <li class="feature-item disabled"><i class="fas fa-times-circle"></i> Personalized recommendations</li>
                         </ul>
                     </div>
                     <div class="upgrade-section">
-                        <h3>Want more features?</h3>
-                        <p>Upgrade to Standard or Premium plan for advanced features</p>
+                        <h3><i class="fas fa-arrow-circle-up"></i> Upgrade Your Prep</h3>
+                        <p>Get access to all features and boost your JEE preparation</p>
                         <div class="plan-selector">
-                            <div class="plan-option active" data-plan="standard">Standard</div>
-                            <div class="plan-option" data-plan="premium">Premium</div>
+                            <div class="plan-option active" data-plan="standard">
+                                <div class="plan-name">Standard</div>
+                                <div class="plan-price">₹499<span>/month</span></div>
+                            </div>
+                            <div class="plan-option" data-plan="premium">
+                                <div class="plan-name">Premium</div>
+                                <div class="plan-price">₹999<span>/month</span></div>
+                                <div class="best-value">Best Value</div>
+                            </div>
                         </div>
-                        <a href="#" class="upgrade-btn">Upgrade Now</a>
+                        <a href="#" class="upgrade-btn">Upgrade Now <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -265,14 +320,16 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/dashboard.js"></script>
     <script>
         // Initialize performance chart
         const ctx = document.getElementById('performanceChart').getContext('2d');
         
         // Create gradient for chart
         const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-        gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
-        gradient.addColorStop(1, 'rgba(79, 70, 229, 0.05)');
+        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.5)');
+        gradient.addColorStop(1, 'rgba(37, 99, 235, 0.05)');
         
         const performanceChart = new Chart(ctx, {
             type: 'line',
@@ -281,19 +338,19 @@
                 datasets: [{
                     label: 'Score %',
                     data: [55, 60, 58, 65, 68],
-                    borderColor: '#4f46e5',
+                    borderColor: '#2563eb',
                     borderWidth: 3,
                     backgroundColor: gradient,
                     tension: 0.4,
                     fill: true,
                     pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#4f46e5',
+                    pointBorderColor: '#2563eb',
                     pointBorderWidth: 2,
                     pointRadius: 5,
                     pointHoverRadius: 8,
                     pointHoverBorderWidth: 3,
                     pointHoverBackgroundColor: '#ffffff',
-                    pointHoverBorderColor: '#4f46e5'
+                    pointHoverBorderColor: '#2563eb'
                 }]
             },
             options: {
@@ -605,7 +662,7 @@
                 
                 // Add click effect for navigation items
                 item.addEventListener('click', function(e) {
-                    e.preventDefault();
+                    // Don't prevent default to allow navigation
                     
                     // Remove active class from all items
                     document.querySelectorAll('.sidebar-nav li').forEach(li => {
@@ -713,18 +770,52 @@
             paperItems.forEach(item => {
                 item.addEventListener('mouseenter', function() {
                     gsap.to(this, {
-                        backgroundColor: 'rgba(79, 70, 229, 0.05)',
-                        paddingLeft: '10px',
+                        paddingLeft: '25px',
+                        duration: 0.3
+                    });
+                    
+                    // Animate the start button
+                    const startBtn = this.querySelector('.start-btn');
+                    gsap.to(startBtn, {
+                        scale: 1.05,
                         duration: 0.3
                     });
                 });
                 
                 item.addEventListener('mouseleave', function() {
                     gsap.to(this, {
-                        backgroundColor: 'transparent',
-                        paddingLeft: '0px',
+                        paddingLeft: '18px',
                         duration: 0.3
                     });
+                    
+                    // Reset the start button
+                    const startBtn = this.querySelector('.start-btn');
+                    gsap.to(startBtn, {
+                        scale: 1,
+                        duration: 0.3
+                    });
+                });
+            });
+            
+            // Add interactivity to time filter
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    document.querySelectorAll('.filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Show loading effect on chart
+                    const chart = document.querySelector('.performance-chart');
+                    chart.style.opacity = '0.5';
+                    
+                    // Simulate data loading
+                    setTimeout(() => {
+                        chart.style.opacity = '1';
+                    }, 500);
                 });
             });
             
