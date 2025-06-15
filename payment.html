@@ -451,9 +451,8 @@
                     
                     // Set current user as logged in with subscription details
                     localStorage.setItem('loggedInUser', JSON.stringify({
+                        name: firstName + ' ' + lastName,
                         email,
-                        firstName,
-                        lastName,
                         subscription,
                         subscriptionStartDate: startDate.toISOString(),
                         subscriptionEndDate: endDate.toISOString(),
@@ -466,8 +465,38 @@
                     // Redirect to appropriate dashboard
                     redirectToDashboard(subscription);
                 } else {
-                    alert('User not found. Please try registering again.');
-                    window.location.href = 'register.html';
+                    // User not found in localStorage, create new user
+                    const newUser = {
+                        name: firstName + ' ' + lastName,
+                        email: email,
+                        subscription: subscription,
+                        paymentId: paymentId,
+                        subscriptionStartDate: new Date().toISOString(),
+                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                        planName: planName,
+                        planPrice: planPrice,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    // Add to users array
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // Set as logged in user
+                    localStorage.setItem('loggedInUser', JSON.stringify({
+                        name: firstName + ' ' + lastName,
+                        email,
+                        subscription,
+                        subscriptionStartDate: new Date().toISOString(),
+                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                        planName
+                    }));
+                    
+                    // Show success message
+                    alert('Payment successful! Your subscription is now active.');
+                    
+                    // Redirect to appropriate dashboard
+                    redirectToDashboard(subscription);
                 }
             }, 2000);
         }
