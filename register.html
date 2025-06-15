@@ -681,6 +681,22 @@
                 createdAt: new Date().toISOString()
             };
             
+            // Check if this is a paid plan
+            if (subscription !== 'free') {
+                // Save user data temporarily
+                localStorage.setItem('tempUserData', JSON.stringify(newUser));
+                
+                // Redirect to payment page with subscription details
+                window.location.href = `payment.html?subscription=${subscription}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(email)}`;
+                return;
+            }
+            
+            // For free plan, continue with registration
+            registerUser(newUser, firstName, lastName, email, subscription);
+        });
+        
+        // Function to handle user registration
+        function registerUser(newUser, firstName, lastName, email, subscription) {
             // Try to register user with API first
             try {
                 fetch('/api/users/register', {
@@ -755,10 +771,7 @@
                 // Redirect to appropriate dashboard
                 redirectToDashboard(subscription);
             }
-            
-            // Redirect to appropriate dashboard
-            redirectToDashboard(subscription);
-        });
+        }
         
         // Email validation function
         function validateEmail(email) {

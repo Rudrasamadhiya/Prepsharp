@@ -700,33 +700,18 @@
             
             if (Object.keys(users).length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No students registered yet</td></tr>';
-                updateStatCards(0, 0, 0, 0);
                 return;
             }
-            
-            let totalStudents = 0;
-            let activeStudents = 0;
-            let newStudents = 0;
-            let premiumStudents = 0;
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
             
             // Process and display each user
             Object.entries(users).forEach(([id, user]) => {
                 const registrationDate = user.createdAt 
-                    ? new Date(user.createdAt)
-                    : new Date();
+                    ? new Date(user.createdAt).toLocaleString() 
+                    : new Date().toLocaleString();
                 
                 // Get stream and class from user data, checking all possible property names
                 const streamValue = user.stream || user.Stream || 'N/A';
                 const classValue = user.class || user.Class || user.classValue || 'N/A';
-                const isPremium = user.plan === 'premium' || user.subscription === 'premium';
-                
-                // Update counters
-                totalStudents++;
-                if (user.status !== 'inactive') activeStudents++;
-                if (registrationDate > oneWeekAgo) newStudents++;
-                if (isPremium) premiumStudents++;
                 
                 studentsData.push({
                     name: user.name || 'N/A',
@@ -734,7 +719,7 @@
                     mobile: user.mobile || user.phone || 'N/A',
                     stream: streamValue,
                     class: classValue,
-                    registrationDate: registrationDate.toLocaleString()
+                    registrationDate: registrationDate
                 });
                 
                 const row = document.createElement('tr');
@@ -744,30 +729,10 @@
                     <td>${user.mobile || user.phone || 'N/A'}</td>
                     <td>${streamValue}</td>
                     <td>${classValue}</td>
-                    <td>${registrationDate.toLocaleString()}</td>
+                    <td>${registrationDate}</td>
                 `;
                 tbody.appendChild(row);
             });
-            
-            // Update stat cards
-            updateStatCards(totalStudents, activeStudents, newStudents, premiumStudents);
-        }
-        
-        // Update statistics cards
-        function updateStatCards(total, active, newUsers, premium) {
-            document.getElementById('total-students').textContent = total;
-            document.getElementById('active-students').textContent = active;
-            document.getElementById('new-students').textContent = newUsers;
-            document.getElementById('premium-students').textContent = premium;
-            
-            // Animate stats cards
-            document.querySelectorAll('.stats-card').forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
-        }
         }
         
         // Export to Excel
