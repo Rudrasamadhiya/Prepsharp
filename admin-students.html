@@ -620,7 +620,7 @@
                             <tbody id="students-data">
                                 <!-- Student data will be loaded here -->
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">Loading...</td>
+                                    <td colspan="7" style="text-align: center;">Loading...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -646,7 +646,7 @@
         // Load students data from server or localStorage
         function loadStudents() {
             const tbody = document.getElementById('students-data');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
             
             try {
                 // Try to fetch from server first
@@ -666,7 +666,7 @@
                     });
             } catch (error) {
                 console.error("Error loading students:", error);
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
             }
         }
         
@@ -700,7 +700,7 @@
             studentsData = [];
             
             if (Object.keys(users).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No students registered yet</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No students registered yet</td></tr>';
                 return;
             }
             
@@ -710,17 +710,37 @@
                     ? new Date(user.createdAt).toLocaleString() 
                     : new Date().toLocaleString();
                 
-                // Get stream and class from user data, checking all possible property names
-                const streamValue = user.stream || user.Stream || 'N/A';
+                // Get subscription plan and class from user data
+                const subscriptionPlan = user.subscriptionPlan || user.plan || 'Free';
                 const classValue = user.class || user.Class || user.classValue || 'N/A';
+                
+                // Calculate subscription end date based on plan type
+                let endDate = 'N/A';
+                
+                if (subscriptionPlan === 'Free') {
+                    // Free plan has no end date
+                    endDate = 'N/A';
+                } else if (user.subscriptionEndDate) {
+                    // Use the specific end date if available
+                    endDate = new Date(user.subscriptionEndDate).toLocaleString();
+                } else if (user.paymentDate) {
+                    // If payment was made, calculate based on payment date and plan duration
+                    const paymentDate = new Date(user.paymentDate);
+                    const duration = user.planDuration || 30; // Default to 30 days if not specified
+                    endDate = new Date(paymentDate.setDate(paymentDate.getDate() + duration)).toLocaleString();
+                } else if (user.createdAt && subscriptionPlan !== 'Free') {
+                    // For paid plans without specific dates, use 30 days from registration
+                    endDate = new Date(new Date(user.createdAt).setDate(new Date(user.createdAt).getDate() + 30)).toLocaleString();
+                }
                 
                 studentsData.push({
                     name: user.name || 'N/A',
                     email: user.email || 'N/A',
                     mobile: user.mobile || user.phone || 'N/A',
-                    stream: streamValue,
+                    subscriptionPlan: subscriptionPlan,
                     class: classValue,
-                    registrationDate: registrationDate
+                    registrationDate: registrationDate,
+                    endDate: endDate
                 });
                 
                 const row = document.createElement('tr');
@@ -728,9 +748,10 @@
                     <td>${user.name || 'N/A'}</td>
                     <td>${user.email || 'N/A'}</td>
                     <td>${user.mobile || user.phone || 'N/A'}</td>
-                    <td>${streamValue}</td>
+                    <td>${subscriptionPlan}</td>
                     <td>${classValue}</td>
                     <td>${registrationDate}</td>
+                    <td>${endDate}</td>
                 `;
                 tbody.appendChild(row);
             });
