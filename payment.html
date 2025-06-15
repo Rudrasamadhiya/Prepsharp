@@ -428,8 +428,6 @@
                 description: planName + " Subscription",
                 image: "logo for index (1).png",
                 handler: function(response) {
-                    console.log("Payment successful! Payment ID:", response.razorpay_payment_id);
-                    
                     // Payment successful
                     const paymentId = response.razorpay_payment_id;
                     
@@ -440,44 +438,18 @@
                     const userIndex = users.findIndex(user => user.email === email);
                     
                     if (userIndex !== -1) {
-                        // Calculate subscription dates
-                        const startDate = new Date();
-                        const endDate = new Date();
-                        endDate.setDate(endDate.getDate() + planDuration);
-                        
                         // Update user with subscription details
                         users[userIndex].subscription = subscription;
                         users[userIndex].paymentId = paymentId;
-                        users[userIndex].subscriptionStartDate = startDate.toISOString();
-                        users[userIndex].subscriptionEndDate = endDate.toISOString();
+                        users[userIndex].subscriptionStartDate = new Date().toISOString();
+                        users[userIndex].subscriptionEndDate = new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString();
                         users[userIndex].planName = planName;
                         users[userIndex].planPrice = planPrice;
                         
                         // Save updated users array
                         localStorage.setItem('users', JSON.stringify(users));
-                        
-                        // Set current user as logged in with subscription details
-                        const loggedInUser = {
-                            name: firstName + ' ' + lastName,
-                            email,
-                            subscription,
-                            subscriptionStartDate: startDate.toISOString(),
-                            subscriptionEndDate: endDate.toISOString(),
-                            planName
-                        };
-                        
-                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-                        console.log("User data saved:", loggedInUser);
-                        
-                        // Show success message
-                        alert('Payment successful! Your subscription is now active.');
-                        
-                        // Redirect to appropriate dashboard with a slight delay
-                        setTimeout(function() {
-                            redirectToDashboard(subscription);
-                        }, 500);
                     } else {
-                        // User not found in localStorage, create new user
+                        // Create new user
                         const newUser = {
                             name: firstName + ' ' + lastName,
                             email: email,
@@ -493,28 +465,27 @@
                         // Add to users array
                         users.push(newUser);
                         localStorage.setItem('users', JSON.stringify(users));
-                        
-                        // Set as logged in user
-                        const loggedInUser = {
-                            name: firstName + ' ' + lastName,
-                            email,
-                            subscription,
-                            subscriptionStartDate: new Date().toISOString(),
-                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                            planName
-                        };
-                        
-                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-                        console.log("New user created:", loggedInUser);
-                        
-                        // Show success message
-                        alert('Payment successful! Your subscription is now active.');
-                        
-                        // Redirect to appropriate dashboard with a slight delay
-                        setTimeout(function() {
-                            redirectToDashboard(subscription);
-                        }, 500);
                     }
+                    
+                    // Set as logged in user
+                    localStorage.setItem('loggedInUser', JSON.stringify({
+                        name: firstName + ' ' + lastName,
+                        email: email,
+                        subscription: subscription
+                    }));
+                    
+                    // Show success message
+                    alert('Payment successful! Your subscription is now active.');
+                    
+                    // Direct redirection based on subscription
+                    if (subscription === 'premium') {
+                        window.location.href = 'dashboards/premium/dashboard.html';
+                    } else if (subscription === 'standard') {
+                        window.location.href = 'dashboards/standard/dashboard.html';
+                    } else {
+                        window.location.href = 'dashboards/basic/dashboard.html';
+                    }
+                }
                 },
                 prefill: {
                     name: firstName + ' ' + lastName,
@@ -530,28 +501,7 @@
             rzp.open();
         }
         
-        function redirectToDashboard(subscription) {
-            console.log("Redirecting to dashboard for subscription:", subscription);
-            
-            let dashboardUrl;
-            switch(subscription) {
-                case 'premium':
-                    dashboardUrl = 'dashboards/premium/dashboard.html';
-                    break;
-                case 'standard':
-                    dashboardUrl = 'dashboards/standard/dashboard.html';
-                    break;
-                case 'basic':
-                    dashboardUrl = 'dashboards/basic/dashboard.html';
-                    break;
-                default:
-                    dashboardUrl = 'dashboards/basic/dashboard.html';
-                    break;
-            }
-            
-            console.log("Dashboard URL:", dashboardUrl);
-            window.location.href = dashboardUrl;
-        }
+        // This function is no longer used as we're redirecting directly in the handler
     </script>
 </body>
 </html>
