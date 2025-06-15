@@ -409,6 +409,8 @@
             
             // Check for admin login
             if (email === "admin@prepsharp.in" && password === "6263636696") {
+                // Set admin session
+                sessionStorage.setItem('adminLoggedIn', 'true');
                 window.location.href = "admin-dashboard.html";
                 return;
             }
