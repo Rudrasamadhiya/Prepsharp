@@ -471,8 +471,30 @@
                 
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <div style="display: flex; gap: 10px;">
+                        <div style="flex-grow: 1; position: relative;">
+                            <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                            <span id="emailVerifiedIcon" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #10b981; font-size: 18px;">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                        </div>
+                        <button type="button" id="verifyEmailBtn" class="register-btn" style="width: auto; padding: 0 20px; white-space: nowrap;">Verify</button>
+                    </div>
                     <div id="emailError" class="error-message">Please enter a valid email address</div>
+                </div>
+                
+                <!-- OTP Verification Section (initially hidden) -->
+                <div id="otpSection" class="form-group" style="display: none;">
+                    <label for="otp" class="form-label">Verification Code</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="otp" class="form-input" placeholder="Enter 6-digit code sent to your email" maxlength="6">
+                        <button type="button" id="submitOtpBtn" class="register-btn" style="width: auto; padding: 0 20px;">Verify</button>
+                    </div>
+                    <div id="otpError" class="error-message">Invalid verification code</div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <span id="otpTimer" style="color: #4f46e5; font-size: 14px;">Code expires in: 5:00</span>
+                        <button type="button" id="resendOtp" style="background: none; border: none; color: #4f46e5; cursor: pointer; font-size: 14px; font-weight: 500;">Resend Code</button>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -495,6 +517,17 @@
                         </button>
                     </div>
                     <div id="confirmPasswordError" class="error-message">Passwords do not match</div>
+                </div>
+                
+                <!-- OTP Verification Section (initially hidden) -->
+                <div id="otpSection" class="form-group" style="display: none;">
+                    <label for="otp" class="form-label">Verification Code</label>
+                    <input type="text" id="otp" class="form-input" placeholder="Enter 6-digit code sent to your email" maxlength="6">
+                    <div id="otpError" class="error-message">Invalid verification code</div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <span id="otpTimer" style="color: #4f46e5; font-size: 14px;">Code expires in: 5:00</span>
+                        <button type="button" id="resendOtp" style="background: none; border: none; color: #4f46e5; cursor: pointer; font-size: 14px; font-weight: 500;">Resend Code</button>
+                    </div>
                 </div>
                 
                 <div class="subscription-options">
@@ -547,6 +580,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("GzrtvJADYV5bG2CkI");
+        })();
+    </script>
     <script>
         
         // Create animated particles
@@ -637,6 +677,160 @@
             };
         });
         
+        // EmailJS is already initialized in the head section
+        
+        // Global variables for OTP verification
+        let generatedOTP = "";
+        let otpTimerInterval;
+        let otpExpiryTime;
+        let tempUserData = {};
+        let isEmailVerified = false;
+        
+        // Function to generate a 6-digit OTP
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+        
+        // Function to send OTP via EmailJS
+        function sendOTP(email, name, otp) {
+            console.log("Sending OTP to:", email);
+            return emailjs.send(
+                "service_82g86pr",
+                "template_eopykik",
+                {
+                    to_email: email,
+                    to_name: name,
+                    otp: otp
+                }
+            ).then(function(response) {
+                console.log("Email sent successfully:", response);
+                return response;
+            }).catch(function(error) {
+                console.error("Email sending failed:", error);
+                throw error;
+            });
+        }
+        
+        // Function to start OTP timer
+        function startOTPTimer() {
+            const timerElement = document.getElementById('otpTimer');
+            otpExpiryTime = Date.now() + 5 * 60 * 1000; // 5 minutes
+            
+            clearInterval(otpTimerInterval);
+            otpTimerInterval = setInterval(() => {
+                const timeLeft = Math.max(0, otpExpiryTime - Date.now());
+                const minutes = Math.floor(timeLeft / 60000);
+                const seconds = Math.floor((timeLeft % 60000) / 1000);
+                
+                timerElement.textContent = `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(otpTimerInterval);
+                    timerElement.textContent = "Code expired";
+                    generatedOTP = ""; // Invalidate OTP
+                }
+            }, 1000);
+        }
+        
+        // Email verification button handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Email verification button
+            document.getElementById('verifyEmailBtn').addEventListener('click', function() {
+                const email = document.getElementById('email').value;
+                
+                // Validate email
+                if (!validateEmail(email)) {
+                    document.getElementById('emailError').style.display = 'block';
+                    return;
+                }
+                
+                document.getElementById('emailError').style.display = 'none';
+                
+                // Generate OTP
+                generatedOTP = generateOTP();
+                
+                // Change button text to show loading
+                const verifyButton = document.getElementById('verifyEmailBtn');
+                verifyButton.textContent = "Sending...";
+                verifyButton.disabled = true;
+                
+                // Send OTP
+                sendOTP(email, email.split('@')[0], generatedOTP)
+                    .then(() => {
+                        // Show OTP verification section
+                        document.getElementById('otpSection').style.display = 'block';
+                        
+                        // Start OTP timer
+                        startOTPTimer();
+                        
+                        // Change button text
+                        verifyButton.textContent = "Verify";
+                        verifyButton.disabled = false;
+                        
+                        // Add event listener for resend OTP button
+                        document.getElementById('resendOtp').addEventListener('click', function() {
+                            generatedOTP = generateOTP();
+                            this.disabled = true;
+                            this.textContent = "Sending...";
+                            
+                            sendOTP(email, "User", generatedOTP)
+                                .then(() => {
+                                    startOTPTimer();
+                                    this.textContent = "Resend Code";
+                                    setTimeout(() => {
+                                        this.disabled = false;
+                                    }, 30000); // Enable resend after 30 seconds
+                                })
+                                .catch(error => {
+                                    console.error("Error sending OTP:", error);
+                                    alert("Failed to send verification code. Please try again.");
+                                    this.disabled = false;
+                                    this.textContent = "Resend Code";
+                                });
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error sending OTP:", error);
+                        alert("Failed to send verification code. Please try again.");
+                        verifyButton.textContent = "Verify";
+                        verifyButton.disabled = false;
+                    });
+            });
+            
+            // OTP verification button
+            document.getElementById('submitOtpBtn').addEventListener('click', function() {
+                const enteredOTP = document.getElementById('otp').value;
+                const email = document.getElementById('email').value;
+                
+                if (enteredOTP === generatedOTP && generatedOTP !== "") {
+                    // OTP is valid
+                    document.getElementById('otpError').style.display = 'none';
+                    
+                    // Clear OTP timer
+                    clearInterval(otpTimerInterval);
+                    
+                    // Hide OTP section
+                    document.getElementById('otpSection').style.display = 'none';
+                    
+                    // Show verified icon
+                    document.getElementById('emailVerifiedIcon').style.display = 'block';
+                    
+                    // Disable email field
+                    document.getElementById('email').readOnly = true;
+                    
+                    // Disable verify button
+                    document.getElementById('verifyEmailBtn').disabled = true;
+                    document.getElementById('verifyEmailBtn').textContent = "Verified";
+                    
+                    // Set email as verified
+                    isEmailVerified = true;
+                } else {
+                    // Invalid OTP
+                    document.getElementById('otpError').style.display = 'block';
+                }
+            });
+        });
+        
         // Handle registration form submission
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -655,6 +849,13 @@
             
             // Validate email
             if (!validateEmail(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                return;
+            }
+            
+            // Check if email is verified
+            if (!isEmailVerified) {
+                document.getElementById('emailError').textContent = "Please verify your email first";
                 document.getElementById('emailError').style.display = 'block';
                 return;
             }
