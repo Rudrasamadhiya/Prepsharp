@@ -1353,15 +1353,147 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
+        
+        // Function to count students and calculate revenue
+        function countStudents() {
+            // Try to get users from Firestore
+            db.collection("users").get().then((querySnapshot) => {
+                const totalUsers = querySnapshot.size;
+                let totalRevenue = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    const plan = user.subscriptionPlan || user.plan || 'Free';
+                    if (plan.includes('999') || plan === '₹999' || plan === 'Premium') {
+                        totalRevenue += 999;
+                    } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard') {
+                        totalRevenue += 499;
+                    } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic') {
+                        totalRevenue += 199;
+                    }
+                });
+                
+                updateUserStats(totalUsers, totalRevenue);
+            }).catch(error => {
+                console.error("Error counting students from Firestore:", error);
+                // Fallback to localStorage
+                const usersJson = localStorage.getItem('users');
+                let totalUsers = 0;
+                let totalRevenue = 0;
+                
+                if (usersJson) {
+                    try {
+                        const users = JSON.parse(usersJson);
+                        totalUsers = Object.keys(users).length;
+                        
+                        // Calculate revenue based on subscription plans
+                        Object.values(users).forEach(user => {
+                            const plan = user.subscriptionPlan || user.plan || 'Free';
+                            if (plan.includes('999') || plan === '₹999' || plan === 'Premium') {
+                                totalRevenue += 999;
+                            } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard') {
+                                totalRevenue += 499;
+                            } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic') {
+                                totalRevenue += 199;
+                            }
+                        });
+                    } catch (e) {
+                        console.error("Error parsing users JSON:", e);
+                    }
+                }
+                
+                updateUserStats(totalUsers, totalRevenue);
+            });
+        }
+        
+        // Function to count exams and questions
+        function countExamsAndQuestions() {
+            // Try to get papers from Firestore
+            db.collection("papers").get().then((querySnapshot) => {
+                const totalExams = querySnapshot.size;
+                let totalQuestions = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const paper = doc.data();
+                    if (paper.questions && Array.isArray(paper.questions)) {
+                        totalQuestions += paper.questions.length;
+                    }
+                });
+                
+                updateExamStats(totalExams, totalQuestions);
+            }).catch(error => {
+                console.error("Error counting exams from Firestore:", error);
+                // Fallback to localStorage
+                const papersJson = localStorage.getItem('papers');
+                let totalExams = 0;
+                let totalQuestions = 0;
+                
+                if (papersJson) {
+                    try {
+                        const papers = JSON.parse(papersJson);
+                        totalExams = papers.length;
+                        
+                        papers.forEach(paper => {
+                            if (paper.questions && Array.isArray(paper.questions)) {
+                                totalQuestions += paper.questions.length;
+                            }
+                        });
+                    } catch (e) {
+                        console.error("Error parsing papers JSON:", e);
+                    }
+                }
+                
+                updateExamStats(totalExams, totalQuestions);
+            });
+        }
+        
+        // Update user statistics on dashboard
+        function updateUserStats(totalUsers, totalRevenue) {
+            // Update user count
+            const userStatsElement = document.querySelector('.stats-card.primary .stats-number');
+            if (userStatsElement) {
+                userStatsElement.textContent = totalUsers;
+            }
+            
+            // Update revenue
+            const revenueElement = document.querySelector('.stats-card.danger .stats-number');
+            if (revenueElement) {
+                revenueElement.textContent = `₹${totalRevenue}`;
+            }
+        }
+        
+        // Update exam statistics on dashboard
+        function updateExamStats(totalExams, totalQuestions) {
+            // Update exam count
+            const examStatsElement = document.querySelector('.stats-card.success .stats-number');
+            if (examStatsElement) {
+                examStatsElement.textContent = totalExams;
+            }
+            
+            // Update question count
+            const questionStatsElement = document.querySelector('.stats-card.warning .stats-number');
+            if (questionStatsElement) {
+                questionStatsElement.textContent = totalQuestions;
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
+            
+            // Count students, exams and questions when dashboard loads
+            countStudents();
+            countExamsAndQuestions();
             
             // Add animation class to stats cards
             document.querySelectorAll('.stats-card').forEach((card, index) => {

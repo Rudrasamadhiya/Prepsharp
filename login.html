@@ -347,13 +347,17 @@
                 <button type="submit" class="login-btn">Login</button>
                 
                 <div class="login-footer">
-                    <a href="#">Forgot Password?</a>
+                    <a href="forgot-password.html">Forgot Password?</a>
                     <a href="register.html">Create Account</a>
                 </div>
             </form>
         </div>
     </div>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // Sample user data (in a real app, this would come from a database)
         const users = [
@@ -427,14 +431,46 @@
                 return;
             }
             
-            // Get users from localStorage and combine with hardcoded users
-            const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-            const allUsers = [...users, ...storedUsers];
+            // Try to find user in Firestore first
+            db.collection("users").where("email", "==", email).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        // User found in Firestore
+                        const firestoreUser = querySnapshot.docs[0].data();
+                        
+                        if (firestoreUser.password === password) {
+                            handleSuccessfulLogin(firestoreUser, remember);
+                        } else {
+                            // Try localStorage as fallback
+                            checkLocalStorage();
+                        }
+                    } else {
+                        // User not found in Firestore, try localStorage
+                        checkLocalStorage();
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error checking Firestore:", error);
+                    // Fallback to localStorage
+                    checkLocalStorage();
+                });
+                
+            function checkLocalStorage() {
+                // Get users from localStorage and combine with hardcoded users
+                const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+                const allUsers = [...users, ...storedUsers];
+                
+                // Find user by email and password
+                const user = allUsers.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    handleSuccessfulLogin(user, remember);
+                } else {
+                    alert('Invalid email or password. Please try again.');
+                }
+            }
             
-            // Find user by email and password
-            const user = allUsers.find(u => u.email === email && u.password === password);
-            
-            if (user) {
+            function handleSuccessfulLogin(user, remember) {
                 // Check if subscription has expired
                 let isExpired = false;
                 if (user.subscription !== 'free' && user.subscriptionEndDate) {
@@ -449,8 +485,8 @@
                 // Store user data in localStorage
                 const userData = {
                     email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
+                    firstName: user.firstName || user.name?.split(' ')[0] || '',
+                    lastName: user.lastName || user.name?.split(' ')[1] || '',
                     subscription: activeSubscription
                 };
                 
@@ -470,8 +506,6 @@
                 
                 // Redirect to appropriate dashboard
                 redirectToDashboard(activeSubscription);
-            } else {
-                alert('Invalid email or password. Please try again.');
             }
         });
         
