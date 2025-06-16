@@ -471,31 +471,74 @@
                 
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <div style="display: flex; gap: 10px;">
-                        <div style="flex-grow: 1; position: relative;">
-                            <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
-                            <span id="emailVerifiedIcon" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #10b981; font-size: 18px;">
-                                <i class="fas fa-check-circle"></i>
-                            </span>
-                        </div>
-                        <button type="button" id="verifyEmailBtn" class="register-btn" style="width: auto; padding: 0 20px; white-space: nowrap;">Verify</button>
+                    <div style="position: relative;">
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                        <span id="emailVerifiedIcon" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #10b981; font-size: 18px; animation: scaleIn 0.3s ease-out;">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
                     </div>
                     <div id="emailError" class="error-message">Please enter a valid email address</div>
+                    <button type="button" id="verifyEmailBtn" class="register-btn" style="display: none; margin-top: 10px; background: linear-gradient(to right, #f8fafc, #f1f5f9); color: #4f46e5; border: 1px solid rgba(79, 70, 229, 0.3); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); align-items: center; justify-content: center; gap: 5px; font-weight: 500; letter-spacing: 0.3px; transition: all 0.2s ease;">
+                        <i class="fas fa-shield-alt"></i> Verify Email
+                    </button>
                 </div>
                 
+                <style>
+                    @keyframes scaleIn {
+                        from { transform: translateY(-50%) scale(0); opacity: 0; }
+                        to { transform: translateY(-50%) scale(1); opacity: 1; }
+                    }
+                </style>
+                
                 <!-- OTP Verification Section (initially hidden) -->
-                <div id="otpSection" class="form-group" style="display: none;">
+                <div id="otpSection" class="form-group" style="display: none; animation: fadeIn 0.5s ease-out;">
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px solid rgba(226, 232, 240, 0.8); margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                        <div style="display: flex; align-items: flex-start;">
+                            <div style="background: rgba(79, 70, 229, 0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">
+                                <i class="fas fa-envelope" style="color: #4f46e5; font-size: 14px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #1e293b; font-size: 15px; margin-bottom: 4px;">Verification Code Sent</div>
+                                <div style="font-size: 13px; color: #64748b; line-height: 1.5;">Please check your email and enter the 6-digit verification code below to complete the verification process.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <label for="otp" class="form-label">Verification Code</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="otp" class="form-input" placeholder="Enter 6-digit code sent to your email" maxlength="6">
-                        <button type="button" id="submitOtpBtn" class="register-btn" style="width: auto; padding: 0 20px;">Verify</button>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; justify-content: center;">
+                            <div style="position: relative; width: 240px;">
+                                <input type="text" id="otp" class="form-input" placeholder="• • • • • •" maxlength="6" style="letter-spacing: 6px; font-size: 20px; text-align: center; font-weight: 500; padding: 14px 16px; border-color: #e2e8f0; background-color: #f8fafc;">
+                                <div style="position: absolute; bottom: -22px; left: 0; width: 100%; display: flex; justify-content: center;">
+                                    <span id="otpTimer" style="color: #64748b; font-size: 12px; display: flex; align-items: center;">
+                                        <i class="fas fa-clock" style="margin-right: 4px; font-size: 10px;"></i> Code expires in: 5:00
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="submitOtpBtn" class="register-btn" style="background: #4f46e5; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; font-weight: 500; letter-spacing: 0.3px; box-shadow: 0 1px 3px rgba(79, 70, 229, 0.4);">
+                            <i class="fas fa-check-circle" style="margin-right: 5px;"></i> Verify Code
+                        </button>
+                        <div style="display: flex; justify-content: center; margin-top: 5px;">
+                            <button type="button" id="resendOtp" style="background: none; border: none; color: #4f46e5; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center;">
+                                <i class="fas fa-redo-alt" style="margin-right: 5px; font-size: 11px;"></i> Resend Code
+                            </button>
+                        </div>
                     </div>
                     <div id="otpError" class="error-message">Invalid verification code</div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <span id="otpTimer" style="color: #4f46e5; font-size: 14px;">Code expires in: 5:00</span>
-                        <button type="button" id="resendOtp" style="background: none; border: none; color: #4f46e5; cursor: pointer; font-size: 14px; font-weight: 500;">Resend Code</button>
-                    </div>
+
                 </div>
+                
+                <style>
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    
+                    #otp::placeholder {
+                        letter-spacing: normal;
+                    }
+                </style>
                 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
@@ -586,7 +629,85 @@
         (function() {
             emailjs.init("GzrtvJADYV5bG2CkI");
         })();
+        
+        // Toast notification system
+        function showToast(message, type = "info") {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            
+            // Set toast style based on type
+            let bgColor, borderColor, iconColor, icon;
+            switch(type) {
+                case 'success':
+                    bgColor = '#f0fdf4';
+                    borderColor = '#bbf7d0';
+                    iconColor = '#10b981';
+                    icon = 'fa-check-circle';
+                    break;
+                case 'error':
+                    bgColor = '#fef2f2';
+                    borderColor = '#fecaca';
+                    iconColor = '#ef4444';
+                    icon = 'fa-exclamation-circle';
+                    break;
+                default:
+                    bgColor = '#f0f9ff';
+                    borderColor = '#bae6fd';
+                    iconColor = '#0ea5e9';
+                    icon = 'fa-info-circle';
+            }
+            
+            toast.style.cssText = `
+                background: ${bgColor};
+                color: #1e293b;
+                padding: 12px 16px;
+                border-radius: 6px;
+                border-left: 4px solid ${borderColor};
+                margin-bottom: 10px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                min-width: 300px;
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+                animation: slideIn 0.3s forwards, fadeOut 0.5s forwards 3.5s;
+                font-size: 14px;
+            `;
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}" style="margin-right: 12px; font-size: 16px; color: ${iconColor};"></i>
+                <span style="flex-grow: 1;">${message}</span>
+            `;
+            
+            // Add toast to container
+            toastContainer.appendChild(toast);
+            
+            // Remove toast after animation
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
     </script>
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(120%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(120%); }
+        }
+    </style>
     <script>
         
         // Create animated particles
@@ -694,14 +815,24 @@
         // Function to send OTP via EmailJS
         function sendOTP(email, name, otp) {
             console.log("Sending OTP to:", email);
+            
+            // Log OTP for debugging
+            console.log("OTP:", otp);
+            
+            // Based on your template structure
+            const templateParams = {
+                to_email: email,
+                to_name: name,
+                email: email,
+                name: name,
+                passcode: otp,
+                time: new Date(Date.now() + 15 * 60000).toLocaleTimeString()
+            };
+            
             return emailjs.send(
                 "service_82g86pr",
                 "template_eopykik",
-                {
-                    to_email: email,
-                    to_name: name,
-                    otp: otp
-                }
+                templateParams
             ).then(function(response) {
                 console.log("Email sent successfully:", response);
                 return response;
@@ -734,6 +865,15 @@
         
         // Email verification button handler
         document.addEventListener('DOMContentLoaded', function() {
+            // Show verify button when email is typed
+            document.getElementById('email').addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    document.getElementById('verifyEmailBtn').style.display = 'flex';
+                } else {
+                    document.getElementById('verifyEmailBtn').style.display = 'none';
+                }
+            });
+            
             // Email verification button
             document.getElementById('verifyEmailBtn').addEventListener('click', function() {
                 const email = document.getElementById('email').value;
@@ -754,6 +894,10 @@
                 verifyButton.textContent = "Sending...";
                 verifyButton.disabled = true;
                 
+                // Change button text to show loading
+                this.textContent = "Sending...";
+                this.disabled = true;
+                
                 // Send OTP
                 sendOTP(email, email.split('@')[0], generatedOTP)
                     .then(() => {
@@ -763,9 +907,11 @@
                         // Start OTP timer
                         startOTPTimer();
                         
-                        // Change button text
-                        verifyButton.textContent = "Verify";
-                        verifyButton.disabled = false;
+                        // Hide verify button when OTP section is shown
+                        verifyButton.style.display = 'none';
+                        
+                        // Show toast notification instead of alert
+                        showToast("Verification code sent successfully!", "success");
                         
                         // Add event listener for resend OTP button
                         document.getElementById('resendOtp').addEventListener('click', function() {
@@ -773,17 +919,18 @@
                             this.disabled = true;
                             this.textContent = "Sending...";
                             
-                            sendOTP(email, "User", generatedOTP)
+                            sendOTP(email, email.split('@')[0], generatedOTP)
                                 .then(() => {
                                     startOTPTimer();
                                     this.textContent = "Resend Code";
+                                    showToast("New verification code sent!", "success");
                                     setTimeout(() => {
                                         this.disabled = false;
                                     }, 30000); // Enable resend after 30 seconds
                                 })
                                 .catch(error => {
                                     console.error("Error sending OTP:", error);
-                                    alert("Failed to send verification code. Please try again.");
+                                    showToast("Failed to send verification code. Please try again.", "error");
                                     this.disabled = false;
                                     this.textContent = "Resend Code";
                                 });
@@ -791,7 +938,7 @@
                     })
                     .catch(error => {
                         console.error("Error sending OTP:", error);
-                        alert("Failed to send verification code. Please try again.");
+                        showToast("Failed to send verification code. Please try again.", "error");
                         verifyButton.textContent = "Verify";
                         verifyButton.disabled = false;
                     });
@@ -809,18 +956,32 @@
                     // Clear OTP timer
                     clearInterval(otpTimerInterval);
                     
-                    // Hide OTP section
-                    document.getElementById('otpSection').style.display = 'none';
+                    // Hide OTP section with fade out effect
+                    const otpSection = document.getElementById('otpSection');
+                    otpSection.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => {
+                        otpSection.style.display = 'none';
+                    }, 500);
                     
                     // Show verified icon
                     document.getElementById('emailVerifiedIcon').style.display = 'block';
                     
-                    // Disable email field
-                    document.getElementById('email').readOnly = true;
+                    // Disable email field with success styling
+                    const emailField = document.getElementById('email');
+                    emailField.readOnly = true;
+                    emailField.style.borderColor = '#10b981';
+                    emailField.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
                     
-                    // Disable verify button
-                    document.getElementById('verifyEmailBtn').disabled = true;
-                    document.getElementById('verifyEmailBtn').textContent = "Verified";
+                    // Update verify button with success styling
+                    const verifyButton = document.getElementById('verifyEmailBtn');
+                    verifyButton.disabled = true;
+                    verifyButton.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                    verifyButton.style.background = '#f0fdf4';
+                    verifyButton.style.color = '#10b981';
+                    verifyButton.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    
+                    // Show success toast
+                    showToast("Email verified successfully!", "success");
                     
                     // Set email as verified
                     isEmailVerified = true;
@@ -907,7 +1068,7 @@
                 db.collection("users").where("email", "==", email).get()
                     .then((querySnapshot) => {
                         if (!querySnapshot.empty) {
-                            alert("This email is already registered. Please login instead.");
+                            showToast("This email is already registered. Please login instead.", "error");
                             window.location.href = "login.html";
                             return;
                         }
