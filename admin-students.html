@@ -634,6 +634,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -643,27 +647,23 @@
         // Store all students data
         let studentsData = [];
         
-        // Load students data from server or localStorage
+        // Load students data from Firestore or localStorage
         function loadStudents() {
             const tbody = document.getElementById('students-data');
             tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
             
             try {
-                // Try to fetch from server first
-                fetch('/api/users')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success && data.users && Object.keys(data.users).length > 0) {
-                            displayUsers(data.users);
-                        } else {
-                            // Fallback to localStorage
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.log("Server fetch failed, using localStorage:", error);
-                        loadFromLocalStorage();
+                // Try to fetch from Firestore
+                db.collection("users").get().then((querySnapshot) => {
+                    const users = {};
+                    querySnapshot.forEach((doc) => {
+                        users[doc.id] = doc.data();
                     });
+                    displayUsers(users);
+                }).catch(error => {
+                    console.error("Error loading students from Firestore:", error);
+                    loadFromLocalStorage(); // Fallback to localStorage
+                });
             } catch (error) {
                 console.error("Error loading students:", error);
                 tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;

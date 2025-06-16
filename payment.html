@@ -320,6 +320,10 @@
     
     <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     
     <script>
         // Create animated particles
@@ -431,40 +435,99 @@
                     // Payment successful
                     const paymentId = response.razorpay_payment_id;
                     
-                    // Get existing users array
-                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    // Update user in Firestore
+                    const subscriptionData = {
+                        subscription: subscription,
+                        paymentId: paymentId,
+                        subscriptionStartDate: new Date().toISOString(),
+                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                        planName: planName,
+                        planPrice: planPrice
+                    };
                     
-                    // Find the user by email
-                    const userIndex = users.findIndex(user => user.email === email);
+                    // Try to find and update user in Firestore
+                    db.collection("users").where("email", "==", email).get()
+                        .then((querySnapshot) => {
+                            if (!querySnapshot.empty) {
+                                // Update existing user
+                                const userDoc = querySnapshot.docs[0];
+                                db.collection("users").doc(userDoc.id).update(subscriptionData)
+                                    .then(() => {
+                                        console.log("User subscription updated in Firestore");
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error updating user in Firestore:", error);
+                                        // Fallback to localStorage
+                                        updateLocalStorage();
+                                    });
+                            } else {
+                                // User not found in Firestore, create new
+                                const newUser = {
+                                    name: firstName + ' ' + lastName,
+                                    email: email,
+                                    subscription: subscription,
+                                    paymentId: paymentId,
+                                    subscriptionStartDate: new Date().toISOString(),
+                                    subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                                    planName: planName,
+                                    planPrice: planPrice,
+                                    createdAt: new Date().toISOString()
+                                };
+                                
+                                db.collection("users").add(newUser)
+                                    .then(() => {
+                                        console.log("New user added to Firestore after payment");
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error adding new user to Firestore:", error);
+                                        // Fallback to localStorage
+                                        updateLocalStorage();
+                                    });
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error checking for user in Firestore:", error);
+                            // Fallback to localStorage
+                            updateLocalStorage();
+                        });
                     
-                    if (userIndex !== -1) {
-                        // Update user with subscription details
-                        users[userIndex].subscription = subscription;
-                        users[userIndex].paymentId = paymentId;
-                        users[userIndex].subscriptionStartDate = new Date().toISOString();
-                        users[userIndex].subscriptionEndDate = new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString();
-                        users[userIndex].planName = planName;
-                        users[userIndex].planPrice = planPrice;
+                    // Fallback function to update localStorage
+                    function updateLocalStorage() {
+                        // Get existing users array
+                        let users = JSON.parse(localStorage.getItem('users')) || [];
                         
-                        // Save updated users array
-                        localStorage.setItem('users', JSON.stringify(users));
-                    } else {
-                        // Create new user
-                        const newUser = {
-                            name: firstName + ' ' + lastName,
-                            email: email,
-                            subscription: subscription,
-                            paymentId: paymentId,
-                            subscriptionStartDate: new Date().toISOString(),
-                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                            planName: planName,
-                            planPrice: planPrice,
-                            createdAt: new Date().toISOString()
-                        };
+                        // Find the user by email
+                        const userIndex = users.findIndex(user => user.email === email);
                         
-                        // Add to users array
-                        users.push(newUser);
-                        localStorage.setItem('users', JSON.stringify(users));
+                        if (userIndex !== -1) {
+                            // Update user with subscription details
+                            users[userIndex].subscription = subscription;
+                            users[userIndex].paymentId = paymentId;
+                            users[userIndex].subscriptionStartDate = new Date().toISOString();
+                            users[userIndex].subscriptionEndDate = new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString();
+                            users[userIndex].planName = planName;
+                            users[userIndex].planPrice = planPrice;
+                            
+                            // Save updated users array
+                            localStorage.setItem('users', JSON.stringify(users));
+                        } else {
+                            // Create new user
+                            const newUser = {
+                                name: firstName + ' ' + lastName,
+                                email: email,
+                                subscription: subscription,
+                                paymentId: paymentId,
+                                subscriptionStartDate: new Date().toISOString(),
+                                subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                                planName: planName,
+                                planPrice: planPrice,
+                                createdAt: new Date().toISOString()
+                            };
+                            
+                            // Add to users array
+                            users.push(newUser);
+                            localStorage.setItem('users', JSON.stringify(users));
+                        }
                     }
                     
                     // Set as logged in user

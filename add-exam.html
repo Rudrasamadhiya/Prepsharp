@@ -215,6 +215,10 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // Load custom exam types from dashboard config
         document.addEventListener('DOMContentLoaded', function() {
@@ -405,10 +409,11 @@
                 paperName = `${examType.toUpperCase()} ${examYear}`;
             }
             
-            // Create paper object
+            // Create paper object with a clean ID for Firestore
+            const timestamp = Date.now().toString();
             const paper = {
                 ...examData,
-                id: 'local_' + Date.now(),
+                id: timestamp,
                 name: paperName,
                 createdAt: new Date().toISOString(),
                 questions: []
@@ -417,21 +422,39 @@
             // Store paper in localStorage
             localStorage.setItem('currentExam', JSON.stringify(paper));
             
-            // Store papers array if it doesn't exist
+            // Store in Firestore
+            try {
+                // Save to Firestore with the paper ID as document ID
+                db.collection("papers").doc(paper.id).set(paper)
+                    .then(() => {
+                        console.log("Paper successfully saved to Firestore!");
+                        
+                        // Redirect based on exam type
+                        if (examType === 'jee-advanced') {
+                            window.location.href = 'advanced-exam-setup.html';
+                        } else if (examType === 'jee-main' || examType === 'neet') {
+                            localStorage.setItem('currentQuestionIndex', '0');
+                            localStorage.setItem('currentSubject', examData.subjects[0]);
+                            window.location.href = 'add-question.html';
+                        } else {
+                            window.location.href = 'subject-setup.html';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error saving paper to Firestore: ", error);
+                        alert("Error saving exam. Please try again.");
+                    });
+            } catch (error) {
+                console.error("Error with Firestore: ", error);
+                alert("Error connecting to database. Please try again.");
+            }
+            
+            // Store papers array if it doesn't exist (localStorage fallback)
             let papers = JSON.parse(localStorage.getItem('papers') || '[]');
             papers.push(paper);
             localStorage.setItem('papers', JSON.stringify(papers));
             
-            // Redirect based on exam type
-            if (examType === 'jee-advanced') {
-                window.location.href = 'advanced-exam-setup.html';
-            } else if (examType === 'jee-main' || examType === 'neet') {
-                localStorage.setItem('currentQuestionIndex', '0');
-                localStorage.setItem('currentSubject', examData.subjects[0]);
-                window.location.href = 'add-question.html';
-            } else {
-                window.location.href = 'subject-setup.html';
-            }
+            // Navigation is now handled in the Firestore promise
             
             // This code is now handled in the fetch promise
         });

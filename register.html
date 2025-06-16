@@ -543,8 +543,11 @@
         </div>
     </div>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
-
         
         // Create animated particles
         function createParticles() {
@@ -697,46 +700,46 @@
         
         // Function to handle user registration
         function registerUser(newUser, firstName, lastName, email, subscription) {
-            // Try to register user with API first
+            // Try to register user with Firestore first
             try {
-                fetch('/api/users/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newUser)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // API registration successful
-                        console.log('User registered successfully with API');
+                // Check if user already exists
+                db.collection("users").where("email", "==", email).get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            alert("This email is already registered. Please login instead.");
+                            window.location.href = "login.html";
+                            return;
+                        }
                         
-                        // Set as logged in user
-                        const loggedInUser = {
-                            name: firstName + ' ' + lastName,
-                            email: email,
-                            subscription: subscription
-                        };
-                        
-                        localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
-                        
-                        // Redirect to appropriate dashboard
-                        redirectToDashboard(subscription);
-                    } else {
-                        // API registration failed, fallback to localStorage
-                        console.error('API registration failed:', data.message);
+                        // Add user to Firestore
+                        db.collection("users").add(newUser)
+                            .then((docRef) => {
+                                console.log("User registered successfully with Firestore, ID:", docRef.id);
+                                
+                                // Set as logged in user
+                                const loggedInUser = {
+                                    name: firstName + ' ' + lastName,
+                                    email: email,
+                                    subscription: subscription
+                                };
+                                
+                                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                                
+                                // Redirect to appropriate dashboard
+                                redirectToDashboard(subscription);
+                            })
+                            .catch((error) => {
+                                console.error("Error adding user to Firestore:", error);
+                                saveToLocalStorage();
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Error checking for existing user:", error);
                         saveToLocalStorage();
-                    }
-                })
-                .catch(error => {
-                    // API call failed, fallback to localStorage
-                    console.error('API call failed:', error);
-                    saveToLocalStorage();
-                });
+                    });
             } catch (error) {
-                // If fetch fails completely, fallback to localStorage
-                console.error('Error during API registration:', error);
+                // If Firestore fails completely, fallback to localStorage
+                console.error('Error during Firestore registration:', error);
                 saveToLocalStorage();
             }
             
