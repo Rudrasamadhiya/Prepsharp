@@ -391,29 +391,36 @@
                 }
             }
             
-            // Generate paper name
+            // Generate paper name and ID
             let paperName = '';
+            let paperId = '';
+            
             if (examType === 'jee-main') {
                 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const monthName = monthNames[parseInt(examData.month) - 1];
                 paperName = `JEE Main - ${examData.date}/${monthName} Shift ${examData.shift} ${examYear}`;
+                paperId = `jee mains ${examData.date}-${examData.month} shift ${examData.shift}`;
             } else if (examType === 'jee-advanced') {
                 paperName = `JEE Advanced - Paper ${examData.paperNumber} ${examYear}`;
+                paperId = `jee advanced ${examYear} paper-${examData.paperNumber}`;
             } else if (examType === 'neet') {
                 paperName = `NEET ${examYear}`;
+                paperId = `neet-${examYear}`;
             } else if (examType === 'bitsat') {
                 paperName = `BITSAT ${examYear}`;
+                paperId = `bitsat-${examYear}`;
             } else if (examType === 'aiims') {
                 paperName = `AIIMS ${examYear}`;
+                paperId = `aiims-${examYear}`;
             } else {
                 paperName = `${examType.toUpperCase()} ${examYear}`;
+                paperId = `${examType.toLowerCase()}-${examYear}`;
             }
             
-            // Create paper object with a clean ID for Firestore
-            const timestamp = Date.now().toString();
+            // Create paper object with the custom ID for Firestore
             const paper = {
                 ...examData,
-                id: timestamp,
+                id: paperId,
                 name: paperName,
                 createdAt: new Date().toISOString(),
                 questions: []
@@ -424,8 +431,12 @@
             
             // Store in Firestore
             try {
-                // Save to Firestore with the paper ID as document ID
-                db.collection("papers").doc(paper.id).set(paper)
+                // Replace any characters that might be invalid in Firestore document IDs
+                const safeId = paperId.replace(/[\/\\.#$[\]]/g, "-");
+                paper.id = safeId;
+                
+                // Save to Firestore with the custom paper ID as document ID
+                db.collection("papers").doc(safeId).set(paper)
                     .then(() => {
                         console.log("Paper successfully saved to Firestore!");
                         
