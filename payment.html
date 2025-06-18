@@ -267,7 +267,7 @@
     <div class="payment-container">
         <div class="payment-header">
             <div class="logo">
-                <img src="logo for index (1).png" alt="PrepSharp Logo" style="height: 50px; vertical-align: middle; margin-right: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));">
+                <img src="./logo for index (1).png" alt="PrepSharp Logo" style="height: 50px; vertical-align: middle; margin-right: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));" onerror="this.onerror=null; this.src='logo for index.png';">
                 <span>PrepSharp</span>
             </div>
             <div class="tagline">Complete Your Subscription</div>
@@ -324,6 +324,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <!-- Initialize Firebase -->
+    <script>
+        // Ensure Firebase is properly initialized
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if Firebase is initialized
+            if (typeof firebase === 'undefined') {
+                console.error('Firebase SDK not loaded properly');
+                // Fallback to localStorage only
+            } else {
+                console.log('Firebase SDK loaded successfully');
+            }
+        });
+    </script>
     
     <script>
         // Create animated particles
@@ -430,66 +443,84 @@
                 currency: "INR",
                 name: "PrepSharp",
                 description: planName + " Subscription",
-                image: "logo for index (1).png",
+                image: "./logo for index (1).png",
                 handler: function(response) {
                     // Payment successful
                     const paymentId = response.razorpay_payment_id;
                     
-                    // Update user in Firestore
-                    const subscriptionData = {
-                        subscription: subscription,
-                        paymentId: paymentId,
-                        subscriptionStartDate: new Date().toISOString(),
-                        subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                        planName: planName,
-                        planPrice: planPrice
-                    };
-                    
-                    // Try to find and update user in Firestore
-                    db.collection("users").where("email", "==", email).get()
-                        .then((querySnapshot) => {
-                            if (!querySnapshot.empty) {
-                                // Update existing user
-                                const userDoc = querySnapshot.docs[0];
-                                db.collection("users").doc(userDoc.id).update(subscriptionData)
-                                    .then(() => {
-                                        console.log("User subscription updated in Firestore");
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error updating user in Firestore:", error);
-                                        // Fallback to localStorage
-                                        updateLocalStorage();
-                                    });
-                            } else {
-                                // User not found in Firestore, create new
-                                const newUser = {
-                                    name: firstName + ' ' + lastName,
-                                    email: email,
-                                    subscription: subscription,
-                                    paymentId: paymentId,
-                                    subscriptionStartDate: new Date().toISOString(),
-                                    subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                                    planName: planName,
-                                    planPrice: planPrice,
-                                    createdAt: new Date().toISOString()
-                                };
-                                
-                                db.collection("users").add(newUser)
-                                    .then(() => {
-                                        console.log("New user added to Firestore after payment");
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error adding new user to Firestore:", error);
-                                        // Fallback to localStorage
-                                        updateLocalStorage();
-                                    });
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error checking for user in Firestore:", error);
-                            // Fallback to localStorage
+                    try {
+                        // Update user in Firestore if Firebase is available
+                        if (typeof firebase !== 'undefined' && firebase.firestore) {
+                            const subscriptionData = {
+                                subscription: subscription,
+                                paymentId: paymentId,
+                                subscriptionStartDate: new Date().toISOString(),
+                                subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                                planName: planName,
+                                planPrice: planPrice
+                            };
+                            
+                            // Try to find and update user in Firestore
+                            db.collection("users").where("email", "==", email).get()
+                                .then((querySnapshot) => {
+                                    if (!querySnapshot.empty) {
+                                        // Update existing user
+                                        const userDoc = querySnapshot.docs[0];
+                                        db.collection("users").doc(userDoc.id).update(subscriptionData)
+                                            .then(() => {
+                                                console.log("User subscription updated in Firestore");
+                                                handleSuccessfulPayment();
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error updating user in Firestore:", error);
+                                                // Fallback to localStorage
+                                                updateLocalStorage();
+                                                handleSuccessfulPayment();
+                                            });
+                                    } else {
+                                        // User not found in Firestore, create new
+                                        const newUser = {
+                                            name: firstName + ' ' + lastName,
+                                            email: email,
+                                            subscription: subscription,
+                                            paymentId: paymentId,
+                                            subscriptionStartDate: new Date().toISOString(),
+                                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
+                                            planName: planName,
+                                            planPrice: planPrice,
+                                            createdAt: new Date().toISOString()
+                                        };
+                                        
+                                        db.collection("users").add(newUser)
+                                            .then(() => {
+                                                console.log("New user added to Firestore after payment");
+                                                handleSuccessfulPayment();
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error adding new user to Firestore:", error);
+                                                // Fallback to localStorage
+                                                updateLocalStorage();
+                                                handleSuccessfulPayment();
+                                            });
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error("Error checking for user in Firestore:", error);
+                                    // Fallback to localStorage
+                                    updateLocalStorage();
+                                    handleSuccessfulPayment();
+                                });
+                        } else {
+                            console.warn("Firebase not available, using localStorage only");
                             updateLocalStorage();
-                        });
+                            handleSuccessfulPayment();
+                        }
+                    } catch (error) {
+                        console.error("Error in payment processing:", error);
+                        // Ensure we still save to localStorage and redirect
+                        updateLocalStorage();
+                        handleSuccessfulPayment();
+                    }
                     
                     // Fallback function to update localStorage
                     function updateLocalStorage() {
@@ -530,25 +561,26 @@
                         }
                     }
                     
-                    // Set as logged in user
-                    localStorage.setItem('loggedInUser', JSON.stringify({
-                        name: firstName + ' ' + lastName,
-                        email: email,
-                        subscription: subscription
-                    }));
-                    
-                    // Show success message
-                    alert('Payment successful! Your subscription is now active.');
-                    
-                    // Direct redirection based on subscription
-                    if (subscription === 'premium') {
-                        window.location.href = 'dashboards/premium/dashboard.html';
-                    } else if (subscription === 'standard') {
-                        window.location.href = 'dashboards/standard/dashboard.html';
-                    } else {
-                        window.location.href = 'dashboards/basic/dashboard.html';
+                    function handleSuccessfulPayment() {
+                        // Set as logged in user
+                        localStorage.setItem('loggedInUser', JSON.stringify({
+                            name: firstName + ' ' + lastName,
+                            email: email,
+                            subscription: subscription
+                        }));
+                        
+                        // Show success message
+                        alert('Payment successful! Your subscription is now active.');
+                        
+                        // Direct redirection based on subscription
+                        if (subscription === 'premium') {
+                            window.location.href = 'dashboards/premium/dashboard.html';
+                        } else if (subscription === 'standard') {
+                            window.location.href = 'dashboards/standard/dashboard.html';
+                        } else {
+                            window.location.href = 'dashboards/basic/dashboard.html';
+                        }
                     }
-                }
                 },
                 prefill: {
                     name: firstName + ' ' + lastName,
@@ -559,9 +591,14 @@
                 }
             };
             
-            // Create and open Razorpay payment form
-            const rzp = new Razorpay(options);
-            rzp.open();
+            try {
+                // Create and open Razorpay payment form
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.error("Error opening Razorpay:", error);
+                alert("There was an error processing your payment. Please try again.");
+            }
         }
         
         // This function is no longer used as we're redirecting directly in the handler

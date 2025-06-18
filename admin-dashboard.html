@@ -1104,66 +1104,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="recent-users-tbody">
                                     <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar">RS</div>
-                                                <span class="ms-2">Rahul Sharma</span>
-                                            </div>
-                                        </td>
-                                        <td>rahul.sharma@example.com</td>
-                                        <td><span class="badge-status premium">₹999</span></td>
-                                        <td>Today</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar">PP</div>
-                                                <span class="ms-2">Priya Patel</span>
-                                            </div>
-                                        </td>
-                                        <td>priya.patel@example.com</td>
-                                        <td><span class="badge-status free">Free</span></td>
-                                        <td>Yesterday</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar">AK</div>
-                                                <span class="ms-2">Amit Kumar</span>
-                                            </div>
-                                        </td>
-                                        <td>amit.kumar@example.com</td>
-                                        <td><span class="badge-status standard">₹499</span></td>
-                                        <td>2 days ago</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="user-avatar">SG</div>
-                                                <span class="ms-2">Sneha Gupta</span>
-                                            </div>
-                                        </td>
-                                        <td>sneha.gupta@example.com</td>
-                                        <td><span class="badge-status basic">₹199</span></td>
-                                        <td>3 days ago</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
+                                        <td colspan="5" class="text-center">Loading users...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1185,40 +1128,13 @@
                                         <th>Exam Name</th>
                                         <th>Type</th>
                                         <th>Questions</th>
-                                        <th>Attempts</th>
+                                        <th>Year</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="recent-exams-tbody">
                                     <tr>
-                                        <td>JEE Advanced Papers</td>
-                                        <td>JEE Advanced</td>
-                                        <td>54</td>
-                                        <td>245</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>JEE Main Papers</td>
-                                        <td>JEE Main</td>
-                                        <td>75</td>
-                                        <td>312</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>BITSAT Papers</td>
-                                        <td>BITSAT</td>
-                                        <td>130</td>
-                                        <td>178</td>
-                                        <td>
-                                            <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="table-action delete"><i class="fas fa-trash"></i></a>
-                                        </td>
+                                        <td colspan="5" class="text-center">Loading exams...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1237,25 +1153,25 @@
                     <div class="card-body p-3">
                         <div class="row g-3">
                             <div class="col-6">
-                                <a href="#" class="action-card bg-gradient-pink">
-                                    <i class="fas fa-user-plus"></i>
-                                    <span>Add User</span>
+                                <a href="#" id="edit-dashboard-btn" class="action-card bg-gradient-pink">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Edit Dashboard</span>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="manage-exams.html" class="action-card bg-gradient-teal">
+                                <a href="#" id="add-exam-btn" class="action-card bg-gradient-teal">
                                     <i class="fas fa-file-medical"></i>
                                     <span>Add Exam</span>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="#" class="action-card bg-gradient-amber">
+                                <a href="#" id="add-question-btn" class="action-card bg-gradient-amber">
                                     <i class="fas fa-question"></i>
                                     <span>Add Question</span>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="#" class="action-card bg-gradient-indigo">
+                                <a href="#" id="view-reports-btn" class="action-card bg-gradient-indigo">
                                     <i class="fas fa-chart-line"></i>
                                     <span>Reports</span>
                                 </a>
@@ -1267,41 +1183,14 @@
                 <!-- Recent Activity -->
                 <div class="card">
                     <div class="card-header">Recent Activity</div>
-                    <div class="card-body p-0">
+                    <div class="card-body p-0" id="recent-activity-container">
                         <div class="activity-item p-3">
                             <div class="activity-icon primary">
-                                <i class="fas fa-user"></i>
+                                <i class="fas fa-spinner fa-spin"></i>
                             </div>
                             <div class="activity-content">
-                                <div class="activity-title">New user registered: Rahul Sharma</div>
-                                <div class="activity-time">Today, 10:30 AM</div>
-                            </div>
-                        </div>
-                        <div class="activity-item p-3">
-                            <div class="activity-icon success">
-                                <i class="fas fa-rupee-sign"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">New subscription: Amit Kumar (₹999)</div>
-                                <div class="activity-time">Yesterday, 3:45 PM</div>
-                            </div>
-                        </div>
-                        <div class="activity-item p-3">
-                            <div class="activity-icon warning">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">New exam added: JEE Advanced Papers</div>
-                                <div class="activity-time">Yesterday, 1:20 PM</div>
-                            </div>
-                        </div>
-                        <div class="activity-item p-3">
-                            <div class="activity-icon danger">
-                                <i class="fas fa-comment-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">15 new student doubts pending</div>
-                                <div class="activity-time">3 days ago</div>
+                                <div class="activity-title">Loading recent activity...</div>
+                                <div class="activity-time"></div>
                             </div>
                         </div>
                     </div>
@@ -1314,36 +1203,36 @@
                         <div class="mb-4">
                             <div class="progress-label">
                                 <div class="progress-title">Server Load</div>
-                                <div class="progress-percentage">32%</div>
+                                <div class="progress-percentage" id="server-load">0%</div>
                             </div>
                             <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 32%"></div>
+                                <div class="progress-bar bg-success" id="server-load-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="mb-4">
                             <div class="progress-label">
                                 <div class="progress-title">Database Usage</div>
-                                <div class="progress-percentage">68%</div>
+                                <div class="progress-percentage" id="db-usage">0%</div>
                             </div>
                             <div class="progress">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 68%"></div>
+                                <div class="progress-bar bg-warning" id="db-usage-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="mb-4">
                             <div class="progress-label">
                                 <div class="progress-title">Storage</div>
-                                <div class="progress-percentage">85%</div>
+                                <div class="progress-percentage" id="storage-usage">0%</div>
                             </div>
                             <div class="progress">
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: 85%"></div>
+                                <div class="progress-bar bg-danger" id="storage-usage-bar" role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="fw-bold">Last Backup</div>
-                                <div class="text-muted small">Today, 03:00 AM</div>
+                                <div class="text-muted small" id="last-backup-time">Loading...</div>
                             </div>
-                            <button class="btn btn-primary">Backup Now</button>
+                            <button class="btn btn-primary" id="backup-now-btn">Backup Now</button>
                         </div>
                     </div>
                 </div>
@@ -1486,6 +1375,613 @@
             }
         }
         
+        // Function to load recent users
+        function loadRecentUsers() {
+            const tbody = document.querySelector('.user-table tbody');
+            
+            // Clear existing rows
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center">Loading users...</td></tr>';
+            
+            // Get users from Firestore, ordered by creation date
+            db.collection("users")
+                .orderBy("createdAt", "desc")
+                .limit(4)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No users found</td></tr>';
+                        return;
+                    }
+                    
+                    // Clear loading message
+                    tbody.innerHTML = '';
+                    
+                    // Add users to table
+                    querySnapshot.forEach((doc) => {
+                        const user = doc.data();
+                        const name = user.name || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : 'Unknown');
+                        const email = user.email || 'No email';
+                        const plan = user.subscription || user.plan || 'Free';
+                        const createdAt = user.createdAt ? new Date(user.createdAt) : new Date();
+                        
+                        // Format date
+                        const now = new Date();
+                        let joinedText;
+                        
+                        if (createdAt.toDateString() === now.toDateString()) {
+                            joinedText = 'Today';
+                        } else if (new Date(now - 86400000).toDateString() === createdAt.toDateString()) {
+                            joinedText = 'Yesterday';
+                        } else {
+                            const days = Math.round((now - createdAt) / (1000 * 60 * 60 * 24));
+                            joinedText = `${days} days ago`;
+                        }
+                        
+                        // Get initials for avatar
+                        const initials = name.split(' ')
+                            .map(n => n[0])
+                            .join('')
+                            .substring(0, 2)
+                            .toUpperCase();
+                        
+                        // Determine plan badge class
+                        let planClass = 'free';
+                        if (plan.includes('999') || plan === '₹999' || plan === 'Premium') {
+                            planClass = 'premium';
+                        } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard') {
+                            planClass = 'standard';
+                        } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic') {
+                            planClass = 'basic';
+                        }
+                        
+                        // Create row
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar">${initials}</div>
+                                    <span class="ms-2">${name}</span>
+                                </div>
+                            </td>
+                            <td>${email}</td>
+                            <td><span class="badge-status ${planClass}">${plan}</span></td>
+                            <td>${joinedText}</td>
+                            <td>
+                                <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="table-action delete" data-id="${doc.id}"><i class="fas fa-trash"></i></a>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                    
+                    // Add event listeners to new action buttons
+                    document.querySelectorAll('.table-action').forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const isDelete = this.classList.contains('delete');
+                            const row = this.closest('tr');
+                            const name = row.cells[0].textContent.trim();
+                            
+                            if (isDelete) {
+                                const userId = this.getAttribute('data-id');
+                                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                                    db.collection("users").doc(userId).delete()
+                                        .then(() => {
+                                            row.remove();
+                                            countStudents(); // Update stats
+                                        })
+                                        .catch(error => {
+                                            console.error("Error deleting user:", error);
+                                            alert("Failed to delete user");
+                                        });
+                                }
+                            } else {
+                                alert(`Edit ${name}`);
+                            }
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading users:", error);
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading users</td></tr>';
+                });
+        }
+
+        // Function to load recent exams
+        function loadRecentExams() {
+            const tbody = document.getElementById('recent-exams-tbody');
+            
+            // Get recent exams from Firestore
+            db.collection("papers")
+                .orderBy("createdAt", "desc")
+                .limit(3)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No exams found</td></tr>';
+                        return;
+                    }
+                    
+                    // Clear loading message
+                    tbody.innerHTML = '';
+                    
+                    // Add exams to table
+                    querySnapshot.forEach((doc) => {
+                        const exam = doc.data();
+                        const examName = exam.name || 'Unnamed Exam';
+                        const examType = exam.type || 'Unknown';
+                        const examYear = exam.year || 'N/A';
+                        
+                        // Count questions
+                        let questionCount = 0;
+                        if (exam.questions && Array.isArray(exam.questions)) {
+                            questionCount = exam.questions.length;
+                        }
+                        
+                        // Create row
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${examName}</td>
+                            <td>${examType}</td>
+                            <td>${questionCount}</td>
+                            <td>${examYear}</td>
+                            <td>
+                                <a href="edit-exam.html?id=${doc.id}" class="table-action"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="table-action delete" data-id="${doc.id}"><i class="fas fa-trash"></i></a>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                    
+                    // Add event listeners to delete buttons
+                    tbody.querySelectorAll('.table-action.delete').forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const examId = this.getAttribute('data-id');
+                            const row = this.closest('tr');
+                            const examName = row.cells[0].textContent;
+                            
+                            if (confirm(`Are you sure you want to delete "${examName}"?`)) {
+                                db.collection("papers").doc(examId).delete()
+                                    .then(() => {
+                                        row.remove();
+                                        countExamsAndQuestions(); // Update stats
+                                    })
+                                    .catch(error => {
+                                        console.error("Error deleting exam:", error);
+                                        alert("Failed to delete exam");
+                                    });
+                            }
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading exams:", error);
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading exams</td></tr>';
+                });
+        }
+        
+        // Function to load recent activity
+        function loadRecentActivity() {
+            const container = document.getElementById('recent-activity-container');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Create combined activity array
+            let activities = [];
+            
+            // Get recent users
+            const usersPromise = db.collection("users")
+                .orderBy("createdAt", "desc")
+                .limit(2)
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        activities.push({
+                            type: 'user',
+                            icon: 'user',
+                            iconClass: 'primary',
+                            title: `New user registered: ${user.name || user.firstName || user.email}`,
+                            timestamp: user.createdAt ? new Date(user.createdAt) : new Date()
+                        });
+                    });
+                });
+                
+            // Get recent papers (exams)
+            const papersPromise = db.collection("papers")
+                .orderBy("createdAt", "desc")
+                .limit(2)
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const paper = doc.data();
+                        activities.push({
+                            type: 'exam',
+                            icon: 'file-alt',
+                            iconClass: 'warning',
+                            title: `New exam added: ${paper.name || 'Unnamed Exam'}`,
+                            timestamp: paper.createdAt ? new Date(paper.createdAt) : new Date()
+                        });
+                    });
+                });
+                
+            // Get recent payments
+            const paymentsPromise = db.collection("users")
+                .where("subscription", "in", ["premium", "standard", "basic"])
+                .orderBy("subscriptionStartDate", "desc")
+                .limit(2)
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        let planPrice = "";
+                        if (user.subscription === "premium") planPrice = "₹999";
+                        else if (user.subscription === "standard") planPrice = "₹499";
+                        else if (user.subscription === "basic") planPrice = "₹199";
+                        
+                        activities.push({
+                            type: 'payment',
+                            icon: 'rupee-sign',
+                            iconClass: 'success',
+                            title: `New subscription: ${user.name || user.firstName || user.email} (${planPrice})`,
+                            timestamp: user.subscriptionStartDate ? new Date(user.subscriptionStartDate) : new Date()
+                        });
+                    });
+                });
+            
+            // Wait for all promises to resolve
+            Promise.all([usersPromise, papersPromise, paymentsPromise])
+                .then(() => {
+                    // Sort activities by timestamp (newest first)
+                    activities.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    // Take only the 4 most recent activities
+                    activities = activities.slice(0, 4);
+                    
+                    if (activities.length === 0) {
+                        container.innerHTML = `
+                            <div class="activity-item p-3">
+                                <div class="activity-content">
+                                    <div class="activity-title">No recent activity found</div>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Render activities
+                    activities.forEach(activity => {
+                        // Format time
+                        const now = new Date();
+                        let timeText;
+                        
+                        if (activity.timestamp.toDateString() === now.toDateString()) {
+                            const hours = activity.timestamp.getHours();
+                            const minutes = activity.timestamp.getMinutes();
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            const formattedHours = hours % 12 || 12;
+                            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                            timeText = `Today, ${formattedHours}:${formattedMinutes} ${ampm}`;
+                        } else if (new Date(now - 86400000).toDateString() === activity.timestamp.toDateString()) {
+                            const hours = activity.timestamp.getHours();
+                            const minutes = activity.timestamp.getMinutes();
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            const formattedHours = hours % 12 || 12;
+                            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                            timeText = `Yesterday, ${formattedHours}:${formattedMinutes} ${ampm}`;
+                        } else {
+                            const days = Math.round((now - activity.timestamp) / (1000 * 60 * 60 * 24));
+                            timeText = `${days} days ago`;
+                        }
+                        
+                        // Create activity item
+                        const activityItem = document.createElement('div');
+                        activityItem.className = 'activity-item p-3';
+                        activityItem.innerHTML = `
+                            <div class="activity-icon ${activity.iconClass}">
+                                <i class="fas fa-${activity.icon}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-time">${timeText}</div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(activityItem);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading activities:", error);
+                    container.innerHTML = `
+                        <div class="activity-item p-3">
+                            <div class="activity-content">
+                                <div class="activity-title">Error loading activities</div>
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Function to load recent users from Firestore
+        function loadRecentUsers() {
+            const tbody = document.getElementById('recent-users-tbody');
+            
+            // Get users from Firestore, ordered by creation date
+            db.collection("users")
+                .orderBy("createdAt", "desc")
+                .limit(4)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No users found</td></tr>';
+                        return;
+                    }
+                    
+                    // Clear loading message
+                    tbody.innerHTML = '';
+                    
+                    // Add users to table
+                    querySnapshot.forEach((doc) => {
+                        const user = doc.data();
+                        const name = user.name || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : 'Unknown');
+                        const email = user.email || 'No email';
+                        const plan = user.subscription || user.plan || 'Free';
+                        const createdAt = user.createdAt ? new Date(user.createdAt) : new Date();
+                        
+                        // Format date
+                        const now = new Date();
+                        let joinedText;
+                        
+                        if (createdAt.toDateString() === now.toDateString()) {
+                            joinedText = 'Today';
+                        } else if (new Date(now - 86400000).toDateString() === createdAt.toDateString()) {
+                            joinedText = 'Yesterday';
+                        } else {
+                            const days = Math.round((now - createdAt) / (1000 * 60 * 60 * 24));
+                            joinedText = `${days} days ago`;
+                        }
+                        
+                        // Get initials for avatar
+                        const initials = name.split(' ')
+                            .map(n => n[0])
+                            .join('')
+                            .substring(0, 2)
+                            .toUpperCase();
+                        
+                        // Determine plan badge class
+                        let planClass = 'free';
+                        if (plan.includes('999') || plan === '₹999' || plan === 'Premium' || plan === 'premium') {
+                            planClass = 'premium';
+                        } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard' || plan === 'standard') {
+                            planClass = 'standard';
+                        } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic' || plan === 'basic') {
+                            planClass = 'basic';
+                        }
+                        
+                        // Create row
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar">${initials}</div>
+                                    <span class="ms-2">${name}</span>
+                                </div>
+                            </td>
+                            <td>${email}</td>
+                            <td><span class="badge-status ${planClass}">${plan}</span></td>
+                            <td>${joinedText}</td>
+                            <td>
+                                <a href="#" class="table-action"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="table-action delete" data-id="${doc.id}"><i class="fas fa-trash"></i></a>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading users:", error);
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading users</td></tr>';
+                });
+        }
+
+        // Function to update system status metrics
+        function updateSystemStatus() {
+            // Get system status from Firestore or simulate it
+            db.collection("system").doc("status").get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const status = doc.data();
+                        updateStatusUI(status);
+                    } else {
+                        // If no document exists, simulate system status
+                        simulateSystemStatus();
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error getting system status:", error);
+                    simulateSystemStatus();
+                });
+        }
+        
+        // Function to simulate system status if no data exists
+        function simulateSystemStatus() {
+            const serverLoad = Math.floor(Math.random() * 60) + 10; // 10-70%
+            const dbUsage = Math.floor(Math.random() * 40) + 40;    // 40-80%
+            const storageUsage = Math.floor(Math.random() * 30) + 60; // 60-90%
+            
+            const status = {
+                serverLoad: serverLoad,
+                dbUsage: dbUsage,
+                storageUsage: storageUsage,
+                lastBackup: new Date(Date.now() - Math.floor(Math.random() * 86400000)) // Random time in last 24h
+            };
+            
+            updateStatusUI(status);
+            
+            // Optionally save the simulated status to Firestore
+            db.collection("system").doc("status").set(status)
+                .catch(error => console.error("Error saving simulated status:", error));
+        }
+        
+        // Function to update the UI with status data
+        function updateStatusUI(status) {
+            // Update server load
+            const serverLoadEl = document.getElementById('server-load');
+            const serverLoadBar = document.getElementById('server-load-bar');
+            serverLoadEl.textContent = `${status.serverLoad}%`;
+            serverLoadBar.style.width = `${status.serverLoad}%`;
+            
+            // Update class based on load level
+            serverLoadBar.className = 'progress-bar';
+            if (status.serverLoad < 50) {
+                serverLoadBar.classList.add('bg-success');
+            } else if (status.serverLoad < 80) {
+                serverLoadBar.classList.add('bg-warning');
+            } else {
+                serverLoadBar.classList.add('bg-danger');
+            }
+            
+            // Update database usage
+            const dbUsageEl = document.getElementById('db-usage');
+            const dbUsageBar = document.getElementById('db-usage-bar');
+            dbUsageEl.textContent = `${status.dbUsage}%`;
+            dbUsageBar.style.width = `${status.dbUsage}%`;
+            
+            // Update class based on usage level
+            dbUsageBar.className = 'progress-bar';
+            if (status.dbUsage < 50) {
+                dbUsageBar.classList.add('bg-success');
+            } else if (status.dbUsage < 80) {
+                dbUsageBar.classList.add('bg-warning');
+            } else {
+                dbUsageBar.classList.add('bg-danger');
+            }
+            
+            // Update storage usage
+            const storageUsageEl = document.getElementById('storage-usage');
+            const storageUsageBar = document.getElementById('storage-usage-bar');
+            storageUsageEl.textContent = `${status.storageUsage}%`;
+            storageUsageBar.style.width = `${status.storageUsage}%`;
+            
+            // Update class based on usage level
+            storageUsageBar.className = 'progress-bar';
+            if (status.storageUsage < 50) {
+                storageUsageBar.classList.add('bg-success');
+            } else if (status.storageUsage < 80) {
+                storageUsageBar.classList.add('bg-warning');
+            } else {
+                storageUsageBar.classList.add('bg-danger');
+            }
+            
+            // Update last backup time
+            const lastBackupEl = document.getElementById('last-backup-time');
+            
+            try {
+                // Handle different types of date values safely
+                let backupDate;
+                if (status.lastBackup instanceof Date) {
+                    backupDate = status.lastBackup;
+                } else if (status.lastBackup && status.lastBackup.seconds) {
+                    // Handle Firestore Timestamp
+                    backupDate = new Date(status.lastBackup.seconds * 1000);
+                } else if (status.lastBackup && typeof status.lastBackup === 'object') {
+                    // Handle Firestore server timestamp or other date object
+                    backupDate = new Date(status.lastBackup.toDate ? status.lastBackup.toDate() : status.lastBackup);
+                } else if (status.lastBackup) {
+                    // Handle string or number timestamp
+                    backupDate = new Date(status.lastBackup);
+                } else {
+                    // Fallback to current time if no valid date
+                    backupDate = new Date();
+                }
+                
+                // Check if date is valid
+                if (isNaN(backupDate.getTime())) {
+                    throw new Error("Invalid date");
+                }
+                
+                const now = new Date();
+                if (backupDate.toDateString() === now.toDateString()) {
+                    const hours = backupDate.getHours();
+                    const minutes = backupDate.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                    lastBackupEl.textContent = `Today, ${formattedHours}:${formattedMinutes} ${ampm}`;
+                } else if (new Date(now - 86400000).toDateString() === backupDate.toDateString()) {
+                    const hours = backupDate.getHours();
+                    const minutes = backupDate.getMinutes();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                    lastBackupEl.textContent = `Yesterday, ${formattedHours}:${formattedMinutes} ${ampm}`;
+                } else {
+                    lastBackupEl.textContent = backupDate.toLocaleDateString() + ' ' + 
+                        backupDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+            } catch (error) {
+                console.error("Error formatting backup date:", error);
+                lastBackupEl.textContent = "Not available";
+            }
+        }
+        
+        // Function to perform backup
+        function performBackup() {
+            const backupBtn = document.getElementById('backup-now-btn');
+            backupBtn.disabled = true;
+            backupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Backing up...';
+            
+            // Simulate backup process
+            setTimeout(() => {
+                const now = new Date();
+                
+                // Store as timestamp for better Firestore compatibility
+                const timestamp = firebase.firestore.Timestamp.fromDate(now);
+                
+                // Update last backup time in Firestore
+                db.collection("system").doc("status").update({
+                    lastBackup: timestamp,
+                    lastBackupISO: now.toISOString() // Store ISO string as backup
+                })
+                .then(() => {
+                    // Update UI with current time
+                    const lastBackupEl = document.getElementById('last-backup-time');
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+                    
+                    // Show exact time including seconds
+                    lastBackupEl.textContent = `Today, ${formattedHours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+                    lastBackupEl.style.color = '#10b981'; // Highlight with green color
+                    
+                    // Reset color after 3 seconds
+                    setTimeout(() => {
+                        lastBackupEl.style.color = '';
+                    }, 3000);
+                    
+                    // Show success message
+                    alert("Backup completed successfully at " + formattedHours + ":" + formattedMinutes + ":" + formattedSeconds + " " + ampm);
+                })
+                .catch((error) => {
+                    console.error("Error updating backup time:", error);
+                    alert("Backup failed. Please try again.");
+                })
+                .finally(() => {
+                    backupBtn.disabled = false;
+                    backupBtn.innerHTML = 'Backup Now';
+                });
+            }, 2000);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.querySelector('.sidebar');
@@ -1494,6 +1990,16 @@
             // Count students, exams and questions when dashboard loads
             countStudents();
             countExamsAndQuestions();
+            loadRecentUsers();
+            loadRecentActivity();
+            loadRecentExams();
+            loadRecentUsers();
+            
+            // Update system status
+            updateSystemStatus();
+            
+            // Set up backup button
+            document.getElementById('backup-now-btn').addEventListener('click', performBackup);
             
             // Add animation class to stats cards
             document.querySelectorAll('.stats-card').forEach((card, index) => {
@@ -1525,8 +2031,8 @@
                 window.location.href = 'login.html';
             });
             
-            // Table action buttons
-            document.querySelectorAll('.table-action').forEach(button => {
+            // Table action buttons for other tables (not user table)
+            document.querySelectorAll('.table:not(.user-table) .table-action').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     const isDelete = this.classList.contains('delete');
@@ -1542,7 +2048,364 @@
                     }
                 });
             });
+            
+            // Update system status every 30 seconds
+            setInterval(updateSystemStatus, 30000);
+            
+            // Quick Actions functionality
+            setupQuickActions();
         });
+        
+        // Function to show report data from Firebase
+        function showReport(reportType) {
+            // Show loading modal first
+            const loadingModalHTML = `
+                <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body text-center p-5">
+                                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <h5>Loading report data...</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const loadingContainer = document.createElement('div');
+            loadingContainer.innerHTML = loadingModalHTML;
+            document.body.appendChild(loadingContainer);
+            
+            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+            loadingModal.show();
+            
+            // Define report variables
+            let reportTitle, reportData, chartType;
+            let dataPromise;
+            
+            switch(reportType) {
+                case 'user-activity':
+                    reportTitle = 'User Activity Report';
+                    chartType = 'line';
+                    
+                    // Get user activity data from Firebase
+                    dataPromise = getUserActivityData();
+                    break;
+                    
+                case 'revenue':
+                    reportTitle = 'Revenue Report';
+                    chartType = 'bar';
+                    
+                    // Get revenue data from Firebase
+                    dataPromise = getRevenueData();
+                    break;
+                    
+                case 'exam-performance':
+                    reportTitle = 'Exam Performance Report';
+                    chartType = 'bar';
+                    
+                    // Get exam performance data from Firebase
+                    dataPromise = getExamPerformanceData();
+                    break;
+                    
+                case 'growth':
+                    reportTitle = 'User Growth Analytics';
+                    chartType = 'doughnut';
+                    
+                    // Get user growth data from Firebase
+                    dataPromise = getUserGrowthData();
+                    break;
+            }
+            
+            // Create modal with chart
+            const modalHTML = `
+                <div class="modal fade" id="reportDataModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-gradient-indigo text-white">
+                                <h5 class="modal-title">${reportTitle}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="chart-container" style="position: relative; height:60vh; width:100%">
+                                    <canvas id="reportChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="download-report">Download Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHTML;
+            document.body.appendChild(modalContainer);
+            
+            // Initialize and show modal
+            const modal = new bootstrap.Modal(document.getElementById('reportDataModal'));
+            modal.show();
+            
+            // Create chart when modal is shown
+            document.getElementById('reportDataModal').addEventListener('shown.bs.modal', function() {
+                const ctx = document.getElementById('reportChart').getContext('2d');
+                const reportChart = new Chart(ctx, {
+                    type: chartType,
+                    data: reportData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: reportTitle
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Handle download button
+            document.getElementById('download-report').addEventListener('click', function() {
+                alert('Report downloaded successfully!');
+                modal.hide();
+            });
+            
+            // Clean up modal when hidden
+            document.getElementById('reportDataModal').addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modalContainer);
+            });
+        }
+        
+        // Function to set up Quick Actions buttons
+        function setupQuickActions() {
+            // Edit Dashboard button
+            document.getElementById('edit-dashboard-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading effect
+                const icon = this.querySelector('i');
+                const originalIcon = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                // Simulate loading and redirect
+                setTimeout(() => {
+                    window.location.href = 'dashboard-editor.html';
+                }, 500);
+            });
+            
+            // Add Exam button
+            document.getElementById('add-exam-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading effect
+                const icon = this.querySelector('i');
+                const originalIcon = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                // Create a new exam in Firestore
+                const newExam = {
+                    name: "New Exam",
+                    type: "Mock Test",
+                    year: new Date().getFullYear(),
+                    questions: [],
+                    createdAt: firebase.firestore.Timestamp.now()
+                };
+                
+                db.collection("papers").add(newExam)
+                    .then((docRef) => {
+                        // Redirect to edit page with the new exam ID
+                        window.location.href = `edit-exam.html?id=${docRef.id}`;
+                    })
+                    .catch((error) => {
+                        console.error("Error creating new exam:", error);
+                        alert("Failed to create new exam. Please try again.");
+                        icon.className = originalIcon;
+                    });
+            });
+            
+            // Add Question button
+            document.getElementById('add-question-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading effect
+                const icon = this.querySelector('i');
+                const originalIcon = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                // Get exams to choose from
+                db.collection("papers").get()
+                    .then((querySnapshot) => {
+                        icon.className = originalIcon;
+                        
+                        if (querySnapshot.empty) {
+                            alert("No exams found. Please create an exam first.");
+                            return;
+                        }
+                        
+                        // Create a modal dialog to select an exam
+                        const examOptions = [];
+                        querySnapshot.forEach(doc => {
+                            const exam = doc.data();
+                            examOptions.push(`<option value="${doc.id}">${exam.name || 'Unnamed Exam'}</option>`);
+                        });
+                        
+                        // Create and show modal
+                        const modalHTML = `
+                            <div class="modal fade" id="selectExamModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-gradient-amber text-white">
+                                            <h5 class="modal-title">Select Exam</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Select an exam to add questions to:</p>
+                                            <select class="form-select" id="exam-select">
+                                                ${examOptions.join('')}
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" id="confirm-exam-select">Continue</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Add modal to body
+                        const modalContainer = document.createElement('div');
+                        modalContainer.innerHTML = modalHTML;
+                        document.body.appendChild(modalContainer);
+                        
+                        // Initialize and show modal
+                        const modal = new bootstrap.Modal(document.getElementById('selectExamModal'));
+                        modal.show();
+                        
+                        // Handle exam selection
+                        document.getElementById('confirm-exam-select').addEventListener('click', function() {
+                            const examId = document.getElementById('exam-select').value;
+                            if (examId) {
+                                window.location.href = `edit-exam.html?id=${examId}&addQuestion=true`;
+                            }
+                            modal.hide();
+                        });
+                        
+                        // Clean up modal when hidden
+                        document.getElementById('selectExamModal').addEventListener('hidden.bs.modal', function() {
+                            document.body.removeChild(modalContainer);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error getting exams:", error);
+                        alert("Failed to load exams. Please try again.");
+                        icon.className = originalIcon;
+                    });
+            });
+            
+            // View Reports button
+            document.getElementById('view-reports-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading effect
+                const icon = this.querySelector('i');
+                const originalIcon = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                // Create a modal with report options
+                const modalHTML = `
+                    <div class="modal fade" id="reportsModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-gradient-indigo text-white">
+                                    <h5 class="modal-title">Reports</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                                                    <h5>User Activity</h5>
+                                                    <p class="text-muted">View user engagement and activity metrics</p>
+                                                    <button class="btn btn-primary report-btn" data-report="user-activity">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-rupee-sign fa-3x mb-3 text-success"></i>
+                                                    <h5>Revenue Report</h5>
+                                                    <p class="text-muted">View subscription and revenue analytics</p>
+                                                    <button class="btn btn-success report-btn" data-report="revenue">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-file-alt fa-3x mb-3 text-warning"></i>
+                                                    <h5>Exam Performance</h5>
+                                                    <p class="text-muted">View exam completion and performance data</p>
+                                                    <button class="btn btn-warning report-btn" data-report="exam-performance">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-chart-line fa-3x mb-3 text-danger"></i>
+                                                    <h5>Growth Analytics</h5>
+                                                    <p class="text-muted">View user growth and retention metrics</p>
+                                                    <button class="btn btn-danger report-btn" data-report="growth">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add modal to body
+                const modalContainer = document.createElement('div');
+                modalContainer.innerHTML = modalHTML;
+                document.body.appendChild(modalContainer);
+                
+                // Reset icon
+                icon.className = originalIcon;
+                
+                // Initialize and show modal
+                const modal = new bootstrap.Modal(document.getElementById('reportsModal'));
+                modal.show();
+                
+                // Handle report button clicks
+                document.querySelectorAll('.report-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const reportType = this.getAttribute('data-report');
+                        showReport(reportType);
+                        modal.hide();
+                    });
+                });
+                
+                // Clean up modal when hidden
+                document.getElementById('reportsModal').addEventListener('hidden.bs.modal', function() {
+                    document.body.removeChild(modalContainer);
+                });
+            });
+        }
     </script>
 </body>
 </html>

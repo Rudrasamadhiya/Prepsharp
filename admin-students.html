@@ -706,9 +706,22 @@
             
             // Process and display each user
             Object.entries(users).forEach(([id, user]) => {
-                const registrationDate = user.createdAt 
-                    ? new Date(user.createdAt).toLocaleString() 
-                    : new Date().toLocaleString();
+                // Format registration date properly
+                let registrationDate = 'N/A';
+                if (user.createdAt) {
+                    try {
+                        const date = new Date(user.createdAt);
+                        if (!isNaN(date.getTime())) {
+                            registrationDate = date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error formatting date:", e);
+                    }
+                }
                 
                 // Get subscription plan and class from user data
                 const subscriptionPlan = user.subscriptionPlan || user.plan || 'Free';
@@ -722,15 +735,53 @@
                     endDate = 'N/A';
                 } else if (user.subscriptionEndDate) {
                     // Use the specific end date if available
-                    endDate = new Date(user.subscriptionEndDate).toLocaleString();
+                    try {
+                        const date = new Date(user.subscriptionEndDate);
+                        if (!isNaN(date.getTime())) {
+                            endDate = date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error formatting subscription end date:", e);
+                    }
                 } else if (user.paymentDate) {
                     // If payment was made, calculate based on payment date and plan duration
-                    const paymentDate = new Date(user.paymentDate);
-                    const duration = user.planDuration || 30; // Default to 30 days if not specified
-                    endDate = new Date(paymentDate.setDate(paymentDate.getDate() + duration)).toLocaleString();
+                    try {
+                        const paymentDate = new Date(user.paymentDate);
+                        if (!isNaN(paymentDate.getTime())) {
+                            const duration = user.planDuration || 30; // Default to 30 days if not specified
+                            const calculatedDate = new Date(paymentDate);
+                            calculatedDate.setDate(calculatedDate.getDate() + duration);
+                            
+                            endDate = calculatedDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error calculating end date from payment date:", e);
+                    }
                 } else if (user.createdAt && subscriptionPlan !== 'Free') {
                     // For paid plans without specific dates, use 30 days from registration
-                    endDate = new Date(new Date(user.createdAt).setDate(new Date(user.createdAt).getDate() + 30)).toLocaleString();
+                    try {
+                        const createdDate = new Date(user.createdAt);
+                        if (!isNaN(createdDate.getTime())) {
+                            const calculatedDate = new Date(createdDate);
+                            calculatedDate.setDate(calculatedDate.getDate() + 30);
+                            
+                            endDate = calculatedDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error calculating end date from creation date:", e);
+                    }
                 }
                 
                 studentsData.push({
