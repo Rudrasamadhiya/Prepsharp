@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - PrepSharp Premium</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .stats-grid {
@@ -265,6 +266,55 @@
             font-size: 14px;
             margin-bottom: 15px;
         }
+        
+        /* User dropdown styles */
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            z-index: 100;
+            display: none;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(147, 51, 234, 0.05);
+            color: var(--premium-color);
+        }
+        
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: rgba(0,0,0,0.05);
+            margin: 8px 0;
+        }
     </style>
 </head>
 <body>
@@ -331,10 +381,17 @@
                         <span class="notification-count">7</span>
                     </div>
                     
-                    <div class="user-profile">
+                    <div class="user-profile" id="userProfile">
                         <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
                         <span class="user-name">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="../../index.html" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -515,6 +572,28 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // User profile dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfile = document.getElementById('userProfile');
+            if (userProfile) {
+                userProfile.addEventListener('click', function(e) {
+                    const dropdown = this.querySelector('.user-dropdown');
+                    if (dropdown) {
+                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                        e.stopPropagation();
+                    }
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function() {
+                    const dropdown = userProfile.querySelector('.user-dropdown');
+                    if (dropdown) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            }
+        });
+        
         // Performance Chart
         const perfCtx = document.getElementById('performanceChart').getContext('2d');
         const performanceChart = new Chart(perfCtx, {

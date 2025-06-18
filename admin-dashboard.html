@@ -1246,6 +1246,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <script src="reports.js"></script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -2056,134 +2057,7 @@
             setupQuickActions();
         });
         
-        // Function to show report data from Firebase
-        function showReport(reportType) {
-            // Show loading modal first
-            const loadingModalHTML = `
-                <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-body text-center p-5">
-                                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <h5>Loading report data...</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const loadingContainer = document.createElement('div');
-            loadingContainer.innerHTML = loadingModalHTML;
-            document.body.appendChild(loadingContainer);
-            
-            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-            loadingModal.show();
-            
-            // Define report variables
-            let reportTitle, reportData, chartType;
-            let dataPromise;
-            
-            switch(reportType) {
-                case 'user-activity':
-                    reportTitle = 'User Activity Report';
-                    chartType = 'line';
-                    
-                    // Get user activity data from Firebase
-                    dataPromise = getUserActivityData();
-                    break;
-                    
-                case 'revenue':
-                    reportTitle = 'Revenue Report';
-                    chartType = 'bar';
-                    
-                    // Get revenue data from Firebase
-                    dataPromise = getRevenueData();
-                    break;
-                    
-                case 'exam-performance':
-                    reportTitle = 'Exam Performance Report';
-                    chartType = 'bar';
-                    
-                    // Get exam performance data from Firebase
-                    dataPromise = getExamPerformanceData();
-                    break;
-                    
-                case 'growth':
-                    reportTitle = 'User Growth Analytics';
-                    chartType = 'doughnut';
-                    
-                    // Get user growth data from Firebase
-                    dataPromise = getUserGrowthData();
-                    break;
-            }
-            
-            // Create modal with chart
-            const modalHTML = `
-                <div class="modal fade" id="reportDataModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header bg-gradient-indigo text-white">
-                                <h5 class="modal-title">${reportTitle}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="chart-container" style="position: relative; height:60vh; width:100%">
-                                    <canvas id="reportChart"></canvas>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="download-report">Download Report</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Add modal to body
-            const modalContainer = document.createElement('div');
-            modalContainer.innerHTML = modalHTML;
-            document.body.appendChild(modalContainer);
-            
-            // Initialize and show modal
-            const modal = new bootstrap.Modal(document.getElementById('reportDataModal'));
-            modal.show();
-            
-            // Create chart when modal is shown
-            document.getElementById('reportDataModal').addEventListener('shown.bs.modal', function() {
-                const ctx = document.getElementById('reportChart').getContext('2d');
-                const reportChart = new Chart(ctx, {
-                    type: chartType,
-                    data: reportData,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: true,
-                                text: reportTitle
-                            }
-                        }
-                    }
-                });
-            });
-            
-            // Handle download button
-            document.getElementById('download-report').addEventListener('click', function() {
-                alert('Report downloaded successfully!');
-                modal.hide();
-            });
-            
-            // Clean up modal when hidden
-            document.getElementById('reportDataModal').addEventListener('hidden.bs.modal', function() {
-                document.body.removeChild(modalContainer);
-            });
-        }
+        // The showReport function is now imported from reports.js
         
         // Function to set up Quick Actions buttons
         function setupQuickActions() {
