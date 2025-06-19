@@ -258,6 +258,52 @@
             margin-right: 8px;
             color: #10b981;
         }
+
+        /* Success message styles */
+        .success-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            z-index: 1000;
+        }
+        
+        .success-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .success-icon {
+            color: #10b981;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: #4f46e5;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .success-message {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .countdown {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -267,7 +313,7 @@
     <div class="payment-container">
         <div class="payment-header">
             <div class="logo">
-                <img src="./logo for index (1).png" alt="PrepSharp Logo" style="height: 50px; vertical-align: middle; margin-right: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));" onerror="this.onerror=null; this.src='logo for index.png';">
+                <img src="./logo for index (1).png" alt="PrepSharp Logo" style="height: 50px; vertical-align: middle; margin-right: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));" onerror="this.onerror=null; this.src='prepsharp-logo.png';">
                 <span>PrepSharp</span>
             </div>
             <div class="tagline">Complete Your Subscription</div>
@@ -315,6 +361,7 @@
             <div class="secure-badge">
                 <i class="fas fa-lock"></i> Secure Payment Processing via Razorpay
             </div>
+            
         </div>
     </div>
     
@@ -323,17 +370,31 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <!-- Initialize Firebase -->
     <script>
+        // Global db variable
+        let db;
+        
         // Ensure Firebase is properly initialized
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if Firebase is initialized
-            if (typeof firebase === 'undefined') {
-                console.error('Firebase SDK not loaded properly');
+            try {
+                // Firebase configuration
+                const firebaseConfig = {
+                    apiKey: "AIzaSyA1234567890abcdefghijklmnopqrstuv",
+                    authDomain: "prepsharp-demo.firebaseapp.com",
+                    projectId: "prepsharp-demo",
+                    storageBucket: "prepsharp-demo.appspot.com",
+                    messagingSenderId: "123456789012",
+                    appId: "1:123456789012:web:abc123def456ghi789jkl"
+                };
+                
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                console.log('Firebase SDK loaded and initialized successfully');
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
                 // Fallback to localStorage only
-            } else {
-                console.log('Firebase SDK loaded successfully');
             }
         });
     </script>
@@ -443,86 +504,63 @@
                 currency: "INR",
                 name: "PrepSharp",
                 description: planName + " Subscription",
-                image: "./logo for index (1).png",
+                image: "./prepsharp-logo.png",
                 handler: function(response) {
+                    console.log("Payment successful, response:", response);
                     // Payment successful
                     const paymentId = response.razorpay_payment_id;
                     
+                    // Update localStorage
+                    updateLocalStorage();
+                    
+                    // Save to Firebase
                     try {
-                        // Update user in Firestore if Firebase is available
-                        if (typeof firebase !== 'undefined' && firebase.firestore) {
-                            const subscriptionData = {
+                        if (typeof firebase !== 'undefined' && firebase.firestore && typeof db !== 'undefined') {
+                            const userData = {
+                                name: firstName + ' ' + lastName,
+                                email: email,
                                 subscription: subscription,
                                 paymentId: paymentId,
                                 subscriptionStartDate: new Date().toISOString(),
                                 subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
                                 planName: planName,
-                                planPrice: planPrice
+                                planPrice: planPrice,
+                                lastUpdated: new Date().toISOString()
                             };
                             
-                            // Try to find and update user in Firestore
+                            // Save to Firebase
                             db.collection("users").where("email", "==", email).get()
                                 .then((querySnapshot) => {
                                     if (!querySnapshot.empty) {
                                         // Update existing user
-                                        const userDoc = querySnapshot.docs[0];
-                                        db.collection("users").doc(userDoc.id).update(subscriptionData)
-                                            .then(() => {
-                                                console.log("User subscription updated in Firestore");
-                                                handleSuccessfulPayment();
-                                            })
-                                            .catch((error) => {
-                                                console.error("Error updating user in Firestore:", error);
-                                                // Fallback to localStorage
-                                                updateLocalStorage();
-                                                handleSuccessfulPayment();
-                                            });
+                                        return db.collection("users").doc(querySnapshot.docs[0].id).update(userData);
                                     } else {
-                                        // User not found in Firestore, create new
-                                        const newUser = {
-                                            name: firstName + ' ' + lastName,
-                                            email: email,
-                                            subscription: subscription,
-                                            paymentId: paymentId,
-                                            subscriptionStartDate: new Date().toISOString(),
-                                            subscriptionEndDate: new Date(Date.now() + (planDuration * 24 * 60 * 60 * 1000)).toISOString(),
-                                            planName: planName,
-                                            planPrice: planPrice,
-                                            createdAt: new Date().toISOString()
-                                        };
-                                        
-                                        db.collection("users").add(newUser)
-                                            .then(() => {
-                                                console.log("New user added to Firestore after payment");
-                                                handleSuccessfulPayment();
-                                            })
-                                            .catch((error) => {
-                                                console.error("Error adding new user to Firestore:", error);
-                                                // Fallback to localStorage
-                                                updateLocalStorage();
-                                                handleSuccessfulPayment();
-                                            });
+                                        // Add new user
+                                        userData.createdAt = new Date().toISOString();
+                                        return db.collection("users").add(userData);
                                     }
                                 })
+                                .then(() => {
+                                    console.log("User data saved to Firebase");
+                                    // Show success alert and redirect
+                                    handleSuccessfulPayment(subscription, firstName, lastName, email);
+                                })
                                 .catch((error) => {
-                                    console.error("Error checking for user in Firestore:", error);
-                                    // Fallback to localStorage
-                                    updateLocalStorage();
-                                    handleSuccessfulPayment();
+                                    console.error("Error saving to Firebase:", error);
+                                    // Still show success alert and redirect
+                                    handleSuccessfulPayment(subscription, firstName, lastName, email);
                                 });
                         } else {
-                            console.warn("Firebase not available, using localStorage only");
-                            updateLocalStorage();
-                            handleSuccessfulPayment();
+                            // Firebase not available, just show success alert and redirect
+                            handleSuccessfulPayment(subscription, firstName, lastName, email);
                         }
                     } catch (error) {
-                        console.error("Error in payment processing:", error);
-                        // Ensure we still save to localStorage and redirect
-                        updateLocalStorage();
-                        handleSuccessfulPayment();
+                        console.error("Firebase error:", error);
+                        // Still show success alert and redirect
+                        handleSuccessfulPayment(subscription, firstName, lastName, email);
                     }
                     
-                    // Fallback function to update localStorage
+                    // Function to update localStorage with user data
                     function updateLocalStorage() {
                         // Get existing users array
                         let users = JSON.parse(localStorage.getItem('users')) || [];
@@ -559,27 +597,13 @@
                             users.push(newUser);
                             localStorage.setItem('users', JSON.stringify(users));
                         }
-                    }
-                    
-                    function handleSuccessfulPayment() {
+                        
                         // Set as logged in user
                         localStorage.setItem('loggedInUser', JSON.stringify({
                             name: firstName + ' ' + lastName,
                             email: email,
                             subscription: subscription
                         }));
-                        
-                        // Show success message
-                        alert('Payment successful! Your subscription is now active.');
-                        
-                        // Direct redirection based on subscription
-                        if (subscription === 'premium') {
-                            window.location.href = 'dashboards/premium/dashboard.html';
-                        } else if (subscription === 'standard') {
-                            window.location.href = 'dashboards/standard/dashboard.html';
-                        } else {
-                            window.location.href = 'dashboards/basic/dashboard.html';
-                        }
                     }
                 },
                 prefill: {
@@ -592,8 +616,13 @@
             };
             
             try {
+                console.log("Opening Razorpay with options:", options);
                 // Create and open Razorpay payment form
                 const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function(response){
+                    console.error("Payment failed:", response.error);
+                    alert("Payment failed: " + response.error.description);
+                });
                 rzp.open();
             } catch (error) {
                 console.error("Error opening Razorpay:", error);
@@ -601,7 +630,51 @@
             }
         }
         
-        // This function is no longer used as we're redirecting directly in the handler
+        // Function to handle successful payment and redirect
+        function handleSuccessfulPayment(subscription, firstName, lastName, email) {
+            // Set as logged in user
+            localStorage.setItem('loggedInUser', JSON.stringify({
+                name: firstName + ' ' + lastName,
+                email: email,
+                subscription: subscription
+            }));
+            
+            // Create success message element
+            const successElement = document.createElement('div');
+            successElement.className = 'success-container';
+            successElement.innerHTML = `
+                <div class="success-card">
+                    <div class="success-icon">✓</div>
+                    <h1 class="success-title">Payment Successful</h1>
+                    <p class="success-message">You will be redirected in <span id="countdown" class="countdown">3</span> seconds</p>
+                </div>
+            `;
+            
+            // Add to body
+            document.body.appendChild(successElement);
+            
+            // Countdown and redirect
+            let seconds = 3;
+            const interval = setInterval(() => {
+                seconds--;
+                const countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    countdownElement.textContent = seconds;
+                }
+                
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    // Redirect based on subscription
+                    if (subscription === 'premium') {
+                        window.location.href = 'dashboards/premium/dashboard.html';
+                    } else if (subscription === 'standard') {
+                        window.location.href = 'dashboards/standard/dashboard.html';
+                    } else {
+                        window.location.href = 'dashboards/basic/dashboard.html';
+                    }
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>

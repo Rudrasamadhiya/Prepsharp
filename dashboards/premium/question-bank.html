@@ -7,6 +7,41 @@
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* User profile styles */
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-initials {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
         .filter-bar {
             display: flex;
             justify-content: space-between;
@@ -422,21 +457,23 @@
         <main class="main-content">
             <!-- Top Navigation -->
             <header class="top-nav">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-                
                 <div class="user-actions">
                     <div class="notification-bell">
                         <i class="fas fa-bell"></i>
                         <span class="notification-count">7</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -720,7 +757,31 @@
         </main>
     </div>
     
+    <script src="../../js/auth-check.js"></script>
     <script>
+        // User profile dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfile = document.getElementById('userProfile');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                // Override the hover-based dropdown with click-based
+                userProfile.addEventListener('click', function(e) {
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
+                });
+                
+                // Close dropdown when clicking elsewhere
+                document.addEventListener('click', function() {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                });
+            }
+        });
+        
         // Tab switching
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {

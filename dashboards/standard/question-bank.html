@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question Bank - PrepSharp</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .filter-bar {
@@ -270,6 +271,7 @@
             display: block;
         }
     </style>
+    <script src="../../assets/js/auth-check.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -315,21 +317,23 @@
         <main class="main-content">
             <!-- Top Navigation -->
             <header class="top-nav">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-                
                 <div class="user-actions">
                     <div class="notification-bell">
                         <i class="fas fa-bell"></i>
                         <span class="notification-count">5</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -732,6 +736,31 @@
                 }
             });
         });
-    </script>
+    
+    // User profile dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const userProfile = document.getElementById('userProfile');
+        const userDropdown = document.querySelector('.user-dropdown');
+        
+        if (userProfile && userDropdown) {
+            // Override the hover-based dropdown with click-based
+            userProfile.addEventListener('click', function(e) {
+                userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                e.stopPropagation();
+            });
+            
+            // Close dropdown when clicking elsewhere
+            document.addEventListener('click', function() {
+                userDropdown.style.opacity = '0';
+                userDropdown.style.visibility = 'hidden';
+                userDropdown.style.transform = 'translateY(-10px)';
+            });
+        }
+        
+        
+</script>
+    <script src="../../assets/js/logout.js"></script>
 </body>
 </html>
