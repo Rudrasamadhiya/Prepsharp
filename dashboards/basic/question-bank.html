@@ -354,9 +354,9 @@
                         <span class="notification-count">3</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
@@ -656,6 +656,8 @@
         </main>
     </div>
     
+    <script src="../../js/user-profile.js"></script>
+    <script src="../../js/sidebar-logout.js"></script>
     <script>
         // Question option selection
         document.querySelectorAll('.question-option').forEach(option => {

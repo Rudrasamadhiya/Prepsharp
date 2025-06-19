@@ -1,313 +1,437 @@
-// Practice Papers functionality for PrepSharp
-// This file handles the practice papers page functionality with GitHub integration
-
+// Practice Papers Handler - Firebase Integration
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current user
-    const currentUser = DB.getCurrentUser();
+    // Get logged in user data
+    const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
     
-    // If no user is logged in, redirect to login page
-    if (!currentUser) {
-        window.location.href = '../../login.html';
-        return;
+    if (loggedInUser) {
+        const userData = JSON.parse(loggedInUser);
+        const userId = userData.email;
+        
+        // Load papers from Firebase
+        loadPapers(userId);
+        
+        // Setup search and filters
+        setupSearchAndFilters();
     }
-    
-    // Update user profile information
-    updateUserProfile(currentUser);
-    
-    // Load available papers
-    loadAvailablePapers(currentUser);
-    
-    // Initialize animations
-    initializeAnimations();
-    
-    // Setup event handlers
-    setupEventHandlers();
 });
 
-// Update user profile information in the UI
-function updateUserProfile(user) {
-    // Update user name
-    const userNameElements = document.querySelectorAll('.user-name');
-    userNameElements.forEach(element => {
-        element.textContent = user.name;
-    });
-    
-    // Update subscription badge
-    const planBadges = document.querySelectorAll('.plan-badge');
-    planBadges.forEach(badge => {
-        badge.textContent = capitalizeFirstLetter(user.subscription) + ' Plan';
-        badge.className = 'plan-badge ' + user.subscription;
-    });
+// Load papers from Firebase
+function loadPapers(userId) {
+    // Get papers collection from Firebase
+    db.collection("papers")
+        .get()
+        .then((snapshot) => {
+            const papers = [];
+            snapshot.forEach((doc) => {
+                papers.push({id: doc.id, ...doc.data()});
+            });
+            
+            // Get user stats to check completed papers
+            db.collection("userStats").doc(userId)
+                .get()
+                .then((doc) => {
+                    let completedPapers = [];
+                    let averageScore = 0;
+                    
+                    if (doc.exists) {
+                        const stats = doc.data();
+                        completedPapers = stats.completedPapers || [];
+                        averageScore = stats.averageScore || 0;
+                    }
+                    
+                    // Update header stats
+                    updateHeaderStats(papers.length, completedPapers.length, averageScore);
+                    
+                    // Update papers grid
+                    updatePapersGrid(papers, completedPapers);
+                })
+                .catch((error) => {
+                    console.error("Error getting user stats:", error);
+                    
+                    // Update UI without completed papers info
+                    updateHeaderStats(papers.length, 0, 0);
+                    updatePapersGrid(papers, []);
+                });
+        })
+        .catch((error) => {
+            console.error("Error getting papers:", error);
+            
+            // Show error message
+            const papersGrid = document.querySelector('.papers-grid');
+            if (papersGrid) {
+                papersGrid.innerHTML = '<div class="error-message">Failed to load papers. Please try again later.</div>';
+            }
+        });
 }
 
-// Load available papers based on user subscription
-function loadAvailablePapers(user) {
-    // Get available papers
-    const papers = DB.getAvailablePapers(user.subscription);
-    
-    // Get papers grid container
-    const papersGrid = document.querySelector('.papers-grid');
-    
-    // Clear existing papers
-    papersGrid.innerHTML = '';
-    
-    // Add papers to the grid
-    papers.forEach(paper => {
-        const paperCard = createPaperCard(paper);
-        papersGrid.appendChild(paperCard);
-    });
-    
-    // Update stats in header
-    updateHeaderStats(user);
-}
-
-// Update header statistics
-function updateHeaderStats(user) {
-    // Get user performance data
-    const performance = DB.getUserPerformance(user.email);
-    
-    // Update available papers count
-    const availablePapersElement = document.querySelector('.stat-value:nth-child(1)');
+// Update header stats
+function updateHeaderStats(availablePapers, completedPapers, averageScore) {
+    // Update available papers
+    const availablePapersElement = document.querySelector('.header-stats .stat-card:nth-child(1) .stat-value');
     if (availablePapersElement) {
-        availablePapersElement.textContent = DB.papers.length;
+        availablePapersElement.textContent = availablePapers;
     }
     
-    // Update completed papers count
-    const completedPapersElement = document.querySelector('.stat-value:nth-child(3)');
+    // Update completed papers
+    const completedPapersElement = document.querySelector('.header-stats .stat-card:nth-child(2) .stat-value');
     if (completedPapersElement) {
-        completedPapersElement.textContent = performance.completedPapers;
+        completedPapersElement.textContent = completedPapers;
     }
     
     // Update average score
-    const averageScoreElement = document.querySelector('.stat-value:nth-child(5)');
+    const averageScoreElement = document.querySelector('.header-stats .stat-card:nth-child(3) .stat-value');
     if (averageScoreElement) {
-        averageScoreElement.textContent = performance.overallScore + '%';
+        averageScoreElement.textContent = `${averageScore}%`;
     }
 }
 
-// Create a paper card element
-function createPaperCard(paper) {
-    const div = document.createElement('div');
-    div.className = 'paper-card';
-    div.dataset.id = paper.id;
+// Update papers grid
+function updatePapersGrid(papers, completedPapers) {
+    const papersGrid = document.querySelector('.papers-grid');
+    if (!papersGrid) return;
     
-    // Create paper banner
-    const banner = document.createElement('div');
-    banner.className = 'paper-banner';
+    // Clear existing content
+    papersGrid.innerHTML = '';
     
-    // Add badge if paper is new or popular
-    if (paper.isNew) {
-        const badge = document.createElement('div');
-        badge.className = 'paper-badge';
-        badge.textContent = 'NEW';
-        banner.appendChild(badge);
-    } else if (paper.isPopular) {
-        const badge = document.createElement('div');
-        badge.className = 'paper-badge popular';
-        badge.textContent = 'POPULAR';
-        banner.appendChild(badge);
-    }
-    
-    div.appendChild(banner);
-    
-    // Create paper content
-    const content = document.createElement('div');
-    content.className = 'paper-content';
-    
-    // Add paper icon
-    const icon = document.createElement('div');
-    icon.className = 'paper-icon';
-    icon.innerHTML = '<i class="fas fa-file-alt"></i>';
-    content.appendChild(icon);
-    
-    // Add paper title
-    const title = document.createElement('h3');
-    title.className = 'paper-title';
-    title.textContent = paper.title;
-    content.appendChild(title);
-    
-    // Add paper subtitle
-    const subtitle = document.createElement('div');
-    subtitle.className = 'paper-subtitle';
-    
-    const tag = document.createElement('span');
-    tag.className = 'paper-tag';
-    tag.textContent = paper.type;
-    subtitle.appendChild(tag);
-    
-    subtitle.appendChild(document.createTextNode(paper.date));
-    content.appendChild(subtitle);
-    
-    // Add paper details
-    const details = document.createElement('div');
-    details.className = 'paper-details';
-    
-    // Add questions detail
-    const questionsDetail = document.createElement('div');
-    questionsDetail.className = 'detail-item';
-    
-    const questionsValue = document.createElement('div');
-    questionsValue.className = 'detail-value';
-    questionsValue.textContent = paper.questions;
-    questionsDetail.appendChild(questionsValue);
-    
-    const questionsLabel = document.createElement('div');
-    questionsLabel.className = 'detail-label';
-    questionsLabel.textContent = 'Questions';
-    questionsDetail.appendChild(questionsLabel);
-    
-    details.appendChild(questionsDetail);
-    
-    // Add duration detail
-    const durationDetail = document.createElement('div');
-    durationDetail.className = 'detail-item';
-    
-    const durationValue = document.createElement('div');
-    durationValue.className = 'detail-value';
-    durationValue.textContent = paper.duration;
-    durationDetail.appendChild(durationValue);
-    
-    const durationLabel = document.createElement('div');
-    durationLabel.className = 'detail-label';
-    durationLabel.textContent = 'Duration';
-    durationDetail.appendChild(durationLabel);
-    
-    details.appendChild(durationDetail);
-    
-    // Add marks detail
-    const marksDetail = document.createElement('div');
-    marksDetail.className = 'detail-item';
-    
-    const marksValue = document.createElement('div');
-    marksValue.className = 'detail-value';
-    marksValue.textContent = paper.marks;
-    marksDetail.appendChild(marksValue);
-    
-    const marksLabel = document.createElement('div');
-    marksLabel.className = 'detail-label';
-    marksLabel.textContent = 'Marks';
-    marksDetail.appendChild(marksLabel);
-    
-    details.appendChild(marksDetail);
-    
-    content.appendChild(details);
-    
-    // Add paper actions
-    const actions = document.createElement('div');
-    actions.className = 'paper-actions';
-    
-    // Add start button
-    const startButton = document.createElement('button');
-    startButton.className = 'start-button';
-    startButton.innerHTML = '<i class="fas fa-play"></i> Start Paper';
-    actions.appendChild(startButton);
-    
-    // Add info button
-    const infoButton = document.createElement('button');
-    infoButton.className = 'info-button';
-    infoButton.innerHTML = '<i class="fas fa-info"></i>';
-    actions.appendChild(infoButton);
-    
-    content.appendChild(actions);
-    
-    div.appendChild(content);
-    
-    return div;
-}
-
-// Initialize animations
-function initializeAnimations() {
-    // Animate hero section
-    gsap.from('.header-section', {
-        y: -30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out'
+    // Sort papers by year (newest first)
+    papers.sort((a, b) => {
+        const yearA = parseInt(a.year) || 0;
+        const yearB = parseInt(b.year) || 0;
+        return yearB - yearA;
     });
     
-    gsap.from('.stat-card', {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.2,
-        delay: 0.3,
-        ease: 'back.out(1.7)'
-    });
-    
-    // Animate filter section
-    gsap.from('.filter-container', {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-        delay: 0.2,
-        ease: 'power2.out'
-    });
-    
-    // Animate paper cards
-    gsap.from('.paper-card', {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        delay: 0.4,
-        ease: 'power3.out'
-    });
-}
-
-// Setup event handlers
-function setupEventHandlers() {
-    // Handle filter changes
-    document.querySelectorAll('.filter-select').forEach(select => {
-        select.addEventListener('change', function() {
-            // Add animation effect when filtering
-            gsap.fromTo('.paper-card', 
-                {scale: 0.95, opacity: 0.5},
-                {scale: 1, opacity: 1, duration: 0.5, stagger: 0.05}
-            );
-        });
-    });
-    
-    // Handle pagination
-    document.querySelectorAll('.page-button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (!this.classList.contains('active') && !this.querySelector('i')) {
-                document.querySelectorAll('.page-button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+    // Add papers to grid
+    papers.forEach((paper) => {
+        // Check if paper is completed
+        const isCompleted = completedPapers.some(p => p.id === paper.id);
+        
+        // Create paper card
+        const paperCard = document.createElement('div');
+        paperCard.className = 'paper-card';
+        
+        // Format paper type for display
+        const paperType = paper.type === 'jee-main' ? 'JEE Main' : 
+                         paper.type === 'jee-advanced' ? 'JEE Advanced' : paper.type;
+        
+        // Create badge based on paper properties
+        let badgeHTML = '';
+        if (paper.isNew) {
+            badgeHTML = '<div class="paper-badge">NEW</div>';
+        } else if (paper.popular) {
+            badgeHTML = '<div class="paper-badge popular">POPULAR</div>';
+        }
+        
+        // Create paper card HTML
+        paperCard.innerHTML = `
+            <div class="paper-banner">
+                ${badgeHTML}
+            </div>
+            <div class="paper-content">
+                <div class="paper-icon">
+                    <i class="fas fa-${isCompleted ? 'check-circle' : 'file-alt'}"></i>
+                </div>
+                <h3 class="paper-title">${paper.name || `${paperType} ${paper.year} Paper ${paper.paperNumber || ''}`}</h3>
+                <div class="paper-subtitle">
+                    <span class="paper-tag">${paperType}</span>
+                    <span>${paper.month || ''} ${paper.year}</span>
+                </div>
                 
-                // Add animation effect when changing page
-                gsap.fromTo('.paper-card', 
-                    {y: 20, opacity: 0},
-                    {y: 0, opacity: 1, duration: 0.5, stagger: 0.05}
-                );
-            }
-        });
-    });
-    
-    // Add hover effects to paper cards
-    document.addEventListener('mouseover', function(e) {
-        if (e.target.closest('.paper-card')) {
-            const card = e.target.closest('.paper-card');
-            const startButton = card.querySelector('.start-button');
-            if (startButton) {
-                startButton.style.transform = 'translateY(-3px)';
-                startButton.style.boxShadow = '0 15px 25px rgba(79, 70, 229, 0.3)';
-            }
+                <div class="paper-details">
+                    <div class="detail-item">
+                        <div class="detail-value">${paper.questionCount || 90}</div>
+                        <div class="detail-label">Questions</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">${paper.duration || '3h'}</div>
+                        <div class="detail-label">Duration</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value">${paper.totalMarks || 300}</div>
+                        <div class="detail-label">Marks</div>
+                    </div>
+                </div>
+                
+                <div class="paper-actions">
+                    <button class="start-button" data-paper-id="${paper.id}">
+                        <i class="fas fa-${isCompleted ? 'redo' : 'play'}"></i> ${isCompleted ? 'Retake' : 'Start'} Paper
+                    </button>
+                    <button class="info-button" data-paper-id="${paper.id}">
+                        <i class="fas fa-info"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add event listeners
+        const startButton = paperCard.querySelector('.start-button');
+        if (startButton) {
+            startButton.addEventListener('click', function() {
+                const paperId = this.getAttribute('data-paper-id');
+                window.location.href = `exam.html?id=${paperId}`;
+            });
         }
+        
+        const infoButton = paperCard.querySelector('.info-button');
+        if (infoButton) {
+            infoButton.addEventListener('click', function() {
+                const paperId = this.getAttribute('data-paper-id');
+                showPaperInfo(paperId, papers);
+            });
+        }
+        
+        papersGrid.appendChild(paperCard);
     });
+}
+
+// Show paper info
+function showPaperInfo(paperId, papers) {
+    const paper = papers.find(p => p.id === paperId);
+    if (!paper) return;
     
-    document.addEventListener('mouseout', function(e) {
-        if (e.target.closest('.paper-card')) {
-            const card = e.target.closest('.paper-card');
-            const startButton = card.querySelector('.start-button');
-            if (startButton) {
-                startButton.style.transform = '';
-                startButton.style.boxShadow = '';
-            }
+    // Format paper type for display
+    const paperType = paper.type === 'jee-main' ? 'JEE Main' : 
+                     paper.type === 'jee-advanced' ? 'JEE Advanced' : paper.type;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'paper-info-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>${paper.name || `${paperType} ${paper.year} Paper ${paper.paperNumber || ''}`}</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <div class="info-label">Type:</div>
+                    <div class="info-value">${paperType}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Year:</div>
+                    <div class="info-value">${paper.month || ''} ${paper.year}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Questions:</div>
+                    <div class="info-value">${paper.questionCount || 90}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Duration:</div>
+                    <div class="info-value">${paper.duration || '3 hours'}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Total Marks:</div>
+                    <div class="info-value">${paper.totalMarks || 300}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Subjects:</div>
+                    <div class="info-value">${(paper.subjects || ['Physics', 'Chemistry', 'Mathematics']).join(', ')}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Description:</div>
+                    <div class="info-value">${paper.description || 'Standard JEE paper with questions from Physics, Chemistry, and Mathematics.'}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="start-paper-btn" data-paper-id="${paper.id}">Start Paper</button>
+            </div>
+        </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .paper-info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            width: 120px;
+            font-weight: 600;
+            color: #64748b;
+        }
+        
+        .info-value {
+            flex: 1;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+        
+        .start-paper-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-paper-btn:hover {
+            background: #4338ca;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+        }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    const closeButton = modal.querySelector('.close-modal');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            modal.remove();
+        });
+    }
+    
+    const startButton = modal.querySelector('.start-paper-btn');
+    if (startButton) {
+        startButton.addEventListener('click', function() {
+            const paperId = this.getAttribute('data-paper-id');
+            window.location.href = `exam.html?id=${paperId}`;
+        });
+    }
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
         }
     });
 }
 
-// Helper function to capitalize first letter
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+// Setup search and filters
+function setupSearchAndFilters() {
+    const searchInput = document.querySelector('.search-input');
+    const filterSelects = document.querySelectorAll('.filter-select');
+    
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            applyFilters();
+        });
+    }
+    
+    // Filter functionality
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            applyFilters();
+        });
+    });
+}
+
+// Apply filters
+function applyFilters() {
+    const searchInput = document.querySelector('.search-input');
+    const filterSelects = document.querySelectorAll('.filter-select');
+    const paperCards = document.querySelectorAll('.paper-card');
+    
+    // Get filter values
+    const searchValue = searchInput ? searchInput.value.toLowerCase() : '';
+    const paperTypeFilter = filterSelects[0] ? filterSelects[0].value : '';
+    const yearFilter = filterSelects[1] ? filterSelects[1].value : '';
+    const sortFilter = filterSelects[2] ? filterSelects[2].value : '';
+    
+    // Filter papers
+    paperCards.forEach(card => {
+        const title = card.querySelector('.paper-title').textContent.toLowerCase();
+        const paperType = card.querySelector('.paper-tag').textContent;
+        const year = card.querySelector('.paper-subtitle span:last-child').textContent;
+        
+        // Check if paper matches filters
+        const matchesSearch = !searchValue || title.includes(searchValue);
+        const matchesType = !paperTypeFilter || (paperTypeFilter === 'jee-main' && paperType === 'JEE Main') || 
+                           (paperTypeFilter === 'solved' && card.querySelector('.fa-check-circle')) ||
+                           (paperTypeFilter === 'unsolved' && !card.querySelector('.fa-check-circle'));
+        const matchesYear = !yearFilter || year.includes(yearFilter);
+        
+        // Show or hide paper
+        if (matchesSearch && matchesType && matchesYear) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Apply sorting
+    if (sortFilter && paperCards.length > 0) {
+        const papersGrid = document.querySelector('.papers-grid');
+        const cardsArray = Array.from(paperCards).filter(card => card.style.display !== 'none');
+        
+        // Sort cards
+        cardsArray.sort((a, b) => {
+            if (sortFilter === 'newest') {
+                const yearA = a.querySelector('.paper-subtitle span:last-child').textContent;
+                const yearB = b.querySelector('.paper-subtitle span:last-child').textContent;
+                return yearB.localeCompare(yearA);
+            } else if (sortFilter === 'oldest') {
+                const yearA = a.querySelector('.paper-subtitle span:last-child').textContent;
+                const yearB = b.querySelector('.paper-subtitle span:last-child').textContent;
+                return yearA.localeCompare(yearB);
+            }
+            return 0;
+        });
+        
+        // Reorder cards
+        cardsArray.forEach(card => {
+            papersGrid.appendChild(card);
+        });
+    }
 }

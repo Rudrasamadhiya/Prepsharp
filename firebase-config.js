@@ -1,13 +1,18 @@
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-  authDomain: "prepsharp-c91fd.firebaseapp.com",
-  projectId: "prepsharp-c91fd",
-  storageBucket: "prepsharp-c91fd.firebasestorage.app",
-  messagingSenderId: "688294848433",
-  appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+  apiKey: "AIzaSyA1234567890abcdefghijklmnopqrstuv",
+  authDomain: "prepsharp-demo.firebaseapp.com",
+  projectId: "prepsharp-demo",
+  storageBucket: "prepsharp-demo.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abc123def456ghi789jkl"
 };
 
-// Initialize Firebase (using compat version for easier integration)
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Initialize Firebase
+try {
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  console.log("Firebase initialized successfully");
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+}

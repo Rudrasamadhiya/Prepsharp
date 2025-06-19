@@ -393,9 +393,9 @@
                         <span class="notification-count">3</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
@@ -448,7 +448,7 @@
                             
                             <div class="avatar-section">
                                 <div class="avatar-preview">
-                                    <img src="../../assets/images/user-avatar.png" alt="User Avatar">
+                                    <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px;">JS</div>
                                 </div>
                                 <div class="avatar-upload">
                                     <button class="btn-secondary">Change Photo</button>
@@ -480,10 +480,8 @@
                                 <div class="form-group">
                                     <label class="form-label" for="examYear">Target Exam Year</label>
                                     <select id="examYear" class="form-select">
-                                        <option value="2023">2023</option>
-                                        <option value="2024" selected>2024</option>
-                                        <option value="2025">2025</option>
                                         <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
                                     </select>
                                 </div>
                                 
@@ -725,6 +723,14 @@
         </main>
     </div>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../../firebase-config.js"></script>
+    <script src="../../js/database.js"></script>
+    <script src="../../js/user-profile.js"></script>
+    <script src="../../js/sidebar-logout.js"></script>
+    <script src="../../js/settings-firebase.js"></script>
     <script>
         // Settings navigation
         document.querySelectorAll('.settings-nav-link').forEach(link => {
@@ -747,23 +753,6 @@
                 // Show the corresponding section
                 const sectionId = this.getAttribute('href').substring(1);
                 document.getElementById(sectionId).style.display = 'block';
-            });
-        });
-        
-        // Toggle switches
-        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                // In a real app, this would save the notification preference
-                console.log('Toggle changed:', this.checked);
-            });
-        });
-        
-        // Form submission
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real app, this would save the form data
-                alert('Changes saved successfully!');
             });
         });
     </script>

@@ -399,7 +399,7 @@
                 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const monthName = monthNames[parseInt(examData.month) - 1];
                 paperName = `JEE Main - ${examData.date}/${monthName} Shift ${examData.shift} ${examYear}`;
-                paperId = `jee mains ${examData.date}-${examData.month} shift ${examData.shift}`;
+                paperId = `jee mains ${examData.date}/${examData.month} shift ${examData.shift} ${examYear}`;
             } else if (examType === 'jee-advanced') {
                 paperName = `JEE Advanced - Paper ${examData.paperNumber} ${examYear}`;
                 paperId = `jee advanced ${examYear} paper-${examData.paperNumber}`;
@@ -420,11 +420,16 @@
             // Create paper object with the custom ID for Firestore
             const paper = {
                 ...examData,
-                id: paperId,
+                id: paperId, // Set the custom ID format
                 name: paperName,
                 createdAt: new Date().toISOString(),
                 questions: []
             };
+            
+            // Double check that we're not using a timestamp ID
+            if (!paperId) {
+                console.error("Paper ID is empty, check the ID generation logic");
+            }
             
             // Store paper in localStorage
             localStorage.setItem('currentExam', JSON.stringify(paper));
@@ -432,11 +437,18 @@
             // Store in Firestore
             try {
                 // Replace any characters that might be invalid in Firestore document IDs
-                const safeId = paperId.replace(/[\/\\.#$[\]]/g, "-");
+                const safeId = paperId.replace(/[\/\\\\.#$[\]]/g, "-");
                 paper.id = safeId;
                 
+                // Log the ID being used
+                console.log("Using paper ID:", safeId);
+                console.log("Original paper ID:", paperId);
+                
+                // Force using the custom ID by explicitly setting it
+                const timestamp = Date.now().toString(); // Keep this as fallback
+                
                 // Save to Firestore with the custom paper ID as document ID
-                db.collection("papers").doc(safeId).set(paper)
+                db.collection("papers").doc(safeId || timestamp).set(paper)
                     .then(() => {
                         console.log("Paper successfully saved to Firestore!");
                         
@@ -462,7 +474,8 @@
             
             // Store papers array if it doesn't exist (localStorage fallback)
             let papers = JSON.parse(localStorage.getItem('papers') || '[]');
-            papers.push(paper);
+            // Ensure we're using the same ID everywhere
+            papers.push({...paper, id: paper.id});
             localStorage.setItem('papers', JSON.stringify(papers));
             
             // Navigation is now handled in the Firestore promise

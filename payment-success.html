@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - PrepSharp</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .success-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+        .success-icon {
+            color: #10b981;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #4f46e5;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+        .countdown {
+            font-weight: bold;
+            color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h1>Payment Successful</h1>
+        <p>Thank you for subscribing to PrepSharp!</p>
+        <p>You will be redirected to your dashboard in <span id="countdown" class="countdown">3</span> seconds...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const subscription = urlParams.get('subscription') || 'standard';
+            const firstName = urlParams.get('firstName') || '';
+            const lastName = urlParams.get('lastName') || '';
+            const email = urlParams.get('email') || '';
+            
+            // Set user as logged in
+            localStorage.setItem('loggedInUser', JSON.stringify({
+                name: firstName + ' ' + lastName,
+                email: email,
+                subscription: subscription
+            }));
+            
+            // Countdown timer
+            let seconds = 3;
+            const countdownElement = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(function() {
+                seconds--;
+                countdownElement.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    // Redirect based on subscription
+                    redirectToDashboard(subscription);
+                }
+            }, 1000);
+        });
+        
+        function redirectToDashboard(subscription) {
+            switch(subscription) {
+                case 'premium':
+                    window.location.href = 'dashboards/premium/dashboard.html';
+                    break;
+                case 'standard':
+                    window.location.href = 'dashboards/standard/dashboard.html';
+                    break;
+                case 'basic':
+                    window.location.href = 'dashboards/basic/dashboard.html';
+                    break;
+                default:
+                    window.location.href = 'dashboards/standard/dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -216,9 +216,9 @@
                         <span class="notification-count">3</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
@@ -249,7 +249,7 @@
                             <canvas id="overallChart"></canvas>
                         </div>
                         <div class="chart-legend" style="text-align: center; font-size: 14px; color: var(--text-light);">
-                            Average Score: <span style="font-weight: 600; color: var(--primary-color);">68%</span>
+                            Average Score: <span style="font-weight: 600; color: var(--primary-color);">0%</span>
                         </div>
                     </div>
                     
@@ -261,28 +261,28 @@
                         <div class="subject-progress">
                             <div class="subject-header">
                                 <div class="subject-name">Physics</div>
-                                <div class="subject-score">65%</div>
+                                <div class="subject-score">0%</div>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress" style="width: 65%;"></div>
+                                <div class="progress" style="width: 0%;"></div>
                             </div>
                         </div>
                         <div class="subject-progress">
                             <div class="subject-header">
                                 <div class="subject-name">Chemistry</div>
-                                <div class="subject-score">72%</div>
+                                <div class="subject-score">0%</div>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress" style="width: 72%;"></div>
+                                <div class="progress" style="width: 0%;"></div>
                             </div>
                         </div>
                         <div class="subject-progress">
                             <div class="subject-header">
                                 <div class="subject-name">Mathematics</div>
-                                <div class="subject-score">58%</div>
+                                <div class="subject-score">0%</div>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress" style="width: 58%;"></div>
+                                <div class="progress" style="width: 0%;"></div>
                             </div>
                         </div>
                     </div>
@@ -296,7 +296,7 @@
                             <canvas id="timeChart"></canvas>
                         </div>
                         <div class="chart-legend" style="text-align: center; font-size: 14px; color: var(--text-light);">
-                            Total Hours: <span style="font-weight: 600; color: var(--primary-color);">42</span>
+                            Total Hours: <span style="font-weight: 600; color: var(--primary-color);">0</span>
                         </div>
                     </div>
                 </div>
@@ -322,49 +322,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>JEE Main 2023 Paper 1</td>
-                                <td>July 10, 2023</td>
-                                <td>
-                                    <span class="score-badge score-high">85%</span>
-                                </td>
-                                <td>2h 45m</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>JEE Main 2022 Paper 2</td>
-                                <td>July 5, 2023</td>
-                                <td>
-                                    <span class="score-badge score-medium">72%</span>
-                                </td>
-                                <td>2h 50m</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>JEE Main 2022 Paper 1</td>
-                                <td>June 28, 2023</td>
-                                <td>
-                                    <span class="score-badge score-low">58%</span>
-                                </td>
-                                <td>2h 30m</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>JEE Main 2021 Paper 2</td>
-                                <td>June 20, 2023</td>
-                                <td>
-                                    <span class="score-badge score-medium">68%</span>
-                                </td>
-                                <td>2h 40m</td>
-                                <td>Completed</td>
-                            </tr>
-                            <tr>
-                                <td>JEE Main 2021 Paper 1</td>
-                                <td>June 15, 2023</td>
-                                <td>
-                                    <span class="score-badge score-medium">75%</span>
-                                </td>
-                                <td>2h 55m</td>
-                                <td>Completed</td>
+                                <td colspan="5" style="text-align: center;">Loading performance data...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -373,26 +331,182 @@
                 <!-- Upgrade Banner -->
                 <div class="upgrade-banner">
                     <div class="upgrade-content">
-                        <div class="upgrade-title">Unlock Detailed Analytics</div>
-                        <p class="upgrade-description">Upgrade to Standard or Premium plan for topic-wise analysis, personalized recommendations, and more advanced analytics features.</p>
+                        <div class="upgrade-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="upgrade-text">
+                            <div class="upgrade-title">
+                                <span class="highlight">Unlock</span> Detailed Analytics
+                                <span class="premium-badge">Premium</span>
+                            </div>
+                            <p class="upgrade-description">
+                                <i class="fas fa-check-circle feature-icon"></i> Topic-wise detailed analysis<br>
+                                <i class="fas fa-check-circle feature-icon"></i> AI-powered personalized recommendations<br>
+                                <i class="fas fa-check-circle feature-icon"></i> Advanced performance tracking
+                            </p>
+                        </div>
                     </div>
-                    <button class="upgrade-btn">Upgrade Now</button>
+                    <div class="upgrade-action">
+                        <div class="price-tag">Starting at ₹199/month</div>
+                        <button class="upgrade-btn">
+                            <span>Upgrade Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
+                
+                <style>
+                    .upgrade-banner {
+                        background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
+                        padding: 30px;
+                        border-radius: 20px;
+                        position: relative;
+                        overflow: hidden;
+                        box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 30px;
+                    }
+
+                    .upgrade-banner::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E") repeat;
+                        opacity: 0.1;
+                    }
+
+                    .upgrade-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 25px;
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    .upgrade-icon {
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(255, 255, 255, 0.2);
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 24px;
+                        color: white;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .upgrade-title {
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: white;
+                        margin-bottom: 10px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .highlight {
+                        color: #ffd700;
+                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .premium-badge {
+                        background: rgba(255, 255, 255, 0.2);
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        font-size: 14px;
+                        font-weight: 600;
+                    }
+
+                    .upgrade-description {
+                        color: rgba(255, 255, 255, 0.9);
+                        font-size: 15px;
+                        line-height: 1.8;
+                        margin: 0;
+                    }
+
+                    .feature-icon {
+                        color: #ffd700;
+                        margin-right: 8px;
+                    }
+
+                    .upgrade-action {
+                        text-align: right;
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    .price-tag {
+                        color: rgba(255, 255, 255, 0.9);
+                        font-size: 16px;
+                        margin-bottom: 15px;
+                    }
+
+                    .upgrade-btn {
+                        background: white;
+                        color: #4f46e5;
+                        border: none;
+                        padding: 12px 25px;
+                        border-radius: 12px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 10px;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .upgrade-btn:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+                        background: #ffd700;
+                        color: #4f46e5;
+                    }
+
+                    @media (max-width: 768px) {
+                        .upgrade-banner {
+                            flex-direction: column;
+                            text-align: center;
+                            padding: 20px;
+                        }
+
+                        .upgrade-content {
+                            flex-direction: column;
+                            margin-bottom: 20px;
+                        }
+
+                        .upgrade-action {
+                            text-align: center;
+                        }
+                    }
+                </style>
             </div>
         </main>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../../firebase-config.js"></script>
     <script>
         // Overall Performance Chart
         const overallCtx = document.getElementById('overallChart').getContext('2d');
-        const overallChart = new Chart(overallCtx, {
+        window.overallChart = new Chart(overallCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                 datasets: [{
                     label: 'Score %',
-                    data: [55, 60, 58, 65, 68, 72, 75],
+                    data: [0, 0, 0, 0, 0, 0, 0],
                     borderColor: '#4f46e5',
                     backgroundColor: 'rgba(79, 70, 229, 0.1)',
                     tension: 0.3,
@@ -418,12 +532,12 @@
         
         // Time Spent Chart
         const timeCtx = document.getElementById('timeChart').getContext('2d');
-        const timeChart = new Chart(timeCtx, {
+        window.timeChart = new Chart(timeCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Physics', 'Chemistry', 'Mathematics'],
                 datasets: [{
-                    data: [15, 12, 15],
+                    data: [0, 0, 0],
                     backgroundColor: [
                         '#4f46e5',
                         '#f97316',
@@ -449,5 +563,8 @@
     </script>
     <script src="../../js/database.js"></script>
     <script src="../../js/analytics.js"></script>
+    <script src="../../js/user-profile.js"></script>
+    <script src="../../js/sidebar-logout.js"></script>
+    <script src="../../js/analytics-firebase.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Standard Dashboard - PrepSharp</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Standard plan specific styles */
@@ -175,6 +176,20 @@
             cursor: pointer;
         }
         
+        .avatar-initials {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
         .user-dropdown {
             position: absolute;
             top: 100%;
@@ -185,11 +200,10 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             padding: 10px 0;
             z-index: 100;
-            display: none;
-        }
-        
-        .user-profile:hover .user-dropdown {
-            display: block;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
         
         .dropdown-item {
@@ -218,6 +232,7 @@
             margin: 8px 0;
         }
     </style>
+    <script src="../../assets/js/auth-check.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -231,22 +246,22 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li class="active">
-                        <a href="#"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                 </ul>
             </nav>
@@ -263,27 +278,22 @@
         <main class="main-content">
             <!-- Top Navigation -->
             <header class="top-nav">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-                
                 <div class="user-actions">
-                    <div class="notification-bell">
+                    <div class="notification-bell" id="notificationBell">
                         <i class="fas fa-bell"></i>
                         <span class="notification-count">5</span>
                     </div>
                     
                     <div class="user-profile" id="userProfile">
-                        <img src="../../assets/images/user-avatar.png" alt="User Avatar" class="avatar">
-                        <span class="user-name">John Smith</span>
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
-                            <a href="../../index.html" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="dropdown-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -343,7 +353,7 @@
                     <div class="dashboard-card">
                         <div class="card-header">
                             <h2>Recent Practice Papers</h2>
-                            <a href="#" class="view-all">View All</a>
+                            <a href="practice-papers.html" class="view-all">View All</a>
                         </div>
                         <div class="card-content">
                             <ul class="paper-list">
@@ -412,7 +422,7 @@
                 <div class="study-plan-section">
                     <div class="study-plan-header">
                         <h2>Your Personalized Study Plan</h2>
-                        <a href="#" class="view-all">View Full Plan</a>
+                        <a href="study-plan.html" class="view-all">View Full Plan</a>
                     </div>
                     <div class="study-plan-content">
                         <div class="study-calendar">
@@ -517,21 +527,22 @@
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
             const userProfile = document.getElementById('userProfile');
-            if (userProfile) {
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                // Override the hover-based dropdown with click-based
                 userProfile.addEventListener('click', function(e) {
-                    const dropdown = this.querySelector('.user-dropdown');
-                    if (dropdown) {
-                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                        e.stopPropagation();
-                    }
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
                 });
                 
-                // Close dropdown when clicking outside
+                // Close dropdown when clicking elsewhere
                 document.addEventListener('click', function() {
-                    const dropdown = userProfile.querySelector('.user-dropdown');
-                    if (dropdown) {
-                        dropdown.style.display = 'none';
-                    }
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
                 });
             }
         });
@@ -682,8 +693,12 @@
         }
         
         // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadStandardDashboardData);
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStandardDashboardData();
+            
+            
     </script>
     </script>
+    <script src="../../assets/js/logout.js"></script>
 </body>
 </html>
