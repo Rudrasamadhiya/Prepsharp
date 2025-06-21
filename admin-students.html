@@ -599,6 +599,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
                     <div><i class="fas fa-users me-2"></i> Student Details</div>
                     <div>
+                        <button id="add-sample-data" class="btn btn-warning btn-sm me-2">Add Sample Data</button>
                         <button id="export-excel" class="btn btn-light btn-sm me-2">Export to Excel</button>
                         <button id="refresh-data" class="btn btn-light btn-sm">Refresh Data</button>
                     </div>
@@ -777,7 +778,14 @@
                 let registrationDate = 'N/A';
                 if (user.createdAt) {
                     try {
-                        const date = new Date(user.createdAt);
+                        let date;
+                        if (user.createdAt.toDate) {
+                            // Firebase Timestamp
+                            date = user.createdAt.toDate();
+                        } else {
+                            // Regular date string or Date object
+                            date = new Date(user.createdAt);
+                        }
                         if (!isNaN(date.getTime())) {
                             registrationDate = date.toLocaleDateString('en-US', {
                                 year: 'numeric',
@@ -803,7 +811,14 @@
                 } else if (user.subscriptionEndDate) {
                     // Use the specific end date if available
                     try {
-                        const date = new Date(user.subscriptionEndDate);
+                        let date;
+                        if (user.subscriptionEndDate.toDate) {
+                            // Firebase Timestamp
+                            date = user.subscriptionEndDate.toDate();
+                        } else {
+                            // Regular date string or Date object
+                            date = new Date(user.subscriptionEndDate);
+                        }
                         if (!isNaN(date.getTime())) {
                             endDate = date.toLocaleDateString('en-US', {
                                 year: 'numeric',
