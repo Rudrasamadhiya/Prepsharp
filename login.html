@@ -382,7 +382,7 @@
 
         
         // Handle login form submission
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
@@ -399,37 +399,77 @@
             document.getElementById('emailError').style.display = 'none';
             document.getElementById('passwordError').style.display = 'none';
             
-            // Check for admin login
-            if ((email === "admin@prepsharp.in" || email === "mailto:admin@prepsharp.in") && password === "6263636696") {
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                window.location.href = "admin-dashboard.html";
-                return;
-            }
+            // Show loading state
+            const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Logging in...';
+            loginBtn.disabled = true;
             
-            // Test accounts
-            const testAccounts = {
-                "user@example.com": { subscription: "basic" },
-                "mailto:user@example.com": { subscription: "basic" },
-                "standard@example.com": { subscription: "standard" },
-                "mailto:standard@example.com": { subscription: "standard" },
-                "premium@example.com": { subscription: "premium" },
-                "mailto:premium@example.com": { subscription: "premium" }
-            };
-            
-            if (testAccounts[email] && password === "password123") {
-                handleSuccessfulLogin({ email: email, subscription: testAccounts[email].subscription }, remember);
-                return;
-            }
-            
-            // Check localStorage for registered users
-            const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = storedUsers.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                handleSuccessfulLogin(user, remember);
-            } else {
+            try {
+                // Check for admin login
+                if ((email === "admin@prepsharp.in" || email === "mailto:admin@prepsharp.in") && password === "6263636696") {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    window.location.href = "admin-dashboard.html";
+                    return;
+                }
+                
+                // Query Firestore for user
+                if (window.db) {
+                    const usersRef = db.collection('users');
+                    const snapshot = await usersRef.where('email', '==', email).get();
+                    
+                    if (!snapshot.empty) {
+                        const userDoc = snapshot.docs[0];
+                        const userData = userDoc.data();
+                        
+                        // Check password (in real app, passwords should be hashed)
+                        if (userData.password === password || userData.mobile === password) {
+                            const subscription = mapSubscriptionPlan(userData.subscriptionPlan);
+                            handleSuccessfulLogin({
+                                id: userDoc.id,
+                                email: userData.email,
+                                name: userData.name,
+                                subscription: subscription,
+                                subscriptionPlan: userData.subscriptionPlan,
+                                subscriptionEndDate: userData.subscriptionEndDate
+                            }, remember);
+                            return;
+                        }
+                    }
+                }
+                
+                // Fallback to test accounts if Firebase fails
+                const testAccounts = {
+                    "user@example.com": { subscription: "basic" },
+                    "standard@example.com": { subscription: "standard" },
+                    "premium@example.com": { subscription: "premium" }
+                };
+                
+                if (testAccounts[email] && password === "password123") {
+                    handleSuccessfulLogin({ email: email, subscription: testAccounts[email].subscription }, remember);
+                    return;
+                }
+                
                 alert('Invalid email or password. Please try again.');
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
+            } finally {
+                // Reset button state
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
             }
+        }
+        
+        // Map subscription plan names to dashboard types
+        function mapSubscriptionPlan(plan) {
+            if (!plan) return 'free';
+            const planLower = plan.toLowerCase();
+            if (planLower.includes('premium')) return 'premium';
+            if (planLower.includes('standard')) return 'standard';
+            if (planLower.includes('basic')) return 'basic';
+            return 'free';
         }
         
         function handleSuccessfulLogin(user, remember) {

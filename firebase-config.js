@@ -1,11 +1,11 @@
 // Firebase configuration for PrepSharp - Replace with your actual config
 const firebaseConfig = {
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyBvOkBY0rlczrnyg4X2t2H1XqCt2H1XqCt",
+  authDomain: "prepsharp-default-rtdb.firebaseapp.com",
+  projectId: "prepsharp-default-rtdb",
+  storageBucket: "prepsharp-default-rtdb.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abcdef123456"
 };
 
 // Initialize Firebase and make db globally accessible
