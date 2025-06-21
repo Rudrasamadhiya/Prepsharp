@@ -210,9 +210,38 @@
             padding: 25px;
             background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
             border-top: 1px solid rgba(99, 102, 241, 0.1);
-            display: flex;
-            gap: 15px;
             position: relative;
+        }
+        
+        .floating-buttons {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
         
         .chat-input::before {
@@ -245,18 +274,22 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
         }
         
-        .chat-input button {
+        .chat-input button:last-child {
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
+            padding: 12px 24px;
+            border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
             position: relative;
             overflow: hidden;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .chat-input button::before {
@@ -274,26 +307,31 @@
             left: 100%;
         }
         
-        .chat-input button:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        .chat-input button:last-child:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
         
         .math-toggle {
             background: linear-gradient(135deg, #f59e0b, #ec4899);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 25px;
-            font-size: 18px;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .math-toggle:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
         }
         
         .math-btn {
@@ -316,17 +354,22 @@
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 25px;
-            font-size: 18px;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .image-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
         
         .image-preview {
@@ -405,26 +448,31 @@
         
         /* Math formula styling */
         .math-formula {
-            background: rgba(99, 102, 241, 0.1);
-            padding: 8px 12px;
-            border-radius: 8px;
+            background: rgba(99, 102, 241, 0.12);
+            padding: 6px 10px;
+            border-radius: 6px;
             font-family: 'Times New Roman', serif;
             font-style: italic;
-            color: #6366f1;
+            color: #4338ca;
             display: inline-block;
-            margin: 4px 2px;
+            margin: 2px 1px;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
         
         .math-display {
-            background: rgba(99, 102, 241, 0.05);
-            padding: 15px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
+            padding: 20px;
+            border-radius: 15px;
             font-family: 'Times New Roman', serif;
-            font-size: 1.1em;
-            color: #6366f1;
+            font-size: 1.3em;
+            color: #1e293b;
             text-align: center;
-            margin: 10px 0;
-            border-left: 4px solid #6366f1;
+            margin: 20px 0;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+            line-height: 1.8;
         }
     </style>
 </head>
@@ -547,8 +595,16 @@
                     </div>
                     
                     <div class="chat-input">
-                        <div style="position: relative; flex: 1;">
-                            <textarea placeholder="Ask your question here... Paste your text with exact formatting!" rows="3" style="resize: vertical; min-height: 60px; max-height: 200px;"></textarea>
+                        <div style="position: relative; width: 100%;">
+                            <textarea placeholder="Ask your question here... Paste your text with exact formatting!" rows="3" style="resize: vertical; min-height: 80px; max-height: 200px; width: 100%; padding-right: 160px;"></textarea>
+                            
+                            <div class="floating-buttons">
+                                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                                <button class="image-btn" type="button" title="Upload Image">📷</button>
+                                <button class="math-toggle" type="button" title="Math Keyboard">🔢</button>
+                                <button class="send-btn" type="button"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                            
                             <div class="math-keyboard" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: white; border: 2px solid #6366f1; border-radius: 12px; padding: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 1000;">
                                 <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;">
                                     <button type="button" class="math-btn" data-symbol="²">x²</button>
@@ -566,10 +622,6 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                        <button class="image-btn" type="button" title="Upload Image">📷</button>
-                        <button class="math-toggle" type="button" title="Math Keyboard">🔢</button>
-                        <button><i class="fas fa-paper-plane"></i> Send</button>
                     </div>
                 </div>
                 
@@ -702,21 +754,36 @@
     
     <script>
         // OpenAI Chat Integration
-        async function sendMessageToAI(message) {
+        async function sendMessageToAI(message, imageData = null) {
             try {
                 console.log('Sending message to AI:', message);
+                console.log('Has image:', !!imageData);
+                
+                const requestBody = { message: message };
+                if (imageData) {
+                    console.log('Image data length:', imageData.length);
+                    requestBody.image = imageData;
+                    requestBody.hasImage = true;
+                }
                 
                 const response = await fetch('http://localhost:3000/api/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify(requestBody)
                 });
                 
                 console.log('Response status:', response.status);
                 
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server error response:', errorText);
+                    
+                    if (response.status === 500) {
+                        return 'Server crashed! Check your terminal where you ran "npm start" for error details. Restart the server if needed.';
+                    }
+                    
                     throw new Error(`Server error: ${response.status}`);
                 }
                 
@@ -728,7 +795,7 @@
                 if (error.message.includes('fetch')) {
                     return 'Backend server is not running! Please start your Node.js server first.';
                 }
-                return `Error: ${error.message}. Check console for details.`;
+                return `Error: ${error.message}. Check your terminal for server errors.`;
             }
         }
         
@@ -751,10 +818,11 @@
                 // Add loading message
                 const loadingDiv = addMessage('AI is thinking...', 'ai', true);
                 
-                // Get AI response (for now, just acknowledge the image)
+                // Get AI response
                 let aiResponse;
                 if (currentImage) {
-                    aiResponse = "I can see your image! However, I currently can't analyze images directly. Please describe what you'd like help with regarding this image, and I'll do my best to assist you with the math or science concepts!";
+                    console.log('Sending image to AI...');
+                    aiResponse = await sendMessageToAI(message || 'Please analyze this image step by step. If there are math problems, solve them completely with detailed explanations.', currentImage);
                 } else {
                     aiResponse = await sendMessageToAI(message);
                 }
@@ -766,12 +834,12 @@
                 // Clear current image
                 currentImage = null;
                 
-                // Render math formulas
+                // Render math formulas with MathJax
                 setTimeout(() => {
                     if (window.MathJax && window.MathJax.typesetPromise) {
-                        MathJax.typesetPromise([chatMessages]).catch((err) => console.log(err));
+                        MathJax.typesetPromise([messageDiv]).catch((err) => console.log('MathJax error:', err));
                     }
-                }, 300);
+                }, 100);
             }
             
             function addMessage(text, sender, isLoading = false, imageData = null) {
@@ -788,23 +856,36 @@
                 // Format the text better with colors
                 let formattedText = text;
                 if (!isLoading && sender === 'ai') {
-                    // Convert markdown-style formatting with colors and math
+                    // Clean, simple formatting without LaTeX
                     formattedText = text
-                        // Math formulas - simple replacements for common symbols
+                        // Remove LaTeX symbols
+                        .replace(/\\\[/g, '')
+                        .replace(/\\\]/g, '')
+                        .replace(/\\\(/g, '')
+                        .replace(/\\\)/g, '')
+                        .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)')
+                        .replace(/\\text\{([^}]+)\}/g, '$1')
+                        .replace(/\\left/g, '')
+                        .replace(/\\right/g, '')
+                        .replace(/\\pi/g, 'π')
+                        .replace(/\\alpha/g, 'α')
+                        .replace(/\\omega/g, 'ω')
+                        .replace(/\\([a-zA-Z]+)/g, '$1')
+                        // Step headers
+                        .replace(/###\s*Step\s(\d+):/g, '<h3 style="color: #6366f1; margin: 15px 0 8px 0; font-size: 1.1rem; font-weight: 600;">Step $1:</h3>')
+                        .replace(/Step\s(\d+):/g, '<h3 style="color: #6366f1; margin: 15px 0 8px 0; font-size: 1.1rem; font-weight: 600;">Step $1:</h3>')
+                        // Math formatting
                         .replace(/\^2/g, '²')
                         .replace(/\^3/g, '³')
-                        .replace(/\^\((\d+)\)/g, '<sup>$1</sup>')
-                        .replace(/\^(\d+)/g, '<sup>$1</sup>')
-                        .replace(/\$\$([^$]+)\$\$/g, '<div class="math-display">$1</div>')
-                        .replace(/\$([^$]+)\$/g, '<span class="math-formula">$1</span>')
+                        .replace(/\^4/g, '⁴')
+                        .replace(/([A-Za-z])_([A-Za-z0-9]+)/g, '$1<sub>$2</sub>')
+                        // Clean up brackets
+                        .replace(/\{([^}]+)\}/g, '$1')
                         // Text formatting
                         .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #6366f1;">$1</strong>')
                         .replace(/\*(.*?)\*/g, '<em style="color: #8b5cf6;">$1</em>')
-                        .replace(/(\d+\.)\s/g, '<span style="color: #ec4899; font-weight: 600;">$1</span> ')
-                        .replace(/###\s(.*?)\n/g, '<h3 style="color: #10b981; margin: 15px 0 10px 0; font-size: 1.1rem;">$1</h3>')
-                        .replace(/##\s(.*?)\n/g, '<h2 style="color: #f59e0b; margin: 15px 0 10px 0; font-size: 1.2rem;">$1</h2>')
-                        .replace(/#\s(.*?)\n/g, '<h1 style="color: #6366f1; margin: 15px 0 10px 0; font-size: 1.3rem;">$1</h1>')
-                        .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
+                        // Clean paragraphs
+                        .replace(/\n\n/g, '</p><p style="margin: 10px 0; line-height: 1.5;">')
                         .replace(/\n/g, '<br>');
                     
                     // Wrap in paragraph if not already
@@ -868,11 +949,41 @@
             imageUpload.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentImage = e.target.result;
+                    // Compress image before uploading
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        // Resize image to max 800px width/height
+                        const maxSize = 800;
+                        let { width, height } = img;
+                        
+                        if (width > height) {
+                            if (width > maxSize) {
+                                height = (height * maxSize) / width;
+                                width = maxSize;
+                            }
+                        } else {
+                            if (height > maxSize) {
+                                width = (width * maxSize) / height;
+                                height = maxSize;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Convert to base64 with compression
+                        currentImage = canvas.toDataURL('image/jpeg', 0.7);
                         chatInput.placeholder = 'Image ready to send! Add a message or just click send.';
                         chatInput.style.borderColor = '#10b981';
+                    };
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
@@ -880,7 +991,7 @@
             
             // Send button functionality
             function setupSendButton() {
-                const sendButton = document.querySelector('.chat-input button:last-child');
+                const sendButton = document.querySelector('.send-btn');
                 if (sendButton) {
                     sendButton.addEventListener('click', sendMessage);
                 }
