@@ -452,39 +452,7 @@
             }
         }
         
-        // Map subscription plan names to dashboard types
-        function mapSubscriptionPlan(plan) {
-            if (!plan) return 'free';
-            const planLower = plan.toLowerCase();
-            if (planLower.includes('premium')) return 'premium';
-            if (planLower.includes('standard')) return 'standard';
-            if (planLower.includes('basic')) return 'basic';
-            return 'free';
-        }
-        
-        function handleSuccessfulLogin(user, remember) {
-            // Check subscription expiry
-            let activeSubscription = user.subscription || 'free';
-            if (user.subscriptionEndDate) {
-                const isExpired = new Date() > new Date(user.subscriptionEndDate);
-                if (isExpired) activeSubscription = 'free';
-            }
-            
-            const userData = {
-                email: user.email,
-                firstName: user.firstName || '',
-                lastName: user.lastName || '',
-                subscription: activeSubscription
-            };
-            
-            if (remember) {
-                localStorage.setItem('loggedInUser', JSON.stringify(userData));
-            } else {
-                sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
-            }
-            
-            redirectToDashboard(activeSubscription);
-        }
+
         
         // Attach event listener
         document.addEventListener('DOMContentLoaded', function() {
