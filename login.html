@@ -389,75 +389,65 @@
             const password = document.getElementById('password').value;
             const remember = document.getElementById('remember').checked;
             
-            // Basic validation
             if (!email || !password) {
                 alert('Please enter both email and password.');
                 return;
             }
             
-            // Reset error messages
-            document.getElementById('emailError').style.display = 'none';
-            document.getElementById('passwordError').style.display = 'none';
-            
-            // Show loading state
             const loginBtn = document.querySelector('.login-btn');
-            const originalText = loginBtn.textContent;
             loginBtn.textContent = 'Logging in...';
             loginBtn.disabled = true;
             
             try {
-                // Check for admin login
-                if ((email === "admin@prepsharp.in" || email === "mailto:admin@prepsharp.in") && password === "6263636696") {
+                // Admin login
+                if (email === "admin@prepsharp.in" && password === "6263636696") {
                     sessionStorage.setItem('adminLoggedIn', 'true');
                     window.location.href = "admin-dashboard.html";
                     return;
                 }
                 
-                // Query Firestore for user
+                // Firebase authentication
                 if (window.db) {
-                    const usersRef = db.collection('users');
-                    const snapshot = await usersRef.where('email', '==', email).get();
+                    const snapshot = await db.collection('users').get();
+                    let loginSuccess = false;
                     
-                    if (!snapshot.empty) {
-                        const userDoc = snapshot.docs[0];
-                        const userData = userDoc.data();
-                        
-                        // Check password (in real app, passwords should be hashed)
-                        if (userData.password === password || userData.mobile === password) {
-                            const subscription = mapSubscriptionPlan(userData.subscriptionPlan);
-                            handleSuccessfulLogin({
-                                id: userDoc.id,
+                    snapshot.forEach(doc => {
+                        const userData = doc.data();
+                        if (userData.email === email && 
+                            (userData.password === password || userData.mobile === password)) {
+                            
+                            loginSuccess = true;
+                            const subscription = userData.subscriptionPlan ? 
+                                userData.subscriptionPlan.toLowerCase() : 'free';
+                            
+                            const userInfo = {
                                 email: userData.email,
                                 name: userData.name,
-                                subscription: subscription,
-                                subscriptionPlan: userData.subscriptionPlan,
-                                subscriptionEndDate: userData.subscriptionEndDate
-                            }, remember);
-                            return;
+                                subscription: subscription
+                            };
+                            
+                            if (remember) {
+                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            } else {
+                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            }
+                            
+                            redirectToDashboard(subscription);
                         }
+                    });
+                    
+                    if (!loginSuccess) {
+                        alert('Invalid email or password. Please try again.');
                     }
+                } else {
+                    alert('Database connection failed. Please try again.');
                 }
-                
-                // Fallback to test accounts if Firebase fails
-                const testAccounts = {
-                    "user@example.com": { subscription: "basic" },
-                    "standard@example.com": { subscription: "standard" },
-                    "premium@example.com": { subscription: "premium" }
-                };
-                
-                if (testAccounts[email] && password === "password123") {
-                    handleSuccessfulLogin({ email: email, subscription: testAccounts[email].subscription }, remember);
-                    return;
-                }
-                
-                alert('Invalid email or password. Please try again.');
                 
             } catch (error) {
                 console.error('Login error:', error);
                 alert('Login failed. Please try again.');
             } finally {
-                // Reset button state
-                loginBtn.textContent = originalText;
+                loginBtn.textContent = 'Login';
                 loginBtn.disabled = false;
             }
         }
