@@ -1,16 +1,29 @@
 # Environment variables
 .env
-ai-coach-backend/.env
+*.env
+.env.local
+.env.production
+
+# API Keys and secrets
+**/api-keys/
+**/*key*
+**/*secret*
 
 # Node modules
 node_modules/
-ai-coach-backend/node_modules/
+npm-debug.log*
 
-# API keys and secrets
-*.key
-*.pem
-config/secrets.js
+# Build outputs
+dist/
+build/
+out/
 
-# OS generated files
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
 .DS_Store
 Thumbs.db
