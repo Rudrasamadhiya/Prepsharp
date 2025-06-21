@@ -911,6 +911,16 @@
             XLSX.writeFile(wb, "PrepSharp_Students.xlsx");
         });
         
+        // Add sample data to Firebase
+        document.getElementById('add-sample-data').addEventListener('click', function() {
+            if (typeof addSampleData === 'function') {
+                addSampleData();
+                alert('Sample data added to Firebase. Click Refresh to see the data.');
+            } else {
+                alert('Firebase not properly initialized');
+            }
+        });
+        
         // Refresh data
         document.getElementById('refresh-data').addEventListener('click', loadStudents);
         
