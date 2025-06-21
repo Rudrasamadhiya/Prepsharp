@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PrepSharp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --body-bg: #f9fafb;
+            --border-radius: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 40px 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+        }
+        
+        .tagline {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .login-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #4f46e5;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(to right, #4f46e5, #6366f1, #818cf8);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
+        }
+        
+        .login-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+        
+        .login-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <span>PrepSharp</span>
+            </div>
+            <div class="tagline">Your Ultimate JEE Preparation Platform</div>
+        </div>
+        
+        <div class="login-card">
+            <h2 class="login-title">Login to Your Account</h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" id="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+                
+                <div class="login-footer">
+                    <a href="forgot-password.html">Forgot Password?</a>
+                    <a href="register.html">Create Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                
+                if (!email || !password) {
+                    alert('Please enter both email and password.');
+                    return;
+                }
+                
+                const loginBtn = document.querySelector('.login-btn');
+                loginBtn.textContent = 'Logging in...';
+                loginBtn.disabled = true;
+                
+                try {
+                    // Admin login
+                    if (email === "admin@prepsharp.in" && password === "6263636696") {
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        window.location.href = "admin-dashboard.html";
+                        return;
+                    }
+                    
+                    // Firebase authentication
+                    if (window.db) {
+                        const snapshot = await db.collection('users').get();
+                        let loginSuccess = false;
+                        
+                        snapshot.forEach(doc => {
+                            const userData = doc.data();
+                            if (userData.email === email && 
+                                (userData.password === password || userData.mobile === password)) {
+                                
+                                loginSuccess = true;
+                                const subscription = userData.subscriptionPlan ? 
+                                    userData.subscriptionPlan.toLowerCase() : 'free';
+                                
+                                const userInfo = {
+                                    email: userData.email,
+                                    name: userData.name,
+                                    subscription: subscription
+                                };
+                                
+                                if (remember) {
+                                    localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                                } else {
+                                    sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                                }
+                                
+                                // Redirect based on subscription
+                                switch(subscription) {
+                                    case 'premium':
+                                        window.location.href = 'dashboards/premium/dashboard.html';
+                                        break;
+                                    case 'standard':
+                                        window.location.href = 'dashboards/standard/dashboard.html';
+                                        break;
+                                    default:
+                                        window.location.href = 'dashboards/basic/dashboard.html';
+                                        break;
+                                }
+                            }
+                        });
+                        
+                        if (!loginSuccess) {
+                            alert('Invalid email or password. Please try again.');
+                        }
+                    } else {
+                        alert('Database connection failed. Please try again.');
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    alert('Login failed. Please try again.');
+                } finally {
+                    loginBtn.textContent = 'Login';
+                    loginBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
