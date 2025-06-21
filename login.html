@@ -356,28 +356,43 @@
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <script>
-    // Fallback in case Firebase fails to load
-    window.addEventListener('error', function(e) {
-        if (e.filename && e.filename.includes('firebase')) {
-            console.warn('Firebase script error detected, using fallback');
+        // Initialize Firebase directly here
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        let db, auth;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            auth = firebase.auth();
+            console.log("Firebase initialized successfully");
+            window.db = db;
+            window.auth = auth;
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
             window.db = null;
+            window.auth = null;
         }
-    }, true);</script>
+    </script>
     <script>
-        // Sample user data (in a real app, this would come from a database)
-        const users = [
-            { email: "user@example.com", password: "password123", subscription: "basic" },
-            { email: "standard@example.com", password: "password123", subscription: "standard" },
-            { email: "premium@example.com", password: "password123", subscription: "premium" },
-            { email: "admin@prepsharp.in", password: "6263636696", isAdmin: true },
-            { email: "mailto:user@example.com", password: "password123", subscription: "basic" },
-            { email: "mailto:standard@example.com", password: "password123", subscription: "standard" },
-            { email: "mailto:premium@example.com", password: "password123", subscription: "premium" },
-            { email: "mailto:admin@prepsharp.in", password: "6263636696", isAdmin: true }
-        ];
+        // Backup test accounts (if Firestore fails)
+        const testUsers = {
+            "admin@prepsharp.in": { password: "6263636696", isAdmin: true, name: "Admin" },
+            "user@example.com": { password: "password123", subscription: "basic", name: "Test User" }
+        };
         
 
         
@@ -389,70 +404,150 @@
             const password = document.getElementById('password').value;
             const remember = document.getElementById('remember').checked;
             
+            // Basic validation
             if (!email || !password) {
                 alert('Please enter both email and password.');
                 return;
             }
             
+            // Reset error messages
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            
+            // Show loading state
             const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.textContent;
             loginBtn.textContent = 'Logging in...';
             loginBtn.disabled = true;
             
             try {
-                // Admin login
+                // Debug Firebase connection
+                console.log('Firebase apps:', window.firebase ? window.firebase.apps.length : 'Firebase not loaded');
+                console.log('Database:', window.db ? 'Connected' : 'Not connected');
+                console.log('Auth:', window.auth ? 'Connected' : 'Not connected');
+                
+                // Check for admin login first
                 if (email === "admin@prepsharp.in" && password === "6263636696") {
                     sessionStorage.setItem('adminLoggedIn', 'true');
                     window.location.href = "admin-dashboard.html";
                     return;
                 }
                 
-                // Firebase authentication
-                if (window.db) {
-                    const snapshot = await db.collection('users').get();
-                    let loginSuccess = false;
-                    
-                    snapshot.forEach(doc => {
-                        const userData = doc.data();
-                        if (userData.email === email && 
-                            (userData.password === password || userData.mobile === password)) {
-                            
-                            loginSuccess = true;
-                            const subscription = userData.subscriptionPlan ? 
-                                userData.subscriptionPlan.toLowerCase() : 'free';
-                            
-                            const userInfo = {
-                                email: userData.email,
-                                name: userData.name,
-                                subscription: subscription
-                            };
-                            
-                            if (remember) {
-                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            } else {
-                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            }
-                            
-                            redirectToDashboard(subscription);
-                        }
-                    });
-                    
-                    if (!loginSuccess) {
-                        alert('Invalid email or password. Please try again.');
+                // Check test users first (works without Firebase)
+                if (testUsers[email] && testUsers[email].password === password) {
+                    if (testUsers[email].isAdmin) {
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        window.location.href = "admin-dashboard.html";
+                    } else {
+                        handleSuccessfulLogin({
+                            email: email,
+                            name: testUsers[email].name,
+                            subscription: testUsers[email].subscription
+                        }, remember);
                     }
-                } else {
-                    alert('Database connection failed. Please try again.');
+                    return;
                 }
+                
+
+                
+                // Try Firestore database first (for existing users like yours)
+                if (window.db && window.firebase && window.firebase.apps.length > 0) {
+                    try {
+                        console.log('Searching for email:', email);
+                        const usersSnapshot = await db.collection('users').where('email', '==', email).get();
+                        console.log('Found users:', usersSnapshot.size);
+                        
+                        if (!usersSnapshot.empty) {
+                            const userDoc = usersSnapshot.docs[0];
+                            const userData = userDoc.data();
+                            console.log('User data:', userData);
+                            console.log('Entered password:', password);
+                            console.log('Stored password:', userData.password);
+                            
+                            // Check password
+                            if (userData.password === password) {
+                                console.log('Password match! Logging in...');
+                                handleSuccessfulLogin({
+                                    id: userDoc.id,
+                                    email: userData.email,
+                                    name: userData.name,
+                                    subscription: userData.subscription || 'free'
+                                }, remember);
+                                return;
+                            } else {
+                                console.log('Password mismatch!');
+                            }
+                        } else {
+                            console.log('No user found with this email');
+                        }
+                        
+                        // Try Firebase Auth as backup
+                        if (window.auth) {
+                            try {
+                                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                                const user = userCredential.user;
+                                handleSuccessfulLogin({
+                                    id: user.uid,
+                                    email: user.email,
+                                    name: user.displayName || '',
+                                    subscription: 'free'
+                                }, remember);
+                                return;
+                            } catch (authError) {
+                                console.log('Firebase Auth also failed:', authError.message);
+                            }
+                        }
+                        
+                    } catch (firebaseError) {
+                        console.log('Firestore query failed:', firebaseError.message);
+                    }
+                }
+                
+                alert('Invalid email or password. Please try again.');
                 
             } catch (error) {
                 console.error('Login error:', error);
                 alert('Login failed. Please try again.');
             } finally {
-                loginBtn.textContent = 'Login';
+                // Reset button state
+                loginBtn.textContent = originalText;
                 loginBtn.disabled = false;
             }
         }
         
-
+        // Map subscription plan names to dashboard types
+        function mapSubscriptionPlan(plan) {
+            if (!plan) return 'free';
+            const planLower = plan.toLowerCase();
+            if (planLower.includes('premium')) return 'premium';
+            if (planLower.includes('standard')) return 'standard';
+            if (planLower.includes('basic')) return 'basic';
+            return 'free';
+        }
+        
+        function handleSuccessfulLogin(user, remember) {
+            // Check subscription expiry
+            let activeSubscription = user.subscription || 'free';
+            if (user.subscriptionEndDate) {
+                const isExpired = new Date() > new Date(user.subscriptionEndDate);
+                if (isExpired) activeSubscription = 'free';
+            }
+            
+            const userData = {
+                email: user.email,
+                firstName: user.firstName || '',
+                lastName: user.lastName || '',
+                subscription: activeSubscription
+            };
+            
+            if (remember) {
+                localStorage.setItem('loggedInUser', JSON.stringify(userData));
+            } else {
+                sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
+            }
+            
+            redirectToDashboard(activeSubscription);
+        }
         
         // Attach event listener
         document.addEventListener('DOMContentLoaded', function() {

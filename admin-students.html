@@ -638,7 +638,32 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script>
+        // Initialize Firebase directly with your real config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase connected successfully for admin panel");
+            window.db = db;
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            window.db = null;
+        }
+    </script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -648,35 +673,38 @@
         // Store all students data
         let studentsData = [];
         
-        // Load students data from Firestore or localStorage
-        function loadStudents() {
+        // Load students data from Firebase
+        async function loadStudents() {
             const tbody = document.getElementById('students-data');
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading students from Firebase...</td></tr>';
             
-            // Check if Firebase is available and initialized
-            if (typeof db !== 'undefined' && db !== null) {
-                try {
-                    console.log("Fetching users from Firebase...");
-                    // Try to fetch from Firestore
-                    db.collection("users").get().then((querySnapshot) => {
-                        console.log("Firebase query completed, documents found:", querySnapshot.size);
-                        const users = {};
-                        querySnapshot.forEach((doc) => {
-                            console.log("User document:", doc.id, doc.data());
-                            users[doc.id] = doc.data();
-                        });
-                        displayUsers(users);
-                    }).catch(error => {
-                        console.error("Error loading students from Firestore:", error);
-                        loadFromLocalStorage();
+            try {
+                if (window.db) {
+                    console.log("Fetching students from Firebase database...");
+                    const querySnapshot = await db.collection("users").get();
+                    console.log(`Found ${querySnapshot.size} students in database`);
+                    
+                    const users = {};
+                    querySnapshot.forEach((doc) => {
+                        const userData = doc.data();
+                        console.log(`Student: ${userData.name || userData.email}`, userData);
+                        users[doc.id] = userData;
                     });
-                } catch (error) {
-                    console.error("Error accessing Firestore:", error);
-                    loadFromLocalStorage();
+                    
+                    if (Object.keys(users).length > 0) {
+                        displayUsers(users);
+                        console.log("Students loaded successfully!");
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No students found in database</td></tr>';
+                        updateStats({});
+                    }
+                } else {
+                    throw new Error("Firebase not connected");
                 }
-            } else {
-                console.log("Firebase not available, loading from localStorage");
-                loadFromLocalStorage();
+            } catch (error) {
+                console.error("Error loading students:", error);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error loading students: ${error.message}</td></tr>`;
+                updateStats({});
             }
         }
         
@@ -914,12 +942,42 @@
         });
         
         // Add sample data to Firebase
-        document.getElementById('add-sample-data').addEventListener('click', function() {
-            if (typeof addSampleData === 'function') {
-                addSampleData();
-                alert('Sample data added to Firebase. Click Refresh to see the data.');
-            } else {
-                alert('Firebase not properly initialized');
+        document.getElementById('add-sample-data').addEventListener('click', async function() {
+            if (!window.db) {
+                alert('Firebase not connected!');
+                return;
+            }
+            
+            try {
+                const sampleUsers = [
+                    {
+                        name: "Test Student 1",
+                        email: "student1@test.com",
+                        mobile: "9876543210",
+                        subscriptionPlan: "Premium",
+                        class: "12th",
+                        createdAt: new Date(),
+                        subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                    },
+                    {
+                        name: "Test Student 2",
+                        email: "student2@test.com",
+                        mobile: "9876543211",
+                        subscriptionPlan: "Basic",
+                        class: "11th",
+                        createdAt: new Date()
+                    }
+                ];
+                
+                for (let user of sampleUsers) {
+                    await db.collection('users').add(user);
+                }
+                
+                alert('Sample students added successfully!');
+                loadStudents(); // Refresh the data
+            } catch (error) {
+                console.error('Error adding sample data:', error);
+                alert('Error adding sample data: ' + error.message);
             }
         });
         
