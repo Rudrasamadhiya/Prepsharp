@@ -1,11 +1,11 @@
-// Firebase configuration for PrepSharp
+// Firebase configuration for PrepSharp - Replace with your actual config
 const firebaseConfig = {
-  apiKey: "AIzaSyBvOiJIAJOTgEtJvHlOI-4C2WO0QkQQRjU",
-  authDomain: "prepsharp-jee.firebaseapp.com",
-  projectId: "prepsharp-jee",
-  storageBucket: "prepsharp-jee.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:prepsharp-jee-app"
+  apiKey: "your-actual-api-key",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
 };
 
 // Initialize Firebase and make db globally accessible

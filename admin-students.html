@@ -656,21 +656,23 @@
             // Check if Firebase is available and initialized
             if (typeof db !== 'undefined' && db !== null) {
                 try {
+                    console.log("Fetching users from Firebase...");
                     // Try to fetch from Firestore
                     db.collection("users").get().then((querySnapshot) => {
+                        console.log("Firebase query completed, documents found:", querySnapshot.size);
                         const users = {};
                         querySnapshot.forEach((doc) => {
+                            console.log("User document:", doc.id, doc.data());
                             users[doc.id] = doc.data();
                         });
                         displayUsers(users);
-                        updateStats(users);
                     }).catch(error => {
                         console.error("Error loading students from Firestore:", error);
-                        loadFromLocalStorage(); // Fallback to localStorage
+                        loadFromLocalStorage();
                     });
                 } catch (error) {
                     console.error("Error accessing Firestore:", error);
-                    loadFromLocalStorage(); // Fallback to localStorage
+                    loadFromLocalStorage();
                 }
             } else {
                 console.log("Firebase not available, loading from localStorage");
