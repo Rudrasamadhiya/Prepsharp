@@ -652,21 +652,28 @@
             const tbody = document.getElementById('students-data');
             tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
             
-            try {
-                // Try to fetch from Firestore
-                db.collection("users").get().then((querySnapshot) => {
-                    const users = {};
-                    querySnapshot.forEach((doc) => {
-                        users[doc.id] = doc.data();
+            // Check if Firebase is available and initialized
+            if (typeof db !== 'undefined' && db !== null) {
+                try {
+                    // Try to fetch from Firestore
+                    db.collection("users").get().then((querySnapshot) => {
+                        const users = {};
+                        querySnapshot.forEach((doc) => {
+                            users[doc.id] = doc.data();
+                        });
+                        displayUsers(users);
+                        updateStats(users);
+                    }).catch(error => {
+                        console.error("Error loading students from Firestore:", error);
+                        loadFromLocalStorage(); // Fallback to localStorage
                     });
-                    displayUsers(users);
-                }).catch(error => {
-                    console.error("Error loading students from Firestore:", error);
+                } catch (error) {
+                    console.error("Error accessing Firestore:", error);
                     loadFromLocalStorage(); // Fallback to localStorage
-                });
-            } catch (error) {
-                console.error("Error loading students:", error);
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error loading data: ${error.message}</td></tr>`;
+                }
+            } else {
+                console.log("Firebase not available, loading from localStorage");
+                loadFromLocalStorage();
             }
         }
         
@@ -685,12 +692,67 @@
             if (usersJson) {
                 try {
                     users = JSON.parse(usersJson);
+                    if (Object.keys(users).length > 0) {
+                        displayUsers(users);
+                        return;
+                    }
                 } catch (e) {
                     console.error("Error parsing users JSON:", e);
                 }
             }
             
-            displayUsers(users);
+            // If no data in localStorage, try to load from db/users.json
+            loadFromJsonFile();
+        }
+        
+        // Load users from db/users.json file
+        function loadFromJsonFile() {
+            const tbody = document.getElementById('students-data');
+            
+            fetch('db/users.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load users data');
+                    }
+                    return response.json();
+                })
+                .then(users => {
+                    displayUsers(users);
+                })
+                .catch(error => {
+                    console.error('Error loading users from JSON file:', error);
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No student data available</td></tr>';
+                    updateStats({});
+                });
+        }
+        
+        // Update statistics
+        function updateStats(users) {
+            const totalStudents = Object.keys(users).length;
+            const activeStudents = Object.values(users).filter(user => {
+                const plan = user.subscriptionPlan || user.plan || 'Free';
+                return plan !== 'Free';
+            }).length;
+            
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const newStudents = Object.values(users).filter(user => {
+                if (user.createdAt) {
+                    const createdDate = new Date(user.createdAt);
+                    return createdDate >= oneWeekAgo;
+                }
+                return false;
+            }).length;
+            
+            const premiumStudents = Object.values(users).filter(user => {
+                const plan = user.subscriptionPlan || user.plan || 'Free';
+                return plan === 'Premium' || plan === 'Pro';
+            }).length;
+            
+            document.getElementById('total-students').textContent = totalStudents;
+            document.getElementById('active-students').textContent = activeStudents;
+            document.getElementById('new-students').textContent = newStudents;
+            document.getElementById('premium-students').textContent = premiumStudents;
         }
         
         // Display users in the table
@@ -701,11 +763,16 @@
             
             if (Object.keys(users).length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No students registered yet</td></tr>';
+                updateStats({});
                 return;
             }
             
             // Process and display each user
             Object.entries(users).forEach(([id, user]) => {
+                // Skip if user data is invalid
+                if (!user || typeof user !== 'object') {
+                    return;
+                }
                 // Format registration date properly
                 let registrationDate = 'N/A';
                 if (user.createdAt) {
@@ -806,6 +873,9 @@
                 `;
                 tbody.appendChild(row);
             });
+            
+            // Update statistics
+            updateStats(users);
         }
         
         // Export to Excel

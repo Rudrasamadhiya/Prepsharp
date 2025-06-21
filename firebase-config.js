@@ -8,11 +8,13 @@ const firebaseConfig = {
   appId: "1:123456789012:web:abc123def456ghi789jkl"
 };
 
-// Initialize Firebase
+// Initialize Firebase and make db globally accessible
+let db;
 try {
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  db = firebase.firestore();
   console.log("Firebase initialized successfully");
 } catch (error) {
   console.error("Firebase initialization error:", error);
+  db = null;
 }
