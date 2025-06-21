@@ -7,10 +7,60 @@
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Premium color scheme */
+        :root {
+            --premium-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --premium-gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --premium-gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --premium-dark: #1a1a2e;
+            --premium-darker: #16213e;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Premium background */
+        body {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .dashboard-container {
+            backdrop-filter: blur(20px);
+        }
+        
+        .sidebar {
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
         /* User profile styles */
         .user-profile {
             position: relative;
             cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .user-dropdown {
@@ -18,28 +68,53 @@
             top: 100%;
             right: 0;
             width: 200px;
-            background-color: white;
+            background: var(--edu-card);
             border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             padding: 10px 0;
             z-index: 100;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
+            border: 1px solid var(--edu-border);
         }
         
         .avatar-initials {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            background: var(--premium-gradient);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            margin-right: 10px;
+            margin-right: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Premium welcome section */
+        .welcome-section {
+            background: var(--premium-gradient);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
         /* AI Coach specific styles */
@@ -51,9 +126,10 @@
         }
         
         .ai-sidebar {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
+            background: var(--edu-card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--edu-border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -61,7 +137,9 @@
         
         .ai-sidebar-header {
             padding: 20px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--edu-border);
+            background: var(--edu-primary);
+            color: white;
         }
         
         .ai-sidebar-title {
@@ -74,7 +152,7 @@
         }
         
         .ai-sidebar-title i {
-            color: var(--premium-color);
+            color: white;
         }
         
         .ai-topics {
@@ -92,15 +170,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--edu-text);
         }
         
         .ai-topic:hover {
-            background-color: rgba(147, 51, 234, 0.05);
+            background-color: #f1f5f9;
+            color: var(--edu-primary);
         }
         
         .ai-topic.active {
-            background-color: rgba(147, 51, 234, 0.1);
-            color: var(--premium-color);
+            background-color: var(--edu-primary);
+            color: white;
         }
         
         .ai-topic i {
@@ -123,20 +203,22 @@
         }
         
         .ai-chat {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
+            background: var(--edu-card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--edu-border);
             display: flex;
             flex-direction: column;
-            border-top: 3px solid var(--premium-color);
+            border-top: 3px solid var(--edu-primary);
         }
         
         .ai-chat-header {
             padding: 20px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--edu-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #f8fafc;
         }
         
         .ai-chat-title {
@@ -145,10 +227,11 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--edu-text);
         }
         
         .ai-chat-title i {
-            color: var(--premium-color);
+            color: var(--edu-primary);
         }
         
         .ai-chat-actions {
@@ -157,8 +240,8 @@
         }
         
         .ai-chat-actions button {
-            background-color: transparent;
-            border: 1px solid rgba(0,0,0,0.1);
+            background: transparent;
+            border: 1px solid var(--edu-border);
             border-radius: 6px;
             padding: 8px 12px;
             cursor: pointer;
@@ -166,12 +249,13 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            color: var(--edu-text);
         }
         
         .ai-chat-actions button:hover {
-            background-color: rgba(147, 51, 234, 0.05);
-            border-color: var(--premium-color);
-            color: var(--premium-color);
+            background: var(--edu-primary);
+            color: white;
+            border-color: var(--edu-primary);
         }
         
         .ai-chat-messages {
@@ -208,14 +292,17 @@
         
         .ai-message-content {
             flex: 1;
-            background-color: rgba(147, 51, 234, 0.05);
+            background: #f1f5f9;
             padding: 15px;
             border-radius: 12px;
             position: relative;
+            border: 1px solid var(--edu-border);
         }
         
         .user-message .ai-message-content {
-            background-color: rgba(79, 70, 229, 0.05);
+            background: var(--edu-primary);
+            color: white;
+            border: 1px solid var(--edu-primary);
         }
         
         .ai-message-content::before {
@@ -267,71 +354,89 @@
         .ai-chat-input input {
             flex: 1;
             padding: 12px 15px;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid var(--edu-border);
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.2s ease;
+            background: var(--edu-card);
         }
         
         .ai-chat-input input:focus {
             outline: none;
-            border-color: var(--premium-color);
-            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.1);
+            border-color: var(--edu-primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
         }
         
         .ai-chat-input button {
-            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            background: var(--edu-primary);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 0 20px;
+            padding: 12px 20px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 500;
         }
         
         .ai-chat-input button:hover {
-            box-shadow: 0 4px 8px rgba(147, 51, 234, 0.3);
-            transform: translateY(-2px);
+            background: var(--edu-secondary);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
         
         .ai-features {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
             margin-top: 30px;
+            align-items: start;
         }
         
         .ai-feature-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 3px solid var(--premium-color);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: fit-content;
+        }
+        
+        .ai-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--premium-gradient);
         }
         
         .ai-feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         
         .ai-feature-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background-color: rgba(147, 51, 234, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--premium-gradient-3);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
         }
         
         .ai-feature-icon i {
-            font-size: 24px;
-            color: var(--premium-color);
+            font-size: 28px;
+            color: white;
         }
         
         .ai-feature-title {
@@ -364,6 +469,43 @@
             margin: 10px 0;
             font-family: 'Times New Roman', serif;
             font-size: 18px;
+        }
+        
+        /* Premium button styling */
+        .start-btn {
+            background: var(--premium-gradient-2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .start-btn:hover {
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .ai-feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+        
+        .ai-feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -444,8 +586,11 @@
             <!-- Page Content -->
             <div class="dashboard-content">
                 <div class="welcome-section">
-                    <h1>AI Study Coach</h1>
-                    <p>Get personalized guidance and instant answers to your doubts</p>
+                    <h1>🎓 AI Study Coach</h1>
+                    <p>Get personalized academic guidance and instant answers to your study questions from our advanced AI tutor</p>
+                    <div style="margin-top: 16px;">
+                        <span style="background: var(--edu-primary); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">Premium Learning Tool</span>
+                    </div>
                 </div>
                 
                 <!-- AI Chat Interface -->
@@ -699,7 +844,7 @@
         </main>
     </div>
     
-    <script src="../../js/auth-check.js"></script>
+    <!-- <script src="../../js/auth-check.js"></script> -->
     <script>
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -810,6 +955,8 @@
             hours = hours ? hours : 12; // Convert 0 to 12
             return `${hours}:${minutes} ${ampm}`;
         }
+        
+
     </script>
 </body>
 </html>
