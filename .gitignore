@@ -1,0 +1,16 @@
+# Environment variables
+.env
+ai-coach-backend/.env
+
+# Node modules
+node_modules/
+ai-coach-backend/node_modules/
+
+# API keys and secrets
+*.key
+*.pem
+config/secrets.js
+
+# OS generated files
+.DS_Store
+Thumbs.db
