@@ -583,7 +583,7 @@
                                     <span style="background: rgba(236, 72, 153, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">🧪 Chemistry</span>
                                     <span style="background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">📐 Mathematics</span>
                                 </div>
-                                <p>💡 Ask me anything or upload an image of your problem!</p>
+                                <p>💡 Try asking: "What is mass?", "Explain derivatives", "What are acids?"</p>
                             </div>
                         </div>
                     </div>
@@ -684,42 +684,64 @@
         async function sendMessage() {
             if (!chatInput) return;
             
-            const message = chatInput.value.trim();
+            const message = chatInput.value.trim().toLowerCase();
             if (!message && !currentImage) {
                 alert('Please type a message!');
                 return;
             }
             
-            addMessage(message || 'Image uploaded', 'user');
+            addMessage(chatInput.value.trim() || 'Image uploaded', 'user');
             chatInput.value = '';
             
             const loadingDiv = addMessage('🤔 AI is thinking...', 'ai');
             
-            try {
-                const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        inputs: `You are a JEE study coach. Help with Physics, Chemistry, Math. Question: ${message}`
-                    })
-                });
-                
-                const data = await response.json();
+            setTimeout(() => {
                 loadingDiv.remove();
-                
-                if (data.generated_text) {
-                    addMessage(data.generated_text, 'ai');
-                } else {
-                    addMessage('I can help you with JEE Physics, Chemistry, and Math questions. Please ask me anything!', 'ai');
+                addMessage(getAIResponse(message), 'ai');
+            }, 1000);
+        }
+        
+        function getAIResponse(message) {
+            const responses = {
+                'mass': '**Mass** is the amount of matter in an object. It\'s measured in kg and doesn\'t change with location. Formula: F = ma (Newton\'s 2nd law)',
+                'force': '**Force** is a push or pull that changes motion. F = ma. Types: Contact forces (friction, normal) and Non-contact forces (gravity, magnetic)',
+                'velocity': '**Velocity** is displacement per unit time with direction. v = s/t. It\'s a vector quantity unlike speed which is scalar.',
+                'acceleration': '**Acceleration** is rate of change of velocity. a = (v-u)/t or a = F/m. Measured in m/s²',
+                'gravity': '**Gravity** is the force of attraction between masses. g = 9.8 m/s² on Earth. F = GMm/r²',
+                'energy': '**Energy** is the capacity to do work. Types: Kinetic (½mv²), Potential (mgh), Heat, etc. Energy is conserved.',
+                'momentum': '**Momentum** = mass × velocity (p = mv). It\'s conserved in collisions. Impulse = change in momentum.',
+                'work': '**Work** = Force × displacement × cos(θ). W = F·s. Measured in Joules. Work-Energy theorem: W = ΔKE',
+                'power': '**Power** is rate of doing work. P = W/t = F·v. Measured in Watts (J/s)',
+                'atom': '**Atom** is the basic unit of matter. Contains protons, neutrons (nucleus) and electrons (shells). Atomic number = protons',
+                'molecule': '**Molecule** is a group of atoms bonded together. Can be same element (O₂) or different (H₂O)',
+                'mole': '**Mole** is amount of substance containing 6.022×10²³ particles (Avogadro\'s number). 1 mole = atomic/molecular mass in grams',
+                'acid': '**Acid** releases H⁺ ions in water. pH < 7. Examples: HCl, H₂SO₄. Strong acids ionize completely',
+                'base': '**Base** releases OH⁻ ions in water. pH > 7. Examples: NaOH, Ca(OH)₂. Strong bases ionize completely',
+                'oxidation': '**Oxidation** is loss of electrons or gain of oxygen. Reducing agent gets oxidized. LEO: Lose Electrons = Oxidation',
+                'reduction': '**Reduction** is gain of electrons or loss of oxygen. Oxidizing agent gets reduced. GER: Gain Electrons = Reduction',
+                'derivative': '**Derivative** is rate of change. d/dx(xⁿ) = nxⁿ⁻¹. Geometric meaning: slope of tangent line',
+                'integral': '**Integral** is area under curve. ∫xⁿdx = xⁿ⁺¹/(n+1) + C. Fundamental theorem connects derivatives and integrals',
+                'limit': '**Limit** is the value a function approaches. lim(x→a) f(x). Used to define derivatives and continuity',
+                'function': '**Function** maps input to unique output. f(x) = y. Domain (input) and Range (output). Types: linear, quadratic, exponential',
+                'trigonometry': '**Trigonometry** studies triangles. sin²θ + cos²θ = 1. Key ratios: sin, cos, tan. Used in waves, circles, oscillations',
+                'probability': '**Probability** = favorable outcomes / total outcomes. P(A) = n(A)/n(S). Range: 0 ≤ P ≤ 1'
+            };
+            
+            for (let key in responses) {
+                if (message.includes(key)) {
+                    return responses[key];
                 }
-                
-            } catch (error) {
-                loadingDiv.remove();
-                addMessage('I\'m here to help with your JEE preparation! Ask me about Physics, Chemistry, or Math concepts.', 'ai');
             }
+            
+            if (message.includes('hello') || message.includes('hi')) {
+                return '👋 Hello! I\'m your JEE AI Coach. Ask me about **Physics** (mechanics, waves, electricity), **Chemistry** (atoms, reactions, organic), or **Math** (calculus, algebra, trigonometry)!';
+            }
+            
+            if (message.includes('help')) {
+                return '🎯 I can help with:\n• **Physics**: Force, Energy, Waves, Electricity\n• **Chemistry**: Atoms, Reactions, Organic compounds\n• **Math**: Calculus, Algebra, Trigonometry\n\nJust ask your question!';
+            }
+            
+            return `🤔 I understand you\'re asking about "${message}". Could you be more specific? I can help with:\n\n📚 **Physics**: mechanics, thermodynamics, waves\n🧪 **Chemistry**: atomic structure, chemical bonding\n📐 **Math**: calculus, algebra, coordinate geometry\n\nTry asking: "What is force?" or "Explain derivatives"`;
         }
         
         function addMessage(text, sender) {

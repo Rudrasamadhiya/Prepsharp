@@ -6,7 +6,6 @@
     <title>Register - PrepSharp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Same styling as login page */
         :root {
             --primary-color: #4f46e5;
             --secondary-color: #6366f1;
@@ -223,8 +222,6 @@
                         <input type="tel" id="mobile" class="form-input" placeholder="Enter mobile number" required style="flex: 1;">
                     </div>
                     
-
-                    
                     <button type="button" id="send-otp" class="register-btn" style="margin-top: 10px; display: none; background: #10b981;">Send Mobile OTP</button>
                     <div id="mobileError" class="error-message">Please enter a valid mobile number</div>
                     
@@ -327,8 +324,6 @@
             }
         }
         
-
-        
         // Email validation and verification
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -410,7 +405,7 @@
         document.getElementById('mobile').addEventListener('input', validateMobile);
         document.getElementById('country-code').addEventListener('change', validateMobile);
         
-        // Send OTP with Firebase Phone Auth + Fallback
+        // Send OTP with Firebase Phone Auth
         document.getElementById('send-otp').addEventListener('click', async function() {
             const countryCode = document.getElementById('country-code').value;
             const mobileNumber = document.getElementById('mobile').value.trim();
@@ -494,11 +489,6 @@
             
             // Validation
             let hasError = false;
-            
-            if (!mobile.startsWith('+91') || mobile.length < 13) {
-                document.getElementById('mobileError').style.display = 'block';
-                hasError = true;
-            }
             
             if (!emailVerified) {
                 alert('Please verify your email first!');
