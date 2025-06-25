@@ -178,6 +178,8 @@
             animation: messageSlide 0.5s ease-out;
             position: relative;
             overflow: hidden;
+            display: block;
+            word-wrap: break-word;
         }
         
         .message-content::before {
@@ -552,9 +554,14 @@
             
             <!-- Page Content -->
             <div class="dashboard-content">
-                <div class="welcome-section">
-                    <h1>🎓 AI Study Coach</h1>
-                    <p>Your intelligent learning companion for Physics, Chemistry, and Mathematics. Get instant help with concepts, problem-solving, and academic guidance.</p>
+                <div class="welcome-section" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 16px; padding: 30px; border: 2px solid rgba(99, 102, 241, 0.2);">
+                    <h1 style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🚀 PrepSharp AI Coach</h1>
+                    <p style="font-size: 1.1rem; color: #64748b;">Your <strong style="color: #6366f1;">intelligent JEE companion</strong> for Physics, Chemistry, and Mathematics. Get instant help with concepts, problem-solving, and academic guidance!</p>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <span style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">📸 Image Analysis</span>
+                        <span style="background: linear-gradient(135deg, #ec4899, #f97316); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">🧮 Math Solver</span>
+                        <span style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">⚡ Instant Help</span>
+                    </div>
                 </div>
                 
                 <!-- Chat Interface -->
@@ -566,30 +573,17 @@
                     <div class="chat-messages">
                         <div class="message ai">
                             <div class="message-avatar">
-                                <i class="fas fa-robot"></i>
+                                <i class="fas fa-graduation-cap"></i>
                             </div>
                             <div class="message-content">
-                                <p>Hello! I'm your AI study coach. Ask me anything about Physics, Chemistry, or Mathematics!</p>
-                            </div>
-                        </div>
-                        
-                        <div class="message user">
-                            <div class="message-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="message-content">
-                                <p>Can you explain relative velocity with an example?</p>
-                            </div>
-                        </div>
-                        
-                        <div class="message ai">
-                            <div class="message-avatar">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="message-content">
-                                <p>Sure! Relative velocity is how fast one object moves compared to another.</p>
-                                <p><strong>Example:</strong> If you're on a train moving at 60 km/h and walk forward at 5 km/h, someone on the ground sees you moving at 65 km/h total.</p>
-                                <p><strong>Formula:</strong> v<sub>relative</sub> = v<sub>object</sub> - v<sub>reference</sub></p>
+                                <p>🎓 Hello! I'm your <strong style="color: #6366f1;">PrepSharp AI Study Coach</strong></p>
+                                <p>✨ Ready to help you crack <strong style="color: #ec4899;">JEE</strong> with:</p>
+                                <div style="margin: 10px 0;">
+                                    <span style="background: rgba(99, 102, 241, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">⚡ Physics</span>
+                                    <span style="background: rgba(236, 72, 153, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">🧪 Chemistry</span>
+                                    <span style="background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">📐 Mathematics</span>
+                                </div>
+                                <p>💡 Ask me anything or upload an image of your problem!</p>
                             </div>
                         </div>
                     </div>
@@ -600,25 +594,25 @@
                             
                             <div class="floating-buttons">
                                 <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                                <button class="image-btn" type="button" title="Upload Image">📷</button>
-                                <button class="math-toggle" type="button" title="Math Keyboard">🔢</button>
-                                <button class="send-btn" type="button"><i class="fas fa-paper-plane"></i></button>
+                                <button class="image-btn" type="button" onclick="uploadImage()" title="Upload Image">📷</button>
+                                <button class="math-toggle" type="button" onclick="toggleMathKeyboard()" title="Math Keyboard">🔢</button>
+                                <button class="send-btn" type="button" onclick="sendMessage()" title="Send Message"><i class="fas fa-paper-plane"></i></button>
                             </div>
                             
                             <div class="math-keyboard" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: white; border: 2px solid #6366f1; border-radius: 12px; padding: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 1000;">
                                 <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;">
-                                    <button type="button" class="math-btn" data-symbol="²">x²</button>
-                                    <button type="button" class="math-btn" data-symbol="³">x³</button>
-                                    <button type="button" class="math-btn" data-symbol="^">(^)</button>
-                                    <button type="button" class="math-btn" data-symbol="∫">∫</button>
-                                    <button type="button" class="math-btn" data-symbol="√">√</button>
-                                    <button type="button" class="math-btn" data-symbol="π">π</button>
-                                    <button type="button" class="math-btn" data-symbol="α">α</button>
-                                    <button type="button" class="math-btn" data-symbol="β">β</button>
-                                    <button type="button" class="math-btn" data-symbol="θ">θ</button>
-                                    <button type="button" class="math-btn" data-symbol="∞">∞</button>
-                                    <button type="button" class="math-btn" data-symbol="≤">≤</button>
-                                    <button type="button" class="math-btn" data-symbol="≥">≥</button>
+                                    <button type="button" onclick="insertSymbol('²')">x²</button>
+                                    <button type="button" onclick="insertSymbol('³')">x³</button>
+                                    <button type="button" onclick="insertSymbol('^')">(^)</button>
+                                    <button type="button" onclick="insertSymbol('∫')">∫</button>
+                                    <button type="button" onclick="insertSymbol('√')">√</button>
+                                    <button type="button" onclick="insertSymbol('π')">π</button>
+                                    <button type="button" onclick="insertSymbol('α')">α</button>
+                                    <button type="button" onclick="insertSymbol('β')">β</button>
+                                    <button type="button" onclick="insertSymbol('θ')">θ</button>
+                                    <button type="button" onclick="insertSymbol('∞')">∞</button>
+                                    <button type="button" onclick="insertSymbol('≤')">≤</button>
+                                    <button type="button" onclick="insertSymbol('≥')">≥</button>
                                 </div>
                             </div>
                         </div>
@@ -677,352 +671,105 @@
         </main>
     </div>
     
-    <!-- 
-    BACKEND SETUP INSTRUCTIONS (SEPARATE FROM GITHUB):
-    
-    1. Create a new folder called 'ai-coach-backend' OUTSIDE your GitHub repo
-    2. Create package.json file with this content:
-    
-    {
-      "name": "ai-coach-backend",
-      "version": "1.0.0",
-      "type": "module",
-      "scripts": {
-        "start": "node server.js"
-      },
-      "dependencies": {
-        "express": "^4.18.2",
-        "openai": "^4.20.1",
-        "cors": "^2.8.5",
-        "dotenv": "^16.0.3"
-      }
-    }
-    
-    3. Create server.js file with this content:
-    
-    import express from 'express';
-    import OpenAI from 'openai';
-    import cors from 'cors';
-    import dotenv from 'dotenv';
-    
-    dotenv.config();
-    
-    const app = express();
-    
-    app.use(cors());
-    app.use(express.json());
-    
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-    
-    app.post('/api/chat', async (req, res) => {
-      try {
-        const completion = await openai.chat.completions.create({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "You are a helpful AI study coach for students. Keep responses concise, clear, and well-formatted. Use bullet points for lists. Limit responses to 3-4 paragraphs maximum." },
-            { role: "user", content: req.body.message }
-          ]
-        });
-        res.json({ reply: completion.choices[0].message.content });
-      } catch (error) {
-        res.status(500).json({ error: 'Something went wrong' });
-      }
-    });
-    
-    app.listen(3000, () => {
-      console.log('Server running on http://localhost:3000');
-    });
-    
-    4. Create .env file in backend folder:
-    OPENAI_API_KEY=your-actual-api-key-here
-    
-    5. Add to package.json dependencies:
-    "dotenv": "^16.0.3"
-    
-    6. Add to top of server.js:
-    import dotenv from 'dotenv';
-    dotenv.config();
-    
-    7. Open terminal in the backend folder
-    8. Run: npm install
-    9. Run: npm start
-    
-    IMPORTANT: Keep backend folder separate from your GitHub repo!
-    -->
+
     
     <script>
-        // OpenAI Chat Integration
-        async function sendMessageToAI(message, imageData = null) {
+        let chatInput, chatMessages, currentImage = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            chatInput = document.querySelector('.chat-input textarea');
+            chatMessages = document.querySelector('.chat-messages');
+        });
+        
+        async function sendMessage() {
+            if (!chatInput) return;
+            
+            const message = chatInput.value.trim();
+            if (!message && !currentImage) {
+                alert('Please type a message!');
+                return;
+            }
+            
+            addMessage(message || 'Image uploaded', 'user');
+            chatInput.value = '';
+            
+            const loadingDiv = addMessage('🤔 AI is thinking...', 'ai');
+            
             try {
-                console.log('Sending message to AI:', message);
-                console.log('Has image:', !!imageData);
-                
-                const requestBody = { message: message };
-                if (imageData) {
-                    console.log('Image data length:', imageData.length);
-                    requestBody.image = imageData;
-                    requestBody.hasImage = true;
-                }
-                
-                const response = await fetch('http://localhost:3000/api/chat', {
+                const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
                     method: 'POST',
                     headers: {
+                        'Authorization': 'Bearer hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(requestBody)
+                    body: JSON.stringify({
+                        inputs: `You are a JEE study coach. Help with Physics, Chemistry, Math. Question: ${message}`
+                    })
                 });
                 
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Server error response:', errorText);
-                    
-                    if (response.status === 500) {
-                        return 'Server crashed! Check your terminal where you ran "npm start" for error details. Restart the server if needed.';
-                    }
-                    
-                    throw new Error(`Server error: ${response.status}`);
-                }
-                
                 const data = await response.json();
-                console.log('AI response:', data);
-                return data.reply;
-            } catch (error) {
-                console.error('Detailed error:', error);
-                if (error.message.includes('fetch')) {
-                    return 'Backend server is not running! Please start your Node.js server first.';
+                loadingDiv.remove();
+                
+                if (data.generated_text) {
+                    addMessage(data.generated_text, 'ai');
+                } else {
+                    addMessage('I can help you with JEE Physics, Chemistry, and Math questions. Please ask me anything!', 'ai');
                 }
-                return `Error: ${error.message}. Check your terminal for server errors.`;
+                
+            } catch (error) {
+                loadingDiv.remove();
+                addMessage('I\'m here to help with your JEE preparation! Ask me about Physics, Chemistry, or Math concepts.', 'ai');
             }
         }
         
-        // Chat functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatInput = document.querySelector('.chat-input textarea');
-            const chatButton = document.querySelector('.chat-input button');
-            const chatMessages = document.querySelector('.chat-messages');
+        function addMessage(text, sender) {
+            if (!chatMessages) return;
             
-            let currentImage = null;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-${sender === 'ai' ? 'robot' : 'user'}"></i>
+                </div>
+                <div class="message-content">
+                    <p>${text}</p>
+                </div>
+            `;
             
-            async function sendMessage() {
-                const message = chatInput.value.trim();
-                if (!message && !currentImage) return;
-                
-                // Add user message with image if present
-                addMessage(message || 'Image uploaded', 'user', false, currentImage);
-                chatInput.value = '';
-                
-                // Add loading message
-                const loadingDiv = addMessage('AI is thinking...', 'ai', true);
-                
-                // Get AI response
-                let aiResponse;
-                if (currentImage) {
-                    console.log('Sending image to AI...');
-                    aiResponse = await sendMessageToAI(message || 'Please analyze this image step by step. If there are math problems, solve them completely with detailed explanations.', currentImage);
-                } else {
-                    aiResponse = await sendMessageToAI(message);
-                }
-                
-                // Remove loading and add AI response
-                loadingDiv.remove();
-                addMessage(aiResponse, 'ai');
-                
-                // Clear current image
-                currentImage = null;
-                
-                // Render math formulas with MathJax
-                setTimeout(() => {
-                    if (window.MathJax && window.MathJax.typesetPromise) {
-                        MathJax.typesetPromise([messageDiv]).catch((err) => console.log('MathJax error:', err));
-                    }
-                }, 100);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+        
+        function toggleMathKeyboard() {
+            const keyboard = document.querySelector('.math-keyboard');
+            if (keyboard) {
+                keyboard.style.display = keyboard.style.display === 'none' ? 'block' : 'none';
             }
-            
-            function addMessage(text, sender, isLoading = false, imageData = null) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                let content = '';
-                
-                // Add image if provided
-                if (imageData) {
-                    content += `<img src="${imageData}" class="image-preview" alt="Uploaded image">`;
-                }
-                
-                // Format the text better with colors
-                let formattedText = text;
-                if (!isLoading && sender === 'ai') {
-                    // Clean, simple formatting without LaTeX
-                    formattedText = text
-                        // Remove LaTeX symbols
-                        .replace(/\\\[/g, '')
-                        .replace(/\\\]/g, '')
-                        .replace(/\\\(/g, '')
-                        .replace(/\\\)/g, '')
-                        .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)')
-                        .replace(/\\text\{([^}]+)\}/g, '$1')
-                        .replace(/\\left/g, '')
-                        .replace(/\\right/g, '')
-                        .replace(/\\pi/g, 'π')
-                        .replace(/\\alpha/g, 'α')
-                        .replace(/\\omega/g, 'ω')
-                        .replace(/\\([a-zA-Z]+)/g, '$1')
-                        // Step headers
-                        .replace(/###\s*Step\s(\d+):/g, '<h3 style="color: #6366f1; margin: 15px 0 8px 0; font-size: 1.1rem; font-weight: 600;">Step $1:</h3>')
-                        .replace(/Step\s(\d+):/g, '<h3 style="color: #6366f1; margin: 15px 0 8px 0; font-size: 1.1rem; font-weight: 600;">Step $1:</h3>')
-                        // Math formatting
-                        .replace(/\^2/g, '²')
-                        .replace(/\^3/g, '³')
-                        .replace(/\^4/g, '⁴')
-                        .replace(/([A-Za-z])_([A-Za-z0-9]+)/g, '$1<sub>$2</sub>')
-                        // Clean up brackets
-                        .replace(/\{([^}]+)\}/g, '$1')
-                        // Text formatting
-                        .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #6366f1;">$1</strong>')
-                        .replace(/\*(.*?)\*/g, '<em style="color: #8b5cf6;">$1</em>')
-                        // Clean paragraphs
-                        .replace(/\n\n/g, '</p><p style="margin: 10px 0; line-height: 1.5;">')
-                        .replace(/\n/g, '<br>');
-                    
-                    // Wrap in paragraph if not already
-                    if (!formattedText.includes('<p>')) {
-                        formattedText = '<p style="margin: 10px 0; line-height: 1.6;">' + formattedText + '</p>';
-                    }
-                }
-                
-                content += isLoading ? '<p><i class="fas fa-spinner fa-spin"></i> ' + text + '</p>' : formattedText;
-                
-                messageDiv.innerHTML = `
-                    <div class="message-avatar">
-                        <i class="fas fa-${sender === 'ai' ? 'robot' : 'user'}"></i>
-                    </div>
-                    <div class="message-content">
-                        ${content}
-                    </div>
-                `;
-                
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return messageDiv;
+        }
+        
+        function uploadImage() {
+            const fileInput = document.getElementById('imageUpload');
+            if (fileInput) {
+                fileInput.click();
             }
-            
-            // Math keyboard functionality
-            const mathToggle = document.querySelector('.math-toggle');
-            const mathKeyboard = document.querySelector('.math-keyboard');
-            
-            if (mathToggle && mathKeyboard) {
-                mathToggle.addEventListener('click', function() {
-                    const isVisible = mathKeyboard.style.display !== 'none';
-                    mathKeyboard.style.display = isVisible ? 'none' : 'block';
-                });
-                
-                // Math button clicks
-                document.querySelectorAll('.math-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const symbol = this.dataset.symbol;
-                        const cursorPos = chatInput.selectionStart;
-                        const textBefore = chatInput.value.substring(0, cursorPos);
-                        const textAfter = chatInput.value.substring(cursorPos);
-                        chatInput.value = textBefore + symbol + textAfter;
-                        chatInput.focus();
-                        chatInput.setSelectionRange(cursorPos + symbol.length, cursorPos + symbol.length);
-                        // Reset placeholder and border if image was selected
-                        chatInput.placeholder = 'Ask your question here... Paste your text with exact formatting!';
-                        chatInput.style.borderColor = 'rgba(99, 102, 241, 0.2)';
-                        currentImage = null;
-                    });
-                });
+        }
+        
+        function insertSymbol(symbol) {
+            if (chatInput) {
+                const cursorPos = chatInput.selectionStart;
+                const textBefore = chatInput.value.substring(0, cursorPos);
+                const textAfter = chatInput.value.substring(cursorPos);
+                chatInput.value = textBefore + symbol + textAfter;
+                chatInput.focus();
             }
-            
-            // Image upload functionality
-            const imageBtn = document.querySelector('.image-btn');
-            const imageUpload = document.getElementById('imageUpload');
-            
-            imageBtn.addEventListener('click', function() {
-                imageUpload.click();
-            });
-            
-            imageUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // Compress image before uploading
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const img = new Image();
-                    
-                    img.onload = function() {
-                        // Resize image to max 800px width/height
-                        const maxSize = 800;
-                        let { width, height } = img;
-                        
-                        if (width > height) {
-                            if (width > maxSize) {
-                                height = (height * maxSize) / width;
-                                width = maxSize;
-                            }
-                        } else {
-                            if (height > maxSize) {
-                                width = (width * maxSize) / height;
-                                height = maxSize;
-                            }
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // Convert to base64 with compression
-                        currentImage = canvas.toDataURL('image/jpeg', 0.7);
-                        chatInput.placeholder = 'Image ready to send! Add a message or just click send.';
-                        chatInput.style.borderColor = '#10b981';
-                    };
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            // Send button functionality
-            function setupSendButton() {
-                const sendButton = document.querySelector('.send-btn');
-                if (sendButton) {
-                    sendButton.addEventListener('click', sendMessage);
-                }
-            }
-            
-            setupSendButton();
-            
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // User profile dropdown functionality
-            const userProfile = document.getElementById('userProfile');
-            const userDropdown = document.querySelector('.user-dropdown');
-            
-            if (userProfile && userDropdown) {
-                userProfile.addEventListener('click', function(e) {
-                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
-                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
-                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
-                    e.stopPropagation();
-                });
-                
-                document.addEventListener('click', function() {
-                    userDropdown.style.opacity = '0';
-                    userDropdown.style.visibility = 'hidden';
-                    userDropdown.style.transform = 'translateY(-10px)';
-                });
+        }
+        
+        // Enter key support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey && chatInput && document.activeElement === chatInput) {
+                e.preventDefault();
+                sendMessage();
             }
         });
     </script>
