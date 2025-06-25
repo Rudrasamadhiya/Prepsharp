@@ -397,8 +397,13 @@
             const mobile = document.getElementById('mobile').value.trim();
             if (mobile.length >= 10) {
                 document.getElementById('send-otp').style.display = 'block';
+                // Auto-verify mobile for now
+                mobileVerified = true;
+                updateRegisterButton();
             } else {
                 document.getElementById('send-otp').style.display = 'none';
+                mobileVerified = false;
+                updateRegisterButton();
             }
         }
         
@@ -495,16 +500,6 @@
                 return;
             }
             
-            if (!confirmationResult) {
-                alert('Please send and verify mobile OTP first!');
-                return;
-            }
-            
-            if (!otp || otp.length !== 6) {
-                document.getElementById('otpError').style.display = 'block';
-                hasError = true;
-            }
-            
             if (password.length < 6) {
                 document.getElementById('passwordError').style.display = 'block';
                 hasError = true;
@@ -524,29 +519,25 @@
             registerBtn.disabled = true;
             
             try {
-                // Verify OTP first
-                const phoneCredential = await confirmationResult.confirm(otp);
-                const phoneUser = phoneCredential.user;
-                
-                // Link phone with email/password
-                const emailCredential = firebase.auth.EmailAuthProvider.credential(email, password);
-                await phoneUser.linkWithCredential(emailCredential);
+                // Create user with email/password
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
                 
                 // Update user profile
-                await phoneUser.updateProfile({
+                await user.updateProfile({
                     displayName: name
                 });
                 
                 // Save user data to Firestore
                 if (window.db) {
-                    await db.collection('users').doc(phoneUser.uid).set({
+                    await db.collection('users').doc(user.uid).set({
                         name: name,
                         email: email,
                         mobile: mobile,
                         subscriptionPlan: 'Free',
                         createdAt: new Date(),
                         class: '',
-                        phoneVerified: true
+                        phoneVerified: false
                     });
                 }
                 
