@@ -453,68 +453,28 @@
                 alert('Real SMS OTP sent to your mobile number!');
                 
             } catch (error) {
-                console.error('=== FIREBASE PHONE AUTH ERROR ===');
-                console.error('Error code:', error.code);
-                console.error('Error message:', error.message);
-                console.error('Full error:', error);
+                console.error('Firebase Phone Auth Error:', error);
                 
-                // If Firebase Phone Auth fails, use demo system
-                if (error.code === 'auth/internal-error' || error.code === 'auth/configuration-not-found' || error.message.includes('internal') || !recaptchaVerifier) {
-                    console.log('Using demo OTP system as fallback');
-                    
-                    // Generate demo OTP
-                    const demoOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                    window.demoOTP = demoOTP;
-                    
-                    // Create demo confirmation result
-                    confirmationResult = {
-                        confirm: function(otp) {
-                            return new Promise((resolve, reject) => {
-                                if (otp === window.demoOTP) {
-                                    resolve({ 
-                                        user: { 
-                                            uid: 'demo-' + Date.now(), 
-                                            phoneNumber: fullMobile,
-                                            updateProfile: function() { return Promise.resolve(); }
-                                        } 
-                                    });
-                                } else {
-                                    reject({ code: 'auth/invalid-verification-code' });
-                                }
-                            });
-                        }
-                    };
-                    
-                    document.getElementById('otp-group').style.display = 'block';
-                    this.textContent = 'Demo OTP Sent!';
-                    this.style.background = '#f59e0b';
-                    mobileVerified = true;
-                    updateRegisterButton();
-                    
-                    alert(`Firebase Phone Auth not configured. Demo OTP: ${demoOTP}\n\nTo enable real SMS:\n1. Enable billing in Firebase\n2. Add domain to authorized domains`);
-                    
+                let errorMessage = 'Error sending OTP: ';
+                if (error.code === 'auth/invalid-phone-number') {
+                    errorMessage = 'Invalid phone number format';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many requests. Please try again later';
+                } else if (error.code === 'auth/invalid-app-credential') {
+                    errorMessage = 'reCAPTCHA verification failed. Please try again.';
+                } else if (error.code === 'auth/internal-error' || error.code === 'auth/configuration-not-found') {
+                    errorMessage = 'Phone authentication not configured. Please contact support.';
                 } else {
-                    // Handle other errors
-                    let errorMessage = 'Error sending OTP: ';
-                    if (error.code === 'auth/invalid-phone-number') {
-                        errorMessage = 'Invalid phone number format';
-                    } else if (error.code === 'auth/too-many-requests') {
-                        errorMessage = 'Too many requests. Please try again later';
-                    } else if (error.code === 'auth/invalid-app-credential') {
-                        errorMessage = 'reCAPTCHA verification failed. Please try again.';
-                    } else {
-                        errorMessage += error.message;
-                    }
-                    
-                    alert(errorMessage);
-                    this.textContent = 'Send Mobile OTP';
-                    this.disabled = false;
-                    
-                    // Clear reCAPTCHA for retry
-                    if (recaptchaVerifier) {
-                        recaptchaVerifier.clear();
-                        recaptchaVerifier = null;
-                    }
+                    errorMessage += error.message;
+                }
+                
+                alert(errorMessage);
+                this.textContent = 'Send Mobile OTP';
+                this.disabled = false;
+                
+                if (recaptchaVerifier) {
+                    recaptchaVerifier.clear();
+                    recaptchaVerifier = null;
                 }
             }
         });
