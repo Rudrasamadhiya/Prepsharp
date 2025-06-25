@@ -697,13 +697,13 @@
             const loadingDiv = addMessage('🤔 AI is thinking...', 'ai');
             
             try {
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                // Use CORS proxy for GitHub Pages
+                const response = await fetch('https://cors-anywhere.herokuapp.com/https://openrouter.ai/api/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer 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',
                         'Content-Type': 'application/json',
-                        'HTTP-Referer': 'https://rudrasamadhiya.github.io',
-                        'X-Title': 'PrepSharp AI Coach'
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({
                         model: 'mistral/mistral-small-3.2-24b-instruct:free',
@@ -724,12 +724,14 @@
                 if (data.choices && data.choices[0]) {
                     addMessage(data.choices[0].message.content, 'ai');
                 } else {
+                    console.log('API Response:', data);
                     addMessage(getLocalResponse(message), 'ai');
                 }
                 
             } catch (error) {
+                console.error('API Error:', error);
                 loadingDiv.remove();
-                addMessage(getLocalResponse(message), 'ai');
+                addMessage(`❌ API Error. Using local response: ${getLocalResponse(message)}`, 'ai');
             }
         }
         
