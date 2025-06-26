@@ -223,9 +223,8 @@
                     </div>
                     
                     <button type="button" id="send-otp" class="register-btn" style="margin-top: 10px; display: none; background: #10b981;">Send Mobile OTP</button>
+                    <div id="recaptcha-container" style="margin-top: 10px; display: none;"></div>
                     <div id="mobileError" class="error-message">Please enter a valid mobile number</div>
-                    
-                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Click "Send Mobile OTP" - reCAPTCHA will verify automatically</p>
                 </div>
                 
                 <div class="form-group" id="otp-group" style="display: none;">
@@ -257,8 +256,8 @@
         </div>
     </div>
     
-    <!-- reCAPTCHA Enterprise -->
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfJoWgrAAAAADvlWekaFrZ69MzmLBGogeUHT6sL"></script>
+    <!-- reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -298,28 +297,27 @@
         let emailVerified = false;
         let mobileVerified = false;
         
-        // Initialize reCAPTCHA Enterprise
+        // Initialize reCAPTCHA
         function initializeFreshRecaptcha() {
             try {
-                // Clear any existing reCAPTCHA
                 if (recaptchaVerifier) {
                     recaptchaVerifier.clear();
                 }
                 
-                console.log('Creating reCAPTCHA Enterprise verifier...');
                 recaptchaVerifier = new firebase.auth.RecaptchaVerifier('send-otp', {
-                    'size': 'invisible',
+                    'size': 'normal',
                     'callback': function(response) {
-                        console.log('reCAPTCHA Enterprise solved successfully');
+                        console.log('reCAPTCHA solved');
                     },
                     'expired-callback': function() {
-                        console.log('reCAPTCHA expired, need to retry');
+                        console.log('reCAPTCHA expired');
                     }
                 });
                 
+                recaptchaVerifier.render();
                 return recaptchaVerifier;
             } catch (error) {
-                console.error('reCAPTCHA initialization failed:', error);
+                console.error('reCAPTCHA error:', error);
                 return null;
             }
         }
@@ -397,84 +395,97 @@
             const mobile = document.getElementById('mobile').value.trim();
             if (mobile.length >= 10) {
                 document.getElementById('send-otp').style.display = 'block';
-                // Auto-verify mobile for now
-                mobileVerified = true;
-                updateRegisterButton();
             } else {
                 document.getElementById('send-otp').style.display = 'none';
-                mobileVerified = false;
-                updateRegisterButton();
             }
+            updateRegisterButton();
         }
         
         document.getElementById('mobile').addEventListener('input', validateMobile);
         document.getElementById('country-code').addEventListener('change', validateMobile);
         
-        // Send OTP with Firebase Phone Auth
+        // Verify OTP via Firebase
+        document.getElementById('otp').addEventListener('input', async function() {
+            const otp = this.value.trim();
+            if (otp.length === 6 && confirmationResult) {
+                try {
+                    await confirmationResult.confirm(otp);
+                    mobileVerified = true;
+                    updateRegisterButton();
+                    this.style.borderColor = '#10b981';
+                    document.getElementById('otpError').style.display = 'none';
+                } catch (error) {
+                    document.getElementById('otpError').textContent = 'Invalid OTP';
+                    document.getElementById('otpError').style.display = 'block';
+                    this.style.borderColor = '#ef4444';
+                }
+            }
+        });
+        
+        // Send OTP via Firebase Phone Auth
         document.getElementById('send-otp').addEventListener('click', async function() {
             const countryCode = document.getElementById('country-code').value;
             const mobileNumber = document.getElementById('mobile').value.trim();
-            const fullMobile = countryCode + mobileNumber;
+            const fullPhone = countryCode + mobileNumber;
             
-            // Validate phone number format
             if (mobileNumber.length < 10) {
                 alert('Please enter a valid mobile number');
                 return;
             }
             
+            this.textContent = 'Sending OTP...';
+            this.disabled = true;
+            
             try {
-                this.textContent = 'Sending OTP...';
-                this.disabled = true;
-                
-                console.log('=== FIREBASE PHONE AUTH DEBUG ===');
-                console.log('Phone number:', fullMobile);
-                console.log('Auth object:', window.auth);
-                console.log('reCAPTCHA verifier:', recaptchaVerifier);
-                console.log('Firebase apps:', firebase.apps.length);
-                
-                // Create fresh reCAPTCHA for this request
-                recaptchaVerifier = initializeFreshRecaptcha();
-                if (!recaptchaVerifier) {
-                    throw new Error('Failed to initialize reCAPTCHA');
+                // Clear any existing reCAPTCHA
+                if (window.recaptchaVerifier) {
+                    window.recaptchaVerifier.clear();
                 }
                 
-                // Try Firebase Phone Auth first
-                console.log('Calling signInWithPhoneNumber...');
-                confirmationResult = await auth.signInWithPhoneNumber(fullMobile, recaptchaVerifier);
-                console.log('Firebase Phone Auth SUCCESS!');
+                // Show reCAPTCHA container
+                const recaptchaContainer = document.getElementById('recaptcha-container');
+                recaptchaContainer.style.display = 'block';
+                recaptchaContainer.innerHTML = ''; // Clear any existing content
+                
+                // Create reCAPTCHA verifier
+                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                    'size': 'normal'
+                });
+                
+                // Render reCAPTCHA first
+                await window.recaptchaVerifier.render();
+                
+                // Then send SMS
+                confirmationResult = await firebase.auth().signInWithPhoneNumber(fullPhone, window.recaptchaVerifier);
                 
                 document.getElementById('otp-group').style.display = 'block';
-                
                 this.textContent = 'OTP Sent!';
                 this.style.background = '#10b981';
-                mobileVerified = true;
-                updateRegisterButton();
                 
-                alert('Real SMS OTP sent to your mobile number!');
+                alert('Firebase SMS OTP sent to your mobile!');
                 
             } catch (error) {
                 console.error('Firebase Phone Auth Error:', error);
                 
-                let errorMessage = 'Error sending OTP: ';
+                let errorMsg = '';
                 if (error.code === 'auth/invalid-phone-number') {
-                    errorMessage = 'Invalid phone number format';
+                    errorMsg = 'Invalid phone number format';
                 } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = 'Too many requests. Please try again later';
-                } else if (error.code === 'auth/invalid-app-credential') {
-                    errorMessage = 'reCAPTCHA verification failed. Please try again.';
-                } else if (error.code === 'auth/internal-error' || error.code === 'auth/configuration-not-found') {
-                    errorMessage = 'Phone authentication not configured. Please contact support.';
+                    errorMsg = 'Too many requests. Try again later';
+                } else if (error.code === 'auth/internal-error' || error.code === 'auth/captcha-check-failed') {
+                    const currentDomain = window.location.hostname || 'localhost';
+                    const currentUrl = window.location.href;
+                    errorMsg = `Domain not authorized in Firebase Console.\n\nFIX REQUIRED:\n1. Go to Firebase Console\n2. Authentication > Settings > Authorized domains\n3. Add: ${currentDomain}\n4. Save and try again\n\nCurrent: ${currentUrl}`;
                 } else {
-                    errorMessage += error.message;
+                    errorMsg = 'Error: ' + error.message;
                 }
                 
-                alert(errorMessage);
+                alert(errorMsg);
                 this.textContent = 'Send Mobile OTP';
                 this.disabled = false;
                 
-                if (recaptchaVerifier) {
-                    recaptchaVerifier.clear();
-                    recaptchaVerifier = null;
+                if (window.recaptchaVerifier) {
+                    window.recaptchaVerifier.clear();
                 }
             }
         });
