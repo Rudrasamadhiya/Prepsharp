@@ -192,6 +192,12 @@
                     <div id="emailSuccess" class="success-message">Email verification sent! Check your inbox.</div>
                 </div>
                 
+                <div class="form-group" id="email-otp-group" style="display: none;">
+                    <label for="email-otp" class="form-label">Enter Email OTP</label>
+                    <input type="text" id="email-otp" class="form-input" placeholder="Enter 6-digit OTP from email" maxlength="6">
+                    <div id="email-otpError" class="error-message">Please enter valid OTP</div>
+                </div>
+                
                 <div class="form-group">
                     <label for="mobile" class="form-label">Mobile Number</label>
                     <div style="display: flex; gap: 10px;">
@@ -338,23 +344,7 @@
             updateRegisterButton();
         });
         
-        // Check if email is already verified from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('emailVerified') === 'true') {
-                emailVerified = true;
-                const verifyBtn = document.getElementById('verify-email');
-                if (verifyBtn) {
-                    verifyBtn.textContent = 'Email Verified!';
-                    verifyBtn.style.background = '#10b981';
-                    verifyBtn.disabled = true;
-                    document.getElementById('emailSuccess').style.display = 'block';
-                    document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
-                    updateRegisterButton();
-                }
-            }
-        });
-        
-        // Verify Email
+        // Verify Email - Send OTP via Firebase
         document.getElementById('verify-email').addEventListener('click', async function() {
             const email = document.getElementById('email').value.trim();
             
@@ -364,40 +354,101 @@
             }
             
             try {
-                this.textContent = 'Sending...';
+                this.textContent = 'Sending OTP...';
                 this.disabled = true;
                 
-                // Create temporary user to send verification
-                const tempPassword = 'temp' + Math.random().toString(36).substr(2, 9);
-                const userCredential = await auth.createUserWithEmailAndPassword(email, tempPassword);
+                // Generate a 6-digit OTP
+                const emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
                 
-                // Send verification email with correct continue URL
-                await userCredential.user.sendEmailVerification({
-                    url: 'https://prepsharp.in/auth-action-handler.html'
+                // Store OTP in Firestore for verification
+                await db.collection('emailOTPs').doc(email).set({
+                    otp: emailOTP,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    expires: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 10 * 60 * 1000)) // 10 minutes
                 });
                 
-                // Delete temporary user
-                await userCredential.user.delete();
+                // Send custom email with OTP using Firebase Cloud Functions
+                // This requires a Cloud Function to be set up
+                await db.collection('mail').add({
+                    to: email,
+                    message: {
+                        subject: 'Your PrepSharp Email Verification Code',
+                        html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+                                <h2 style="color: #4f46e5;">PrepSharp Email Verification</h2>
+                                <p>Hello,</p>
+                                <p>Your email verification code is:</p>
+                                <h1 style="font-size: 32px; letter-spacing: 5px; text-align: center; margin: 30px 0; padding: 10px; background: #f3f4f6; border-radius: 5px;">${emailOTP}</h1>
+                                <p>This code will expire in 10 minutes.</p>
+                                <p>If you didn't request this code, please ignore this email.</p>
+                                <p>Thanks,<br>The PrepSharp Team</p>
+                              </div>`
+                    }
+                });
                 
+                // Show OTP input field
+                document.getElementById('email-otp-group').style.display = 'block';
                 document.getElementById('emailSuccess').style.display = 'block';
-                document.getElementById('emailSuccess').textContent = 'Verification email sent! Please check your inbox and click the verification link.';
-                this.textContent = 'Email Sent!';
+                document.getElementById('emailSuccess').textContent = 'OTP sent to your email! Please check your inbox.';
+                this.textContent = 'OTP Sent!';
                 this.style.background = '#3b82f6';
                 
+                // Store email for verification
+                window.verifyingEmail = email;
+                
             } catch (error) {
-                console.error('Error sending email verification:', error);
-                if (error.code === 'auth/email-already-in-use') {
-                    // Email exists, assume it's verified
-                    emailVerified = true;
-                    updateRegisterButton();
-                    this.textContent = 'Email Verified!';
-                    this.style.background = '#10b981';
-                    document.getElementById('emailSuccess').style.display = 'block';
-                    document.getElementById('emailSuccess').textContent = 'Email already verified!';
-                } else {
-                    alert('Error sending verification email: ' + error.message);
-                    this.textContent = 'Verify Email';
-                    this.disabled = false;
+                console.error('Error sending email OTP:', error);
+                alert('Error sending OTP: ' + error.message);
+                this.textContent = 'Verify Email';
+                this.disabled = false;
+            }
+        });
+        
+        // Verify Email OTP against Firebase
+        document.getElementById('email-otp').addEventListener('input', async function() {
+            const otp = this.value.trim();
+            if (otp.length === 6 && window.verifyingEmail) {
+                try {
+                    // Get OTP from Firestore
+                    const otpDoc = await db.collection('emailOTPs').doc(window.verifyingEmail).get();
+                    
+                    if (otpDoc.exists) {
+                        const otpData = otpDoc.data();
+                        const now = new Date();
+                        const expiryDate = otpData.expires.toDate();
+                        
+                        if (now > expiryDate) {
+                            // OTP expired
+                            document.getElementById('email-otpError').textContent = 'OTP expired. Please request a new one.';
+                            document.getElementById('email-otpError').style.display = 'block';
+                            this.style.borderColor = '#ef4444';
+                        } else if (otp === otpData.otp) {
+                            // OTP valid
+                            emailVerified = true;
+                            updateRegisterButton();
+                            this.style.borderColor = '#10b981';
+                            document.getElementById('email-otpError').style.display = 'none';
+                            document.getElementById('verify-email').textContent = 'Email Verified!';
+                            document.getElementById('verify-email').style.background = '#10b981';
+                            document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
+                            
+                            // Delete the OTP document
+                            await db.collection('emailOTPs').doc(window.verifyingEmail).delete();
+                        } else {
+                            // Invalid OTP
+                            document.getElementById('email-otpError').textContent = 'Invalid OTP';
+                            document.getElementById('email-otpError').style.display = 'block';
+                            this.style.borderColor = '#ef4444';
+                        }
+                    } else {
+                        document.getElementById('email-otpError').textContent = 'OTP not found. Please request a new one.';
+                        document.getElementById('email-otpError').style.display = 'block';
+                        this.style.borderColor = '#ef4444';
+                    }
+                } catch (error) {
+                    console.error('Error verifying OTP:', error);
+                    document.getElementById('email-otpError').textContent = 'Error verifying OTP';
+                    document.getElementById('email-otpError').style.display = 'block';
+                    this.style.borderColor = '#ef4444';
                 }
             }
         });
