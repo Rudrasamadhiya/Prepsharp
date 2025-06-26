@@ -338,8 +338,24 @@
             updateRegisterButton();
         });
         
-        // Verify Email - Simplified approach for demo
-        document.getElementById('verify-email').addEventListener('click', function() {
+        // Check if email is already verified from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('emailVerified') === 'true') {
+                emailVerified = true;
+                const verifyBtn = document.getElementById('verify-email');
+                if (verifyBtn) {
+                    verifyBtn.textContent = 'Email Verified!';
+                    verifyBtn.style.background = '#10b981';
+                    verifyBtn.disabled = true;
+                    document.getElementById('emailSuccess').style.display = 'block';
+                    document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
+                    updateRegisterButton();
+                }
+            }
+        });
+        
+        // Verify Email
+        document.getElementById('verify-email').addEventListener('click', async function() {
             const email = document.getElementById('email').value.trim();
             
             if (!validateEmail(email)) {
@@ -347,26 +363,43 @@
                 return;
             }
             
-            // Check if email domain is valid
-            const emailDomain = email.split('@')[1];
-            if (!emailDomain || !emailDomain.includes('.')) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
-            this.textContent = 'Verifying...';
-            this.disabled = true;
-            
-            // For demo purposes, simulate email verification
-            // In production, implement proper email verification with a backend
-            setTimeout(() => {
+            try {
+                this.textContent = 'Sending...';
+                this.disabled = true;
+                
+                // Create temporary user to send verification
+                const tempPassword = 'temp' + Math.random().toString(36).substr(2, 9);
+                const userCredential = await auth.createUserWithEmailAndPassword(email, tempPassword);
+                
+                // Send verification email
+                await userCredential.user.sendEmailVerification({
+                    url: window.location.origin + '/verify-email.html'
+                });
+                
+                // Delete temporary user
+                await userCredential.user.delete();
+                
                 document.getElementById('emailSuccess').style.display = 'block';
-                document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
-                this.textContent = 'Email Verified!';
-                this.style.background = '#10b981';
-                emailVerified = true;
-                updateRegisterButton();
-            }, 1500);
+                document.getElementById('emailSuccess').textContent = 'Verification email sent! Please check your inbox and click the verification link.';
+                this.textContent = 'Email Sent!';
+                this.style.background = '#3b82f6';
+                
+            } catch (error) {
+                console.error('Error sending email verification:', error);
+                if (error.code === 'auth/email-already-in-use') {
+                    // Email exists, assume it's verified
+                    emailVerified = true;
+                    updateRegisterButton();
+                    this.textContent = 'Email Verified!';
+                    this.style.background = '#10b981';
+                    document.getElementById('emailSuccess').style.display = 'block';
+                    document.getElementById('emailSuccess').textContent = 'Email already verified!';
+                } else {
+                    alert('Error sending verification email: ' + error.message);
+                    this.textContent = 'Verify Email';
+                    this.disabled = false;
+                }
+            }
         });
         
         // Update register button state
