@@ -696,33 +696,11 @@
             
             const loadingDiv = addMessage('🤔 AI is thinking...', 'ai');
             
-            try {
-                // Use Vercel serverless function
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: message
-                    })
-                });
-                
-                const data = await response.json();
+            // Simulate API delay
+            setTimeout(() => {
                 loadingDiv.remove();
-                
-                if (data.reply) {
-                    addMessage(data.reply, 'ai');
-                } else {
-                    addMessage(getLocalResponse(message), 'ai');
-                }
-                
-            } catch (error) {
-                console.error('API Error:', error);
-                loadingDiv.remove();
-                // Just use local response without showing error
                 addMessage(getLocalResponse(message), 'ai');
-            }
+            }, 1000);
         }
         
         function getLocalResponse(message) {
@@ -746,11 +724,17 @@
             if (msg.includes('derivative')) {
                 return '**Derivative** = rate of change. d/dx(x^n) = nx^(n-1). Geometric meaning: slope of tangent to curve.';
             }
+            if (msg.includes('acid')) {
+                return '**Acids** are substances that donate H+ ions (protons) in solution. Properties: sour taste, pH < 7, react with metals to form H₂ gas. Examples: HCl, H₂SO₄.';
+            }
+            if (msg.includes('integral')) {
+                return '**Integral** is the reverse of derivative. ∫x^n dx = x^(n+1)/(n+1) + C. Represents area under curve. Definite integral: ∫[a,b] f(x)dx = F(b) - F(a).';
+            }
             if (msg.includes('hello') || msg.includes('hi')) {
                 return '👋 Hello! I\'m your JEE AI Coach. Ask about Physics, Chemistry, or Math concepts!';
             }
             
-            return `🤔 Ask me about JEE topics like: **Physics** (mass, force, energy), **Chemistry** (atoms, reactions), **Math** (derivatives, integrals)!`;
+            return `🤔 I can help with JEE topics! Try asking about Physics (mass, force, energy), Chemistry (atoms, acids, reactions), or Math (derivatives, integrals)!`;
         }
         
         function addMessage(text, sender) {
@@ -762,6 +746,10 @@
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
+            
+            // Convert markdown-style formatting to HTML
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
             messageDiv.innerHTML = `
                 <div class="message-avatar">
                     <i class="fas fa-${sender === 'ai' ? 'robot' : 'user'}"></i>

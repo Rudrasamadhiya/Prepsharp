@@ -630,17 +630,151 @@
         
         @media (max-width: 768px) {
             .plans-container {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                padding: 0 15px;
+                background-color: #f1f5f9;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                overflow: hidden;
             }
             
             .plan-card {
-                max-width: 350px;
-                margin: 0 auto;
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+                border: none;
+                background-color: white;
             }
             
             .popular-plan {
                 transform: scale(1);
                 order: -1;
+                border-left: 3px solid var(--accent-color);
+            }
+            
+            .plan-header {
+                padding: 15px;
+                border-radius: 12px 12px 0 0;
+                text-align: center;
+            }
+            
+            .price-tag {
+                margin-bottom: 5px;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            
+            .plan-price {
+                font-size: 36px;
+                margin-bottom: 5px;
+                display: inline-flex;
+                align-items: center;
+            }
+            
+            .plan-price span {
+                font-size: 16px;
+                margin-left: 2px;
+            }
+            
+            .plan-duration {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+            
+            .save-text {
+                font-size: 13px;
+                margin: 5px 0 0;
+                padding: 3px 8px;
+                background-color: rgba(245, 158, 11, 0.1);
+                border-radius: 10px;
+                display: inline-block;
+            }
+            
+            .plan-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                padding: 0 15px;
+                opacity: 0;
+            }
+            
+            .plan-content.active {
+                max-height: 500px; /* Large enough to fit content */
+                padding: 15px;
+                opacity: 1;
+                transition: max-height 0.3s ease, opacity 0.3s ease;
+            }
+            
+            .plan-features {
+                margin-bottom: 20px;
+            }
+            
+            .plan-header {
+                cursor: pointer;
+                position: relative;
+                padding-right: 40px; /* Space for the plus/minus icon */
+                transition: background-color 0.3s ease;
+            }
+            
+            .plan-header::after {
+                content: '+';
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--primary-color);
+                transition: all 0.3s ease;
+            }
+            
+            .plan-header.active {
+                background-color: rgba(0,0,0,0.02);
+            }
+            
+            .plan-header.active::after {
+                content: '−'; /* Using proper minus sign */
+                color: var(--accent-color);
+            }
+            
+            /* Make the popular plan header more noticeable */
+            .popular-plan .plan-header::after {
+                color: white;
+            }
+            
+            .plan-features li {
+                padding: 8px 0;
+                font-size: 14px;
+                display: flex;
+                align-items: flex-start;
+                line-height: 1.4;
+            }
+            
+            .plan-features li::before {
+                width: 16px;
+                height: 16px;
+                font-size: 10px;
+                margin-right: 8px;
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+            
+            .popular-plan .plan-header {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            
+            .subscribe-btn {
+                padding: 12px 0;
+                font-size: 14px;
+            }
+            
+            .best-value {
+                font-size: 10px;
+                padding: 3px 15px;
             }
         }
         
@@ -1366,6 +1500,222 @@
             .pricing-grid, .features-grid, .testimonial-grid {
                 grid-template-columns: 1fr;
             }
+            
+            /* Mobile-specific styles */
+            .hero {
+                padding: 60px 15px 80px;
+            }
+            
+            .hero-title {
+                font-size: 28px;
+                padding: 0;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+                margin-bottom: 30px;
+            }
+            
+            .logo {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 14px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+            
+            .features, .pricing, .testimonials {
+                padding: 50px 0;
+            }
+            
+            .section-title {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            
+            /* Completely redesigned feature cards for mobile */
+            .features-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .feature-card {
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                border-radius: 10px;
+            }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                margin: 0 15px 0 0;
+                flex-shrink: 0;
+            }
+            
+            .feature-content {
+                flex: 1;
+            }
+            
+            .feature-title {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            
+            .feature-description {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+            
+            .subscription-header {
+                margin-bottom: 30px;
+                padding: 0 15px;
+            }
+            
+            .subscription-header h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .subscription-header p {
+                font-size: 15px;
+                line-height: 1.4;
+            }
+            
+            .plan-price {
+                font-size: 36px;
+            }
+            
+            .footer-links {
+                gap: 15px;
+            }
+            
+            .cta-title {
+                font-size: 24px;
+            }
+            
+            .cta-subtitle {
+                font-size: 16px;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 24px;
+            }
+            
+            .hero-subtitle {
+                font-size: 14px;
+            }
+            
+            .payment-methods {
+                gap: 8px;
+                padding: 0 10px;
+                margin-top: 30px;
+            }
+            
+            .payment-method {
+                min-width: 70px;
+                height: 60px;
+                padding: 8px 10px;
+                border-radius: 8px;
+            }
+            
+            .payment-method i {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+            
+            .payment-method span {
+                font-size: 10px;
+            }
+            
+            .guarantee {
+                padding: 25px 15px;
+                margin-top: 40px;
+                border-radius: 10px;
+            }
+            
+            .guarantee-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 15px;
+            }
+            
+            .guarantee-icon i {
+                font-size: 24px;
+            }
+            
+            .guarantee h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .guarantee p {
+                font-size: 14px;
+                line-height: 1.4;
+                margin-bottom: 15px;
+            }
+            
+            .guarantee-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            /* Mobile animations */
+            @keyframes logoFloat {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+                100% { transform: translateY(0); }
+            }
+            
+            @keyframes gradientShift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .feature-card:hover .feature-icon {
+                transform: scale(1.1);
+            }
+            
+            .popular-plan {
+                animation: float 2s ease-in-out infinite;
+                margin: 10px 0 25px;
+                position: relative;
+            }
+            
+            .popular-tag {
+                top: -8px;
+                font-size: 10px;
+                padding: 3px 10px;
+                border-radius: 10px;
+            }
+            
+            @keyframes float {
+                0% { transform: translateY(0) scale(1.05); }
+                50% { transform: translateY(-5px) scale(1.05); }
+                100% { transform: translateY(0) scale(1.05); }
+            }
         }
     </style>
 </head>
@@ -1401,54 +1751,66 @@
                     <div class="feature-icon">
                         <i class="fas fa-book"></i>
                     </div>
-                    <h3 class="feature-title">Comprehensive Question Bank</h3>
-                    <p class="feature-description">Access thousands of JEE Main and Advanced questions with detailed solutions.</p>
-                    <div class="feature-badge">10,000+ Questions</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Comprehensive Question Bank</h3>
+                        <p class="feature-description">Access thousands of JEE Main and Advanced questions with detailed solutions.</p>
+                        <div class="feature-badge">10,000+ Questions</div>
+                    </div>
                 </div>
                 
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3 class="feature-title">Detailed Analytics</h3>
-                    <p class="feature-description">Track your progress with in-depth performance analytics and identify areas for improvement.</p>
-                    <div class="feature-badge">Real-time Insights</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Detailed Analytics</h3>
+                        <p class="feature-description">Track your progress with in-depth performance analytics and identify areas for improvement.</p>
+                        <div class="feature-badge">Real-time Insights</div>
+                    </div>
                 </div>
                 
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
-                    <h3 class="feature-title">Personalized Study Plan</h3>
-                    <p class="feature-description">Get a customized study schedule based on your strengths and weaknesses.</p>
-                    <div class="feature-badge">Smart Planning</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Personalized Study Plan</h3>
+                        <p class="feature-description">Get a customized study schedule based on your strengths and weaknesses.</p>
+                        <div class="feature-badge">Smart Planning</div>
+                    </div>
                 </div>
                 
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="feature-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <h3 class="feature-title">AI-Powered Coaching</h3>
-                    <p class="feature-description">Receive personalized guidance and instant answers to your doubts with our AI coach.</p>
-                    <div class="feature-badge">24/7 Support</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">AI-Powered Coaching</h3>
+                        <p class="feature-description">Receive personalized guidance and instant answers to your doubts with our AI coach.</p>
+                        <div class="feature-badge">24/7 Support</div>
+                    </div>
                 </div>
                 
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3 class="feature-title">Peer Comparison</h3>
-                    <p class="feature-description">Compare your performance with peers and understand where you stand among top performers.</p>
-                    <div class="feature-badge">Competitive Edge</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Peer Comparison</h3>
+                        <p class="feature-description">Compare your performance with peers and understand where you stand among top performers.</p>
+                        <div class="feature-badge">Competitive Edge</div>
+                    </div>
                 </div>
                 
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
                     <div class="feature-icon">
                         <i class="fas fa-video"></i>
                     </div>
-                    <h3 class="feature-title">Mock Interviews</h3>
-                    <p class="feature-description">Practice with simulated interview sessions to prepare for college admissions.</p>
-                    <div class="feature-badge">Interview Ready</div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Mock Interviews</h3>
+                        <p class="feature-description">Practice with simulated interview sessions to prepare for college admissions.</p>
+                        <div class="feature-badge">Interview Ready</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1733,10 +2095,75 @@
     
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
+        // Check if device is mobile for animation settings
+        const isMobile = window.innerWidth <= 768;
+        
         AOS.init({
-            duration: 800,
+            duration: isMobile ? 400 : 800,
             easing: 'ease',
-            once: true
+            once: true,
+            offset: isMobile ? 20 : 120,
+            delay: isMobile ? 0 : 100
+        });
+        
+        // Reduce animation intensity on mobile
+        if (isMobile) {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Apply simpler animations for mobile
+                const featureCards = document.querySelectorAll('.feature-card');
+                featureCards.forEach((card) => {
+                    card.setAttribute('data-aos', 'fade-right');
+                    card.setAttribute('data-aos-delay', '50');
+                });
+            });
+        }
+    </script>
+    
+    <!-- Mobile accordion functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Only apply on mobile devices
+            if (window.innerWidth <= 768) {
+                // Setup accordion for plan cards
+                const planCards = document.querySelectorAll('.plan-card');
+                
+                planCards.forEach(card => {
+                    const header = card.querySelector('.plan-header');
+                    const content = card.querySelector('.plan-content');
+                    
+                    if (header && content) {
+                        header.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            
+                            // Check if already active
+                            const isActive = this.classList.contains('active');
+                            
+                            // Close all plans
+                            planCards.forEach(c => {
+                                c.querySelector('.plan-header').classList.remove('active');
+                                c.querySelector('.plan-content').classList.remove('active');
+                            });
+                            
+                            // If wasn't active, open this one
+                            if (!isActive) {
+                                this.classList.add('active');
+                                content.classList.add('active');
+                            }
+                        });
+                    }
+                });
+                
+                // Open popular plan by default
+                const popularPlan = document.querySelector('.popular-plan');
+                if (popularPlan) {
+                    const header = popularPlan.querySelector('.plan-header');
+                    const content = popularPlan.querySelector('.plan-content');
+                    if (header && content) {
+                        header.classList.add('active');
+                        content.classList.add('active');
+                    }
+                }
+            }
         });
     </script>
 </body>
