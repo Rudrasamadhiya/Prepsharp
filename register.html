@@ -338,21 +338,34 @@
             updateRegisterButton();
         });
         
-        // Check if email is already verified from localStorage
+        // Check if email is verified from URL parameter or localStorage
         document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('emailVerified') === 'true') {
+            // Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('verified') === 'true') {
                 emailVerified = true;
-                const verifyBtn = document.getElementById('verify-email');
-                if (verifyBtn) {
-                    verifyBtn.textContent = 'Email Verified!';
-                    verifyBtn.style.background = '#10b981';
-                    verifyBtn.disabled = true;
-                    document.getElementById('emailSuccess').style.display = 'block';
-                    document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
-                    updateRegisterButton();
-                }
+                localStorage.setItem('emailVerified', 'true');
+                markEmailAsVerified();
+            }
+            // Then check localStorage
+            else if (localStorage.getItem('emailVerified') === 'true') {
+                emailVerified = true;
+                markEmailAsVerified();
             }
         });
+        
+        // Helper function to mark email as verified in UI
+        function markEmailAsVerified() {
+            const verifyBtn = document.getElementById('verify-email');
+            if (verifyBtn) {
+                verifyBtn.textContent = 'Email Verified!';
+                verifyBtn.style.background = '#10b981';
+                verifyBtn.disabled = true;
+                document.getElementById('emailSuccess').style.display = 'block';
+                document.getElementById('emailSuccess').textContent = 'Email verified successfully!';
+                updateRegisterButton();
+            }
+        }
         
         // Verify Email
         document.getElementById('verify-email').addEventListener('click', async function() {
@@ -371,9 +384,9 @@
                 const tempPassword = 'temp' + Math.random().toString(36).substr(2, 9);
                 const userCredential = await auth.createUserWithEmailAndPassword(email, tempPassword);
                 
-                // Send verification email
+                // Send verification email with correct continue URL
                 await userCredential.user.sendEmailVerification({
-                    url: window.location.origin + '/verify-email.html'
+                    url: 'https://prepsharp.in/register.html?verified=true'
                 });
                 
                 // Delete temporary user
