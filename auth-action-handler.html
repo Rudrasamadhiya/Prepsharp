@@ -138,26 +138,26 @@
                 <div class="verify-icon">
                     <i class="fas fa-spinner fa-spin"></i>
                 </div>
-                <h2 class="verify-title">Verifying Your Email</h2>
-                <p class="verify-message">Please wait while we verify your email address...</p>
+                <h2 class="verify-title">Processing</h2>
+                <p class="verify-message">Please wait while we process your request...</p>
             </div>
             
             <div id="successState" style="display: none;">
                 <div class="verify-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h2 class="verify-title">Email Verified!</h2>
-                <p class="verify-message">Your email has been successfully verified. You can now continue with registration.</p>
-                <a href="register.html" class="verify-btn">Continue Registration</a>
+                <h2 class="verify-title">Success!</h2>
+                <p class="verify-message" id="successMessage">Your request has been processed successfully.</p>
+                <a href="register.html" class="verify-btn">Continue to Registration</a>
             </div>
             
             <div id="errorState" style="display: none;">
                 <div class="verify-icon">
                     <i class="fas fa-exclamation-circle"></i>
                 </div>
-                <h2 class="verify-title">Verification Failed</h2>
-                <p class="verify-message" id="errorMessage">Your verification link has expired or has already been used.</p>
-                <a href="register.html" class="verify-btn">Try Again</a>
+                <h2 class="verify-title">Error</h2>
+                <p class="verify-message" id="errorMessage">An error occurred while processing your request.</p>
+                <a href="register.html" class="verify-btn">Return to Registration</a>
             </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         
-        // Parse URL parameters
+        // Get action code from URL
         function getParameterByName(name) {
             const url = window.location.href;
             name = name.replace(/[\[\]]/g, '\\$&');
@@ -193,36 +193,73 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
         
-        // Handle email verification
+        // Handle Firebase auth actions
         document.addEventListener('DOMContentLoaded', function() {
+            // Get the action to complete
             const mode = getParameterByName('mode');
             const actionCode = getParameterByName('oobCode');
             
-            if (mode === 'verifyEmail' && actionCode) {
-                // Try to apply the email verification code
-                auth.applyActionCode(actionCode)
-                    .then(() => {
-                        // Email verification successful
-                        document.getElementById('loadingState').style.display = 'none';
-                        document.getElementById('successState').style.display = 'block';
-                        
-                        // Store verification status in localStorage
-                        localStorage.setItem('emailVerified', 'true');
-                    })
-                    .catch((error) => {
-                        // Email verification failed
-                        document.getElementById('loadingState').style.display = 'none';
-                        document.getElementById('errorState').style.display = 'block';
-                        document.getElementById('errorMessage').textContent = error.message;
-                        console.error('Verification error:', error);
-                    });
+            console.log('Mode:', mode);
+            console.log('Action Code:', actionCode);
+            
+            if (mode && actionCode) {
+                // Handle the action
+                switch (mode) {
+                    case 'verifyEmail':
+                        handleVerifyEmail(actionCode);
+                        break;
+                    case 'resetPassword':
+                        handleResetPassword(actionCode);
+                        break;
+                    default:
+                        showError('Invalid action mode');
+                }
             } else {
-                // Invalid or missing parameters
-                document.getElementById('loadingState').style.display = 'none';
-                document.getElementById('errorState').style.display = 'block';
-                document.getElementById('errorMessage').textContent = 'Invalid verification link. Please request a new verification email.';
+                showError('Missing parameters');
             }
         });
+        
+        // Handle email verification
+        function handleVerifyEmail(actionCode) {
+            auth.applyActionCode(actionCode)
+                .then(() => {
+                    // Email verified successfully
+                    localStorage.setItem('emailVerified', 'true');
+                    showSuccess('Your email has been verified successfully!');
+                })
+                .catch((error) => {
+                    console.error('Verification error:', error);
+                    showError(error.message);
+                });
+        }
+        
+        // Handle password reset
+        function handleResetPassword(actionCode) {
+            auth.verifyPasswordResetCode(actionCode)
+                .then((email) => {
+                    // Show password reset UI
+                    showSuccess('You can now reset your password for ' + email);
+                    // Additional password reset UI would go here
+                })
+                .catch((error) => {
+                    console.error('Password reset error:', error);
+                    showError(error.message);
+                });
+        }
+        
+        // Show success state
+        function showSuccess(message) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('successState').style.display = 'block';
+            document.getElementById('successMessage').textContent = message;
+        }
+        
+        // Show error state
+        function showError(message) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('errorMessage').textContent = message;
+        }
     </script>
 </body>
 </html>
