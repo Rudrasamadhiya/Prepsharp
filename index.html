@@ -632,27 +632,35 @@
             .plans-container {
                 display: flex;
                 flex-direction: column;
-                gap: 2px;
+                gap: 15px;
                 padding: 0 15px;
-                background-color: #f1f5f9;
-                border-radius: 12px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                overflow: hidden;
+                overflow: visible;
             }
             
             .plan-card {
                 max-width: 100%;
                 margin: 0;
-                border-radius: 0;
-                box-shadow: none;
-                border: none;
+                border-radius: 12px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                border: 1px solid rgba(0,0,0,0.05);
                 background-color: white;
+                transform: none !important;
             }
             
             .popular-plan {
-                transform: scale(1);
                 order: -1;
-                border-left: 3px solid var(--accent-color);
+                border: 2px solid var(--accent-color);
+                box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
+            }
+            
+            /* Hide all plan content by default on mobile */
+            .plan-content {
+                display: none !important;
+            }
+            
+            /* Show content when active */
+            .plan-content.active {
+                display: block !important;
             }
             
             .plan-header {
@@ -694,35 +702,37 @@
             }
             
             .plan-content {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-                padding: 0 15px;
-                opacity: 0;
+                display: none;
             }
             
             .plan-content.active {
-                max-height: 500px; /* Large enough to fit content */
-                padding: 15px;
-                opacity: 1;
-                transition: max-height 0.3s ease, opacity 0.3s ease;
+                display: block;
+                padding: 20px;
             }
             
             .plan-features {
-                margin-bottom: 20px;
+                margin-bottom: 10px;
             }
             
             .plan-header {
                 cursor: pointer;
                 position: relative;
-                padding-right: 40px; /* Space for the plus/minus icon */
-                transition: background-color 0.3s ease;
+                padding: 20px 40px 20px 20px;
+                border-radius: 12px;
+                text-align: center;
+                background: linear-gradient(145deg, #f8fafc, #edf2f7);
+                transition: background-color 0.3s ease, border-radius 0.3s ease;
+            }
+            
+            .plan-header.active {
+                border-radius: 12px 12px 0 0;
+                background-color: rgba(0,0,0,0.02);
             }
             
             .plan-header::after {
                 content: '+';
                 position: absolute;
-                right: 15px;
+                right: 20px;
                 top: 50%;
                 transform: translateY(-50%);
                 font-size: 24px;
@@ -731,16 +741,16 @@
                 transition: all 0.3s ease;
             }
             
-            .plan-header.active {
-                background-color: rgba(0,0,0,0.02);
-            }
-            
             .plan-header.active::after {
-                content: '−'; /* Using proper minus sign */
+                content: '−';
                 color: var(--accent-color);
             }
             
-            /* Make the popular plan header more noticeable */
+            .popular-plan .plan-header {
+                background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
+                color: white;
+            }
+            
             .popular-plan .plan-header::after {
                 color: white;
             }
@@ -763,13 +773,13 @@
             }
             
             .popular-plan .plan-header {
-                padding-top: 20px;
-                padding-bottom: 20px;
+                padding: 20px;
             }
             
             .subscribe-btn {
-                padding: 12px 0;
+                padding: 14px 0;
                 font-size: 14px;
+                margin-top: 15px;
             }
             
             .best-value {
@@ -1712,9 +1722,9 @@
             }
             
             @keyframes float {
-                0% { transform: translateY(0) scale(1.05); }
-                50% { transform: translateY(-5px) scale(1.05); }
-                100% { transform: translateY(0) scale(1.05); }
+                0% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+                100% { transform: translateY(0); }
             }
         }
     </style>
@@ -2124,6 +2134,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Only apply on mobile devices
             if (window.innerWidth <= 768) {
+                // First hide all plan contents
+                const allContents = document.querySelectorAll('.plan-content');
+                allContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
                 // Setup accordion for plan cards
                 const planCards = document.querySelectorAll('.plan-card');
                 
@@ -2132,6 +2148,9 @@
                     const content = card.querySelector('.plan-content');
                     
                     if (header && content) {
+                        // Ensure all headers start without active class
+                        header.classList.remove('active');
+                        
                         header.addEventListener('click', function(e) {
                             e.preventDefault();
                             
@@ -2153,16 +2172,7 @@
                     }
                 });
                 
-                // Open popular plan by default
-                const popularPlan = document.querySelector('.popular-plan');
-                if (popularPlan) {
-                    const header = popularPlan.querySelector('.plan-header');
-                    const content = popularPlan.querySelector('.plan-content');
-                    if (header && content) {
-                        header.classList.add('active');
-                        content.classList.add('active');
-                    }
-                }
+                // No plan is opened by default
             }
         });
     </script>
