@@ -2,144 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - PrepSharp Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings - PrepSharp</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
     <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/font-size.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
     <style>
-        /* Simple theme styles */
-        .dark-mode {
-            background-color: #121212 !important;
-            color: #ffffff !important;
-        }
-        
-        /* Text colors in dark mode */
-        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
-        .dark-mode p, .dark-mode label, .dark-mode span, .dark-mode a, .dark-mode div,
-        .dark-mode .notification-title, .dark-mode .settings-title, .dark-mode .settings-subtitle,
-        .dark-mode .form-label, .dark-mode .detail-value {
-            color: #ffffff !important;
-        }
-        
-        .dark-mode .settings-content,
-        .dark-mode .settings-sidebar {
-            background-color: #1e1e1e !important;
-        }
-        
-        .dark-mode .sidebar {
-            background: linear-gradient(to bottom, #1a1a1a, #121212) !important;
-        }
-        
-        .dark-mode .sidebar-nav a {
-            color: #e0e0e0 !important;
-        }
-        
-        .dark-mode .sidebar-nav a:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-        
-        .dark-mode .sidebar-nav .active a {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
-            border-left: 3px solid #9333ea !important;
-        }
-        
-        .dark-mode .form-input,
-        .dark-mode .form-select {
-            background-color: #2a2a2a !important;
-            color: #ffffff !important;
-            border-color: #333333 !important;
-        }
-        
-        .dark-mode .btn-secondary {
-            color: #ffffff !important;
-            border-color: #333333 !important;
-        }
-        
-        .dark-mode .notification-description,
-        .dark-mode .detail-label,
-        .dark-mode .text-light {
-            color: #b0b0b0 !important;
-        }
-        
-        body.theme-dark {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-        
-        body.theme-dark .sidebar {
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--border-color);
-        }
-        
-        body.theme-dark .top-nav {
-            background-color: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        body.theme-dark .form-input,
-        body.theme-dark .form-select {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border-color: var(--border-color);
-        }
-        
-        /* Transition for smooth theme switching */
-        body, .sidebar, .top-nav, .settings-content, .form-input, .form-select {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-    </style>
-    <script>
-        // Simple font size application
-        (function() {
-            const savedFontSize = localStorage.getItem('fontSize') || 'medium';
-            let size = '16px';
-            
-            switch (savedFontSize) {
-                case 'small': size = '14px'; break;
-                case 'large': size = '18px'; break;
-            }
-            
-            document.body.style.fontSize = size;
-        })();
-    </script>
-    <style>
-        /* User profile styles */
-        .user-profile {
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .user-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 200px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 10px 0;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-        }
-        
-        .avatar-initials {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-        
         .settings-container {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -176,13 +49,13 @@
         }
         
         .settings-nav-link:hover {
-            background-color: rgba(147, 51, 234, 0.05);
+            background-color: rgba(79, 70, 229, 0.05);
         }
         
         .settings-nav-link.active {
-            background-color: rgba(147, 51, 234, 0.1);
-            color: var(--premium-color);
-            border-left: 3px solid var(--premium-color);
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
         }
         
         .settings-nav-link i {
@@ -242,8 +115,8 @@
         
         .form-input:focus {
             outline: none;
-            border-color: var(--premium-color);
-            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
         }
         
         .form-select {
@@ -258,8 +131,8 @@
         
         .form-select:focus {
             outline: none;
-            border-color: var(--premium-color);
-            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
         }
         
         .form-checkbox {
@@ -286,7 +159,7 @@
         }
         
         .btn-primary {
-            background-image: linear-gradient(to right, var(--premium-color), var(--premium-dark));
+            background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
             border-radius: 6px;
@@ -298,7 +171,7 @@
         }
         
         .btn-primary:hover {
-            box-shadow: 0 4px 8px rgba(147, 51, 234, 0.3);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
             transform: translateY(-2px);
         }
         
@@ -315,16 +188,16 @@
         }
         
         .btn-secondary:hover {
-            border-color: var(--premium-color);
-            color: var(--premium-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
         
         .subscription-card {
-            background-color: rgba(147, 51, 234, 0.05);
+            background-color: rgba(79, 70, 229, 0.05);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 20px;
-            border-left: 3px solid var(--premium-color);
+            border-left: 3px solid var(--primary-color);
         }
         
         .subscription-header {
@@ -347,7 +220,7 @@
             font-size: 14px;
             font-weight: 600;
             color: white;
-            background-color: var(--premium-color);
+            background-color: var(--secondary-color);
         }
         
         .subscription-details {
@@ -377,7 +250,7 @@
         .subscription-price {
             font-size: 18px;
             font-weight: 600;
-            color: var(--premium-color);
+            color: var(--primary-color);
         }
         
         .avatar-section {
@@ -392,7 +265,7 @@
             height: 100px;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid var(--premium-color);
+            border: 3px solid var(--primary-color);
         }
         
         .avatar-preview img {
@@ -473,7 +346,7 @@
         }
         
         input:checked + .toggle-slider {
-            background: linear-gradient(135deg, var(--premium-color), var(--premium-dark));
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         }
         
         input:checked + .toggle-slider:before {
@@ -483,7 +356,7 @@
         /* Dark mode toggle specific styles */
         #themeToggle + .toggle-slider:before {
             background-color: #f8f9fa;
-            content: '☀️';
+            content: '\2600\fe0f';
             display: flex;
             align-items: center;
             justify-content: center;
@@ -498,9 +371,44 @@
             justify-content: center;
             font-size: 12px;
         }
+        
+        @media (max-width: 768px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-content {
+                padding: 15px;
+            }
+            
+            .settings-title {
+                font-size: 20px;
+            }
+            
+            .settings-subtitle {
+                font-size: 16px;
+            }
+            
+            .avatar-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .subscription-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -544,7 +452,6 @@
             <div class="sidebar-footer">
                 <div class="plan-info">
                     <span class="plan-badge premium">Premium Plan</span>
-                    <span style="font-size: 12px; color: var(--text-light);">Highest tier access</span>
                 </div>
             </div>
         </aside>
@@ -577,8 +484,8 @@
             <!-- Page Content -->
             <div class="dashboard-content">
                 <div class="welcome-section">
-                    <h1>Settings <span class="premium-badge">Premium</span></h1>
-                    <p>Manage your account preferences and customize your learning experience.</p>
+                    <h1>Settings</h1>
+                    <p>Manage your account preferences and subscription</p>
                 </div>
                 
                 <div class="settings-container">
@@ -651,12 +558,10 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="form-label" for="targetExam">Target Examination</label>
-                                    <select id="targetExam" class="form-select">
-                                        <option value="jee-main">JEE Main</option>
-                                        <option value="jee-advanced" selected>JEE Advanced</option>
-                                        <option value="neet">NEET</option>
-                                        <option value="bitsat">BITSAT</option>
+                                    <label class="form-label" for="examYear">Target Exam Year</label>
+                                    <select id="examYear" class="form-select">
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
                                     </select>
                                 </div>
                                 
@@ -680,35 +585,31 @@
                                 <div class="subscription-details">
                                     <div class="subscription-detail">
                                         <div class="detail-label">Start Date</div>
-                                        <div class="detail-value" id="subscriptionStartDate">June 15, 2023</div>
+                                        <div class="detail-value">June 15, 2023</div>
                                     </div>
                                     <div class="subscription-detail">
                                         <div class="detail-label">Next Billing</div>
-                                        <div class="detail-value" id="subscriptionNextBilling">October 15, 2023</div>
+                                        <div class="detail-value">July 15, 2023</div>
                                     </div>
                                     <div class="subscription-detail">
                                         <div class="detail-label">Status</div>
-                                        <div class="detail-value" id="subscriptionStatus">Active</div>
+                                        <div class="detail-value">Active</div>
                                     </div>
                                 </div>
                                 
                                 <div class="subscription-actions">
-                                    <div class="subscription-price" id="subscriptionPrice">₹999/month</div>
-                                    <button class="btn-secondary" id="cancelSubscriptionBtn">Cancel Subscription</button>
+                                    <div class="subscription-price">₹499/month</div>
+                                    <button class="btn-secondary">Cancel Subscription</button>
                                 </div>
                             </div>
                             
                             <h3 class="settings-subtitle">Payment Methods</h3>
-                            <div class="form-group">
-                                <label class="form-label" for="paymentMethod">Default Payment Method</label>
-                                <select id="paymentMethod" class="form-select">
-                                    <option value="card-1234" selected>VISA ending in 1234</option>
-                                    <option value="card-5678">Mastercard ending in 5678</option>
-                                    <option value="add-new">Add new payment method</option>
-                                </select>
-                            </div>
+                            <p style="margin-bottom: 20px;">Manage your payment methods and billing information.</p>
                             
-                            <button class="btn-primary" id="updatePaymentBtn">Update Payment Method</button>
+                            <div class="btn-group">
+                                <button class="btn-secondary">Add Payment Method</button>
+                                <button class="btn-secondary">View Billing History</button>
+                            </div>
                         </div>
                         
                         <!-- Notifications Section -->
@@ -728,30 +629,8 @@
                             
                             <div class="notification-option">
                                 <div class="notification-info">
-                                    <div class="notification-title">SMS Notifications</div>
-                                    <div class="notification-description">Get important alerts and reminders via SMS</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="notification-option">
-                                <div class="notification-info">
                                     <div class="notification-title">Study Reminders</div>
-                                    <div class="notification-description">Daily reminders about your study schedule</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="notification-option">
-                                <div class="notification-info">
-                                    <div class="notification-title">Performance Updates</div>
-                                    <div class="notification-description">Weekly updates about your performance and progress</div>
+                                    <div class="notification-description">Get reminders about your scheduled study sessions</div>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -762,7 +641,18 @@
                             <div class="notification-option">
                                 <div class="notification-info">
                                     <div class="notification-title">New Content Alerts</div>
-                                    <div class="notification-description">Get notified when new practice papers or study materials are available</div>
+                                    <div class="notification-description">Be notified when new practice papers or questions are added</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-option">
+                                <div class="notification-info">
+                                    <div class="notification-title">Performance Updates</div>
+                                    <div class="notification-description">Receive weekly updates about your performance and progress</div>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -791,15 +681,6 @@
                         <div class="settings-section" id="security" style="display: none;">
                             <h2 class="settings-title">Security Settings</h2>
                             
-                            <div style="background-color: rgba(16, 185, 129, 0.05); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                    <h3 style="font-size: 18px; margin: 0;">Two-Factor Authentication</h3>
-                                    <span style="background-color: rgba(16, 185, 129, 0.1); color: var(--success); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Enabled</span>
-                                </div>
-                                <p style="margin-bottom: 15px;">Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in.</p>
-                                <button class="btn-secondary">Manage 2FA Settings</button>
-                            </div>
-                            
                             <h3 class="settings-subtitle">Change Password</h3>
                             <form>
                                 <div class="form-group">
@@ -823,6 +704,11 @@
                                 </div>
                             </form>
                             
+                            <h3 class="settings-subtitle" style="margin-top: 30px;">Two-Factor Authentication</h3>
+                            <p style="margin-bottom: 20px;">Add an extra layer of security to your account by enabling two-factor authentication.</p>
+                            
+                            <button class="btn-secondary">Enable Two-Factor Authentication</button>
+                            
                             <h3 class="settings-subtitle" style="margin-top: 30px;">Login Sessions</h3>
                             <p style="margin-bottom: 20px;">Manage your active login sessions across different devices.</p>
                             
@@ -831,46 +717,9 @@
                         
                         <!-- Preferences Section -->
                         <div class="settings-section" id="preferences" style="display: none;">
-                            <h2 class="settings-title">Study Preferences</h2>
+                            <h2 class="settings-title">Preferences</h2>
                             
-                            <div class="form-group">
-                                <label class="form-label" for="studyGoal">Daily Study Goal (hours)</label>
-                                <input type="text" id="studyGoal" class="form-input" value="4">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label" for="difficulty">Default Question Difficulty</label>
-                                <select id="difficulty" class="form-select">
-                                    <option value="easy">Easy</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="hard" selected>Hard</option>
-                                    <option value="very-hard">Very Hard</option>
-                                </select>
-                            </div>
-                            
-                            <div class="notification-option">
-                                <div class="notification-info">
-                                    <div class="notification-title">Focus Mode</div>
-                                    <div class="notification-description">Minimize distractions during study sessions</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="notification-option">
-                                <div class="notification-info">
-                                    <div class="notification-title">AI-Powered Recommendations</div>
-                                    <div class="notification-description">Get personalized study recommendations based on your performance</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            
-                            <h3 class="settings-subtitle" style="margin-top: 30px;">Display Settings</h3>
+                            <h3 class="settings-subtitle">Display Settings</h3>
                             <div class="notification-option">
                                 <div class="notification-info">
                                     <div class="notification-title">Dark Mode</div>
@@ -891,6 +740,60 @@
                                 </select>
                             </div>
                             
+                            <h3 class="settings-subtitle" style="margin-top: 30px;">Study Preferences</h3>
+                            <div class="form-group">
+                                <label class="form-label" for="studyDuration">Default Study Session Duration</label>
+                                <select id="studyDuration" class="form-select">
+                                    <option value="30">30 minutes</option>
+                                    <option value="45">45 minutes</option>
+                                    <option value="60" selected>1 hour</option>
+                                    <option value="90">1.5 hours</option>
+                                    <option value="120">2 hours</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="breakDuration">Default Break Duration</label>
+                                <select id="breakDuration" class="form-select">
+                                    <option value="5">5 minutes</option>
+                                    <option value="10" selected>10 minutes</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="20">20 minutes</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Preferred Study Days</label>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="monday" checked>
+                                    <label for="monday">Monday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="tuesday" checked>
+                                    <label for="tuesday">Tuesday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="wednesday" checked>
+                                    <label for="wednesday">Wednesday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="thursday" checked>
+                                    <label for="thursday">Thursday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="friday" checked>
+                                    <label for="friday">Friday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="saturday" checked>
+                                    <label for="saturday">Saturday</label>
+                                </div>
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="sunday">
+                                    <label for="sunday">Sunday</label>
+                                </div>
+                            </div>
+                            
                             <div class="btn-group">
                                 <button class="btn-primary">Save Preferences</button>
                                 <button class="btn-secondary">Reset to Default</button>
@@ -902,168 +805,151 @@
         </main>
     </div>
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="../../firebase-config.js"></script>
-    <script src="../../js/database.js"></script>
-    <script src="../../js/user-profile.js"></script>
-    <script src="../../js/sidebar-logout.js"></script>
-    <script src="../../js/settings-firebase.js"></script>
-    <script src="../../js/premium-subscription.js"></script>
-    <script src="../../js/theme-manager.js"></script>
+    <script src="js/auth-check-disabled.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script src="../../js/free-theme-manager.js"></script>
     <script>
-        // Direct button handlers for preferences section
-        window.addEventListener('load', function() {
-            console.log('Window loaded, setting up direct button handlers');
-            
-            // Find the preferences section
-            const preferencesSection = document.getElementById('preferences');
-            if (preferencesSection) {
-                // Find the buttons in the preferences section
-                const saveButton = preferencesSection.querySelector('.btn-primary');
-                const resetButton = preferencesSection.querySelector('.btn-secondary');
-                const themeToggle = document.getElementById('themeToggle');
-                
-                console.log('Found elements in preferences section:', saveButton, resetButton, themeToggle);
-                
-                // Set up theme toggle
-                if (themeToggle) {
-                    // Set initial state based on localStorage
-                    const savedTheme = localStorage.getItem('prepsharp-theme') || 'light';
-                    themeToggle.checked = savedTheme === 'dark';
-                    
-                    // Add change handler
-                    themeToggle.addEventListener('change', function() {
-                        const theme = this.checked ? 'dark' : 'light';
-                        console.log('Theme toggle changed to:', theme);
-                        
-                        // Apply theme
-                        if (typeof applyTheme === 'function') {
-                            applyTheme(theme);
-                        }
-                        
-                        // Save to localStorage
-                        localStorage.setItem('prepsharp-theme', theme);
-                        
-                        // Show toast
-                        if (typeof showToast === 'function') {
-                            showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} mode activated`);
-                        }
-                    });
-                }
-                
-                // Add direct click handlers
-                if (saveButton) {
-                    saveButton.onclick = function() {
-                        console.log('Save button clicked directly');
-                        const theme = themeToggle && themeToggle.checked ? 'dark' : 'light';
-                        const fontSize = document.getElementById('fontSize').value;
-                        
-                        // Apply theme and font size
-                        if (typeof applyTheme === 'function') applyTheme(theme);
-                        if (typeof applyFontSize === 'function') applyFontSize(fontSize);
-                        
-                        // Save to localStorage
-                        localStorage.setItem('prepsharp-theme', theme);
-                        localStorage.setItem('prepsharp-font-size', fontSize);
-                        
-                        // Show toast
-                        if (typeof showToast === 'function') {
-                            showToast('Preferences saved successfully!');
-                        } else {
-                            alert('Preferences saved successfully!');
-                        }
-                    };
-                }
-                
-                if (resetButton) {
-                    resetButton.onclick = function() {
-                        console.log('Reset button clicked directly');
-                        
-                        // Reset and apply theme
-                        if (themeToggle) themeToggle.checked = false;
-                        if (typeof applyTheme === 'function') applyTheme('light');
-                        localStorage.setItem('prepsharp-theme', 'light');
-                        
-                        // Reset and apply font size
-                        document.getElementById('fontSize').value = 'medium';
-                        if (typeof applyFontSize === 'function') applyFontSize('medium');
-                        localStorage.setItem('prepsharp-font-size', 'medium');
-                        
-                        // Show toast
-                        if (typeof showToast === 'function') {
-                            showToast('Preferences reset to default.');
-                        } else {
-                            alert('Preferences reset to default.');
-                        }
-                    };
-                }
-                
-                // Apply current theme on page load
-                const currentTheme = localStorage.getItem('prepsharp-theme') || 'light';
-                if (typeof applyTheme === 'function') {
-                    applyTheme(currentTheme);
-                }
-            }
-        });
-        
-        // User profile dropdown functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const userProfile = document.getElementById('userProfile');
-            const userDropdown = document.querySelector('.user-dropdown');
-            
-            if (userProfile && userDropdown) {
-                // Override the hover-based dropdown with click-based
-                userProfile.addEventListener('click', function(e) {
-                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
-                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
-                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
-                    e.stopPropagation();
-                });
-                
-                // Close dropdown when clicking elsewhere
-                document.addEventListener('click', function() {
-                    userDropdown.style.opacity = '0';
-                    userDropdown.style.visibility = 'hidden';
-                    userDropdown.style.transform = 'translateY(-10px)';
-                });
-            }
-        });
-        
         // Settings navigation
-        document.querySelectorAll('.settings-nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                document.querySelectorAll('.settings-nav-link').forEach(l => {
-                    l.classList.remove('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.settings-nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    document.querySelectorAll('.settings-nav-link').forEach(l => {
+                        l.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('.settings-section').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Show the corresponding section
+                    const sectionId = this.getAttribute('href').substring(1);
+                    document.getElementById(sectionId).style.display = 'block';
                 });
-                
-                // Add active class to clicked link
-                this.classList.add('active');
-                
-                // Hide all sections
-                document.querySelectorAll('.settings-section').forEach(section => {
-                    section.style.display = 'none';
-                });
-                
-                // Show the corresponding section
-                const sectionId = this.getAttribute('href').substring(1);
-                document.getElementById(sectionId).style.display = 'block';
             });
+            
+            // Save form data to localStorage
+            const saveBtns = document.querySelectorAll('.btn-primary');
+            saveBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the form
+                    const form = this.closest('form');
+                    if (form) {
+                        // Save form inputs
+                        const inputs = form.querySelectorAll('input, select');
+                        inputs.forEach(input => {
+                            if (input.type === 'checkbox') {
+                                localStorage.setItem(input.id, input.checked);
+                            } else if (input.type !== 'password') {
+                                localStorage.setItem(input.id, input.value);
+                            }
+                        });
+                    }
+                    
+                    // Save toggle switches
+                    const section = this.closest('.settings-section');
+                    if (section) {
+                        const toggles = section.querySelectorAll('.toggle-switch input');
+                        toggles.forEach(toggle => {
+                            const title = toggle.closest('.notification-option').querySelector('.notification-title').textContent;
+                            localStorage.setItem(title, toggle.checked);
+                        });
+                    }
+                    
+                    // Show success message
+                    showSuccessMessage(this);
+                });
+            });
+            
+            // Load saved data
+            loadSavedData();
+            
+            // Initialize profile initials
+            updateProfileInitials();
         });
         
-        // Toggle switches functionality
-        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                const toggleLabel = this.closest('.notification-option').querySelector('.notification-title').textContent;
-                const status = this.checked ? 'enabled' : 'disabled';
-                showToast(`${toggleLabel} ${status}!`);
+        function showSuccessMessage(button) {
+            // Create success message
+            const successMsg = document.createElement('div');
+            successMsg.textContent = 'Settings saved successfully!';
+            successMsg.style.backgroundColor = '#10b981';
+            successMsg.style.color = 'white';
+            successMsg.style.padding = '10px';
+            successMsg.style.borderRadius = '6px';
+            successMsg.style.marginTop = '15px';
+            successMsg.style.textAlign = 'center';
+            
+            // Add to DOM
+            const parent = button.closest('.btn-group');
+            if (parent) {
+                // Remove any existing message
+                const existingMsg = parent.nextElementSibling;
+                if (existingMsg && existingMsg.textContent === 'Settings saved successfully!') {
+                    parent.parentNode.removeChild(existingMsg);
+                }
+                
+                // Add new message
+                parent.parentNode.insertBefore(successMsg, parent.nextSibling);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    if (successMsg.parentNode) {
+                        successMsg.parentNode.removeChild(successMsg);
+                    }
+                }, 3000);
+            }
+        }
+        
+        function loadSavedData() {
+            // Load form inputs
+            document.querySelectorAll('input, select').forEach(input => {
+                if (input.type === 'checkbox') {
+                    const saved = localStorage.getItem(input.id);
+                    if (saved !== null) {
+                        input.checked = saved === 'true';
+                    }
+                } else if (input.type !== 'password') {
+                    const saved = localStorage.getItem(input.id);
+                    if (saved !== null) {
+                        input.value = saved;
+                    }
+                }
             });
-        });
+            
+            // Load toggle switches
+            document.querySelectorAll('.notification-option').forEach(option => {
+                const title = option.querySelector('.notification-title').textContent;
+                const toggle = option.querySelector('.toggle-switch input');
+                const saved = localStorage.getItem(title);
+                if (saved !== null) {
+                    toggle.checked = saved === 'true';
+                }
+            });
+        }
+        
+        function updateProfileInitials() {
+            const fullName = document.getElementById('fullName').value;
+            if (fullName) {
+                const nameParts = fullName.split(' ');
+                let initials = '';
+                if (nameParts.length >= 2) {
+                    initials = nameParts[0].charAt(0) + nameParts[1].charAt(0);
+                } else {
+                    initials = nameParts[0].charAt(0);
+                }
+                
+                document.getElementById('profileInitials').textContent = initials.toUpperCase();
+                document.getElementById('userInitials').textContent = initials.toUpperCase();
+            }
+        }
     </script>
 </body>
 </html>
-

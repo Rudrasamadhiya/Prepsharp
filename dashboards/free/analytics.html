@@ -6,6 +6,8 @@
     <title>Analytics - PrepSharp Free</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/font-size.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/mobile.css">
     <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
@@ -20,15 +22,35 @@
         
         .analytics-card {
             background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 4px solid #4f46e5;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .analytics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            z-index: 0;
+        }
+        
+        .analytics-card > * {
+            position: relative;
+            z-index: 1;
         }
         
         .analytics-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.15);
+            border-top-color: #8b5cf6;
         }
         
         .chart-container {
@@ -40,13 +62,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .chart-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--text-color);
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .chart-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 20px;
+            background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+            border-radius: 5px;
         }
         
         .chart-actions {
@@ -55,25 +91,29 @@
         }
         
         .chart-action {
-            background-color: var(--card-bg);
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 5px 10px;
+            background-color: rgba(79, 70, 229, 0.05);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            border-radius: 20px;
+            padding: 6px 15px;
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #6b7280;
         }
         
         .chart-action:hover {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+            background-color: rgba(79, 70, 229, 0.1);
+            color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.1);
         }
         
         .chart-action.active {
-            background-color: var(--primary-color);
+            background-color: #4f46e5;
             color: white;
-            border-color: var(--primary-color);
+            border-color: #4f46e5;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
         }
         
         .subject-scores {
@@ -152,74 +192,37 @@
             text-align: right;
         }
         
-        .upgrade-banner {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: var(--border-radius);
-            padding: 20px;
-            color: white;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .upgrade-content {
-            flex: 1;
-        }
-        
-        .upgrade-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .upgrade-description {
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
-        
-        .upgrade-btn {
-            background-color: white;
-            color: var(--primary-color);
-            border: none;
-            border-radius: 30px;
-            padding: 10px 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-left: 20px;
-            text-decoration: none;
-        }
-        
-        .upgrade-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
         .locked-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(3px);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 10;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+        
+        .locked-overlay:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .locked-overlay:hover .locked-icon {
+            transform: scale(1.2) rotate(10deg);
+            color: #4f46e5;
+            opacity: 1;
         }
         
         .locked-icon {
             font-size: 32px;
-            color: var(--text-light);
-            margin-bottom: 10px;
-        }
-        
-        .locked-text {
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 10px;
+            color: #9ca3af; /* Gray color */
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .recent-exams {
@@ -233,59 +236,89 @@
         }
         
         .exam-table th, .exam-table td {
-            padding: 12px 15px;
+            padding: 15px 20px;
             text-align: left;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
         
         .exam-table th {
             font-weight: 600;
-            color: var(--text-color);
-            background-color: rgba(0,0,0,0.02);
+            color: #4b5563;
+            background-color: rgba(79, 70, 229, 0.05);
+            position: relative;
         }
         
-        .exam-table tr:hover {
-            background-color: rgba(0,0,0,0.02);
+        .exam-table th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        .exam-table th:last-child {
+            border-top-right-radius: 10px;
+        }
+        
+        .exam-table tr:last-child td:first-child {
+            border-bottom-left-radius: 10px;
+        }
+        
+        .exam-table tr:last-child td:last-child {
+            border-bottom-right-radius: 10px;
+        }
+        
+        .exam-table tr:hover td {
+            background-color: rgba(79, 70, 229, 0.03);
+            transform: translateY(-1px);
         }
         
         .score-badge {
             display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-weight: 600;
             font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
         
         .high {
-            background-color: rgba(16, 185, 129, 0.1);
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
             color: #10b981;
         }
         
         .medium {
-            background-color: rgba(245, 158, 11, 0.1);
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
             color: #f59e0b;
         }
         
         .low {
-            background-color: rgba(239, 68, 68, 0.1);
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2));
             color: #ef4444;
         }
         
+        .score-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
         .view-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(to right, #4f46e5, #6366f1);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
-            font-size: 12px;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: inline-block;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
         }
         
         .view-btn:hover {
-            background-color: var(--primary-dark);
+            background: linear-gradient(to right, #4338ca, #4f46e5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
         }
     </style>
 </head>
@@ -297,7 +330,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
                 <h2>PrepSharp</h2>
             </div>
             
@@ -314,6 +347,21 @@
                     </li>
                     <li>
                         <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li>
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                    </li>
+                    <li>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                    </li>
+                    <li>
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                    </li>
+                    <li>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                 </ul>
             </nav>
@@ -342,7 +390,7 @@
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -353,19 +401,33 @@
             
             <!-- Page Content -->
             <div class="dashboard-content">
-                <div class="welcome-section">
-                    <h1>Performance Analytics</h1>
-                    <p>Track your progress and identify areas for improvement.</p>
+                <div class="welcome-section" style="position: relative; padding: 30px; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); border-radius: 20px; margin-bottom: 30px; overflow: hidden; animation: fadeIn 0.8s ease-out;">
+                    <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%; animation: pulse-slow 4s ease-in-out infinite alternate;"></div>
+                    <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(79, 70, 229, 0) 70%); border-radius: 50%; animation: pulse-slow 4s ease-in-out 2s infinite alternate;"></div>
+                    <h1 style="font-size: 32px; font-weight: 800; background: linear-gradient(to right, #4f46e5, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; position: relative;">Performance Analytics</h1>
+                    <p style="font-size: 16px; color: #4b5563; margin-bottom: 20px; max-width: 600px; position: relative;">Track your progress and identify areas for improvement with our interactive analytics dashboard.</p>
+                    <div style="margin-top: 20px; background-color: rgba(79, 70, 229, 0.08); border-left: 4px solid #4f46e5; padding: 15px 20px; border-radius: 10px; position: relative; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);">
+                        <p style="margin: 0; font-size: 1rem; line-height: 1.5;"><strong style="color: #4f46e5;">Free Plan:</strong> Basic analytics are available. <a href="../../subscription.html" style="color: #4f46e5; text-decoration: none; font-weight: 600; position: relative; padding-bottom: 2px; transition: all 0.3s ease;">Upgrade to Premium</a> for advanced insights, predictions, and personalized recommendations.</p>
+                    </div>
                 </div>
                 
-                <!-- Upgrade banner removed -->
+                <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes slideIn {
+                    from { opacity: 0; transform: translateX(-20px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                </style>
                 
                 <!-- Analytics Grid -->
-                <div class="analytics-grid">
-                    <!-- Performance Trend -->
-                    <div class="analytics-card" style="grid-column: span 2;">
+                <div class="analytics-grid" style="animation: fadeIn 0.8s ease-out 0.1s both;">
+                    <!-- Performance Trend (Basic Feature) -->
+                    <div class="analytics-card" style="grid-column: span 2; animation: slideIn 0.6s ease-out both;">
                         <div class="chart-header">
-                            <div class="chart-title">Performance Trend</div>
+                            <div class="chart-title">Performance Trend <span style="font-size: 12px; background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); color: #10b981; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1);">Basic</span></div>
                             <div class="chart-actions">
                                 <div class="chart-action active">Week</div>
                                 <div class="chart-action">Month</div>
@@ -377,10 +439,10 @@
                         </div>
                     </div>
                     
-                    <!-- Subject Performance -->
-                    <div class="analytics-card">
+                    <!-- Subject Performance (Basic Feature) -->
+                    <div class="analytics-card" style="animation: slideIn 0.6s ease-out 0.2s both;">
                         <div class="chart-header">
-                            <div class="chart-title">Subject Performance</div>
+                            <div class="chart-title">Subject Performance <span style="font-size: 12px; background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); color: #10b981; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1);">Basic</span></div>
                         </div>
                         <div class="chart-container" style="height: 200px;">
                             <canvas id="subjectChart"></canvas>
@@ -426,25 +488,16 @@
                     </div>
                 </div>
                 
-                <!-- Topic Analysis (Locked) -->
-                <div class="analytics-card" style="position: relative; margin-bottom: 30px;">
-                    <div class="chart-header">
-                        <div class="chart-title">Topic-wise Analysis</div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="topicChart"></canvas>
-                    </div>
-                    <div class="locked-overlay">
-                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
-                        <div class="locked-text">Premium Feature</div>
-                        <a href="../../subscription.html" class="upgrade-btn">Upgrade Now</a>
-                    </div>
-                </div>
-                
-                <!-- Recent Exams -->
-                <div class="recent-exams">
-                    <h2>Recent Exams</h2>
-                    <table class="exam-table">
+                <!-- Recent Exams (Basic Feature) -->
+                <div class="recent-exams" style="background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); animation: fadeIn 0.8s ease-out 0.2s both; position: relative; overflow: hidden;">
+                    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 20px; color: #111827; position: relative; padding-left: 15px;">
+                        Recent Exams 
+                        <span style="font-size: 14px; background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); color: #10b981; padding: 4px 12px; border-radius: 20px; margin-left: 10px; vertical-align: middle; font-weight: 600; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1);">Basic</span>
+                    </h2>
+                    <div style="position: absolute; margin-left: -15px; margin-top: -42px; width: 5px; height: 25px; background: linear-gradient(to bottom, #10b981, #059669); border-radius: 5px;"></div>
+                    <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0) 70%); border-radius: 50%; animation: pulse-slow 4s ease-in-out infinite alternate;"></div>
+                    <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0) 70%); border-radius: 50%; animation: pulse-slow 4s ease-in-out 2s infinite alternate;"></div>
+                    <table class="exam-table" style="border-collapse: separate; border-spacing: 0; width: 100%; overflow: hidden;">
                         <thead>
                             <tr>
                                 <th>Exam Name</th>
@@ -479,13 +532,165 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Topic Analysis (Locked) -->
+                <div class="analytics-card" style="position: relative; margin-bottom: 30px; animation: fadeIn 0.8s ease-out 0.3s both;">
+                    <div class="chart-header">
+                        <div class="chart-title">Topic-wise Analysis <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span></div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="topicChart"></canvas>
+                    </div>
+                    <div class="locked-overlay">
+                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Performance Insights (Locked) -->
+                <div class="analytics-card" style="position: relative; margin-bottom: 30px; animation: fadeIn 0.8s ease-out 0.4s both;">
+                    <div class="chart-header">
+                        <div class="chart-title">Detailed Performance Insights <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span></div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="width: 48%;">
+                                <h3 style="font-size: 16px; margin-bottom: 10px;">Strengths</h3>
+                                <ul style="padding-left: 20px; opacity: 0.5;">
+                                    <li>Mechanics (Physics)</li>
+                                    <li>Organic Chemistry</li>
+                                    <li>Calculus</li>
+                                </ul>
+                            </div>
+                            <div style="width: 48%;">
+                                <h3 style="font-size: 16px; margin-bottom: 10px;">Areas for Improvement</h3>
+                                <ul style="padding-left: 20px; opacity: 0.5;">
+                                    <li>Electromagnetism (Physics)</li>
+                                    <li>Inorganic Chemistry</li>
+                                    <li>Coordinate Geometry</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 16px; margin-bottom: 10px;">AI-Generated Recommendations</h3>
+                            <p style="opacity: 0.5;">Based on your performance patterns, we recommend focusing on...</p>
+                        </div>
+                    </div>
+                    <div class="locked-overlay">
+                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                
+                <!-- Performance Prediction (Locked) -->
+                <div class="analytics-card" style="position: relative; margin-bottom: 30px; animation: fadeIn 0.8s ease-out 0.5s both;">
+                    <div class="chart-header">
+                        <div class="chart-title">Performance Prediction <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span></div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="predictionChart"></canvas>
+                    </div>
+                    <div class="locked-overlay">
+                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                
+                <!-- JEE Main Score Prediction (Locked) -->
+                <div class="analytics-card" style="position: relative; margin-bottom: 30px; animation: fadeIn 0.8s ease-out 0.6s both;">
+                    <div class="chart-header">
+                        <div class="chart-title">JEE Main Score Prediction <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span></div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p style="margin-bottom: 15px;">Based on your current performance and learning trajectory:</p>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <div style="text-align: center; width: 30%;">
+                                <div style="font-size: 24px; font-weight: 700; color: #ef4444;">50 percentile</div>
+                                <div style="font-size: 14px; color: #64748b;">Pessimistic</div>
+                            </div>
+                            <div style="text-align: center; width: 30%;">
+                                <div style="font-size: 32px; font-weight: 700; color: #6366f1;">92-98 percentile</div>
+                                <div style="font-size: 14px; color: #64748b;">Most Likely</div>
+                            </div>
+                            <div style="text-align: center; width: 30%;">
+                                <div style="font-size: 24px; font-weight: 700; color: #10b981;">99 percentile</div>
+                                <div style="font-size: 14px; color: #64748b;">Optimistic</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="locked-overlay">
+                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                
+                <!-- AI-Powered Insights (Locked) -->
+                <div class="analytics-card" style="position: relative; margin-bottom: 30px; animation: fadeIn 0.8s ease-out 0.7s both;">
+                    <div class="chart-header">
+                        <div class="chart-title">AI-Powered Insights <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span></div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <ul style="padding-left: 20px; line-height: 1.6;">
+                            <li style="margin-bottom: 10px;">Your performance in Physics has improved by 12% in the last month. Keep focusing on Electromagnetism to maintain this trend.</li>
+                            <li style="margin-bottom: 10px;">Based on your recent practice tests, we recommend spending more time on Organic Chemistry reactions and mechanisms.</li>
+                            <li style="margin-bottom: 10px;">Your average time per question in Mathematics has decreased from 2.5 minutes to 1.8 minutes. This improvement in speed is significant.</li>
+                            <li style="margin-bottom: 10px;">You're performing better than 85% of students in Physics, 78% in Chemistry, and 72% in Mathematics. Focus on improving your Mathematics score.</li>
+                        </ul>
+                    </div>
+                    <div class="locked-overlay">
+                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                
+                <!-- Upgrade Banner -->
+                <div style="background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); padding: 30px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); display: flex; justify-content: space-between; align-items: center; margin-top: 30px; animation: pulse 2s infinite alternate; transform-style: preserve-3d; backdrop-filter: blur(10px);">
+                <style>
+                @keyframes pulse {
+                    0% { box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); }
+                    100% { box-shadow: 0 20px 50px rgba(79, 70, 229, 0.4); }
+                }
+                @keyframes float {
+                    0% { transform: translateY(0px); }
+                    100% { transform: translateY(-10px); }
+                }
+                @keyframes pulse-button {
+                    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+                    100% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+                }
+                @keyframes pulse-slow {
+                    0% { opacity: 0.5; transform: scale(1); }
+                    100% { opacity: 0.8; transform: scale(1.1); }
+                }
+                </style>
+                    <div style="display: flex; align-items: center; gap: 25px; position: relative; z-index: 1;">
+                        <div style="width: 60px; height: 60px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: float 3s ease-in-out infinite alternate;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #ffd700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Unlock</span> Detailed Analytics
+                                <span style="background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">Premium</span>
+                            </div>
+                            <p style="color: rgba(255, 255, 255, 0.9); font-size: 15px; line-height: 1.8; margin: 0;">
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> Topic-wise detailed analysis<br>
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> AI-powered personalized recommendations<br>
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> Advanced performance tracking
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: right; position: relative; z-index: 1;">
+                        <div style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin-bottom: 15px;">Starting at ₹199/month</div>
+                        <button onclick="window.location.href='../../subscription.html'" style="background: white; color: #4f46e5; border: none; padding: 12px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: pulse-button 2s infinite alternate;">
+                            <span>Upgrade Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/auth-check-disabled.js"></script>
-    <script src="../../js/mobile.js"></script></script>
+    <script src="../../js/free-theme-manager.js"></script>
+    <script src="../../js/mobile.js"></script>
     <script>
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -509,8 +714,6 @@
                 });
             }
             
-            // Logout functionality is now handled by auth-check-disabled.js
-            
             // Chart actions functionality
             const chartActions = document.querySelectorAll('.chart-action');
             chartActions.forEach(action => {
@@ -527,8 +730,6 @@
                     console.log('Chart period selected:', this.textContent);
                 });
             });
-            
-            // User data is now set by auth-check-disabled.js
             
             // Initialize Performance Chart
             const perfCtx = document.getElementById('performanceChart').getContext('2d');
@@ -604,6 +805,42 @@
                             label: 'Score %',
                             data: [75, 60, 80, 55, 70],
                             backgroundColor: 'rgba(79, 70, 229, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Add click handlers to all locked overlays
+            document.querySelectorAll('.locked-overlay').forEach(overlay => {
+                overlay.addEventListener('click', function() {
+                    window.location.href = '../../subscription.html';
+                });
+            });
+            
+            // Initialize Prediction Chart (locked)
+            const predictionCtx = document.getElementById('predictionChart').getContext('2d');
+            const predictionChart = new Chart(predictionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Current', 'Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        {
+                            label: 'Predicted Score',
+                            data: [68, 72, 76, 81, 85],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.3,
+                            fill: true
                         }
                     ]
                 },

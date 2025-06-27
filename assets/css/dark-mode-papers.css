@@ -1,0 +1,44 @@
+/* Additional dark mode styles for practice papers page */
+.dark-mode .ai-recommendation {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+    border-left: 4px solid #9333ea !important;
+}
+
+.dark-mode .recommended-paper {
+    background-color: rgba(147, 51, 234, 0.1) !important;
+    border-left: 3px solid #9333ea !important;
+}
+
+.dark-mode .start-btn {
+    background-image: linear-gradient(to right, #9333ea, #6366f1) !important;
+    color: white !important;
+}
+
+.dark-mode .paper-card {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+    border-top: 3px solid #9333ea !important;
+}
+
+.dark-mode .paper-subtitle,
+.dark-mode .paper-header {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .progress-bar {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode .filter-select,
+.dark-mode .page-btn {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .page-btn.active {
+    background-color: #9333ea !important;
+    color: white !important;
+    border-color: #9333ea !important;
+}

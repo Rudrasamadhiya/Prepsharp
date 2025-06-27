@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Coach - PrepSharp</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-ai-coach.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -23,6 +29,8 @@
     </script>
     <style>
         .chat-container {
+            display: flex;
+            height: calc(100vh - 200px);
             background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
             border: 2px solid transparent;
             background-clip: padding-box;
@@ -60,15 +68,92 @@
             100% { background-position: 0% 50%; }
         }
         
+        .topics-sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: inset -5px 0 15px -5px rgba(99, 102, 241, 0.05);
+        }
+        
+        .topics-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #4338ca;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .new-topic-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+        }
+        
+        .new-topic-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(99, 102, 241, 0.4);
+        }
+        
+        .topics-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .topic-item {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-item:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .topic-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            color: #6366f1;
+            border-left: 3px solid #6366f1;
+        }
+        
+        .topic-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: #6366f1;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .chat-header {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
             color: white;
-            padding: 25px;
-            font-size: 1.3rem;
-            font-weight: 700;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: space-between;
             position: relative;
             overflow: hidden;
         }
@@ -89,7 +174,15 @@
             100% { left: 100%; }
         }
         
-        .chat-header i {
+        .chat-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-title i {
+            margin-right: 10px;
+            color: white;
             font-size: 1.5rem;
             animation: pulse 2s ease-in-out infinite;
         }
@@ -99,10 +192,37 @@
             50% { transform: scale(1.1); }
         }
         
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-action {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-action:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
         .chat-messages {
-            height: 450px;
+            flex: 1;
+            padding: 20px;
             overflow-y: auto;
-            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             position: relative;
         }
@@ -120,12 +240,13 @@
         }
         
         .message {
-            margin-bottom: 20px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
+            max-width: 80%;
         }
         
         .message.user {
+            align-self: flex-end;
             flex-direction: row-reverse;
         }
         
@@ -133,16 +254,12 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        
-        .message.ai .message-avatar {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
-            color: white;
+            font-weight: 600;
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
             animation: avatarGlow 3s ease-in-out infinite;
             border: 3px solid rgba(255, 255, 255, 0.3);
@@ -208,33 +325,44 @@
             background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
         }
         
+        .message-text {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+        }
+        
         .chat-input {
             padding: 15px 20px;
             border-top: 1px solid rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
             gap: 10px;
-            width: 100%;
-            box-sizing: border-box;
         }
         
         .input-field {
             flex: 1;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 2px solid rgba(99, 102, 241, 0.2);
             border-radius: 30px;
             padding: 10px 15px;
             font-size: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
         
         .input-field:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
         }
         
         .send-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
             border-radius: 50%;
@@ -245,251 +373,49 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
         
         .send-btn:hover {
-            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
         
-        .chat-input::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
-        }
-        
-        .chat-input textarea {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid rgba(99, 102, 241, 0.2);
-            border-radius: 15px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            font-family: inherit;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-        
-        .chat-input textarea:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
-        }
-        
-        .chat-input button:last-child {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-            position: relative;
-            overflow: hidden;
-            height: 48px;
+        .input-actions {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
-        .chat-input button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .chat-input button:hover::before {
-            left: 100%;
-        }
-        
-        .chat-input button:last-child:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-        
-        .math-toggle {
-            background: linear-gradient(135deg, #f59e0b, #ec4899);
-            color: white;
+        .input-action {
+            background: none;
             border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 14px;
+            color: rgba(99, 102, 241, 0.6);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .math-toggle:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        .input-action:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
         }
-        
-        .math-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .math-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
-        }
-        
-        .image-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .image-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-        
-        .image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 12px;
-            margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .feature-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        
-        .feature-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        
-        .feature-icon i {
-            font-size: 24px;
-            color: white;
-        }
-        
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
-        
-        .feature-description {
-            color: var(--text-light);
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-        
-        .feature-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .feature-btn:hover {
-            background: var(--primary-hover);
-        }
-        
-        /* Math formula styling */
-        .math-formula {
-            background: rgba(99, 102, 241, 0.12);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-            color: #4338ca;
-            display: inline-block;
-            margin: 2px 1px;
-            font-weight: 500;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-        
-        .math-display {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.3em;
-            color: #1e293b;
-            text-align: center;
-            margin: 20px 0;
-            border: 2px solid rgba(99, 102, 241, 0.3);
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
-            line-height: 1.8;
-        }
+
     </style>
 </head>
 <body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
                 <h2>PrepSharp</h2>
             </div>
             
@@ -549,7 +475,7 @@
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -568,29 +494,111 @@
                         <span style="background: linear-gradient(135deg, #ec4899, #f97316); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">🧮 Math Solver</span>
                         <span style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">⚡ Instant Help</span>
                     </div>
+                    <div style="margin-top: 15px; padding: 10px; background-color: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 4px solid #10b981;">
+                        <p style="margin: 0; font-size: 0.9rem; color: #064e3b;"><strong>API Integration:</strong> Using Mistral's free model with image support. Enter your API key in settings.</p>
+                    </div>
                 </div>
                 
                 <!-- Chat Interface -->
                 <div class="chat-container">
-                    <div class="chat-header">
-                        <i class="fas fa-robot"></i> AI Study Assistant
+                    <div class="topics-sidebar">
+                        <div class="topics-header">
+                            <span>Recent Conversations</span>
+                            <button class="new-topic-btn"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <ul class="topics-list">
+                            <li class="topic-item active">
+                                <div class="topic-icon"><i class="fas fa-atom"></i></div>
+                                <div>Physics Doubts</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-flask"></i></div>
+                                <div>Organic Chemistry</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-square-root-alt"></i></div>
+                                <div>Calculus Problems</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-book"></i></div>
+                                <div>JEE Preparation Tips</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div>College Admissions</div>
+                            </li>
+                        </ul>
                     </div>
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <div class="chat-title">
+                                <i class="fas fa-atom"></i>
+                                <span>Physics Doubts</span>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="chat-action"><i class="fas fa-search"></i></button>
+                                <button class="chat-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
                     
                     <div class="chat-messages">
-                        <div class="message ai">
-                            <div class="message-avatar">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
                             <div class="message-content">
-                                <p>🎓 Hello! I'm your <strong style="color: #6366f1;">PrepSharp AI Study Coach</strong></p>
-                                <p>✨ Ready to help you crack <strong style="color: #ec4899;">JEE</strong> with:</p>
-                                <div style="margin: 10px 0;">
-                                    <span style="background: rgba(99, 102, 241, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">⚡ Physics</span>
-                                    <span style="background: rgba(236, 72, 153, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">🧪 Chemistry</span>
-                                    <span style="background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 12px; margin: 2px; display: inline-block;">📐 Mathematics</span>
+                                <div class="message-text">Hello! I'm your AI Physics Coach. How can I help you today?</div>
+                                <div class="message-time">10:30 AM</div>
+                            </div>
+                        </div>
+                        <div class="message user">
+                            <div class="message-avatar">JS</div>
+                            <div class="message-content">
+                                <div class="message-text">I'm having trouble understanding the concept of angular momentum conservation. Can you explain it with an example?</div>
+                                <div class="message-time">10:32 AM</div>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    <p>Angular momentum conservation is a fundamental principle in physics that states that the total angular momentum of a closed system remains constant if no external torque acts on it.</p>
+                                    <p>Here's a simple example: Think of a figure skater spinning with their arms extended. When they pull their arms in closer to their body, they spin faster. This is because:</p>
+                                    <ul>
+                                        <li>Angular momentum (L) = moment of inertia (I) × angular velocity (ω)</li>
+                                        <li>When the skater pulls their arms in, their moment of inertia decreases</li>
+                                        <li>To keep angular momentum constant, the angular velocity must increase</li>
+                                    </ul>
+                                    <p>This is why the skater spins faster with arms pulled in, and slower with arms extended.</p>
+                                    <p>Would you like me to provide a more mathematical explanation or another example?</p>
                                 </div>
-                                <p>💡 Try asking: "What is mass?", "Explain derivatives", "What are acids?"</p>
-                                <p style="font-size: 0.9rem; color: #10b981; margin-top: 10px;">✅ <strong>AI Powered by Mistral (FREE)</strong> - Ask me anything about JEE!</p>
+                                <div class="message-time">10:35 AM</div>
+                            </div>
+                        </div>
+                        <div class="message user">
+                            <div class="message-avatar">JS</div>
+                            <div class="message-content">
+                                <div class="message-text">That makes sense! Can you give me a numerical problem related to this concept that might appear in JEE?</div>
+                                <div class="message-time">10:37 AM</div>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    <p>Here's a JEE-level problem on angular momentum conservation:</p>
+                                    <p><strong>Problem:</strong> A uniform disc of mass 2 kg and radius 0.1 m is rotating about its axis with an angular velocity of 20 rad/s. A small block of mass 0.5 kg is gently placed at a distance of 0.05 m from the axis. Assuming no external torque acts on the system, find the new angular velocity of the disc.</p>
+                                    <p><strong>Solution:</strong></p>
+                                    <p>Step 1: Calculate the initial angular momentum of the system.</p>
+                                    <p>Moment of inertia of disc: I₁ = (1/2)MR² = (1/2) × 2 × (0.1)² = 0.01 kg·m²</p>
+                                    <p>Initial angular momentum: L = I₁ω₁ = 0.01 × 20 = 0.2 kg·m²/s</p>
+                                    <p>Step 2: Calculate the new moment of inertia after placing the block.</p>
+                                    <p>Moment of inertia of block: I_block = mr² = 0.5 × (0.05)² = 0.00125 kg·m²</p>
+                                    <p>Total moment of inertia: I₂ = I₁ + I_block = 0.01 + 0.00125 = 0.01125 kg·m²</p>
+                                    <p>Step 3: Apply conservation of angular momentum to find the new angular velocity.</p>
+                                    <p>L = I₁ω₁ = I₂ω₂</p>
+                                    <p>ω₂ = (I₁ω₁)/I₂ = (0.01 × 20)/0.01125 = 17.78 rad/s</p>
+                                    <p>Therefore, the new angular velocity is 17.78 rad/s.</p>
+                                </div>
+                                <div class="message-time">10:40 AM</div>
                             </div>
                         </div>
                     </div>
@@ -601,227 +609,249 @@
                             <button class="input-action"><i class="fas fa-microphone"></i></button>
                         </div>
                         <input type="text" class="input-field" placeholder="Type your message...">
-                        <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-                            
-                            <div class="math-keyboard" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: white; border: 2px solid #6366f1; border-radius: 12px; padding: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 1000;">
-                                <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;">
-                                    <button type="button" onclick="insertSymbol('²')">x²</button>
-                                    <button type="button" onclick="insertSymbol('³')">x³</button>
-                                    <button type="button" onclick="insertSymbol('^')">(^)</button>
-                                    <button type="button" onclick="insertSymbol('∫')">∫</button>
-                                    <button type="button" onclick="insertSymbol('√')">√</button>
-                                    <button type="button" onclick="insertSymbol('π')">π</button>
-                                    <button type="button" onclick="insertSymbol('α')">α</button>
-                                    <button type="button" onclick="insertSymbol('β')">β</button>
-                                    <button type="button" onclick="insertSymbol('θ')">θ</button>
-                                    <button type="button" onclick="insertSymbol('∞')">∞</button>
-                                    <button type="button" onclick="insertSymbol('≤')">≤</button>
-                                    <button type="button" onclick="insertSymbol('≥')">≥</button>
-                                </div>
-                            </div>
-                        </div>
+                        <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
                 
-                <!-- Features Section -->
-                <h2 style="margin: 30px 0 20px;">AI Coach Features</h2>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                        <h3 class="feature-title">Instant Doubt Solving</h3>
-                        <p class="feature-description">
-                            Get immediate answers to your questions and clear your doubts in real-time.
-                        </p>
-                        <button class="feature-btn">Try Now</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <h3 class="feature-title">Concept Explanations</h3>
-                        <p class="feature-description">
-                            Learn complex concepts with simple explanations and examples.
-                        </p>
-                        <button class="feature-btn">Explore</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <h3 class="feature-title">Practice Problems</h3>
-                        <p class="feature-description">
-                            Get personalized practice problems and step-by-step solutions.
-                        </p>
-                        <button class="feature-btn">Practice</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="feature-title">Study Tips</h3>
-                        <p class="feature-description">
-                            Receive personalized study recommendations based on your progress.
-                        </p>
-                        <button class="feature-btn">Get Tips</button>
-                    </div>
-                </div>
+
             </div>
         </main>
     </div>
     
 
     
-    <script>
-        let chatMessages;
+    <script src="js/auth-check-disabled.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script src="../../js/auth-check-bypass.js"></script>
+    <script src="../../js/theme-manager.js"></script><script>
+        // API key storage and retrieval functions
+        function saveApiKey(apiKey) {
+            localStorage.setItem('prepsharp_api_key', apiKey);
+        }
+        
+        function getApiKey() {
+            return localStorage.getItem('prepsharp_api_key') || '';
+        }
+        
+        // Function to fetch AI response from API
+        async function fetchAIResponse(message) {
+            const apiKey = getApiKey();
+            
+            // If no API key is set, return a fallback response
+            if (!apiKey) {
+                // Check if message is a greeting
+                const lowerMsg = message.toLowerCase();
+                if (lowerMsg === 'hi' || lowerMsg === 'hello' || lowerMsg === 'hey') {
+                    return `
+                        <p>Hello there! 👋 Welcome to PrepSharp AI Coach.</p>
+                        <p>I'm here to help you with your JEE preparation. You can ask me questions about:</p>
+                        <ul>
+                            <li>Physics concepts and problems</li>
+                            <li>Chemistry formulas and reactions</li>
+                            <li>Mathematics theorems and solutions</li>
+                        </ul>
+                        <p>How can I assist you with your studies today?</p>
+                        <p><em>Note: Please set your Mistral AI API key in settings to enable real AI responses with image support.</em></p>
+                    `;
+                } else {
+                    return `
+                        <p>I'd like to help you with your question about "${message}", but I need a Mistral AI API key to provide accurate responses.</p>
+                        <p>Please go to Settings and enter your Mistral AI API key to enable full AI functionality with image support.</p>
+                        <p>Once configured, I'll be able to assist you with all your JEE preparation needs!</p>
+                    `;
+                }
+            }
+            
+            try {
+                // Make API request to Mistral AI
+                const apiUrl = 'https://api.mistral.ai/v1/chat/completions';
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "mistral/mistral-small-3.2-24b-instruct:free",
+                        messages: [
+                            {role: "system", content: "You are an AI tutor specializing in JEE preparation, focusing on Physics, Chemistry, and Mathematics. Provide clear, concise explanations with examples when appropriate. Format your responses with HTML tags like <p>, <ul>, <li>, and <strong> for better readability."}, 
+                            {role: "user", content: message}
+                        ],
+                        max_tokens: 500
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    return data.choices[0].message.content;
+                } else if (data.object === 'chat.completion' && data.choices && data.choices[0] && data.choices[0].message) {
+                    return data.choices[0].message.content;
+                } else {
+                    console.log('API response:', data);
+                    throw new Error('Invalid API response format');
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                return `
+                    <p>Sorry, I encountered an error while processing your request.</p>
+                    <p>Error details: ${error.message}</p>
+                    <p>Please check your API key and try again, or contact support if the issue persists.</p>
+                `;
+            }
+        }
         
         document.addEventListener('DOMContentLoaded', function() {
-            chatMessages = document.querySelector('.chat-messages');
-        });
-        
-        function sendMessage() {
-            const inputField = document.querySelector('.input-field');
-            const message = inputField.value.trim();
-            if (message) {
-                const userInitials = document.getElementById('userInitials').textContent;
+            const userProfile = document.getElementById('userProfile');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                userProfile.addEventListener('click', function(e) {
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
+                });
                 
-                // Create user message
-                const userMessage = document.createElement('div');
-                userMessage.className = 'message user';
-                userMessage.innerHTML = `
-                    <div class="message-avatar">${userInitials}</div>
-                    <div class="message-content">
-                        <div class="message-text">${message}</div>
-                        <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                document.addEventListener('click', function() {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                });
+            }
+            
+            // Check if API key is set
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                // Show API key notification
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.right = '20px';
+                notification.style.padding = '15px 20px';
+                notification.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+                notification.style.color = 'white';
+                notification.style.borderRadius = '8px';
+                notification.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.3)';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '300px';
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <strong>Mistral AI Key Required</strong>
+                        <button id="closeNotification" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">&times;</button>
                     </div>
+                    <p style="margin: 0; font-size: 14px;">Please set your Mistral AI API key in settings to enable AI responses with image support.</p>
+                    <button id="setApiKey" style="margin-top: 10px; background: white; color: #6366f1; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 600;">Set Mistral AI Key</button>
                 `;
-                chatMessages.appendChild(userMessage);
+                document.body.appendChild(notification);
                 
-                // Clear input field
-                inputField.value = '';
+                document.getElementById('closeNotification').addEventListener('click', function() {
+                    notification.style.display = 'none';
+                });
                 
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                document.getElementById('setApiKey').addEventListener('click', function() {
+                    const apiKey = prompt('Enter your Mistral AI API Key:');
+                    if (apiKey) {
+                        saveApiKey(apiKey);
+                        notification.style.display = 'none';
+                        alert('API key saved successfully!');
+                    }
+                });
                 
-                // Simulate AI response after a delay
-                setTimeout(() => {
-                    const aiMessage = document.createElement('div');
-                    aiMessage.className = 'message';
-                    aiMessage.innerHTML = `
-                        <div class="message-avatar">AI</div>
+                // Add event listener to settings button
+                document.getElementById('settingsBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentKey = getApiKey();
+                    const apiKey = prompt('Enter your Mistral AI API Key:', currentKey);
+                    if (apiKey !== null) {
+                        saveApiKey(apiKey);
+                        alert('API key saved successfully!');
+                    }
+                });
+            }
+            
+            // Topic selection
+            const topicItems = document.querySelectorAll('.topic-item');
+            topicItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    topicItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        
+            // Send message functionality
+            const inputField = document.querySelector('.input-field');
+            const sendBtn = document.querySelector('.send-btn');
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            function sendMessage() {
+                const message = inputField.value.trim();
+                if (message) {
+                    const userInitials = document.getElementById('userInitials').textContent;
+                    
+                    // Create user message
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.innerHTML = `
+                        <div class="message-avatar">${userInitials}</div>
                         <div class="message-content">
-                            <div class="message-text">I'm processing your question about "${message}". Let me think about this...</div>
+                            <div class="message-text">${message}</div>
                             <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                         </div>
                     `;
-                    chatMessages.appendChild(aiMessage);
+                    chatMessages.appendChild(userMessage);
+                    
+                    // Clear input field
+                    inputField.value = '';
                     
                     // Scroll to bottom
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 1000);
-            }
-        }
-        
-        function getLocalResponse(message) {
-            const msg = message.toLowerCase();
-            
-            if (msg.includes('mass')) {
-                return '**Mass** is the amount of matter in an object. Measured in kg. Formula: F = ma (Newton\'s 2nd law). Mass is constant everywhere.';
-            }
-            if (msg.includes('force')) {
-                return '**Force** is push/pull that changes motion. F = ma. Types: Contact (friction, normal) & Non-contact (gravity, magnetic).';
-            }
-            if (msg.includes('velocity')) {
-                return '**Velocity** = displacement/time with direction. v = s/t. Vector quantity (has direction) unlike speed (scalar).';
-            }
-            if (msg.includes('energy')) {
-                return '**Energy** = capacity to do work. Types: Kinetic (½mv²), Potential (mgh). Energy is conserved in isolated systems.';
-            }
-            if (msg.includes('atom')) {
-                return '**Atom** = basic unit of matter. Structure: Nucleus (protons + neutrons) + electrons in shells. Atomic number = protons.';
-            }
-            if (msg.includes('derivative')) {
-                return '**Derivative** = rate of change. d/dx(x^n) = nx^(n-1). Geometric meaning: slope of tangent to curve.';
-            }
-            if (msg.includes('acid')) {
-                return '**Acids** are substances that donate H+ ions (protons) in solution. Properties: sour taste, pH < 7, react with metals to form H₂ gas. Examples: HCl, H₂SO₄.';
-            }
-            if (msg.includes('integral')) {
-                return '**Integral** is the reverse of derivative. ∫x^n dx = x^(n+1)/(n+1) + C. Represents area under curve. Definite integral: ∫[a,b] f(x)dx = F(b) - F(a).';
-            }
-            if (msg.includes('hello') || msg.includes('hi')) {
-                return '👋 Hello! I\'m your JEE AI Coach. Ask about Physics, Chemistry, or Math concepts!';
-            }
-            
-            return `🤔 I can help with JEE topics! Try asking about Physics (mass, force, energy), Chemistry (atoms, acids, reactions), or Math (derivatives, integrals)!`;
-        }
-        
-        function addMessage(text, sender) {
-            console.log('Adding message:', text, 'from:', sender);
-            if (!chatMessages) {
-                console.log('No chat messages container found');
-                return;
+                    
+                    // Simulate AI response after a delay
+                    setTimeout(() => {
+                        const aiMessage = document.createElement('div');
+                        aiMessage.className = 'message';
+                        aiMessage.innerHTML = `
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">I'm processing your question about "${message}". Let me think about this...</div>
+                                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                            </div>
+                        `;
+                        chatMessages.appendChild(aiMessage);
+                        
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                                        // Get API response
+                        fetchAIResponse(message).then(responseText => {
+                            const finalResponse = document.createElement('div');
+                            finalResponse.className = 'message';
+                            finalResponse.innerHTML = `
+                                <div class="message-avatar">AI</div>
+                                <div class="message-content">
+                                    <div class="message-text">${responseText}</div>
+                                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(finalResponse);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        });
+                    }, 1000);
+                }
             }
             
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            
-            // Convert markdown-style formatting to HTML
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">
-                    <i class="fas fa-${sender === 'ai' ? 'robot' : 'user'}"></i>
-                </div>
-                <div class="message-content">
-                    <p>${text}</p>
-                </div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            return messageDiv;
-        }
-        
-        function toggleMathKeyboard() {
-            const keyboard = document.querySelector('.math-keyboard');
-            if (keyboard) {
-                keyboard.style.display = keyboard.style.display === 'none' ? 'block' : 'none';
-            }
-        }
-        
-        function uploadImage() {
-            const fileInput = document.getElementById('imageUpload');
-            if (fileInput) {
-                fileInput.click();
-            }
-        }
-        
-        function insertSymbol(symbol) {
-            if (chatInput) {
-                const cursorPos = chatInput.selectionStart;
-                const textBefore = chatInput.value.substring(0, cursorPos);
-                const textAfter = chatInput.value.substring(cursorPos);
-                chatInput.value = textBefore + symbol + textAfter;
-                chatInput.focus();
-            }
-        }
-        
-        // Enter key support
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputField = document.querySelector('.input-field');
+            sendBtn.addEventListener('click', sendMessage);
             
             inputField.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     sendMessage();
                 }
             });
+        
+
         });
+
     </script>
 </body>
 </html>

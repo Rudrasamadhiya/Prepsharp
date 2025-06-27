@@ -1,0 +1,70 @@
+/* Dark mode styles for all premium pages */
+.dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Text colors in dark mode */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
+.dark-mode p, .dark-mode label, .dark-mode span, .dark-mode div,
+.dark-mode .notification-title, .dark-mode .settings-title, .dark-mode .settings-subtitle,
+.dark-mode .form-label, .dark-mode .detail-value, .dark-mode .recommended-title,
+.dark-mode .ai-title, .dark-mode .analytics-title, .dark-mode .paper-title,
+.dark-mode .settings-nav-item i {
+    color: #ffffff !important;
+}
+
+.dark-mode .sidebar {
+    background: linear-gradient(to bottom, #1a1a1a, #121212) !important;
+}
+
+.dark-mode .sidebar-nav a,
+.dark-mode .settings-nav-link,
+.dark-mode .settings-nav-item i {
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .settings-nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-left: 3px solid var(--primary-color) !important;
+}
+
+.dark-mode .sidebar-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark-mode .sidebar-nav .active a {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border-left: 3px solid #9333ea !important;
+}
+
+.dark-mode .dashboard-card, .dark-mode .stat-card, .dark-mode .feature-card, 
+.dark-mode .ai-insights, .dark-mode .settings-content, .dark-mode .settings-sidebar,
+.dark-mode .recommended-paper, .dark-mode .analytics-card, .dark-mode .settings-sidebar {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .notification-description,
+.dark-mode .detail-label,
+.dark-mode .text-light,
+.dark-mode .task-meta,
+.dark-mode .feature-description,
+.dark-mode .recommended-reason,
+.dark-mode .ai-insights p {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .form-input,
+.dark-mode .form-select {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .btn-secondary {
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}

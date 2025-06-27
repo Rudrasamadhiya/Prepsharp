@@ -6,28 +6,76 @@
     <title>AI Coach - PrepSharp</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/font-size.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/mobile.css">
     <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
     <link rel="stylesheet" href="../../assets/css/mobile-ai-coach.css">
     <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
     <style>
         .chat-container {
             display: flex;
             height: calc(100vh - 200px);
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.1);
+            margin-bottom: 40px;
             overflow: hidden;
-            margin-top: 20px;
+            position: relative;
+            animation: containerFloat 6s ease-in-out infinite;
+        }
+        
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6, #a855f7, #6366f1);
+            background-size: 400% 400%;
+            animation: gradientBorder 8s ease infinite;
+            z-index: -1;
+            margin: -2px;
+            border-radius: 20px;
+        }
+        
+        @keyframes containerFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes gradientBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .topics-sidebar {
             width: 250px;
-            background-color: rgba(0,0,0,0.02);
-            border-right: 1px solid rgba(0,0,0,0.05);
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
             padding: 20px;
             overflow-y: auto;
+            box-shadow: inset -5px 0 15px -5px rgba(99, 102, 241, 0.05);
         }
         
         .topics-header {
@@ -36,10 +84,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #4338ca;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         }
         
         .new-topic-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
             border-radius: 4px;
@@ -50,10 +101,12 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
         }
         
         .new-topic-btn:hover {
-            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(99, 102, 241, 0.4);
         }
         
         .topics-list {
@@ -76,14 +129,16 @@
         }
         
         .topic-item.active {
-            background-color: rgba(79, 70, 229, 0.1);
-            color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            color: #6366f1;
+            border-left: 3px solid #6366f1;
         }
         
         .topic-icon {
             margin-right: 10px;
             width: 20px;
             text-align: center;
+            color: #6366f1;
         }
         
         .chat-main {
@@ -93,11 +148,31 @@
         }
         
         .chat-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            color: white;
             padding: 15px 20px;
             border-bottom: 1px solid rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         
         .chat-title {
@@ -108,7 +183,14 @@
         
         .chat-title i {
             margin-right: 10px;
-            color: var(--primary-color);
+            color: white;
+            font-size: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .chat-actions {
@@ -119,7 +201,7 @@
         .chat-action {
             background: none;
             border: none;
-            color: var(--text-light);
+            color: white;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 32px;
@@ -131,8 +213,8 @@
         }
         
         .chat-action:hover {
-            background-color: rgba(0,0,0,0.05);
-            color: var(--primary-color);
+            background-color: rgba(255,255,255,0.2);
+            color: white;
         }
         
         .chat-messages {
@@ -142,6 +224,20 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            position: relative;
+        }
+        
+        .chat-messages::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
         
         .message {
@@ -159,46 +255,75 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: 600;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            animation: avatarGlow 3s ease-in-out infinite;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
         }
         
         .message.user .message-avatar {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, #ec4899, #f59e0b, #10b981);
+            color: white;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            animation: userAvatarGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes userAvatarGlow {
+            0%, 100% { box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4); }
+            50% { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5); }
         }
         
         .message-content {
-            background-color: rgba(0,0,0,0.02);
-            padding: 15px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.1);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            animation: messageSlide 0.5s ease-out;
             position: relative;
-        }
-        
-        .message.user .message-content {
-            background-color: rgba(79, 70, 229, 0.1);
+            overflow: hidden;
+            display: block;
+            word-wrap: break-word;
         }
         
         .message-content::before {
             content: '';
             position: absolute;
-            top: 15px;
-            left: -8px;
-            width: 0;
-            height: 0;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-            border-right: 8px solid rgba(0,0,0,0.02);
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b, #10b981);
+        }
+        
+        @keyframes messageSlide {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
         }
         
         .message.user .message-content::before {
-            left: auto;
-            right: -8px;
-            border-right: none;
-            border-left: 8px solid rgba(79, 70, 229, 0.1);
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
         }
         
         .message-text {
@@ -222,21 +347,23 @@
         
         .input-field {
             flex: 1;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 2px solid rgba(99, 102, 241, 0.2);
             border-radius: 30px;
             padding: 10px 15px;
             font-size: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
         
         .input-field:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
         }
         
         .send-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
             border-radius: 50%;
@@ -247,11 +374,12 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
         
         .send-btn:hover {
-            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
         
         .input-actions {
@@ -262,7 +390,7 @@
         .input-action {
             background: none;
             border: none;
-            color: var(--text-light);
+            color: rgba(99, 102, 241, 0.6);
             cursor: pointer;
             transition: all 0.3s ease;
             width: 40px;
@@ -274,8 +402,33 @@
         }
         
         .input-action:hover {
-            background-color: rgba(0,0,0,0.05);
-            color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        /* Dark mode specific styles */
+        .dark-mode .chat-container {
+            background: linear-gradient(145deg, rgba(30,30,30,0.9), rgba(20,20,20,0.9));
+        }
+        
+        .dark-mode .topics-sidebar {
+            background: linear-gradient(180deg, rgba(30,30,30,0.95), rgba(25,25,25,0.95));
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .dark-mode .chat-messages {
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+        }
+        
+        .dark-mode .message-content {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.95), rgba(35, 35, 35, 0.95));
+            color: #ffffff;
+        }
+        
+        .dark-mode .input-field {
+            background: rgba(40, 40, 40, 0.8);
+            color: #ffffff;
+            border-color: rgba(99, 102, 241, 0.3);
         }
     </style>
 </head>
@@ -287,7 +440,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
                 <h2>PrepSharp</h2>
             </div>
             
@@ -317,12 +470,15 @@
                     <li>
                         <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
                     </li>
+                    <li>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                    </li>
                 </ul>
             </nav>
             
             <div class="sidebar-footer">
                 <div class="plan-info">
-                    <span class="plan-badge premium">Premium Plan</span>
+                    <span class="plan-badge free">Free Plan</span>
                 </div>
             </div>
         </aside>
@@ -343,7 +499,7 @@
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -354,11 +510,17 @@
             
             <!-- Page Content -->
             <div class="dashboard-content">
-                <div class="welcome-section">
-                    <h1>AI Coach</h1>
-                    <p>Get personalized guidance and instant answers to your doubts with our AI-powered coach.</p>
+                <div class="welcome-section" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 16px; padding: 30px; border: 2px solid rgba(99, 102, 241, 0.2);">
+                    <h1 style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🚀 PrepSharp AI Coach</h1>
+                    <p style="font-size: 1.1rem; color: #64748b;">Your <strong style="color: #6366f1;">intelligent JEE companion</strong> for Physics, Chemistry, and Mathematics. Get instant help with concepts, problem-solving, and academic guidance!</p>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <span style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">📸 Image Analysis</span>
+                        <span style="background: linear-gradient(135deg, #ec4899, #f97316); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">🧮 Math Solver</span>
+                        <span style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">⚡ Instant Help</span>
+                    </div>
                 </div>
                 
+                <!-- Chat Interface -->
                 <div class="chat-container">
                     <div class="topics-sidebar">
                         <div class="topics-header">
@@ -399,83 +561,86 @@
                                 <button class="chat-action"><i class="fas fa-ellipsis-v"></i></button>
                             </div>
                         </div>
-                        <div class="chat-messages">
-                            <div class="message">
-                                <div class="message-avatar">AI</div>
-                                <div class="message-content">
-                                    <div class="message-text">Hello! I'm your AI Physics Coach. How can I help you today?</div>
-                                    <div class="message-time">10:30 AM</div>
-                                </div>
-                            </div>
-                            <div class="message user">
-                                <div class="message-avatar">JS</div>
-                                <div class="message-content">
-                                    <div class="message-text">I'm having trouble understanding the concept of angular momentum conservation. Can you explain it with an example?</div>
-                                    <div class="message-time">10:32 AM</div>
-                                </div>
-                            </div>
-                            <div class="message">
-                                <div class="message-avatar">AI</div>
-                                <div class="message-content">
-                                    <div class="message-text">
-                                        <p>Angular momentum conservation is a fundamental principle in physics that states that the total angular momentum of a closed system remains constant if no external torque acts on it.</p>
-                                        <p>Here's a simple example: Think of a figure skater spinning with their arms extended. When they pull their arms in closer to their body, they spin faster. This is because:</p>
-                                        <ul>
-                                            <li>Angular momentum (L) = moment of inertia (I) × angular velocity (ω)</li>
-                                            <li>When the skater pulls their arms in, their moment of inertia decreases</li>
-                                            <li>To keep angular momentum constant, the angular velocity must increase</li>
-                                        </ul>
-                                        <p>This is why the skater spins faster with arms pulled in, and slower with arms extended.</p>
-                                        <p>Would you like me to provide a more mathematical explanation or another example?</p>
-                                    </div>
-                                    <div class="message-time">10:35 AM</div>
-                                </div>
-                            </div>
-                            <div class="message user">
-                                <div class="message-avatar">JS</div>
-                                <div class="message-content">
-                                    <div class="message-text">That makes sense! Can you give me a numerical problem related to this concept that might appear in JEE?</div>
-                                    <div class="message-time">10:37 AM</div>
-                                </div>
-                            </div>
-                            <div class="message">
-                                <div class="message-avatar">AI</div>
-                                <div class="message-content">
-                                    <div class="message-text">
-                                        <p>Here's a JEE-level problem on angular momentum conservation:</p>
-                                        <p><strong>Problem:</strong> A uniform disc of mass 2 kg and radius 0.1 m is rotating about its axis with an angular velocity of 20 rad/s. A small block of mass 0.5 kg is gently placed at a distance of 0.05 m from the axis. Assuming no external torque acts on the system, find the new angular velocity of the disc.</p>
-                                        <p><strong>Solution:</strong></p>
-                                        <p>Step 1: Calculate the initial angular momentum of the system.</p>
-                                        <p>Moment of inertia of disc: I₁ = (1/2)MR² = (1/2) × 2 × (0.1)² = 0.01 kg·m²</p>
-                                        <p>Initial angular momentum: L = I₁ω₁ = 0.01 × 20 = 0.2 kg·m²/s</p>
-                                        <p>Step 2: Calculate the new moment of inertia after placing the block.</p>
-                                        <p>Moment of inertia of block: I_block = mr² = 0.5 × (0.05)² = 0.00125 kg·m²</p>
-                                        <p>Total moment of inertia: I₂ = I₁ + I_block = 0.01 + 0.00125 = 0.01125 kg·m²</p>
-                                        <p>Step 3: Apply conservation of angular momentum to find the new angular velocity.</p>
-                                        <p>L = I₁ω₁ = I₂ω₂</p>
-                                        <p>ω₂ = (I₁ω₁)/I₂ = (0.01 × 20)/0.01125 = 17.78 rad/s</p>
-                                        <p>Therefore, the new angular velocity is 17.78 rad/s.</p>
-                                    </div>
-                                    <div class="message-time">10:40 AM</div>
-                                </div>
+                    
+                    <div class="chat-messages">
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">Hello! I'm your AI Physics Coach. How can I help you today?</div>
+                                <div class="message-time">10:30 AM</div>
                             </div>
                         </div>
-                        <div class="chat-input">
-                            <div class="input-actions">
-                                <button class="input-action"><i class="fas fa-paperclip"></i></button>
-                                <button class="input-action"><i class="fas fa-microphone"></i></button>
+                        <div class="message user">
+                            <div class="message-avatar">JS</div>
+                            <div class="message-content">
+                                <div class="message-text">I'm having trouble understanding the concept of angular momentum conservation. Can you explain it with an example?</div>
+                                <div class="message-time">10:32 AM</div>
                             </div>
-                            <input type="text" class="input-field" placeholder="Type your message...">
-                            <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    <p>Angular momentum conservation is a fundamental principle in physics that states that the total angular momentum of a closed system remains constant if no external torque acts on it.</p>
+                                    <p>Here's a simple example: Think of a figure skater spinning with their arms extended. When they pull their arms in closer to their body, they spin faster. This is because:</p>
+                                    <ul>
+                                        <li>Angular momentum (L) = moment of inertia (I) × angular velocity (ω)</li>
+                                        <li>When the skater pulls their arms in, their moment of inertia decreases</li>
+                                        <li>To keep angular momentum constant, the angular velocity must increase</li>
+                                    </ul>
+                                    <p>This is why the skater spins faster with arms pulled in, and slower with arms extended.</p>
+                                    <p>Would you like me to provide a more mathematical explanation or another example?</p>
+                                </div>
+                                <div class="message-time">10:35 AM</div>
+                            </div>
+                        </div>
+                        <div class="message user">
+                            <div class="message-avatar">JS</div>
+                            <div class="message-content">
+                                <div class="message-text">That makes sense! Can you give me a numerical problem related to this concept that might appear in JEE?</div>
+                                <div class="message-time">10:37 AM</div>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    <p>Here's a JEE-level problem on angular momentum conservation:</p>
+                                    <p><strong>Problem:</strong> A uniform disc of mass 2 kg and radius 0.1 m is rotating about its axis with an angular velocity of 20 rad/s. A small block of mass 0.5 kg is gently placed at a distance of 0.05 m from the axis. Assuming no external torque acts on the system, find the new angular velocity of the disc.</p>
+                                    <p><strong>Solution:</strong></p>
+                                    <p>Step 1: Calculate the initial angular momentum of the system.</p>
+                                    <p>Moment of inertia of disc: I₁ = (1/2)MR² = (1/2) × 2 × (0.1)² = 0.01 kg·m²</p>
+                                    <p>Initial angular momentum: L = I₁ω₁ = 0.01 × 20 = 0.2 kg·m²/s</p>
+                                    <p>Step 2: Calculate the new moment of inertia after placing the block.</p>
+                                    <p>Moment of inertia of block: I_block = mr² = 0.5 × (0.05)² = 0.00125 kg·m²</p>
+                                    <p>Total moment of inertia: I₂ = I₁ + I_block = 0.01 + 0.00125 = 0.01125 kg·m²</p>
+                                    <p>Step 3: Apply conservation of angular momentum to find the new angular velocity.</p>
+                                    <p>L = I₁ω₁ = I₂ω₂</p>
+                                    <p>ω₂ = (I₁ω₁)/I₂ = (0.01 × 20)/0.01125 = 17.78 rad/s</p>
+                                    <p>Therefore, the new angular velocity is 17.78 rad/s.</p>
+                                </div>
+                                <div class="message-time">10:40 AM</div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <div class="chat-input">
+                        <div class="input-actions">
+                            <button class="input-action"><i class="fas fa-paperclip"></i></button>
+                            <button class="input-action"><i class="fas fa-microphone"></i></button>
+                        </div>
+                        <input type="text" class="input-field" placeholder="Type your message...">
+                        <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
+                
             </div>
         </main>
     </div>
     
     <script src="js/auth-check-disabled.js"></script>
-    <script src="../../js/mobile.js"></script></script>
+    <script src="../../js/mobile.js"></script>
+    <script src="../../js/free-theme-manager.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userProfile = document.getElementById('userProfile');
@@ -496,15 +661,105 @@
                 });
             }
             
-            // Topic selection
+            // Topic selection with content switching
             const topicItems = document.querySelectorAll('.topic-item');
+            const chatMessages = document.querySelector('.chat-messages');
+            const chatTitle = document.querySelector('.chat-title span');
+            const chatIcon = document.querySelector('.chat-title i');
+            
+            // Define conversation content for each topic
+            const conversations = {
+                'Physics Doubts': {
+                    icon: 'fas fa-atom',
+                    messages: [
+                        {role: 'ai', text: 'Hello! I\'m your AI Physics Coach. How can I help you today?', time: '10:30 AM'},
+                        {role: 'user', text: 'I\'m having trouble understanding the concept of angular momentum conservation. Can you explain it with an example?', time: '10:32 AM'},
+                        {role: 'ai', text: '<p>Angular momentum conservation is a fundamental principle in physics that states that the total angular momentum of a closed system remains constant if no external torque acts on it.</p><p>Here\'s a simple example: Think of a figure skater spinning with their arms extended. When they pull their arms in closer to their body, they spin faster. This is because:</p><ul><li>Angular momentum (L) = moment of inertia (I) × angular velocity (ω)</li><li>When the skater pulls their arms in, their moment of inertia decreases</li><li>To keep angular momentum constant, the angular velocity must increase</li></ul><p>This is why the skater spins faster with arms pulled in, and slower with arms extended.</p><p>Would you like me to provide a more mathematical explanation or another example?</p>', time: '10:35 AM'},
+                        {role: 'user', text: 'That makes sense! Can you give me a numerical problem related to this concept that might appear in JEE?', time: '10:37 AM'},
+                        {role: 'ai', text: '<p>Here\'s a JEE-level problem on angular momentum conservation:</p><p><strong>Problem:</strong> A uniform disc of mass 2 kg and radius 0.1 m is rotating about its axis with an angular velocity of 20 rad/s. A small block of mass 0.5 kg is gently placed at a distance of 0.05 m from the axis. Assuming no external torque acts on the system, find the new angular velocity of the disc.</p><p><strong>Solution:</strong></p><p>Step 1: Calculate the initial angular momentum of the system.</p><p>Moment of inertia of disc: I₁ = (1/2)MR² = (1/2) × 2 × (0.1)² = 0.01 kg·m²</p><p>Initial angular momentum: L = I₁ω₁ = 0.01 × 20 = 0.2 kg·m²/s</p><p>Step 2: Calculate the new moment of inertia after placing the block.</p><p>Moment of inertia of block: I_block = mr² = 0.5 × (0.05)² = 0.00125 kg·m²</p><p>Total moment of inertia: I₂ = I₁ + I_block = 0.01 + 0.00125 = 0.01125 kg·m²</p><p>Step 3: Apply conservation of angular momentum to find the new angular velocity.</p><p>L = I₁ω₁ = I₂ω₂</p><p>ω₂ = (I₁ω₁)/I₂ = (0.01 × 20)/0.01125 = 17.78 rad/s</p><p>Therefore, the new angular velocity is 17.78 rad/s.</p>', time: '10:40 AM'}
+                    ]
+                },
+                'Organic Chemistry': {
+                    icon: 'fas fa-flask',
+                    messages: [
+                        {role: 'ai', text: 'Welcome to Organic Chemistry! What specific topic would you like to discuss today?', time: '11:15 AM'},
+                        {role: 'user', text: 'I\'m confused about the difference between SN1 and SN2 reactions. Can you explain?', time: '11:16 AM'},
+                        {role: 'ai', text: '<p>SN1 and SN2 are two types of nucleophilic substitution reactions in organic chemistry. Here are the key differences:</p><p><strong>SN2 (Substitution Nucleophilic Bimolecular):</strong></p><ul><li>One-step mechanism where the nucleophile attacks from the back side opposite to the leaving group</li><li>Results in inversion of stereochemistry (Walden inversion)</li><li>Rate depends on both nucleophile and substrate concentrations: Rate = k[Substrate][Nucleophile]</li><li>Favored by primary substrates, strong nucleophiles, and polar aprotic solvents</li></ul><p><strong>SN1 (Substitution Nucleophilic Unimolecular):</strong></p><ul><li>Two-step mechanism where the leaving group departs first, forming a carbocation intermediate</li><li>Results in racemization (with some inversion possible)</li><li>Rate depends only on substrate concentration: Rate = k[Substrate]</li><li>Favored by tertiary substrates, weak nucleophiles, and polar protic solvents</li></ul><p>Would you like me to provide specific examples of each reaction type?</p>', time: '11:20 AM'}
+                    ]
+                },
+                'Calculus Problems': {
+                    icon: 'fas fa-square-root-alt',
+                    messages: [
+                        {role: 'ai', text: 'Hello! I\'m here to help with calculus problems. What specific topic are you working on?', time: '2:05 PM'},
+                        {role: 'user', text: 'I need help with integration by parts. Can you show me an example?', time: '2:07 PM'},
+                        {role: 'ai', text: '<p>Integration by parts is a technique based on the product rule for differentiation. The formula is:</p><p>∫u(x)v′(x)dx = u(x)v(x) − ∫u′(x)v(x)dx</p><p>Let\'s solve ∫x·ln(x)dx as an example:</p><p><strong>Step 1:</strong> Choose u and dv.</p><p>Let u = ln(x) and dv = x·dx</p><p><strong>Step 2:</strong> Find du and v.</p><p>du = (1/x)dx and v = x²/2</p><p><strong>Step 3:</strong> Apply the formula.</p><p>∫x·ln(x)dx = ln(x)·(x²/2) - ∫(1/x)·(x²/2)dx</p><p>= (x²·ln(x))/2 - ∫(x/2)dx</p><p>= (x²·ln(x))/2 - x²/4 + C</p><p>Therefore, ∫x·ln(x)dx = (x²·ln(x))/2 - x²/4 + C</p><p>Would you like to try another example?</p>', time: '2:12 PM'}
+                    ]
+                },
+                'JEE Preparation Tips': {
+                    icon: 'fas fa-book',
+                    messages: [
+                        {role: 'ai', text: 'Welcome to JEE Preparation Tips! How can I help you optimize your study strategy?', time: '4:30 PM'},
+                        {role: 'user', text: 'I have 6 months left for JEE. How should I plan my studies?', time: '4:32 PM'},
+                        {role: 'ai', text: '<p>With 6 months remaining for JEE, here\'s a strategic study plan:</p><p><strong>Month 1-2: Concept Strengthening</strong></p><ul><li>Complete syllabus overview and identify weak areas</li><li>Focus on understanding fundamental concepts in all subjects</li><li>Solve basic to moderate problems from each chapter</li><li>Take chapter-wise tests to assess understanding</li></ul><p><strong>Month 3-4: Problem Solving & Practice</strong></p><ul><li>Increase problem-solving speed and accuracy</li><li>Practice previous years\'questions</li><li>Take subject-wise mock tests</li><li>Revise formulas and important concepts regularly</li></ul><p><strong>Month 5-6: Mock Tests & Revision</strong></p><ul><li>Take full-length mock tests under timed conditions</li><li>Analyze mistakes and work on weak areas</li><li>Revise all important formulas and concepts</li><li>Focus on high-yield topics and question patterns</li></ul><p><strong>Daily Schedule Recommendation:</strong></p><ul><li>6-7 hours of focused study (excluding breaks)</li><li>Alternate between subjects to maintain interest</li><li>Include short breaks using Pomodoro technique</li><li>Weekly revision of covered topics</li></ul><p>Would you like more specific tips for any particular subject?</p>', time: '4:38 PM'}
+                    ]
+                },
+                'College Admissions': {
+                    icon: 'fas fa-graduation-cap',
+                    messages: [
+                        {role: 'ai', text: 'Welcome to College Admissions guidance! How can I help you with your engineering college applications?', time: '5:45 PM'},
+                        {role: 'user', text: 'What are the top engineering colleges I can target with a JEE Main rank of around 5000?', time: '5:47 PM'},
+                        {role: 'ai', text: '<p>With a JEE Main rank of around 5000, you can target several good engineering colleges. Here are some options:</p><p><strong>NITs (National Institutes of Technology):</strong></p><ul><li>NIT Raipur, Jamshedpur, or Jalandhar (depending on category and home state quota)</li><li>Possible branches: Chemical, Civil, Metallurgical, or Production Engineering</li></ul><p><strong>IIITs (Indian Institutes of Information Technology):</strong></p><ul><li>IIIT Pune, Kota, Nagpur (depending on category)</li><li>Good options for Computer Science related branches</li></ul><p><strong>GFTIs (Government Funded Technical Institutes):</strong></p><ul><li>JNTU Hyderabad, PEC Chandigarh</li><li>Various engineering disciplines available</li></ul><p><strong>State Engineering Colleges:</strong></p><ul><li>Top colleges in your home state might be accessible</li><li>Often have separate state-level counseling</li></ul><p>Remember that actual cutoffs vary year to year and depend on factors like:</p><ul><li>Your category (General, OBC, SC, ST)</li><li>Home state advantage</li><li>Specific branch popularity</li></ul><p>Would you like more specific information about any of these institutions or admission processes?</p>', time: '5:53 PM'}
+                    ]
+                }
+            };
+            
+            // Function to render conversation
+            function renderConversation(topicName) {
+                const topic = conversations[topicName];
+                if (!topic) return;
+                
+                // Update header
+                chatTitle.textContent = topicName;
+                chatIcon.className = topic.icon;
+                
+                // Clear current messages
+                chatMessages.innerHTML = '';
+                
+                // Add messages
+                topic.messages.forEach(msg => {
+                    const messageEl = document.createElement('div');
+                    messageEl.className = msg.role === 'user' ? 'message user' : 'message';
+                    
+                    const avatar = msg.role === 'user' ? 'JS' : 'AI';
+                    
+                    messageEl.innerHTML = `
+                        <div class="message-avatar">${avatar}</div>
+                        <div class="message-content">
+                            <div class="message-text">${msg.text}</div>
+                            <div class="message-time">${msg.time}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(messageEl);
+                });
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Add click event to topics
             topicItems.forEach(item => {
                 item.addEventListener('click', function() {
+                    // Update active state
                     topicItems.forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    // Get topic name and render conversation
+                    const topicName = this.querySelector('div:not(.topic-icon)').textContent.trim();
+                    renderConversation(topicName);
                 });
             });
-            
+        
             // Send message functionality
             const inputField = document.querySelector('.input-field');
             const sendBtn = document.querySelector('.send-btn');
@@ -548,6 +803,25 @@
                         
                         // Scroll to bottom
                         chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        // In a real app, we would fetch the AI response here
+                        setTimeout(() => {
+                            const finalResponse = document.createElement('div');
+                            finalResponse.className = 'message';
+                            finalResponse.innerHTML = `
+                                <div class="message-avatar">AI</div>
+                                <div class="message-content">
+                                    <div class="message-text">
+                                        <p>Thank you for your question about "${message}". This is a simulated response.</p>
+                                        <p>In a premium account, this would connect to an AI service to provide a real answer to your question.</p>
+                                        <p>Consider upgrading to our premium plan to access the full AI Coach functionality!</p>
+                                    </div>
+                                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(finalResponse);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 2000);
                     }, 1000);
                 }
             }

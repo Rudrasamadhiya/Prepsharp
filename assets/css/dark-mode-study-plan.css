@@ -1,0 +1,65 @@
+/* Additional dark mode styles for study plan page */
+.dark-mode .calendar-container {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .calendar-header,
+.dark-mode .calendar-weekdays {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .calendar-day {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .calendar-day.today {
+    background-color: rgba(147, 51, 234, 0.2) !important;
+    border-color: #9333ea !important;
+}
+
+.dark-mode .calendar-day.has-event {
+    background-color: rgba(147, 51, 234, 0.1) !important;
+}
+
+.dark-mode .calendar-day.other-month {
+    color: #666666 !important;
+}
+
+.dark-mode .event-card {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .event-time,
+.dark-mode .event-subject {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .event-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .study-session {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+
+.dark-mode .session-time {
+    color: #b0b0b0 !important;
+}
+
+.dark-mode .session-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .progress-container {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode .progress-bar {
+    background-color: #9333ea !important;
+}
