@@ -1,0 +1,93 @@
+/* Mobile styles for AI Coach page */
+@media (max-width: 768px) {
+  /* Chat container */
+  .chat-container {
+    flex-direction: column;
+    height: auto;
+    max-height: calc(100vh - 200px);
+  }
+  
+  /* Topics sidebar */
+  .topics-sidebar {
+    width: 100%;
+    max-height: 150px;
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 15px;
+  }
+  
+  .topics-header {
+    margin-bottom: 10px;
+  }
+  
+  .topic-item {
+    padding: 8px;
+    margin-bottom: 3px;
+    font-size: 14px;
+  }
+  
+  /* Chat main */
+  .chat-main {
+    height: calc(100vh - 350px);
+  }
+  
+  .chat-header {
+    padding: 10px 15px;
+  }
+  
+  .chat-title {
+    font-size: 16px;
+  }
+  
+  .chat-messages {
+    padding: 15px;
+    gap: 15px;
+    max-height: calc(100vh - 450px);
+  }
+  
+  .message {
+    max-width: 90%;
+  }
+  
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .message-content {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .message-text {
+    line-height: 1.4;
+  }
+  
+  .message-text p {
+    margin-bottom: 8px;
+  }
+  
+  .message-time {
+    font-size: 10px;
+  }
+  
+  .chat-input {
+    padding: 10px 15px;
+  }
+  
+  .input-field {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .send-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .input-action {
+    width: 36px;
+    height: 36px;
+  }
+}

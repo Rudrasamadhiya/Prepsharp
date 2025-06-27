@@ -1,0 +1,145 @@
+/* Mobile styles for Study Plan page */
+@media (max-width: 768px) {
+  /* Calendar */
+  .calendar-container {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .calendar-header {
+    margin-bottom: 15px;
+  }
+  
+  .calendar-title {
+    font-size: 16px;
+  }
+  
+  .calendar-grid {
+    gap: 2px;
+  }
+  
+  .calendar-day-header {
+    padding: 5px;
+    font-size: 12px;
+  }
+  
+  .calendar-day {
+    padding: 2px;
+  }
+  
+  .day-number {
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+  
+  .day-events {
+    gap: 1px;
+  }
+  
+  .day-event {
+    font-size: 6px;
+    padding: 1px 2px;
+  }
+  
+  .more-events {
+    font-size: 6px;
+  }
+  
+  /* Progress */
+  .progress-container {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-header {
+    margin-bottom: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .progress-title {
+    font-size: 16px;
+  }
+  
+  .progress-filter {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+  }
+  
+  .filter-btn {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+  
+  .progress-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .progress-card {
+    padding: 10px;
+  }
+  
+  .progress-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  .progress-topic {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .progress-percentage {
+    font-size: 12px;
+  }
+  
+  /* Tasks */
+  .tasks-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .tasks-card {
+    padding: 15px;
+  }
+  
+  .tasks-header {
+    margin-bottom: 15px;
+  }
+  
+  .tasks-title {
+    font-size: 16px;
+  }
+  
+  .add-task-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .task-item {
+    padding: 10px 0;
+  }
+  
+  .task-checkbox {
+    margin-right: 10px;
+  }
+  
+  .task-checkbox input {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .task-title {
+    font-size: 14px;
+  }
+  
+  .task-meta {
+    font-size: 11px;
+  }
+}

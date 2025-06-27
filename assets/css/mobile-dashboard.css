@@ -1,0 +1,165 @@
+/* Additional mobile styles for dashboard */
+@media (max-width: 768px) {
+  /* Mobile sidebar improvements */
+  .sidebar {
+    width: 270px;
+    left: -280px;
+    position: fixed;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    background-color: white;
+    padding-top: 20px;
+  }
+  
+  .sidebar.active {
+    left: 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+  
+  .sidebar-header {
+    padding: 0 20px 20px;
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-header h2 {
+    display: block;
+  }
+  
+  .sidebar-nav a {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+  
+  .sidebar-nav a span {
+    display: inline;
+  }
+  
+  .sidebar-nav a i {
+    font-size: 18px;
+    margin-right: 15px;
+  }
+  
+  .sidebar-footer {
+    display: block;
+    padding: 20px;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
+  }
+  
+  /* Dashboard content improvements */
+  .welcome-section {
+    padding: 15px;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+  }
+  
+  .welcome-section h1 {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+  
+  .welcome-section p {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  
+  /* Stats cards */
+  .stat-card {
+    padding: 15px !important;
+  }
+  
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .stat-icon i {
+    font-size: 18px;
+  }
+  
+  .stat-info h3 {
+    font-size: 14px;
+  }
+  
+  .stat-info p {
+    font-size: 18px;
+  }
+  
+  /* Dashboard cards */
+  .dashboard-card {
+    margin-bottom: 15px;
+  }
+  
+  .card-header {
+    padding: 15px;
+  }
+  
+  .card-header h2 {
+    font-size: 16px;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  /* Paper items */
+  .paper-item {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .paper-info h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  
+  .paper-info p {
+    font-size: 12px;
+  }
+  
+  .paper-meta {
+    margin-top: 5px;
+    font-size: 11px;
+    gap: 10px;
+  }
+  
+  .start-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+  
+  /* Performance chart */
+  .performance-chart {
+    height: 180px;
+    padding: 10px;
+  }
+  
+  /* Subject scores */
+  .subject-score {
+    padding: 8px 0;
+  }
+  
+  .subject-info {
+    width: 100px;
+  }
+  
+  .subject-icon {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .subject-name {
+    font-size: 14px;
+  }
+  
+  .score-value {
+    font-size: 14px;
+    padding: 3px 8px;
+  }
+}

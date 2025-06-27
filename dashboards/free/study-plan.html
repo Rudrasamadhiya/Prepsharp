@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Study Plan - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-study-plan.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <style>
+        .calendar-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-nav-btn:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--primary-color);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: var(--text-light);
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .calendar-day.active {
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--primary-color);
+        }
+        
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+        
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .day-event {
+            font-size: 8px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .event-physics {
+            background-color: rgba(79, 70, 229, 0.2);
+            color: var(--primary-color);
+        }
+        
+        .event-chemistry {
+            background-color: rgba(249, 115, 22, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .event-mathematics {
+            background-color: rgba(147, 51, 234, 0.2);
+            color: var(--premium-color);
+        }
+        
+        .event-general {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .more-events {
+            font-size: 8px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .tasks-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .tasks-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+        }
+        
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .tasks-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .add-task-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .add-task-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-right: 15px;
+        }
+        
+        .task-checkbox input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .task-meta {
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .task-subject {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .subject-physics {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .subject-chemistry {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .subject-mathematics {
+            background-color: rgba(147, 51, 234, 0.1);
+            color: var(--premium-color);
+        }
+        
+        .subject-general {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-action {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .task-action:hover {
+            color: var(--primary-color);
+        }
+        
+        .progress-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .progress-filter {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            background: none;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .progress-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .progress-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .icon-physics {
+            background-color: var(--primary-color);
+        }
+        
+        .icon-chemistry {
+            background-color: var(--accent-color);
+        }
+        
+        .icon-mathematics {
+            background-color: var(--premium-color);
+        }
+        
+        .icon-general {
+            background-color: #10b981;
+        }
+        
+        .progress-topic {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-container {
+            height: 8px;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-bar-physics {
+            background-color: var(--primary-color);
+        }
+        
+        .progress-bar-chemistry {
+            background-color: var(--accent-color);
+        }
+        
+        .progress-bar-mathematics {
+            background-color: var(--premium-color);
+        }
+        
+        .progress-bar-general {
+            background-color: #10b981;
+        }
+        
+        .progress-percentage {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                    </li>
+                    <li>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                    </li>
+                    <li>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li>
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                    </li>
+                    <li>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                    </li>
+                    <li>
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge premium">Premium Plan</span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">7</span>
+                    </div>
+                    
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>Study Plan</h1>
+                    <p>Your personalized study schedule based on your strengths and weaknesses.</p>
+                </div>
+                
+                <!-- Progress Overview -->
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <div class="progress-title">Progress Overview</div>
+                        <div class="progress-filter">
+                            <button class="filter-btn active">All</button>
+                            <button class="filter-btn">Physics</button>
+                            <button class="filter-btn">Chemistry</button>
+                            <button class="filter-btn">Mathematics</button>
+                        </div>
+                    </div>
+                    <div class="progress-grid">
+                        <div class="progress-card">
+                            <div class="progress-icon icon-physics">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <div class="progress-topic">Mechanics</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-physics" style="width: 85%;"></div>
+                            </div>
+                            <div class="progress-percentage">85% Complete</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-icon icon-physics">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="progress-topic">Electromagnetism</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-physics" style="width: 70%;"></div>
+                            </div>
+                            <div class="progress-percentage">70% Complete</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-icon icon-chemistry">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="progress-topic">Organic Chemistry</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-chemistry" style="width: 65%;"></div>
+                            </div>
+                            <div class="progress-percentage">65% Complete</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-icon icon-chemistry">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <div class="progress-topic">Inorganic Chemistry</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-chemistry" style="width: 80%;"></div>
+                            </div>
+                            <div class="progress-percentage">80% Complete</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-icon icon-mathematics">
+                                <i class="fas fa-square-root-alt"></i>
+                            </div>
+                            <div class="progress-topic">Calculus</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-mathematics" style="width: 75%;"></div>
+                            </div>
+                            <div class="progress-percentage">75% Complete</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-icon icon-mathematics">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="progress-topic">Coordinate Geometry</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar progress-bar-mathematics" style="width: 60%;"></div>
+                            </div>
+                            <div class="progress-percentage">60% Complete</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calendar -->
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-title">July 2023</div>
+                        <div class="calendar-nav">
+                            <button class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                            <button class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Sun</div>
+                        <div class="calendar-day-header">Mon</div>
+                        <div class="calendar-day-header">Tue</div>
+                        <div class="calendar-day-header">Wed</div>
+                        <div class="calendar-day-header">Thu</div>
+                        <div class="calendar-day-header">Fri</div>
+                        <div class="calendar-day-header">Sat</div>
+                        
+                        <div class="calendar-day other-month">
+                            <div class="day-number">25</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">26</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">27</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">28</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">29</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">30</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">1</div>
+                            <div class="day-events">
+                                <div class="day-event event-physics">Mechanics</div>
+                            </div>
+                        </div>
+                        
+                        <div class="calendar-day">
+                            <div class="day-number">2</div>
+                            <div class="day-events">
+                                <div class="day-event event-chemistry">Organic Chemistry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">3</div>
+                            <div class="day-events">
+                                <div class="day-event event-mathematics">Calculus</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">4</div>
+                            <div class="day-events">
+                                <div class="day-event event-general">Mock Test</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">5</div>
+                            <div class="day-events">
+                                <div class="day-event event-physics">Electromagnetism</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">6</div>
+                            <div class="day-events">
+                                <div class="day-event event-chemistry">Inorganic Chemistry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">7</div>
+                            <div class="day-events">
+                                <div class="day-event event-mathematics">Coordinate Geometry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">8</div>
+                            <div class="day-events">
+                                <div class="day-event event-physics">Optics</div>
+                            </div>
+                        </div>
+                        
+                        <div class="calendar-day">
+                            <div class="day-number">9</div>
+                            <div class="day-events">
+                                <div class="day-event event-chemistry">Physical Chemistry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day today active">
+                            <div class="day-number">10</div>
+                            <div class="day-events">
+                                <div class="day-event event-physics">Kinematics</div>
+                                <div class="day-event event-chemistry">Organic Chemistry</div>
+                                <div class="day-event event-general">Mock Interview</div>
+                                <div class="more-events">+1 more</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">11</div>
+                            <div class="day-events">
+                                <div class="day-event event-mathematics">Algebra</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">12</div>
+                            <div class="day-events">
+                                <div class="day-event event-physics">Thermodynamics</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">13</div>
+                            <div class="day-events">
+                                <div class="day-event event-chemistry">Organic Chemistry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">14</div>
+                            <div class="day-events">
+                                <div class="day-event event-mathematics">Trigonometry</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">15</div>
+                            <div class="day-events">
+                                <div class="day-event event-general">Mock Test</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Remaining days... -->
+                        <div class="calendar-day">
+                            <div class="day-number">16</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">17</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">18</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">19</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">20</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">21</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">22</div>
+                            <div class="day-events"></div>
+                        </div>
+                        
+                        <div class="calendar-day">
+                            <div class="day-number">23</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">24</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">25</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">26</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">27</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">28</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">29</div>
+                            <div class="day-events"></div>
+                        </div>
+                        
+                        <div class="calendar-day">
+                            <div class="day-number">30</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="day-number">31</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">1</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">2</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">3</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">4</div>
+                            <div class="day-events"></div>
+                        </div>
+                        <div class="calendar-day other-month">
+                            <div class="day-number">5</div>
+                            <div class="day-events"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tasks -->
+                <div class="tasks-container">
+                    <div class="tasks-card">
+                        <div class="tasks-header">
+                            <div class="tasks-title">Today's Tasks</div>
+                            <button class="add-task-btn"><i class="fas fa-plus"></i> Add Task</button>
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Complete Kinematics Practice Set</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-clock"></i> 10:00 AM - 12:00 PM</span>
+                                        <span class="task-subject subject-physics">Physics</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Organic Chemistry Revision</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-clock"></i> 2:00 PM - 4:00 PM</span>
+                                        <span class="task-subject subject-chemistry">Chemistry</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Mock Interview Session</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-clock"></i> 5:00 PM - 6:00 PM</span>
+                                        <span class="task-subject subject-general">Interview</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tasks-card">
+                        <div class="tasks-header">
+                            <div class="tasks-title">Upcoming Tasks</div>
+                            <button class="add-task-btn"><i class="fas fa-plus"></i> Add Task</button>
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Algebra Practice Problems</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-calendar"></i> Tomorrow, 9:00 AM</span>
+                                        <span class="task-subject subject-mathematics">Mathematics</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">Thermodynamics Revision</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-calendar"></i> Jul 12, 10:00 AM</span>
+                                        <span class="task-subject subject-physics">Physics</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox">
+                                    <input type="checkbox">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-title">JEE Mock Test</div>
+                                    <div class="task-meta">
+                                        <span><i class="fas fa-calendar"></i> Jul 15, 9:00 AM</span>
+                                        <span class="task-subject subject-general">Test</span>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-action"><i class="fas fa-edit"></i></button>
+                                    <button class="task-action"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth-check-disabled.js"></script>
+    <script src="../../js/mobile.js"></script></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfile = document.getElementById('userProfile');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                userProfile.addEventListener('click', function(e) {
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
+                });
+                
+                document.addEventListener('click', function() {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                });
+            }
+            
+            // Calendar day selection
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            calendarDays.forEach(day => {
+                day.addEventListener('click', function() {
+                    calendarDays.forEach(d => d.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Filter buttons
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Task checkbox functionality
+            document.querySelectorAll('.task-checkbox input').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskItem = this.closest('.task-item');
+                    if (this.checked) {
+                        taskItem.style.opacity = '0.6';
+                        taskItem.querySelector('.task-title').style.textDecoration = 'line-through';
+                    } else {
+                        taskItem.style.opacity = '1';
+                        taskItem.querySelector('.task-title').style.textDecoration = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mock Interviews - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <style>
+        .interviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .interview-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .interview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .interview-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .interview-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .interview-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .interview-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: white;
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .interview-body {
+            padding: 20px;
+        }
+        
+        .interview-details {
+            margin-bottom: 15px;
+        }
+        
+        .interview-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .detail-icon {
+            width: 30px;
+            color: var(--primary-color);
+        }
+        
+        .interview-description {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .interview-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .schedule-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .schedule-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .interview-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .upcoming-interviews {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .upcoming-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .upcoming-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .upcoming-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .upcoming-table th,
+        .upcoming-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .upcoming-table th {
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .upcoming-table tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .interview-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-scheduled {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .status-cancelled {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .action-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .feedback-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .feedback-item {
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .feedback-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-interviewer {
+            font-weight: 600;
+        }
+        
+        .feedback-date {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .feedback-text {
+            color: var(--text-color);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-rating {
+            display: flex;
+            gap: 5px;
+            color: #f97316;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                    </li>
+                    <li>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                    </li>
+                    <li>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li>
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                    </li>
+                    <li>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge premium">Premium Plan</span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">7</span>
+                    </div>
+                    
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>Mock Interviews</h1>
+                    <p>Practice with simulated interview sessions to prepare for college admissions.</p>
+                </div>
+                
+                <!-- Upcoming Interviews -->
+                <div class="upcoming-interviews">
+                    <div class="upcoming-header">
+                        <div class="upcoming-title">Your Upcoming Interviews</div>
+                    </div>
+                    <table class="upcoming-table">
+                        <thead>
+                            <tr>
+                                <th>Interview Type</th>
+                                <th>Date & Time</th>
+                                <th>Interviewer</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Technical Interview</td>
+                                <td>Jul 10, 2023 • 5:00 PM</td>
+                                <td>Prof. Rajesh Kumar</td>
+                                <td><span class="interview-status status-scheduled">Scheduled</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-video"></i></button>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Personal Interview</td>
+                                <td>Jul 15, 2023 • 3:30 PM</td>
+                                <td>Dr. Anita Sharma</td>
+                                <td><span class="interview-status status-scheduled">Scheduled</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-video"></i></button>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Technical Interview</td>
+                                <td>Jun 28, 2023 • 4:00 PM</td>
+                                <td>Prof. Vikram Singh</td>
+                                <td><span class="interview-status status-completed">Completed</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-file-alt"></i></button>
+                                    <button class="action-btn"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Interview Types -->
+                <h2 style="margin-bottom: 20px;">Available Interview Types</h2>
+                <div class="interviews-grid">
+                    <!-- Interview 1 -->
+                    <div class="interview-card">
+                        <div class="interview-header">
+                            <div class="interview-title">Technical Interview</div>
+                            <div class="interview-subtitle">Focus on subject knowledge</div>
+                            <div class="interview-badge">Most Popular</div>
+                        </div>
+                        <div class="interview-body">
+                            <div class="interview-details">
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                    <div>45 minutes</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-user-tie"></i></div>
+                                    <div>Expert Faculty</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-file-alt"></i></div>
+                                    <div>Detailed Feedback</div>
+                                </div>
+                            </div>
+                            <div class="interview-description">
+                                Prepare for technical questions in JEE counseling and college interviews. Our expert faculty will test your subject knowledge and problem-solving skills.
+                            </div>
+                            <div class="interview-actions">
+                                <a href="#" class="schedule-btn">Schedule Now</a>
+                                <div class="interview-price">Included</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interview 2 -->
+                    <div class="interview-card">
+                        <div class="interview-header">
+                            <div class="interview-title">Personal Interview</div>
+                            <div class="interview-subtitle">Focus on soft skills</div>
+                        </div>
+                        <div class="interview-body">
+                            <div class="interview-details">
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                    <div>30 minutes</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-user-tie"></i></div>
+                                    <div>HR Professionals</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-file-alt"></i></div>
+                                    <div>Personality Assessment</div>
+                                </div>
+                            </div>
+                            <div class="interview-description">
+                                Practice answering personal questions about your goals, achievements, and aspirations. Improve your communication skills and confidence.
+                            </div>
+                            <div class="interview-actions">
+                                <a href="#" class="schedule-btn">Schedule Now</a>
+                                <div class="interview-price">Included</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interview 3 -->
+                    <div class="interview-card">
+                        <div class="interview-header">
+                            <div class="interview-title">Group Discussion</div>
+                            <div class="interview-subtitle">Focus on teamwork</div>
+                        </div>
+                        <div class="interview-body">
+                            <div class="interview-details">
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                    <div>60 minutes</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-users"></i></div>
+                                    <div>4-6 Participants</div>
+                                </div>
+                                <div class="interview-detail">
+                                    <div class="detail-icon"><i class="fas fa-file-alt"></i></div>
+                                    <div>Group & Individual Feedback</div>
+                                </div>
+                            </div>
+                            <div class="interview-description">
+                                Participate in a moderated group discussion on current topics. Develop your ability to express ideas clearly and work effectively in a team.
+                            </div>
+                            <div class="interview-actions">
+                                <a href="#" class="schedule-btn">Schedule Now</a>
+                                <div class="interview-price">Included</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feedback -->
+                <div class="feedback-card">
+                    <div class="feedback-header">
+                        <div class="feedback-title">Your Interview Feedback</div>
+                    </div>
+                    <div class="feedback-item">
+                        <div class="feedback-meta">
+                            <div class="feedback-interviewer">Prof. Vikram Singh</div>
+                            <div class="feedback-date">Jun 28, 2023</div>
+                        </div>
+                        <div class="feedback-text">
+                            John demonstrated good understanding of physics concepts, especially in mechanics and electromagnetism. He needs to work on organic chemistry reactions and mathematical problem-solving speed. Overall, a good performance with room for improvement in specific areas.
+                        </div>
+                        <div class="feedback-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="feedback-item">
+                        <div class="feedback-meta">
+                            <div class="feedback-interviewer">Dr. Anita Sharma</div>
+                            <div class="feedback-date">Jun 15, 2023</div>
+                        </div>
+                        <div class="feedback-text">
+                            John has excellent communication skills and was able to articulate his goals clearly. He showed good awareness of current events and their implications. I recommend working on answering questions more concisely and improving body language during the interview.
+                        </div>
+                        <div class="feedback-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth-check-disabled.js"></script>
+    <script src="../../js/mobile.js"></script>
+</body>
+</html>

@@ -209,41 +209,47 @@
         }
         
         .chat-input {
-            padding: 25px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
-            border-top: 1px solid rgba(99, 102, 241, 0.1);
-            position: relative;
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
-        .floating-buttons {
-            position: absolute;
-            right: 8px;
-            bottom: 8px;
-            display: flex;
-            gap: 6px;
-            z-index: 10;
+        .input-field {
+            flex: 1;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 30px;
+            padding: 10px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
         }
         
         .send-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
-            width: 36px;
-            height: 36px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
         .send-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
         }
         
         .chat-input::before {
@@ -590,15 +596,12 @@
                     </div>
                     
                     <div class="chat-input">
-                        <div style="position: relative; width: 100%;">
-                            <textarea placeholder="Ask your question here... Paste your text with exact formatting!" rows="3" style="resize: vertical; min-height: 80px; max-height: 200px; width: 100%; padding-right: 160px;"></textarea>
-                            
-                            <div class="floating-buttons">
-                                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                                <button class="image-btn" type="button" onclick="uploadImage()" title="Upload Image">📷</button>
-                                <button class="math-toggle" type="button" onclick="toggleMathKeyboard()" title="Math Keyboard">🔢</button>
-                                <button class="send-btn" type="button" onclick="sendMessage()" title="Send Message"><i class="fas fa-paper-plane"></i></button>
-                            </div>
+                        <div class="input-actions">
+                            <button class="input-action"><i class="fas fa-paperclip"></i></button>
+                            <button class="input-action"><i class="fas fa-microphone"></i></button>
+                        </div>
+                        <input type="text" class="input-field" placeholder="Type your message...">
+                        <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
                             
                             <div class="math-keyboard" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: white; border: 2px solid #6366f1; border-radius: 12px; padding: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 1000;">
                                 <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;">
@@ -675,32 +678,53 @@
 
     
     <script>
-        let chatInput, chatMessages, currentImage = null;
+        let chatMessages;
         
         document.addEventListener('DOMContentLoaded', function() {
-            chatInput = document.querySelector('.chat-input textarea');
             chatMessages = document.querySelector('.chat-messages');
         });
         
-        async function sendMessage() {
-            if (!chatInput) return;
-            
-            const message = chatInput.value.trim();
-            if (!message && !currentImage) {
-                alert('Please type a message!');
-                return;
+        function sendMessage() {
+            const inputField = document.querySelector('.input-field');
+            const message = inputField.value.trim();
+            if (message) {
+                const userInitials = document.getElementById('userInitials').textContent;
+                
+                // Create user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message user';
+                userMessage.innerHTML = `
+                    <div class="message-avatar">${userInitials}</div>
+                    <div class="message-content">
+                        <div class="message-text">${message}</div>
+                        <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(userMessage);
+                
+                // Clear input field
+                inputField.value = '';
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.className = 'message';
+                    aiMessage.innerHTML = `
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            <div class="message-text">I'm processing your question about "${message}". Let me think about this...</div>
+                            <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(aiMessage);
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
             }
-            
-            addMessage(message || 'Image uploaded', 'user');
-            chatInput.value = '';
-            
-            const loadingDiv = addMessage('🤔 AI is thinking...', 'ai');
-            
-            // Simulate API delay
-            setTimeout(() => {
-                loadingDiv.remove();
-                addMessage(getLocalResponse(message), 'ai');
-            }, 1000);
         }
         
         function getLocalResponse(message) {
@@ -789,11 +813,14 @@
         }
         
         // Enter key support
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey && chatInput && document.activeElement === chatInput) {
-                e.preventDefault();
-                sendMessage();
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.querySelector('.input-field');
+            
+            inputField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
         });
     </script>
 </body>

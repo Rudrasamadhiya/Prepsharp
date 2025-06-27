@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Coach - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-ai-coach.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <style>
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 200px);
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .topics-sidebar {
+            width: 250px;
+            background-color: rgba(0,0,0,0.02);
+            border-right: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .topics-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .new-topic-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .new-topic-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .topics-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .topic-item {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-item:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        .topic-item.active {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .topic-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-action {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-action:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--primary-color);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 15px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .message.user .message-avatar {
+            background-color: var(--accent-color);
+        }
+        
+        .message-content {
+            background-color: rgba(0,0,0,0.02);
+            padding: 15px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .message.user .message-content {
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+        
+        .message-content::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid rgba(0,0,0,0.02);
+        }
+        
+        .message.user .message-content::before {
+            left: auto;
+            right: -8px;
+            border-right: none;
+            border-left: 8px solid rgba(79, 70, 229, 0.1);
+        }
+        
+        .message-text {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+        }
+        
+        .chat-input {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-field {
+            flex: 1;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 30px;
+            padding: 10px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-action {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .input-action:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../prepsharp-logo.png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a>
+                    </li>
+                    <li>
+                        <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+                    </li>
+                    <li>
+                        <a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a>
+                    </li>
+                    <li>
+                        <a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a>
+                    </li>
+                    <li>
+                        <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
+                    </li>
+                    <li>
+                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="plan-info">
+                    <span class="plan-badge premium">Premium Plan</span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">7</span>
+                    </div>
+                    
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">JS</div>
+                        <span class="user-name" id="loggedInUserName">John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>AI Coach</h1>
+                    <p>Get personalized guidance and instant answers to your doubts with our AI-powered coach.</p>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="topics-sidebar">
+                        <div class="topics-header">
+                            <span>Recent Conversations</span>
+                            <button class="new-topic-btn"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <ul class="topics-list">
+                            <li class="topic-item active">
+                                <div class="topic-icon"><i class="fas fa-atom"></i></div>
+                                <div>Physics Doubts</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-flask"></i></div>
+                                <div>Organic Chemistry</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-square-root-alt"></i></div>
+                                <div>Calculus Problems</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-book"></i></div>
+                                <div>JEE Preparation Tips</div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div>College Admissions</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <div class="chat-title">
+                                <i class="fas fa-atom"></i>
+                                <span>Physics Doubts</span>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="chat-action"><i class="fas fa-search"></i></button>
+                                <button class="chat-action"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <div class="chat-messages">
+                            <div class="message">
+                                <div class="message-avatar">AI</div>
+                                <div class="message-content">
+                                    <div class="message-text">Hello! I'm your AI Physics Coach. How can I help you today?</div>
+                                    <div class="message-time">10:30 AM</div>
+                                </div>
+                            </div>
+                            <div class="message user">
+                                <div class="message-avatar">JS</div>
+                                <div class="message-content">
+                                    <div class="message-text">I'm having trouble understanding the concept of angular momentum conservation. Can you explain it with an example?</div>
+                                    <div class="message-time">10:32 AM</div>
+                                </div>
+                            </div>
+                            <div class="message">
+                                <div class="message-avatar">AI</div>
+                                <div class="message-content">
+                                    <div class="message-text">
+                                        <p>Angular momentum conservation is a fundamental principle in physics that states that the total angular momentum of a closed system remains constant if no external torque acts on it.</p>
+                                        <p>Here's a simple example: Think of a figure skater spinning with their arms extended. When they pull their arms in closer to their body, they spin faster. This is because:</p>
+                                        <ul>
+                                            <li>Angular momentum (L) = moment of inertia (I) × angular velocity (ω)</li>
+                                            <li>When the skater pulls their arms in, their moment of inertia decreases</li>
+                                            <li>To keep angular momentum constant, the angular velocity must increase</li>
+                                        </ul>
+                                        <p>This is why the skater spins faster with arms pulled in, and slower with arms extended.</p>
+                                        <p>Would you like me to provide a more mathematical explanation or another example?</p>
+                                    </div>
+                                    <div class="message-time">10:35 AM</div>
+                                </div>
+                            </div>
+                            <div class="message user">
+                                <div class="message-avatar">JS</div>
+                                <div class="message-content">
+                                    <div class="message-text">That makes sense! Can you give me a numerical problem related to this concept that might appear in JEE?</div>
+                                    <div class="message-time">10:37 AM</div>
+                                </div>
+                            </div>
+                            <div class="message">
+                                <div class="message-avatar">AI</div>
+                                <div class="message-content">
+                                    <div class="message-text">
+                                        <p>Here's a JEE-level problem on angular momentum conservation:</p>
+                                        <p><strong>Problem:</strong> A uniform disc of mass 2 kg and radius 0.1 m is rotating about its axis with an angular velocity of 20 rad/s. A small block of mass 0.5 kg is gently placed at a distance of 0.05 m from the axis. Assuming no external torque acts on the system, find the new angular velocity of the disc.</p>
+                                        <p><strong>Solution:</strong></p>
+                                        <p>Step 1: Calculate the initial angular momentum of the system.</p>
+                                        <p>Moment of inertia of disc: I₁ = (1/2)MR² = (1/2) × 2 × (0.1)² = 0.01 kg·m²</p>
+                                        <p>Initial angular momentum: L = I₁ω₁ = 0.01 × 20 = 0.2 kg·m²/s</p>
+                                        <p>Step 2: Calculate the new moment of inertia after placing the block.</p>
+                                        <p>Moment of inertia of block: I_block = mr² = 0.5 × (0.05)² = 0.00125 kg·m²</p>
+                                        <p>Total moment of inertia: I₂ = I₁ + I_block = 0.01 + 0.00125 = 0.01125 kg·m²</p>
+                                        <p>Step 3: Apply conservation of angular momentum to find the new angular velocity.</p>
+                                        <p>L = I₁ω₁ = I₂ω₂</p>
+                                        <p>ω₂ = (I₁ω₁)/I₂ = (0.01 × 20)/0.01125 = 17.78 rad/s</p>
+                                        <p>Therefore, the new angular velocity is 17.78 rad/s.</p>
+                                    </div>
+                                    <div class="message-time">10:40 AM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <div class="input-actions">
+                                <button class="input-action"><i class="fas fa-paperclip"></i></button>
+                                <button class="input-action"><i class="fas fa-microphone"></i></button>
+                            </div>
+                            <input type="text" class="input-field" placeholder="Type your message...">
+                            <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/auth-check-disabled.js"></script>
+    <script src="../../js/mobile.js"></script></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfile = document.getElementById('userProfile');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                userProfile.addEventListener('click', function(e) {
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
+                });
+                
+                document.addEventListener('click', function() {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                });
+            }
+            
+            // Topic selection
+            const topicItems = document.querySelectorAll('.topic-item');
+            topicItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    topicItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Send message functionality
+            const inputField = document.querySelector('.input-field');
+            const sendBtn = document.querySelector('.send-btn');
+            const chatMessages = document.querySelector('.chat-messages');
+            
+            function sendMessage() {
+                const message = inputField.value.trim();
+                if (message) {
+                    const userInitials = document.getElementById('userInitials').textContent;
+                    
+                    // Create user message
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.innerHTML = `
+                        <div class="message-avatar">${userInitials}</div>
+                        <div class="message-content">
+                            <div class="message-text">${message}</div>
+                            <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(userMessage);
+                    
+                    // Clear input field
+                    inputField.value = '';
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Simulate AI response after a delay
+                    setTimeout(() => {
+                        const aiMessage = document.createElement('div');
+                        aiMessage.className = 'message';
+                        aiMessage.innerHTML = `
+                            <div class="message-avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">I'm processing your question about "${message}". Let me think about this...</div>
+                                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                            </div>
+                        `;
+                        chatMessages.appendChild(aiMessage);
+                        
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            }
+            
+            sendBtn.addEventListener('click', sendMessage);
+            
+            inputField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
