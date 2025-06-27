@@ -647,8 +647,12 @@
                 transform: none !important;
             }
             
+            .plan-card:nth-child(1) { order: 1; } /* Free Plan (₹0) */
+            .plan-card:nth-child(2) { order: 2; } /* Monthly Plan (₹199) */
+            .plan-card:nth-child(3) { order: 3; } /* Quarterly Plan (₹499) */
+            .plan-card:nth-child(4) { order: 4; } /* Yearly Plan (₹999) */
+            
             .popular-plan {
-                order: -1;
                 border: 2px solid var(--accent-color);
                 box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
             }
@@ -671,8 +675,10 @@
             
             .price-tag {
                 margin-bottom: 5px;
+                margin-top: 15px;
                 font-size: 14px;
                 font-weight: 700;
+                text-align: center;
             }
             
             .plan-price {
@@ -722,6 +728,10 @@
                 text-align: center;
                 background: linear-gradient(145deg, #f8fafc, #edf2f7);
                 transition: background-color 0.3s ease, border-radius 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
             
             .plan-header.active {
@@ -752,7 +762,14 @@
             }
             
             .popular-plan .plan-header::after {
+                content: '+';
                 color: white;
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 24px;
+                font-weight: bold;
             }
             
             .plan-features li {
@@ -783,8 +800,11 @@
             }
             
             .best-value {
-                font-size: 10px;
-                padding: 3px 15px;
+                font-size: 7px;
+                padding: 1px 5px;
+                width: 60px;
+                transform: translateX(20%) translateY(-5%) rotate(45deg);
+                letter-spacing: -0.3px;
             }
         }
         
@@ -1715,10 +1735,13 @@
             }
             
             .popular-tag {
-                top: -8px;
-                font-size: 10px;
-                padding: 3px 10px;
-                border-radius: 10px;
+                font-size: 9px;
+                padding: 2px 8px;
+                border-radius: 8px;
+                width: auto;
+                text-align: center;
+                display: block;
+                margin: 50px auto 20px;
             }
             
             @keyframes float {
@@ -1872,12 +1895,13 @@
                 </div>
                 
                 <div class="plan-card popular-plan">
-                    <div class="popular-tag">MOST POPULAR</div>
-                    <div class="plan-header">
-                        <div class="price-tag">QUARTERLY PLAN</div>
-                        <div class="plan-price">₹499 <span>/quarter</span></div>
-                        <div class="plan-duration">90 days of access</div>
-                        <div class="save-text">Save 17% compared to monthly plan</div>
+                    <div class="plan-header" style="padding-top: 25px; padding-bottom: 15px; padding-right: 40px; position: relative;">
+                        <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: bold; color: white;">+</span>
+                        <div style="background-color: #fff; color: var(--accent-color); font-weight: 700; padding: 3px 12px; font-size: 10px; display: inline-block; border-radius: 15px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">MOST POPULAR</div>
+                        <div class="price-tag" style="background-color: rgba(255,255,255,0.25); font-size: 12px; letter-spacing: 0.5px; padding: 4px 10px; margin-bottom: 5px;">QUARTERLY PLAN</div>
+                        <div class="plan-price" style="font-size: 36px; margin: 5px 0;">₹499 <span style="font-size: 16px;">/quarter</span></div>
+                        <div class="plan-duration" style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 5px;">90 days of access</div>
+                        <div class="save-text" style="background-color: rgba(255,255,255,0.2); display: inline-block; padding: 3px 8px; border-radius: 15px; margin-top: 5px; font-weight: 600; font-size: 12px;">Save 17% compared to monthly plan</div>
                     </div>
                     <div class="plan-content">
                         <ul class="plan-features">
@@ -1915,32 +1939,51 @@
                 </div>
             </div>
             
-            <div class="payment-methods">
-                <div class="payment-method">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Credit Card</span>
-                </div>
-                <div class="payment-method">
-                    <i class="fas fa-university"></i>
-                    <span>Bank Transfer</span>
-                </div>
-                <div class="payment-method">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>Mobile Pay</span>
-                </div>
-                <div class="payment-method">
-                    <i class="fas fa-wallet"></i>
-                    <span>Digital Wallet</span>
-                </div>
-            </div>
+
             
-            <div class="guarantee">
-                <div class="guarantee-icon">
-                    <i class="fas fa-shield-alt"></i>
+            <div class="guarantee" style="background: linear-gradient(145deg, #f8fafc, #edf2f7); box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-radius: 15px; padding: 30px 15px;">
+                <div class="guarantee-icon" style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); animation: pulse 2s infinite;">
+                    <i class="fas fa-shield-alt" style="font-size: 28px;"></i>
                 </div>
-                <h3>100% Satisfaction Guarantee</h3>
-                <p>If you're not satisfied with your subscription within the first 7 days, we'll refund your payment. No questions asked!</p>
-                <div class="guarantee-badge">7-Day Money Back</div>
+                <h3 style="font-size: 22px; color: var(--primary-color); font-weight: 700;">Secured Payments</h3>
+                <div class="payment-methods" style="margin-top: 25px; display: flex; justify-content: center; flex-wrap: wrap; gap: 12px;">
+                    <style>
+                        @keyframes fadeInUp {
+                            from { opacity: 0; transform: translateY(10px); }
+                            to { opacity: 1; transform: translateY(0); }
+                        }
+                        @keyframes pulse {
+                            0% { transform: scale(1); }
+                            50% { transform: scale(1.05); }
+                            100% { transform: scale(1); }
+                        }
+                        .payment-method:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                            transition: all 0.3s ease;
+                        }
+                        .payment-method:hover i {
+                            transform: scale(1.2);
+                            transition: all 0.3s ease;
+                        }
+                    </style>
+                    <div class="payment-method" style="min-width: 75px; height: 70px; padding: 10px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03); background: linear-gradient(145deg, #ffffff, #f8fafc); animation: fadeInUp 0.5s ease forwards; animation-delay: 0.1s; opacity: 0;">
+                        <i class="fas fa-credit-card" style="font-size: 22px; margin-bottom: 6px; color: var(--primary-color);"></i>
+                        <span style="font-size: 11px; font-weight: 600;">Cards</span>
+                    </div>
+                    <div class="payment-method" style="min-width: 75px; height: 70px; padding: 10px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03); background: linear-gradient(145deg, #ffffff, #f8fafc); animation: fadeInUp 0.5s ease forwards; animation-delay: 0.2s; opacity: 0;">
+                        <i class="fas fa-university" style="font-size: 22px; margin-bottom: 6px; color: var(--primary-color);"></i>
+                        <span style="font-size: 11px; font-weight: 600;">Net Banking</span>
+                    </div>
+                    <div class="payment-method" style="min-width: 75px; height: 70px; padding: 10px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03); background: linear-gradient(145deg, #ffffff, #f8fafc); animation: fadeInUp 0.5s ease forwards; animation-delay: 0.3s; opacity: 0;">
+                        <i class="fas fa-mobile-alt" style="font-size: 22px; margin-bottom: 6px; color: var(--primary-color);"></i>
+                        <span style="font-size: 11px; font-weight: 600;">UPI</span>
+                    </div>
+                    <div class="payment-method" style="min-width: 75px; height: 70px; padding: 10px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03); background: linear-gradient(145deg, #ffffff, #f8fafc); animation: fadeInUp 0.5s ease forwards; animation-delay: 0.4s; opacity: 0;">
+                        <i class="fas fa-wallet" style="font-size: 22px; margin-bottom: 6px; color: var(--primary-color);"></i>
+                        <span style="font-size: 11px; font-weight: 600;">Digital Wallet</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1999,6 +2042,7 @@
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms of Service</a>
                 <a href="faq.html">FAQ</a>
+                <a href="test-premium.html" style="background: linear-gradient(to right, var(--premium-color), var(--premium-dark)); color: white; padding: 5px 15px;">Try Premium</a>
             </div>
             <div class="social-links">
                 <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -2094,6 +2138,9 @@
     <div class="top-right-login">
         <a href="login.html" class="floating-login">
             Login <i class="fas fa-sign-in-alt"></i>
+        </a>
+        <a href="dashboards/premium/dashboard.html?test=true" class="floating-login" style="margin-left: 10px; background: linear-gradient(to right, var(--premium-color), var(--premium-dark));">
+            Test Premium <i class="fas fa-crown"></i>
         </a>
     </div>
     
