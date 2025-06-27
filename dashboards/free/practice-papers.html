@@ -551,7 +551,7 @@
                     </div>
                     
                     <!-- Free Paper 3 -->
-                    <div class="paper-card">
+                    <div class="paper-card animate-card-3">
                         <div class="paper-header">
                             <h3>JEE Advanced 2023 Paper 1</h3>
                         </div>
@@ -574,7 +574,7 @@
                     </div>
                     
                     <!-- Premium Paper 1 (Locked) -->
-                    <div class="paper-card">
+                    <div class="paper-card animate-card-4">
                         <div class="paper-badge locked">PREMIUM</div>
                         <div class="paper-header">
                             <h3>JEE Advanced 2022 Paper 1</h3>
@@ -603,7 +603,7 @@
                     </div>
                     
                     <!-- Premium Paper 2 (Locked) -->
-                    <div class="paper-card">
+                    <div class="paper-card animate-card-5">
                         <div class="paper-badge locked">PREMIUM</div>
                         <div class="paper-header">
                             <h3>JEE Main 2021 Paper 1</h3>
@@ -632,7 +632,7 @@
                     </div>
                     
                     <!-- Premium Paper 3 (Locked) -->
-                    <div class="paper-card">
+                    <div class="paper-card animate-card-6">
                         <div class="paper-badge locked">PREMIUM</div>
                         <div class="paper-header">
                             <h3>JEE Advanced 2021 Paper 2</h3>
@@ -658,6 +658,39 @@
                             <div class="locked-text">Premium Paper</div>
                             <a href="../../subscription.html" class="upgrade-btn">Upgrade Now</a>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Upgrade Banner -->
+                <div style="background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); padding: 30px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); display: flex; justify-content: space-between; align-items: center; margin-top: 30px; animation: pulse 2s infinite alternate; transform-style: preserve-3d; backdrop-filter: blur(10px);">
+                <style>
+                @keyframes pulse {
+                    0% { box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); }
+                    100% { box-shadow: 0 20px 50px rgba(79, 70, 229, 0.4); }
+                }
+                </style>
+                    <div style="display: flex; align-items: center; gap: 25px; position: relative; z-index: 1;">
+                        <div style="width: 60px; height: 60px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: float 3s ease-in-out infinite alternate;">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #ffd700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Unlock</span> Premium Papers
+                                <span style="background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">Premium</span>
+                            </div>
+                            <p style="color: rgba(255, 255, 255, 0.9); font-size: 15px; line-height: 1.8; margin: 0;">
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> Access to all premium practice papers<br>
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> Detailed solutions and explanations<br>
+                                <i class="fas fa-check-circle" style="color: #ffd700; margin-right: 8px;"></i> Personalized recommendations based on performance
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: right; position: relative; z-index: 1;">
+                        <div style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin-bottom: 15px;">Starting at ₹199/month</div>
+                        <button onclick="window.location.href='../../subscription.html'" style="background: white; color: #4f46e5; border: none; padding: 12px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: pulse-button 2s infinite alternate;">
+                            <span>Upgrade Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -710,6 +743,13 @@
             });
             
             // User data is now set by auth-check-disabled.js
+            
+            // Add click handlers to locked overlays
+            document.querySelectorAll('.locked-overlay').forEach(overlay => {
+                overlay.addEventListener('click', function() {
+                    window.location.href = '../../subscription.html';
+                });
+            });
         });
     </script>
 </body>
