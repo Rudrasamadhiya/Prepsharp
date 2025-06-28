@@ -269,7 +269,24 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
+                <img src="../logo for index (1).png" alt="PrepSharp Logo" style="height: 60px; margin-bottom: 12px;">
                 <h5>PrepSharp Admin</h5>
+            </div>
+            <ul class="sidebar-menu" style="padding: 0; list-style: none; margin: 15px 0;">
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="../admin-dashboard.html" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-tachometer-alt" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Dashboard</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="manage-users.html" class="active" style="display: flex; align-items: center; padding: 12px 15px; color: #f97316; text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 600; background: linear-gradient(90deg, rgba(249, 115, 22, 0.3), rgba(249, 115, 22, 0.1)); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);"><i class="fas fa-users" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center; color: #f97316;"></i> Users</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="manage-exams.html" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-file-alt" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Exams</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="#" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-question-circle" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Questions</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="#" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-book" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Resources</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="#" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-comment-alt" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Doubts</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="#" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-chart-bar" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Analytics</a></li>
+                <li style="margin-bottom: 5px; padding: 0 10px;"><a href="#" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: all 0.3s; border-radius: 10px; font-weight: 500;"><i class="fas fa-cog" style="margin-right: 12px; font-size: 18px; width: 25px; text-align: center;"></i> Settings</a></li>
+            </ul>
+            <div class="sidebar-footer" style="padding: 15px; position: absolute; bottom: 0; width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <a href="#" id="sidebar-logout" class="logout-btn" style="display: flex; align-items: center; padding: 12px 15px; color: rgba(255, 255, 255, 0.7); text-decoration: none; border-radius: 10px; transition: all 0.3s; background: rgba(239, 68, 68, 0.15);">
+                    <i class="fas fa-sign-out-alt" style="margin-right: 10px; font-size: 18px;"></i>
+                    <span>Logout</span>
+                </a>
             </div>
         </div>
 
@@ -336,15 +353,15 @@
                     <form id="add-user-form">
                         <div class="mb-3">
                             <label for="user-name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="user-name-input" required>
+                            <input type="text" class="form-control" id="user-name-input" required oninput="updateEmail()">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
+                            <input type="email" class="form-control" id="email" required readonly>
                         </div>
                         <div class="mb-3">
-                            <p class="text-muted">A temporary password will be generated for the new admin.</p>
-                            <p class="text-muted">They will be prompted to change it on first login.</p>
+                            <p class="text-muted">Temporary password will be: <strong id="temp-password-preview">firstname@123</strong></p>
+                            <p class="text-muted">Admin will be prompted to change it on first login.</p>
                         </div>
                     </form>
                 </div>
@@ -384,6 +401,20 @@
             alert("Error connecting to database. Please try again later.");
         }
         
+        // Function to update email and password preview based on name
+        function updateEmail() {
+            const fullName = document.getElementById('user-name-input').value.trim();
+            const firstName = fullName.split(' ')[0].toLowerCase();
+            
+            if (firstName) {
+                document.getElementById('email').value = firstName + '@prepsharp.in';
+                document.getElementById('temp-password-preview').textContent = firstName + '@123';
+            } else {
+                document.getElementById('email').value = '';
+                document.getElementById('temp-password-preview').textContent = 'firstname@123';
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Check if admin is logged in
             if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -402,6 +433,16 @@
             
             // Set up event listeners
             document.getElementById('save-user').addEventListener('click', saveUser);
+            
+            // Add logout functionality
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                window.location.href = '../login.html';
+            });
+            
+            // Initialize the email field
+            updateEmail();
         });
         
         // Function to load admin users
@@ -463,14 +504,9 @@
             }
         }
         
-        // Function to generate a random password
-        function generateTempPassword() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let password = '';
-            for (let i = 0; i < 10; i++) {
-                password += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return password;
+        // Function to generate a password based on first name
+        function generateTempPassword(firstName) {
+            return firstName.toLowerCase() + '@123';
         }
         
         // Function to save a new user
@@ -499,8 +535,9 @@
                     return;
                 }
                 
-                // Generate temporary password
-                const tempPassword = generateTempPassword();
+                // Get first name and generate temporary password
+                const firstName = name.split(' ')[0].toLowerCase();
+                const tempPassword = generateTempPassword(firstName);
                 
                 // Create new admin object
                 const newAdmin = {

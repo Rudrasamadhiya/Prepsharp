@@ -165,6 +165,11 @@
             margin-top: 5px;
             display: none;
         }
+        
+        .verified-input {
+            border-color: #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.05) !important;
+        }
     </style>
 </head>
 <body>
@@ -202,7 +207,7 @@
                 
                 <div class="form-group">
                     <label for="mobile" class="form-label">Mobile Number</label>
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 10px; position: relative;">
                         <select id="country-code" class="form-input" style="width: 140px; font-size: 14px;">
                             <option value="+91">🇮🇳 India +91</option>
                             <option value="+1">🇺🇸 USA +1</option>
@@ -228,6 +233,7 @@
                             <option value="+977">🇳🇵 Nepal +977</option>
                         </select>
                         <input type="tel" id="mobile" class="form-input" placeholder="Enter mobile number" required style="flex: 1;">
+                        <div id="mobile-verified-tick" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #10b981; font-size: 20px; display: none;">✓</div>
                     </div>
                     
                     <button type="button" id="send-otp" class="register-btn" style="margin-top: 10px; display: none; background: #10b981;">Send Mobile OTP</button>
@@ -506,15 +512,18 @@
                     await confirmationResult.confirm(otp);
                     mobileVerified = true;
                     updateRegisterButton();
-                    document.getElementById('otp').style.borderColor = '#10b981';
-                    document.getElementById('otpSuccess').textContent = 'Mobile verified successfully!';
-                    document.getElementById('otpSuccess').style.display = 'block';
-                    this.textContent = 'Verified!';
-                    this.style.background = '#10b981';
                     
-                    // Disable resend button after successful verification
-                    document.getElementById('resend-mobile-otp').disabled = true;
-                    document.getElementById('resend-mobile-otp').style.background = '#9ca3af';
+                    // Hide OTP section
+                    document.getElementById('otp-group').style.display = 'none';
+                    
+                    // Show green tick on mobile number
+                    document.getElementById('mobile-verified-tick').style.display = 'block';
+                    document.getElementById('mobile').classList.add('verified-input');
+                    document.getElementById('mobile').style.paddingRight = '30px';
+                    document.getElementById('country-code').classList.add('verified-input');
+                    
+                    // Hide send OTP button
+                    document.getElementById('send-otp').style.display = 'none';
                     
                     // Hide reCAPTCHA after verification
                     document.getElementById('recaptcha-container').style.display = 'none';

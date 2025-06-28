@@ -1165,7 +1165,7 @@
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="#" id="add-admin-btn" class="action-card bg-gradient-purple">
+                                <a href="admin/manage-users.html" id="add-admin-btn" class="action-card bg-gradient-purple">
                                     <i class="fas fa-user-plus"></i>
                                     <span>Add Admin</span>
                                 </a>
@@ -2077,124 +2077,7 @@
         
         // Function to set up Quick Actions buttons
         function setupQuickActions() {
-            // Add Admin button
-            document.getElementById('add-admin-btn').addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Show loading effect
-                const icon = this.querySelector('i');
-                const originalIcon = icon.className;
-                icon.className = 'fas fa-spinner fa-spin';
-                
-                // Create modal HTML
-                const modalHTML = `
-                    <div class="modal fade" id="addAdminModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header bg-gradient-purple text-white">
-                                    <h5 class="modal-title">Add New Admin</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="add-admin-form">
-                                        <div class="mb-3">
-                                            <label for="admin-name" class="form-label">Full Name</label>
-                                            <input type="text" class="form-control" id="admin-name" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="admin-email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="admin-email" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <p class="text-muted">A temporary password will be generated for the new admin.</p>
-                                            <p class="text-muted">They will be prompted to change it on first login.</p>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary" id="save-admin-btn">Save Admin</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Add modal to body
-                const modalContainer = document.createElement('div');
-                modalContainer.innerHTML = modalHTML;
-                document.body.appendChild(modalContainer);
-                
-                // Reset icon
-                icon.className = originalIcon;
-                
-                // Initialize and show modal
-                const modal = new bootstrap.Modal(document.getElementById('addAdminModal'));
-                modal.show();
-                
-                // Handle save button click
-                document.getElementById('save-admin-btn').addEventListener('click', function() {
-                    const name = document.getElementById('admin-name').value.trim();
-                    const email = document.getElementById('admin-email').value.trim();
-                    
-                    if (!name || !email) {
-                        alert('Please fill in all required fields');
-                        return;
-                    }
-                    
-                    // Show loading state
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-                    
-                    // Generate temporary password
-                    const tempPassword = generateTempPassword();
-                    
-                    // Check if email already exists
-                    db.collection('admins').where('email', '==', email).get()
-                        .then((snapshot) => {
-                            if (!snapshot.empty) {
-                                alert('An admin with this email already exists.');
-                                this.disabled = false;
-                                this.textContent = 'Save Admin';
-                                return Promise.reject('Email exists');
-                            }
-                            
-                            // Create new admin object
-                            const newAdmin = {
-                                name,
-                                email,
-                                tempPassword,
-                                role: 'Admin',
-                                dateAdded: new Date().toISOString()
-                            };
-                            
-                            // Add to Firestore
-                            return db.collection('admins').add(newAdmin);
-                        })
-                        .then(() => {
-                            // Close modal
-                            bootstrap.Modal.getInstance(document.getElementById('addAdminModal')).hide();
-                            
-                            // Show success message with temporary password
-                            alert(`Admin added successfully!\n\nTemporary Password: ${tempPassword}\n\nPlease share this password with the admin. They will be prompted to change it on first login.`);
-                        })
-                        .catch((error) => {
-                            if (error !== 'Email exists') {
-                                console.error('Error saving admin:', error);
-                                alert('Error saving admin');
-                            }
-                        })
-                        .finally(() => {
-                            this.disabled = false;
-                            this.textContent = 'Save Admin';
-                        });
-                });
-                
-                // Clean up modal when hidden
-                document.getElementById('addAdminModal').addEventListener('hidden.bs.modal', function() {
-                    document.body.removeChild(modalContainer);
-                });
-            });
+            // Add Admin button - now links directly to manage-users.html
             
             // Edit Dashboard button
             document.getElementById('edit-dashboard-btn').addEventListener('click', function(e) {
