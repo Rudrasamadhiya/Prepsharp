@@ -641,13 +641,7 @@
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body">
                                         <label for="new-exam-year" class="form-label" style="color: #4f46e5; font-weight: 600;">Year</label>
-                                        <select class="form-select" id="new-exam-year" required onchange="updateExamName()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
-                                            <option value="">Select Year</option>
-                                            <option value="2024">2024</option>
-                                            <option value="2023">2023</option>
-                                            <option value="2022">2022</option>
-                                            <option value="2021">2021</option>
-                                        </select>
+                                        <input type="number" class="form-control" id="new-exam-year" required oninput="updateExamName()" min="2000" max="2100" placeholder="Enter year" style="border-radius: 10px; border: 2px solid #e2e8f0;">
                                     </div>
                                 </div>
                             </div>
@@ -819,7 +813,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="save-exam-btn">Create Exam</button>
+                    <button type="button" class="btn btn-primary" id="save-exam-btn">Create Exam</button>
                 </div>
             </div>
         </div>
@@ -829,6 +823,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="updated-functions.js"></script>
+    <script src="create-exam.js"></script>
+
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -907,10 +903,7 @@
                 modal.show();
             });
             
-            document.getElementById('create-exam-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                createExam();
-            });
+            document.getElementById('save-exam-btn').addEventListener('click', createExam);
             
             document.getElementById('refresh-btn').addEventListener('click', function() {
                 // Check which tab is active and refresh accordingly
@@ -1465,7 +1458,7 @@
         // Function to update exam name based on selections
         function updateExamName() {
             const typeSelect = document.getElementById('new-exam-type');
-            const yearSelect = document.getElementById('new-exam-year');
+            const yearInput = document.getElementById('new-exam-year');
             const nameField = document.getElementById('new-exam-name');
             
             // Get the display text for the exam type
@@ -1488,12 +1481,12 @@
                 const monthSelect = document.getElementById('new-exam-month');
                 const shiftSelect = document.getElementById('new-exam-shift');
                 
-                if (typeText && daySelect.value && monthSelect.value && shiftSelect.value && yearSelect.value) {
-                    examName = `${typeText} - ${daySelect.value}/${monthSelect.value} ${shiftSelect.value} ${yearSelect.value}`;
-                } else if (typeText && yearSelect.value) {
-                    examName = `${typeText} ${yearSelect.value}`;
+                if (typeText && daySelect.value && monthSelect.value && shiftSelect.value && yearInput.value) {
+                    examName = `${typeText} - ${daySelect.value}/${monthSelect.value} ${shiftSelect.value} ${yearInput.value}`;
+                } else if (typeText && yearInput.value) {
+                    examName = `${typeText} ${yearInput.value}`;
                     if (daySelect.value && monthSelect.value) {
-                        examName = `${typeText} - ${daySelect.value}/${monthSelect.value} ${yearSelect.value}`;
+                        examName = `${typeText} - ${daySelect.value}/${monthSelect.value} ${yearInput.value}`;
                     }
                     if (shiftSelect.value) {
                         examName += ` ${shiftSelect.value}`;
@@ -1502,13 +1495,13 @@
             } else if (typeSelect.value === 'jee-advanced') {
                 const paperSelect = document.getElementById('new-exam-paper');
                 
-                if (typeText && paperSelect.value && yearSelect.value) {
-                    examName = `${typeText} - ${paperSelect.value} ${yearSelect.value}`;
-                } else if (typeText && yearSelect.value) {
-                    examName = `${typeText} ${yearSelect.value}`;
+                if (typeText && paperSelect.value && yearInput.value) {
+                    examName = `${typeText} - ${paperSelect.value} ${yearInput.value}`;
+                } else if (typeText && yearInput.value) {
+                    examName = `${typeText} ${yearInput.value}`;
                 }
-            } else if (typeText && yearSelect.value) {
-                examName = `${typeText} ${yearSelect.value}`;
+            } else if (typeText && yearInput.value) {
+                examName = `${typeText} ${yearInput.value}`;
             }
             
             nameField.textContent = examName;
@@ -1518,7 +1511,7 @@
         // Function to update description based on selections
         function updateDescription() {
             const typeSelect = document.getElementById('new-exam-type');
-            const yearSelect = document.getElementById('new-exam-year');
+            const yearInput = document.getElementById('new-exam-year');
             const totalQuestionsInput = document.getElementById('new-exam-total-questions');
             const descriptionField = document.getElementById('new-exam-description');
             
@@ -1530,7 +1523,7 @@
                 const totalQuestions = totalQuestionsInput.value || '75';
                 
                 description = `<div class="exam-description">
-                    <h6 class="mb-1">JEE Main ${yearSelect.value}</h6>
+                    <h6 class="mb-1">JEE Main ${yearInput.value}</h6>
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics).</span></div>
@@ -1541,7 +1534,7 @@
                 const paperSelect = document.getElementById('new-exam-paper');
                 const difficulty = difficultySelect.value || 'Hard';
                 const paper = paperSelect.value || 'Paper 1';
-                const year = parseInt(yearSelect.value) || 2024;
+                const year = parseInt(yearInput.value) || 2024;
                 let totalQuestions = 54;
                 let questionPattern = '';
                 let markingScheme = '';
@@ -1601,7 +1594,7 @@
                 totalQuestionsInput.value = totalQuestions;
                 
                 description = `<div class="exam-description">
-                    <h6 class="mb-1">JEE Advanced ${yearSelect.value} ${paper}</h6>
+                    <h6 class="mb-1">JEE Advanced ${yearInput.value} ${paper}</h6>
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">${questionPattern}</span></div>
@@ -1611,7 +1604,7 @@
                 const totalQuestions = totalQuestionsInput.value || '180';
                 
                 description = `<div class="exam-description">
-                    <h6 class="mb-1">NEET ${yearSelect.value}</h6>
+                    <h6 class="mb-1">NEET ${yearInput.value}</h6>
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">45 multiple-choice questions each from Physics, Chemistry, Botany, and Zoology.</span></div>
                     <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each question carries 4 marks for correct answer and -1 mark for incorrect answer.</span></div>
@@ -1620,7 +1613,7 @@
                 const totalQuestions = totalQuestionsInput.value || '75';
                 
                 description = `<div class="exam-description">
-                    <h6 class="mb-1">Mock Test ${yearSelect.value}</h6>
+                    <h6 class="mb-1">Mock Test ${yearInput.value}</h6>
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Test Type:</span> <span class="small">This is a practice test designed to simulate the actual exam pattern and difficulty level.</span></div>
                     <div><span class="fw-bold small">Pattern:</span> <span class="small">Follows the latest exam pattern and marking scheme.</span></div>
@@ -1630,121 +1623,7 @@
             descriptionField.innerHTML = description;
         }
         
-        // Function to create a new exam
-        function createExam() {
-            const name = document.getElementById('new-exam-name').textContent.trim();
-            const type = document.getElementById('new-exam-type').value;
-            const year = document.getElementById('new-exam-year').value;
-            const descriptionElement = document.getElementById('new-exam-description');
-            const description = descriptionElement.innerHTML.trim();
-            const totalQuestions = document.getElementById('new-exam-total-questions').value;
-            
-            if (!name || !type || !year || !totalQuestions) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            // Validate type-specific required fields
-            if (type === 'jee-main') {
-                const day = document.getElementById('new-exam-day').value;
-                const month = document.getElementById('new-exam-month').value;
-                const shift = document.getElementById('new-exam-shift').value;
-                const difficulty = document.getElementById('new-exam-difficulty').value;
-                
-                if (!day || !month || !shift || !difficulty) {
-                    alert('Please fill in all JEE Main specific fields');
-                    return;
-                }
-            } else if (type === 'jee-advanced') {
-                const paper = document.getElementById('new-exam-paper').value;
-                const difficulty = document.getElementById('new-exam-difficulty-adv').value;
-                
-                if (!paper || !difficulty) {
-                    alert('Please fill in all JEE Advanced specific fields');
-                    return;
-                }
-            }
-            
-            // Get exam type specific fields
-            let examData = {};
-            
-            if (type === 'jee-main') {
-                const day = document.getElementById('new-exam-day').value;
-                const month = document.getElementById('new-exam-month').value;
-                const shift = document.getElementById('new-exam-shift').value;
-                const difficulty = document.getElementById('new-exam-difficulty').value;
-                
-                examData = {
-                    day,
-                    month,
-                    shift,
-                    difficulty: difficulty || 'Moderate'
-                };
-            } else if (type === 'jee-advanced') {
-                const paper = document.getElementById('new-exam-paper').value;
-                const difficulty = document.getElementById('new-exam-difficulty-adv').value;
-                
-                examData = {
-                    paper: paper || 'Paper 1',
-                    difficulty: difficulty || 'Hard'
-                };
-            }
-            
-            const saveBtn = document.getElementById('save-exam-btn');
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Creating...';
-            
-            // First check if an exam with the same name already exists
-            db.collection('papers').where('name', '==', name).get()
-                .then(snapshot => {
-                    if (!snapshot.empty) {
-                        // Paper with same name exists
-                        const existingPaper = snapshot.docs[0].data();
-                        const createdBy = existingPaper.createdBy ? existingPaper.createdBy.split('@')[0] : 'Unknown';
-                        throw new Error(`Paper already exists in the database and was created by "${createdBy}"`); 
-                    }
-                    
-                    // No duplicate found, proceed with creation
-                    const newExam = {
-                        name,
-                        type,
-                        year,
-                        description,
-                        totalQuestions: parseInt(totalQuestions) || 75,
-                        ...examData,
-                        status: 'Draft',
-                        questions: [],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        createdBy: sessionStorage.getItem('adminEmail') || 'unknown',
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    
-                    // Use the paper name as the document ID (with special characters removed)
-                    const docId = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-                    return db.collection('papers').doc(docId).set(newExam);
-                })
-                .then(() => {
-                    // Close modal
-                    bootstrap.Modal.getInstance(document.getElementById('createExamModal')).hide();
-                    
-                    // Reset form
-                    document.getElementById('create-exam-form').reset();
-                    
-                    // Get the document ID (same as the sanitized name)
-                    const docId = name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-                    
-                    // Redirect to edit page
-                    window.location.href = `edit-exam.html?id=${docId}`;
-                })
-                .catch(error => {
-                    console.error('Error creating exam:', error);
-                    alert(error.message || 'Error creating exam. Please try again.');
-                })
-                .finally(() => {
-                    saveBtn.disabled = false;
-                    saveBtn.innerHTML = 'Create Exam';
-                });
-        }
+        // Function declaration removed - now using the one from create-exam.js
     </script>
 </body>
 </html>

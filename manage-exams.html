@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/logo.png">
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -57,10 +58,11 @@
         }
         
         .sidebar-header img {
-            height: 60px;
+            height: 70px;
             margin-bottom: 12px;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
             transition: transform 0.3s ease;
+            vertical-align: middle;
         }
         
         .sidebar-header:hover img {
@@ -268,7 +270,7 @@
             font-weight: 500;
         }
         
-        /* Exam Management Specific Styles */
+        /* Cards */
         .card {
             background: white;
             border-radius: 16px;
@@ -299,29 +301,173 @@
             padding: 20px;
         }
         
-        .filter-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .filter-controls select, .filter-controls input {
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
+        /* Exam Cards */
+        .exam-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
             transition: all 0.3s ease;
+            height: 100%;
         }
         
-        .filter-controls select:focus, .filter-controls input:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        /* List View */
+        .list-view {
+            display: table;
+            width: 100%;
+        }
+        
+        .list-view .col-md-4 {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+            margin-bottom: 0;
+            display: table-row;
+        }
+        
+        .list-view .exam-card {
+            display: table-row;
+            height: auto;
+            background: white;
+            box-shadow: none;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .list-view .exam-card:hover {
+            background-color: #f8fafc;
+        }
+        
+        .list-view .col-md-4:nth-child(odd) .exam-card {
+            background-color: #fafbff;
+        }
+        
+        .list-view .card-header {
+            display: table-cell;
+            vertical-align: middle;
+            background: transparent;
+            color: #333;
+            border-radius: 0;
+            padding: 12px 15px;
+            width: 30%;
+        }
+        
+        .list-view .card-header h5 {
+            color: #1e293b;
+            margin: 0;
+            display: inline;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .list-view .card-header .badge {
+            margin-left: 8px;
+            font-size: 12px;
+        }
+        
+        .list-view .card-body {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 12px 15px;
+            width: 50%;
+        }
+        
+        .list-view .card-body .mb-3 {
+            margin-bottom: 0 !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .list-view .card-body .d-flex {
+            display: inline-block !important;
+            margin-right: 20px;
+        }
+        
+        .list-view .card-footer {
+            display: table-cell;
+            vertical-align: middle;
+            background: transparent;
+            padding: 12px 15px;
+            width: 20%;
+            text-align: right;
+        }
+        
+        .list-view .btn-group {
+            display: inline-flex;
+        }
+        
+        .list-view .btn {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        /* Modern Table Styling */
+        .table-header {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .table-header div {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .list-row {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .list-row:hover {
+            background-color: #f1f5f9 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transform: translateY(-1px);
+        }
+        
+        .list-row .btn-primary {
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+            min-width: 80px;
+            border-radius: 6px;
+        }
+        
+        .list-row .btn-outline-info {
+            border: 1px solid #0ea5e9;
+            min-width: 80px;
+            border-radius: 6px;
+            background-color: white;
+            color: #0ea5e9;
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.15);
+        }
+        
+        .list-row .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .list-row .btn-outline-info:hover {
+            background-color: #0ea5e9;
+            color: white;
+            border-color: #0ea5e9;
+        }
+        
+        /* Filters */
+        .filter-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-container .form-select,
+        .filter-container .form-control {
+            border-radius: 8px;
+            padding: 10px 15px;
         }
         
         .btn {
@@ -380,27 +526,220 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        thead.bg-gradient {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
         }
         
         th {
-            background-color: #f8fafc;
-            color: #64748b;
+            color: white;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 12px;
             letter-spacing: 0.5px;
             padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
+            border: none;
         }
         
         td {
             padding: 15px;
             vertical-align: middle;
             border-bottom: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
         }
         
         tr:hover td {
             background-color: #f1f5f9;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(79, 70, 229, 0.05);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(16, 185, 129, 0.2);
+            transition: .4s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            z-index: 2;
+        }
+        
+        input:checked + .slider {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+        
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        .lock-icon {
+            color: #ef4444;
+            font-size: 12px;
+            z-index: 1;
+        }
+        
+        .unlock-icon {
+            color: #10b981;
+            font-size: 12px;
+            z-index: 1;
+        }
+        
+        input:not(:checked) + .slider .lock-icon {
+            opacity: 0;
+        }
+        
+        input:checked + .slider .unlock-icon {
+            opacity: 0;
+        }
+        
+        /* Status switch */
+        .status-switch {
+            margin-right: 8px;
+        }
+        
+        .status-slider {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        input:checked + .status-slider {
+            background-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .publish-icon {
+            color: #10b981;
+            font-size: 12px;
+            z-index: 1;
+        }
+        
+        .draft-icon {
+            color: #ef4444;
+            font-size: 12px;
+            z-index: 1;
+        }
+        
+        input:not(:checked) + .status-slider .publish-icon {
+            opacity: 0;
+        }
+        
+        input:checked + .status-slider .draft-icon {
+            opacity: 0;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: white;
+            color: #333;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-body {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toast-body strong {
+            margin-left: 5px;
+            color: var(--primary-color);
+        }
+        
+        /* Dashboard options */
+        .dashboard-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-check:checked + .btn-outline-primary {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+        
+        .btn-check:checked + .btn-outline-success {
+            background-color: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        
+        .btn-check:checked + .btn-outline-warning {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-check:checked + .btn-outline-secondary {
+            background-color: #6b7280;
+            border-color: #6b7280;
+            color: white;
         }
         
         .badge {
@@ -477,7 +816,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <img src="logo for index (1).png" alt="PrepSharp Logo">
+            <img src="images/logo.png" alt="PrepSharp Logo">
             <h5>PrepSharp Admin</h5>
         </div>
         <ul class="sidebar-menu">
@@ -524,8 +863,11 @@
 
         
         <div class="card">
-            <div class="card-header">
-                <a href="add-exam.html" class="btn accent">Add New Exam</a>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-white">Manage Exams</h5>
+                <a href="add-exam.html" class="btn accent">
+                    <i class="fas fa-plus me-2"></i> Add New Exam
+                </a>
             </div>
             <div class="card-body">
                 <div class="filter-controls">
@@ -544,28 +886,64 @@
                         <option value="2022">2022</option>
                         <option value="2021">2021</option>
                     </select>
+                    <select id="exam-status">
+                        <option value="">All Status</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Review">Review</option>
+                        <option value="Published">Published</option>
+                    </select>
                     <input type="text" id="search-input" placeholder="Search by name...">
                     <button class="btn primary" id="apply-filters">Apply Filters</button>
                     <button class="btn secondary" id="clear-filters">Clear Filters</button>
                 </div>
                 
-                <table id="exams-table">
-                    <thead>
+                <table id="exams-table" class="table table-hover">
+                    <thead class="bg-gradient">
                         <tr>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Year</th>
                             <th>Questions</th>
-                            <th>Subjects</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <th>Access</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="exams-list">
                         <tr>
-                            <td colspan="6">Loading exam papers...</td>
+                            <td colspan="8" class="text-center py-5">
+                                <div class="spinner-border text-primary mb-3" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mb-0">Loading exam papers...</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paper Details Modal -->
+    <div class="modal fade" id="paperDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white;">
+                    <h5 class="modal-title">Paper Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="paperDetailsContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading paper details...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -574,8 +952,30 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+        
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'login.html';
@@ -668,42 +1068,78 @@
             });
             
             if (papers.length === 0) {
-                examsListElement.innerHTML = '<tr><td colspan="6">No exam papers found</td></tr>';
+                examsListElement.innerHTML = '<tr><td colspan="8" class="text-center">No exam papers found</td></tr>';
                 return;
             }
             
             // Clear existing content
             examsListElement.innerHTML = '';
             
-            // No special paper at the top
-            
             // Render each paper
             papers.forEach(paper => {
-                // Display all papers
+                // Make sure paper has an ID
+                const paperId = paper.id || paper.name?.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() || 'unknown';
                 
                 const row = document.createElement('tr');
                 
-                // Create badges for subjects
-                const subjectBadges = (paper.subjects || []).map(subject => {
-                    return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
-                }).join('');
+                // Determine status badge class
+                const status = paper.status || 'Draft';
+                let statusClass = '';
+                if (status === 'Published') statusClass = 'success';
+                else if (status === 'Review') statusClass = 'warning';
+                else if (status === 'Draft') statusClass = 'info';
+                
+                // Count questions
+                let questionCount = 0;
+                if (paper.questions && Array.isArray(paper.questions)) {
+                    questionCount = paper.questions.length;
+                }
+                
+                // Get creator info
+                const createdBy = paper.createdBy ? paper.createdBy.split('@')[0] : 'Admin';
+                
+                // Determine access level (free or locked)
+                const isFree = paper.isFree === true || paper.isFree === undefined;
+                const accessClass = isFree ? 'access-free' : 'access-locked';
+                const accessText = isFree ? 'Free' : 'Premium';
+                const accessIcon = isFree ? 'fa-unlock' : 'fa-lock';
                 
                 row.innerHTML = `
-                    <td>${paper.name}</td>
-                    <td>${getExamTypeDisplay(paper.type)}</td>
-                    <td>${paper.year}</td>
-                    <td>${Array.isArray(paper.questions) ? paper.questions.length : 0}</td>
-                    <td>${subjectBadges}</td>
+                    <td><a href="#" class="fw-medium" style="color: #4f46e5; text-decoration: none;" onclick="showPaperDetails('${paperId}'); return false;">${paper.name || 'Unnamed Exam'}</a></td>
+                    <td>${getExamTypeDisplay(paper.type || 'unknown')}</td>
+                    <td>${paper.year || 'N/A'}</td>
+                    <td>${questionCount}</td>
+                    <td>
+                        ${status === 'Review' ? `
+                        <label class="switch status-switch">
+                            <input type="checkbox" ${status === 'Published' ? 'checked' : ''} onchange="togglePublish('${paperId}', '${status}')">
+                            <span class="slider round status-slider">
+                                <i class="fas fa-check publish-icon"></i>
+                                <i class="fas fa-times draft-icon"></i>
+                            </span>
+                        </label>` : ''}
+                        <span class="badge bg-${statusClass} ms-2">${status}</span>
+                        ${paper.dashboards?.free ? '<span class="badge bg-secondary ms-1">Free</span>' : ''}
+                        ${paper.dashboards?.basic ? '<span class="badge bg-primary ms-1">Basic</span>' : ''}
+                        ${paper.dashboards?.standard ? '<span class="badge bg-success ms-1">Standard</span>' : ''}
+                        ${paper.dashboards?.premium ? '<span class="badge bg-warning ms-1">Premium</span>' : ''}
+                    </td>
+                    <td>${createdBy}</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" ${isFree ? '' : 'checked'} onchange="toggleAccess('${paperId}', '${accessText}')">
+                            <span class="slider round">
+                                <i class="fas fa-lock lock-icon"></i>
+                                <i class="fas fa-lock-open unlock-icon"></i>
+                            </span>
+                        </label>
+                    </td>
                     <td class="actions">
-                        <a href="exam.html?id=${paper.id}" class="btn secondary">View</a>
-                        ${getAddQuestionLink(paper)}
-                        <a href="pdf-viewer.html?id=${paper.id}" class="btn accent">PDF</a>
-                        <button class="btn danger" onclick="deletePaper('${paper.id}')">Delete</button>
+                        <a href="exam.html?id=${paperId}" class="btn secondary btn-sm"><i class="fas fa-eye me-1"></i> View</a>
+                        ${getAddQuestionLink(paper, paperId)}
+                        <button class="btn danger btn-sm" onclick="deletePaper('${paperId}')"><i class="fas fa-trash me-1"></i> Delete</button>
                     </td>
                 `;
-                
-                // Debug: Log paper details to console
-                console.log('Paper:', paper.name, 'Type:', paper.type, 'Year:', paper.year, 'Paper Number:', paper.paperNumber);
                 
                 examsListElement.appendChild(row);
             });
@@ -734,9 +1170,12 @@
         }
         
         // Function to get the appropriate Add Questions link based on paper type and year
-        function getAddQuestionLink(paper) {
+        function getAddQuestionLink(paper, paperId) {
+            // Use provided paperId or fallback to paper.id
+            const id = paperId || paper.id || 'unknown';
+            
             // Default link
-            let defaultLink = `<a href="add-question.html?paperId=${paper.id}" class="btn primary">Add Questions</a>`;
+            let defaultLink = `<a href="add-question.html?paperId=${id}" class="btn primary btn-sm"><i class="fas fa-plus me-1"></i> Add</a>`;
             
             // Check if it's JEE Advanced
             if (paper.type === 'jee-advanced') {
@@ -749,19 +1188,16 @@
                                      paper.name.includes("Paper 2") ? "2" : "";
                     }
                     // Try to extract from ID (e.g., "jee-adv-2023-p1")
-                    else if (paper.id) {
-                        paperNumber = paper.id.includes("-p1") ? "1" : 
-                                     paper.id.includes("-p2") ? "2" : "";
+                    else if (id) {
+                        paperNumber = id.includes("-p1") ? "1" : 
+                                     id.includes("-p2") ? "2" : "";
                     }
                 }
-                
-                console.log(`Paper: ${paper.name}, Year: ${paper.year}, Number: ${paperNumber}`);
                 
                 // Generate the link based on year and paper number
                 if (paper.year && paperNumber) {
                     const url = `jee-advanced-${paper.year}-paper${paperNumber}.html`;
-                    console.log(`Generated URL: ${url}`);
-                    return `<a href="${url}" class="btn primary">Add Questions</a>`;
+                    return `<a href="${url}" class="btn primary btn-sm"><i class="fas fa-plus me-1"></i> Add</a>`;
                 }
             }
             
@@ -807,31 +1243,56 @@
         function applyFilters() {
             const typeFilter = document.getElementById('filter-type').value;
             const yearFilter = document.getElementById('filter-year').value;
+            const statusFilter = document.getElementById('exam-status')?.value || '';
             const searchFilter = document.getElementById('search-input').value.toLowerCase();
             
             const rows = document.querySelectorAll('#exams-list tr');
             
+            let visibleCount = 0;
             rows.forEach(row => {
+                if (!row.cells || row.cells.length < 5) return;
+                
+                const name = row.cells[0]?.textContent.toLowerCase();
                 const type = row.cells[1]?.textContent;
                 const year = row.cells[2]?.textContent;
-                const name = row.cells[0]?.textContent.toLowerCase();
+                const status = row.cells[4]?.textContent;
+                const creator = row.cells[5]?.textContent.toLowerCase();
+                const access = row.cells[6]?.textContent.toLowerCase();
                 
                 const typeMatch = !typeFilter || type === getExamTypeDisplay(typeFilter);
                 const yearMatch = !yearFilter || year === yearFilter;
-                const nameMatch = !searchFilter || name.includes(searchFilter);
+                const nameMatch = !searchFilter || 
+                                  name.includes(searchFilter) || 
+                                  creator.includes(searchFilter) || 
+                                  access.includes(searchFilter);
+                const statusMatch = !statusFilter || status.includes(statusFilter);
                 
-                if (typeMatch && yearMatch && nameMatch) {
+                if (typeMatch && yearMatch && nameMatch && statusMatch) {
                     row.style.display = '';
+                    visibleCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
+            
+            // Show a message if no results are found
+            if (visibleCount === 0 && rows.length > 0) {
+                const examsListElement = document.getElementById('exams-list');
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = `<td colspan="8" class="text-center py-4">
+                    <i class="fas fa-search fa-2x text-muted mb-3"></i>
+                    <h5>No matching exams found</h5>
+                    <p class="text-muted">Try adjusting your filters</p>
+                </td>`;
+                examsListElement.appendChild(noResultsRow);
+            }
         }
         
         // Function to clear filters
         function clearFilters() {
             document.getElementById('filter-type').value = '';
             document.getElementById('filter-year').value = '';
+            document.getElementById('exam-status').value = '';
             document.getElementById('search-input').value = '';
             
             const rows = document.querySelectorAll('#exams-list tr');
@@ -840,7 +1301,279 @@
             });
         }
         
-        // This logout button is now handled by the sidebar logout
+        // Function to toggle access level (free/premium)
+        function toggleAccess(paperId, currentStatus) {
+            const checkbox = event.target;
+            const isLocked = checkbox.checked;
+            
+            db.collection("papers").doc(paperId).update({
+                isFree: !isLocked
+            })
+            .then(() => {
+                console.log(`Paper ${paperId} access changed to ${isLocked ? 'Premium' : 'Free'}`);
+                // No need to reload the entire list
+                const statusText = isLocked ? 'Premium' : 'Free';
+                const toast = document.createElement('div');
+                toast.className = 'toast show';
+                toast.innerHTML = `<div class="toast-body">Paper access changed to <strong>${statusText}</strong></div>`;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            })
+            .catch((error) => {
+                console.error('Error updating paper access:', error);
+                alert('Failed to update access level. Please try again.');
+                // Revert checkbox state on error
+                checkbox.checked = !checkbox.checked;
+            });
+        }
+        
+        // Function to toggle publish status
+        function togglePublish(paperId, currentStatus) {
+            const checkbox = event.target;
+            const isPublished = checkbox.checked;
+            
+            // Only allow changing from Review to Published
+            if (currentStatus !== 'Review' && !isPublished) {
+                checkbox.checked = true; // Force back to checked
+                alert('Only papers in Review status can be published');
+                return;
+            }
+            
+            const newStatus = isPublished ? 'Published' : 'Review';
+            
+            db.collection("papers").doc(paperId).update({
+                status: newStatus
+            })
+            .then(() => {
+                console.log(`Paper ${paperId} status changed to ${newStatus}`);
+                // Update the badge next to the toggle
+                const badgeElement = checkbox.closest('td').querySelector('.badge');
+                badgeElement.className = `badge bg-${isPublished ? 'success' : 'warning'} ms-2`;
+                badgeElement.textContent = newStatus;
+                
+                // If published, hide the toggle switch
+                if (isPublished) {
+                    checkbox.closest('label').style.display = 'none';
+                }
+                
+                // Show toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast show';
+                toast.innerHTML = `<div class="toast-body">Paper status changed to <strong>${newStatus}</strong></div>`;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+                
+                // Reload the list after a short delay to reflect the changes
+                setTimeout(() => loadExamPapers(), 1500);
+            })
+            .catch((error) => {
+                console.error('Error updating paper status:', error);
+                alert('Failed to update status. Please try again.');
+                // Revert checkbox state on error
+                checkbox.checked = !checkbox.checked;
+            });
+        }
+        
+        // Function to toggle dashboard availability
+        function toggleDashboard(paperId, dashboardType, isEnabled) {
+            // Create update object with nested field
+            const updateData = {};
+            updateData[`dashboards.${dashboardType}`] = isEnabled;
+            
+            db.collection("papers").doc(paperId).update(updateData)
+                .then(() => {
+                    // Show toast notification
+                    const toast = document.createElement('div');
+                    toast.className = 'toast show';
+                    toast.innerHTML = `<div class="toast-body">
+                        Paper ${isEnabled ? 'added to' : 'removed from'} <strong>${dashboardType}</strong> dashboard
+                    </div>`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        setTimeout(() => toast.remove(), 500);
+                    }, 3000);
+                    
+                    // Reload the paper details to update the badges
+                    showPaperDetails(paperId);
+                    
+                    // Reload the papers list to update the badges in the table
+                    setTimeout(() => loadExamPapers(), 1000);
+                })
+                .catch((error) => {
+                    console.error('Error updating dashboard availability:', error);
+                    alert('Failed to update dashboard availability. Please try again.');
+                    // Revert checkbox state
+                    document.getElementById(`${dashboardType}-${paperId}`).checked = !isEnabled;
+                });
+        }
+        
+        // Function to show paper details in a modal
+        function showPaperDetails(paperId) {
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('paperDetailsModal'));
+            modal.show();
+            
+            // Set loading state
+            document.getElementById('paperDetailsContent').innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading paper details...</p>
+                </div>
+            `;
+            
+            // Fetch paper details from Firestore
+            db.collection("papers").doc(paperId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const paper = doc.data();
+                        
+                        // Format creation date
+                        let createdDate = 'Unknown';
+                        if (paper.createdAt) {
+                            const date = paper.createdAt.toDate();
+                            createdDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        }
+                        
+                        // Format last updated date
+                        let updatedDate = 'Unknown';
+                        if (paper.lastUpdated) {
+                            const date = paper.lastUpdated.toDate();
+                            updatedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        }
+                        
+                        // Get status class
+                        let statusClass = 'bg-secondary';
+                        if (paper.status === 'Published') statusClass = 'bg-success';
+                        else if (paper.status === 'Review') statusClass = 'bg-warning';
+                        else if (paper.status === 'Draft') statusClass = 'bg-info';
+                        
+                        // Count questions
+                        const questionCount = Array.isArray(paper.questions) ? paper.questions.length : 0;
+                        
+                        // Create badges for subjects
+                        const subjectBadges = (paper.subjects || []).map(subject => {
+                            return `<span class="badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
+                        }).join(' ');
+                        
+                        // Update modal content
+                        document.getElementById('paperDetailsContent').innerHTML = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>${paper.name || 'Unnamed Exam'}</h4>
+                                    <p class="text-muted">${paper.description || 'No description available.'}</p>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <span class="badge ${statusClass}">${paper.status || 'Draft'}</span>
+                                    <span class="badge ${paper.isFree ? 'bg-success' : 'bg-secondary'}">${paper.isFree ? 'Free' : 'Premium'}</span>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Type:</strong> ${getExamTypeDisplay(paper.type || 'unknown')}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Year:</strong> ${paper.year || 'N/A'}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Questions:</strong> ${questionCount}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Subjects:</strong> ${subjectBadges || 'None'}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Created By:</strong> ${paper.createdBy || 'Unknown'}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Created At:</strong> ${createdDate}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Last Updated:</strong> ${updatedDate}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Paper ID:</strong> ${paperId}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <strong>Dashboard Availability:</strong>
+                                    <p class="text-muted small mb-2">Select which dashboards this paper should appear on. Papers will only be visible if they are both Published and assigned to a dashboard.</p>
+                                    <div class="dashboard-options mt-2">
+                                        <div class="btn-group" role="group">
+                                            <input type="checkbox" class="btn-check" id="free-${paperId}" ${paper.dashboards?.free ? 'checked' : ''} autocomplete="off" onchange="toggleDashboard('${paperId}', 'free', this.checked)">
+                                            <label class="btn btn-outline-secondary" for="free-${paperId}">Free</label>
+                                            
+                                            <input type="checkbox" class="btn-check" id="basic-${paperId}" ${paper.dashboards?.basic ? 'checked' : ''} autocomplete="off" onchange="toggleDashboard('${paperId}', 'basic', this.checked)">
+                                            <label class="btn btn-outline-primary" for="basic-${paperId}">Basic</label>
+                                            
+                                            <input type="checkbox" class="btn-check" id="standard-${paperId}" ${paper.dashboards?.standard ? 'checked' : ''} autocomplete="off" onchange="toggleDashboard('${paperId}', 'standard', this.checked)">
+                                            <label class="btn btn-outline-success" for="standard-${paperId}">Standard</label>
+                                            
+                                            <input type="checkbox" class="btn-check" id="premium-${paperId}" ${paper.dashboards?.premium ? 'checked' : ''} autocomplete="off" onchange="toggleDashboard('${paperId}', 'premium', this.checked)">
+                                            <label class="btn btn-outline-warning" for="premium-${paperId}">Premium</label>
+                                        </div>
+                                    </div>
+                                    <div class="dashboard-status mt-3">
+                                        <strong>Visibility Status:</strong>
+                                        ${paper.status === 'Published' ? 
+                                            (paper.dashboards?.free || paper.dashboards?.basic || paper.dashboards?.standard || paper.dashboards?.premium ? 
+                                                `<span class="badge bg-success">Visible on: ${[
+                                                    paper.dashboards?.free ? '<span class="badge bg-secondary">Free</span>' : '',
+                                                    paper.dashboards?.basic ? '<span class="badge bg-primary">Basic</span>' : '',
+                                                    paper.dashboards?.standard ? '<span class="badge bg-success">Standard</span>' : '',
+                                                    paper.dashboards?.premium ? '<span class="badge bg-warning">Premium</span>' : ''
+                                                ].filter(Boolean).join(' ')}</span>` : 
+                                                '<span class="badge bg-danger">Not visible (no dashboard selected)</span>') : 
+                                            '<span class="badge bg-warning">Not visible (paper not published)</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-end">
+                                    <a href="exam.html?id=${paperId}" class="btn btn-primary me-2"><i class="fas fa-edit me-1"></i> Edit Paper</a>
+                                    <a href="pdf-viewer.html?id=${paperId}" class="btn btn-info"><i class="fas fa-file-pdf me-1"></i> View PDF</a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        document.getElementById('paperDetailsContent').innerHTML = `
+                            <div class="alert alert-danger">
+                                Paper not found. It may have been deleted.
+                            </div>
+                        `;
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error getting paper details:", error);
+                    document.getElementById('paperDetailsContent').innerHTML = `
+                        <div class="alert alert-danger">
+                            Error loading paper details: ${error.message}
+                        </div>
+                    `;
+                });
+        }
     </script>
 </body>
 </html>

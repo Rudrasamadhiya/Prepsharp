@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Exam - PrepSharp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../images/logo.png">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc, #f1f5f9);
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header img {
+            height: 60px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
+        
+        .sidebar-header h5 {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 0;
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+            padding: 0 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05));
+            color: #f97316;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.3), rgba(249, 115, 22, 0.1));
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            color: #f97316;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+        
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 15px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            transform: translateY(-3px);
+        }
+        
+        .logout-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* Top Navbar */
+        .top-navbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 18px 30px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 20px 8px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+            position: relative;
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 500;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Form Styling */
+        .form-label {
+            font-weight: 500;
+            color: #4f46e5;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            border: none;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338ca, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-outline-primary {
+            color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #4f46e5;
+            color: white;
+        }
+        
+        /* Question List */
+        .question-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .question-item {
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            border-left: 4px solid #4f46e5;
+            transition: all 0.2s ease;
+        }
+        
+        .question-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+        
+        .question-item .question-text {
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        .question-item .question-meta {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -250px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../images/logo.png" alt="PrepSharp Logo">
+            <h5>PrepSharp Admin</h5>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="collaborate-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="collaborate-exams.html" class="active"><i class="fas fa-file-alt"></i> Manage Exams</a></li>
+            <li><a href="add-questions.html"><i class="fas fa-question-circle"></i> Add Questions</a></li>
+            <li><a href="review-content.html"><i class="fas fa-check-circle"></i> Review Content</a></li>
+            <li><a href="student-doubts.html"><i class="fas fa-comment-alt"></i> Student Doubts</a></li>
+            <li><a href="my-profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="#" id="sidebar-logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="dashboard-title">
+                <h2 style="color: white; margin: 0;">Edit Exam</h2>
+            </div>
+            <div class="user-menu">
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-initial">A</div>
+                    <div class="user-info">
+                        <div class="user-name" id="admin-name">Admin</div>
+                        <div class="user-role">Content Admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-container" class="loading-container">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading exam details...</p>
+        </div>
+
+        <!-- Exam Details -->
+        <div id="exam-details" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Exam Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="edit-exam-form">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="exam-name" class="form-label">Exam Name</label>
+                                            <input type="text" class="form-control" id="exam-name" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="exam-type" class="form-label">Exam Type</label>
+                                            <input type="text" class="form-control" id="exam-type" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="exam-year" class="form-label">Year</label>
+                                            <input type="text" class="form-control" id="exam-year" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="exam-status" class="form-label">Status</label>
+                                            <select class="form-select" id="exam-status">
+                                                <option value="Draft">Draft</option>
+                                                <option value="Review">Review</option>
+                                                <option value="Published">Published</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exam-description" class="form-label">Description</label>
+                                    <div class="p-3 bg-light rounded" id="exam-description" style="min-height: 100px; border: 1px solid #e2e8f0;"></div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" id="save-exam-btn">
+                                        <i class="fas fa-save me-2"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Exam Stats</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Total Questions</label>
+                                <h3 id="total-questions" class="mb-0">0</h3>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Created By</label>
+                                <p id="created-by" class="mb-0">-</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Created On</label>
+                                <p id="created-on" class="mb-0">-</p>
+                            </div>
+                            <div>
+                                <label class="form-label">Last Updated</label>
+                                <p id="last-updated" class="mb-0">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Questions</h5>
+                    <button type="button" class="btn btn-primary" id="add-question-btn">
+                        <i class="fas fa-plus me-2"></i> Add Question
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="questions-container" class="question-list">
+                        <div class="text-center py-4" id="no-questions-message">
+                            <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
+                            <h4>No Questions Added Yet</h4>
+                            <p class="text-muted">Click the "Add Question" button to start adding questions to this exam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if admin is logged in
+            if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+                window.location.href = "../login.html";
+                return;
+            }
+            
+            // Set admin name and initial
+            const adminName = sessionStorage.getItem('adminName') || 'Admin';
+            const adminInitial = adminName.charAt(0).toUpperCase();
+            document.getElementById('admin-name').textContent = adminName;
+            document.getElementById('user-initial').textContent = adminInitial;
+            
+            // Get exam ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('id');
+            
+            if (!examId) {
+                alert('No exam ID provided. Redirecting to exams page.');
+                window.location.href = "collaborate-exams.html";
+                return;
+            }
+            
+            // Load exam details
+            loadExamDetails(examId);
+            
+            // Set up event listeners
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                window.location.href = "../login.html";
+            });
+            
+            document.getElementById('save-exam-btn').addEventListener('click', function() {
+                saveExamChanges(examId);
+            });
+            
+            document.getElementById('add-question-btn').addEventListener('click', function() {
+                window.location.href = `add-questions.html?examId=${examId}`;
+            });
+        });
+        
+        // Function to load exam details
+        function loadExamDetails(examId) {
+            db.collection("papers").doc(examId).get()
+                .then(doc => {
+                    if (!doc.exists) {
+                        alert('Exam not found. Redirecting to exams page.');
+                        window.location.href = "collaborate-exams.html";
+                        return;
+                    }
+                    
+                    const exam = doc.data();
+                    
+                    // Populate form fields
+                    document.getElementById('exam-name').value = exam.name || '';
+                    document.getElementById('exam-type').value = exam.type || '';
+                    document.getElementById('exam-year').value = exam.year || '';
+                    document.getElementById('exam-status').value = exam.status || 'Draft';
+                    document.getElementById('exam-description').innerHTML = exam.description || '';
+                    
+                    // Populate stats
+                    const questionCount = exam.questions ? exam.questions.length : 0;
+                    document.getElementById('total-questions').textContent = questionCount;
+                    document.getElementById('created-by').textContent = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
+                    
+                    // Format dates
+                    if (exam.createdAt) {
+                        const createdDate = exam.createdAt.toDate();
+                        document.getElementById('created-on').textContent = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString();
+                    }
+                    
+                    if (exam.lastUpdated) {
+                        const updatedDate = exam.lastUpdated.toDate();
+                        document.getElementById('last-updated').textContent = updatedDate.toLocaleDateString() + ' ' + updatedDate.toLocaleTimeString();
+                    }
+                    
+                    // Load questions
+                    if (exam.questions && exam.questions.length > 0) {
+                        document.getElementById('no-questions-message').style.display = 'none';
+                        renderQuestions(exam.questions);
+                    }
+                    
+                    // Show exam details and hide loading
+                    document.getElementById('loading-container').style.display = 'none';
+                    document.getElementById('exam-details').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error("Error loading exam:", error);
+                    alert('Error loading exam details. Please try again.');
+                });
+        }
+        
+        // Function to render questions
+        function renderQuestions(questions) {
+            const container = document.getElementById('questions-container');
+            
+            questions.forEach((question, index) => {
+                const questionItem = document.createElement('div');
+                questionItem.className = 'question-item';
+                
+                questionItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="question-text">${index + 1}. ${question.text || 'No question text'}</div>
+                            <div class="question-meta">
+                                <span class="me-3"><i class="fas fa-tag me-1"></i> ${question.subject || 'Unknown'}</span>
+                                <span><i class="fas fa-layer-group me-1"></i> ${question.difficulty || 'Medium'}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="editQuestion(${index})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteQuestion(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(questionItem);
+            });
+        }
+        
+        // Function to save exam changes
+        function saveExamChanges(examId) {
+            const status = document.getElementById('exam-status').value;
+            
+            const saveBtn = document.getElementById('save-exam-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
+            
+            db.collection("papers").doc(examId).update({
+                status: status,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert('Exam updated successfully!');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Changes';
+            })
+            .catch(error => {
+                console.error("Error updating exam:", error);
+                alert('Error updating exam. Please try again.');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Changes';
+            });
+        }
+        
+        // Function to edit question
+        function editQuestion(index) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('id');
+            window.location.href = `edit-question.html?examId=${examId}&questionIndex=${index}`;
+        }
+        
+        // Function to delete question
+        function deleteQuestion(index) {
+            if (!confirm('Are you sure you want to delete this question?')) {
+                return;
+            }
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('id');
+            
+            db.collection("papers").doc(examId).get()
+                .then(doc => {
+                    if (!doc.exists) {
+                        alert('Exam not found.');
+                        return;
+                    }
+                    
+                    const exam = doc.data();
+                    if (!exam.questions || !Array.isArray(exam.questions)) {
+                        alert('No questions found in this exam.');
+                        return;
+                    }
+                    
+                    // Remove the question at the specified index
+                    const updatedQuestions = [...exam.questions];
+                    updatedQuestions.splice(index, 1);
+                    
+                    // Update the document
+                    return db.collection("papers").doc(examId).update({
+                        questions: updatedQuestions,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    alert('Question deleted successfully!');
+                    // Reload the page to refresh the question list
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error("Error deleting question:", error);
+                    alert('Error deleting question. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>

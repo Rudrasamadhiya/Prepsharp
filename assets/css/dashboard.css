@@ -174,7 +174,9 @@ body {
 }
 
 .sidebar-header .logo {
-  height: 40px;
+  height: 70px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  vertical-align: middle;
 }
 
 .sidebar-header h2 {

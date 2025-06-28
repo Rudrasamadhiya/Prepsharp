@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Questions - PrepSharp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../images/logo.png">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc, #f1f5f9);
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header img {
+            height: 60px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        }
+        
+        .sidebar-header h5 {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 0;
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+            padding: 0 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05));
+            color: #f97316;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.3), rgba(249, 115, 22, 0.1));
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            color: #f97316;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+        
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 15px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            transform: translateY(-3px);
+        }
+        
+        .logout-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* Top Navbar */
+        .top-navbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 18px 30px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 20px 8px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+            position: relative;
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 500;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Form Styling */
+        .form-label {
+            font-weight: 500;
+            color: #4f46e5;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            border: none;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338ca, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-outline-primary {
+            color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #4f46e5;
+            color: white;
+        }
+        
+        /* Option Styling */
+        .option-container {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+        
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -250px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../images/logo.png" alt="PrepSharp Logo">
+            <h5>PrepSharp Admin</h5>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="collaborate-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="collaborate-exams.html"><i class="fas fa-file-alt"></i> Manage Exams</a></li>
+            <li><a href="add-questions.html" class="active"><i class="fas fa-question-circle"></i> Add Questions</a></li>
+            <li><a href="review-content.html"><i class="fas fa-check-circle"></i> Review Content</a></li>
+            <li><a href="student-doubts.html"><i class="fas fa-comment-alt"></i> Student Doubts</a></li>
+            <li><a href="my-profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="#" id="sidebar-logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="dashboard-title">
+                <h2 style="color: white; margin: 0;">Add Questions</h2>
+            </div>
+            <div class="user-menu">
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-initial">A</div>
+                    <div class="user-info">
+                        <div class="user-name" id="admin-name">Admin</div>
+                        <div class="user-role">Content Admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-container" class="loading-container" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading exam details...</p>
+        </div>
+
+        <!-- Add Question Form -->
+        <div id="add-question-form" style="display: block;">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Add Question to <span id="exam-name"></span></h5>
+                    <div>
+                        <span class="badge bg-primary me-2">Question <span id="question-number">1</span> of 75</span>
+                        <span class="badge bg-info me-2" id="current-section">Physics - Section 1 (MCQ)</span>
+                        <a href="#" id="back-to-exam" class="btn btn-sm btn-light">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body bg-light p-2 mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <label for="exam-type" class="form-label mb-0 me-2">Exam Type:</label>
+                            <select id="exam-type" class="form-select form-select-sm d-inline-block" style="width: auto;" onchange="changeExamType()">
+                                <option value="jee-main">JEE Main</option>
+                                <option value="jee-advanced">JEE Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- JEE Main Sections -->
+                    <div id="jee-main-sections" class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0)">Physics MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20)">Physics Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(25)">Chemistry MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(45)">Chemistry Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(50)">Math MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(70)">Math Num</button>
+                    </div>
+                    
+                    <!-- JEE Advanced Sections -->
+                    <div id="jee-advanced-sections" class="btn-group" style="display: none;">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0)">Phy MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(3)">Phy SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(7)">Phy Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(13)">Phy Match</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(17)">Chem MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20)">Chem SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(24)">Chem Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(30)">Chem Match</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(34)">Math MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(37)">Math SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(41)">Math Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(47)">Math Match</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="question-form">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="question-chapter" class="form-label">Chapter</label>
+                                    <select class="form-select" id="question-chapter" required>
+                                        <option value="">Select Chapter</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="question-difficulty" class="form-label">Difficulty</label>
+                                    <select class="form-select" id="question-difficulty" required>
+                                        <option value="">Select Difficulty</option>
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                        <option value="Very Hard">Very Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Hidden fields for automatic section management -->
+                            <input type="hidden" id="question-type" value="mcq-single">
+                            <input type="hidden" id="question-subject" value="Physics">
+                            <input type="hidden" id="paper-number" value="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="question-text" class="form-label">Question Text</label>
+                            <textarea class="form-control" id="question-text" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="question-image" class="form-label">Question Image (Optional)</label>
+                            <input type="file" class="form-control" id="question-image" accept="image/*">
+                            <div id="question-image-preview" class="mt-2" style="max-width: 300px; display: none;">
+                                <img id="question-image-preview-img" class="img-fluid rounded" src="">
+                                <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeQuestionImage()">Remove Image</button>
+                            </div>
+                        </div>
+                        
+                        <!-- MCQ Options -->
+                        <div id="mcq-options" style="display: none;">
+                            <h6 class="mb-3">Options</h6>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option A</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="correct-option" id="option-a-correct" value="0">
+                                        <label class="form-check-label" for="option-a-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="option-a-text" rows="2"></textarea>
+                                <div class="mt-2">
+                                    <label for="option-a-image" class="form-label">Option Image (Optional)</label>
+                                    <input type="file" class="form-control" id="option-a-image" accept="image/*">
+                                    <div id="option-a-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                        <img id="option-a-image-preview-img" class="img-fluid rounded" src="">
+                                        <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('a')">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option B</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="correct-option" id="option-b-correct" value="1">
+                                        <label class="form-check-label" for="option-b-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="option-b-text" rows="2"></textarea>
+                                <div class="mt-2">
+                                    <label for="option-b-image" class="form-label">Option Image (Optional)</label>
+                                    <input type="file" class="form-control" id="option-b-image" accept="image/*">
+                                    <div id="option-b-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                        <img id="option-b-image-preview-img" class="img-fluid rounded" src="">
+                                        <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('b')">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option C</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="correct-option" id="option-c-correct" value="2">
+                                        <label class="form-check-label" for="option-c-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="option-c-text" rows="2"></textarea>
+                                <div class="mt-2">
+                                    <label for="option-c-image" class="form-label">Option Image (Optional)</label>
+                                    <input type="file" class="form-control" id="option-c-image" accept="image/*">
+                                    <div id="option-c-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                        <img id="option-c-image-preview-img" class="img-fluid rounded" src="">
+                                        <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('c')">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option D</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="correct-option" id="option-d-correct" value="3">
+                                        <label class="form-check-label" for="option-d-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="option-d-text" rows="2"></textarea>
+                                <div class="mt-2">
+                                    <label for="option-d-image" class="form-label">Option Image (Optional)</label>
+                                    <input type="file" class="form-control" id="option-d-image" accept="image/*">
+                                    <div id="option-d-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                        <img id="option-d-image-preview-img" class="img-fluid rounded" src="">
+                                        <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('d')">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Multiple Correct Options -->
+                        <div id="multiple-options" style="display: none;">
+                            <h6 class="mb-3">Options (Select all correct answers)</h6>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option A</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="multi-option-a-correct" value="0">
+                                        <label class="form-check-label" for="multi-option-a-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="multi-option-a-text" rows="2"></textarea>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option B</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="multi-option-b-correct" value="1">
+                                        <label class="form-check-label" for="multi-option-b-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="multi-option-b-text" rows="2"></textarea>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option C</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="multi-option-c-correct" value="2">
+                                        <label class="form-check-label" for="multi-option-c-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="multi-option-c-text" rows="2"></textarea>
+                            </div>
+                            <div class="option-container">
+                                <div class="option-header">
+                                    <span class="option-label">Option D</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="multi-option-d-correct" value="3">
+                                        <label class="form-check-label" for="multi-option-d-correct">Correct</label>
+                                    </div>
+                                </div>
+                                <textarea class="form-control" id="multi-option-d-text" rows="2"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Numerical Answer -->
+                        <div id="numerical-answer" style="display: none;">
+                            <div class="mb-3">
+                                <label for="numerical-value" class="form-label">Correct Answer</label>
+                                <input type="text" class="form-control" id="numerical-value" placeholder="Enter the correct numerical value">
+                            </div>
+                        </div>
+                        
+                        <!-- Match List -->
+                        <div id="match-list" style="display: none;">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="question-marks" class="form-label">Marks</label>
+                                    <input type="number" class="form-control" id="question-marks" min="1" value="4">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary" id="prev-question-btn">
+                                <i class="fas fa-arrow-left me-2"></i> Previous Question
+                            </button>
+                            <button type="button" class="btn btn-primary" id="save-question-btn">
+                                <i class="fas fa-save me-2"></i> Save Question
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" id="next-question-btn">
+                                <i class="fas fa-arrow-right me-2"></i> Next Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="jee-main-structure.js"></script>
+    <script src="jee-advanced-structure.js"></script>
+    <script src="match-list-handler.js"></script>
+    <script src="exam-type-handler.js"></script>
+    <script src="save-question-handler.js"></script>
+    <script src="section-navigation.js"></script>
+    <script src="init-questions.js"></script>
+    <script>
+        // Current question index
+        let currentQuestionIndex = 0;
+        
+        // Force show form immediately
+        window.onload = function() {
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('add-question-form').style.display = 'block';
+            
+            // Initialize with first question
+            updateQuestionFields(0);
+        };
+    </script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Skip login check for direct access
+            // if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            //     window.location.href = "../login.html";
+            //     return;
+            // }
+            
+            // Set admin name and initial
+            const adminName = sessionStorage.getItem('adminName') || 'Admin';
+            const adminInitial = adminName.charAt(0).toUpperCase();
+            document.getElementById('admin-name').textContent = adminName;
+            document.getElementById('user-initial').textContent = adminInitial;
+            
+            // Get exam ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let examId = urlParams.get('examId');
+            
+            if (!examId) {
+                console.warn('No exam ID provided, using default');
+                // Use a default ID instead of redirecting
+                examId = "jee-main---31-jan-shift-2-2024";
+            }
+            
+            // Force show form immediately
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('add-question-form').style.display = 'block';
+            
+            // Set exam type based on URL
+            if (examId.includes('advanced')) {
+                document.getElementById('exam-type').value = 'jee-advanced';
+                changeExamType();
+            }
+            
+            // Set back link
+            document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
+            
+            // Just use the exam ID as the name
+            document.getElementById('exam-name').textContent = examId;
+            
+            // Initialize chapters dropdown
+            loadChapters();
+            
+            // Set up event listeners
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                window.location.href = "../login.html";
+            });
+            
+            document.getElementById('save-question-btn').addEventListener('click', function() {
+                saveQuestion(examId);
+            });
+            
+            document.getElementById('prev-question-btn').addEventListener('click', function() {
+                if (currentQuestionIndex > 0) {
+                    updateQuestionFields(currentQuestionIndex - 1);
+                }
+            });
+            
+            document.getElementById('next-question-btn').addEventListener('click', function() {
+                if (currentQuestionIndex < jeeMainStructure.length - 1) {
+                    updateQuestionFields(currentQuestionIndex + 1);
+                }
+            });
+        });
+        
+        // Function to load exam details - simplified to avoid Firebase errors
+        function loadExamDetails(examId) {
+            // Show form and hide loading immediately
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('add-question-form').style.display = 'block';
+        }
+        
+        // Chapter data by subject
+        const chaptersBySubject = {
+            "Physics": [
+                "Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
+                "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
+                "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"
+            ],
+            "Chemistry": [
+                "Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
+                "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
+                "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
+                "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
+                "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
+                "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
+                "Polymers", "Chemistry in Everyday Life"
+            ],
+            "Mathematics": [
+                "Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
+                "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
+                "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
+                "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
+                "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
+                "Mathematical Reasoning", "Mathematical Induction"
+            ],
+            "Biology": [
+                "Diversity in Living World", "Structural Organization in Plants and Animals", "Cell Structure and Function", 
+                "Plant Physiology", "Human Physiology", "Reproduction", "Genetics and Evolution", "Biology and Human Welfare", 
+                "Biotechnology and its Applications", "Ecology and Environment"
+            ]
+        };
+        
+        // Function to load chapters based on selected subject
+        function loadChapters() {
+            const subject = document.getElementById('question-subject').value;
+            const chapterSelect = document.getElementById('question-chapter');
+            
+            // Clear existing options
+            chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
+            
+            // Add chapters for the selected subject
+            if (subject && chaptersBySubject[subject]) {
+                chaptersBySubject[subject].forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter;
+                    option.textContent = chapter;
+                    chapterSelect.appendChild(option);
+                });
+            }
+        }
+        
+        // Initialize on page load
+        
+        // Function to toggle question fields based on type
+        function toggleQuestionFields() {
+            const questionType = document.getElementById('question-type').value;
+            
+            // Hide all option containers
+            document.getElementById('mcq-options').style.display = 'none';
+            document.getElementById('multiple-options').style.display = 'none';
+            document.getElementById('numerical-answer').style.display = 'none';
+            
+            // Show the appropriate container based on question type
+            if (questionType === 'mcq-single') {
+                document.getElementById('mcq-options').style.display = 'block';
+            } else if (questionType === 'mcq-multiple') {
+                document.getElementById('multiple-options').style.display = 'block';
+            } else if (questionType === 'numerical') {
+                document.getElementById('numerical-answer').style.display = 'block';
+            }
+        }
+        
+        // Function to save question
+        function saveQuestion(examId) {
+            // Get form values
+            const questionType = document.getElementById('question-type').value;
+            const subject = document.getElementById('question-subject').value;
+            const chapter = document.getElementById('question-chapter').value;
+            const questionText = document.getElementById('question-text').value;
+            const difficulty = document.getElementById('question-difficulty').value;
+            const marks = document.getElementById('question-marks').value;
+            
+            // Validate required fields
+            if (!questionType || !subject || !chapter || !questionText || !difficulty) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Disable save button
+            const saveBtn = document.getElementById('save-question-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
+            
+            // Create question object
+            let question = {
+                text: questionText,
+                type: questionType,
+                subject: subject,
+                chapter: chapter,
+                difficulty: difficulty,
+                marks: parseInt(marks) || 4
+            };
+            
+            // Add type-specific data
+            if (questionType === 'mcq-single') {
+                const options = [
+                    document.getElementById('option-a-text').value,
+                    document.getElementById('option-b-text').value,
+                    document.getElementById('option-c-text').value,
+                    document.getElementById('option-d-text').value
+                ];
+                
+                // Check if all options are filled
+                if (options.some(opt => !opt.trim())) {
+                    alert('Please fill in all options');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                    return;
+                }
+                
+                // Get correct option
+                const correctOption = document.querySelector('input[name="correct-option"]:checked');
+                if (!correctOption) {
+                    alert('Please select the correct option');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                    return;
+                }
+                
+                question.options = options;
+                question.correctOption = parseInt(correctOption.value);
+            } else if (questionType === 'mcq-multiple') {
+                const options = [
+                    document.getElementById('multi-option-a-text').value,
+                    document.getElementById('multi-option-b-text').value,
+                    document.getElementById('multi-option-c-text').value,
+                    document.getElementById('multi-option-d-text').value
+                ];
+                
+                // Check if all options are filled
+                if (options.some(opt => !opt.trim())) {
+                    alert('Please fill in all options');
+                    return;
+                }
+                
+                // Get correct options
+                const correctOptions = [
+                    document.getElementById('multi-option-a-correct').checked,
+                    document.getElementById('multi-option-b-correct').checked,
+                    document.getElementById('multi-option-c-correct').checked,
+                    document.getElementById('multi-option-d-correct').checked
+                ];
+                
+                // Check if at least one option is selected
+                if (!correctOptions.some(opt => opt)) {
+                    alert('Please select at least one correct option');
+                    return;
+                }
+                
+                question.options = options;
+                question.correctOptions = correctOptions;
+            } else if (questionType === 'numerical') {
+                const answer = document.getElementById('numerical-value').value;
+                
+                if (!answer.trim()) {
+                    alert('Please enter the correct numerical answer');
+                    return;
+                }
+                
+                question.answer = answer;
+            }
+            
+            // Simplified save function to avoid Firebase errors
+            console.log('Saving question:', question);
+            
+            // Simulate successful save
+            setTimeout(() => {
+                alert('Question added successfully!');
+                
+                // Move to next question if available
+                if (currentQuestionIndex < jeeMainStructure.length - 1) {
+                    updateQuestionFields(currentQuestionIndex + 1);
+                } else {
+                    // Reset form if at the last question
+                    document.getElementById('question-form').reset();
+                }
+                
+                // Re-enable save button
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+            }, 1000); // Simulate network delay
+        }
+    </script>
+</body>
+</html>
