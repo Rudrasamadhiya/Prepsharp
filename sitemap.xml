@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <urlset
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -57,6 +58,8 @@
 
 </urlset>
 =======
+=======
+>>>>>>> 9c8be591be6e03e7a34601982f4707c5bb53287e
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://prepsharp.in/</loc>
@@ -89,4 +92,7 @@
     <priority>0.64</priority>
   </url>
 </urlset>
+<<<<<<< HEAD
+>>>>>>> 9c8be591be6e03e7a34601982f4707c5bb53287e
+=======
 >>>>>>> 9c8be591be6e03e7a34601982f4707c5bb53287e
