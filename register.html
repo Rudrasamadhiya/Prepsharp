@@ -238,8 +238,12 @@
                 <div class="form-group" id="otp-group" style="display: none;">
                     <label for="otp" class="form-label">Enter OTP</label>
                     <input type="text" id="otp" class="form-input" placeholder="Enter 6-digit OTP" maxlength="6">
-                    <button type="button" id="verify-mobile-otp" class="register-btn" style="margin-top: 10px; background: #3b82f6;">Verify OTP</button>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button type="button" id="verify-mobile-otp" class="register-btn" style="flex: 1; background: #3b82f6;">Verify OTP</button>
+                        <button type="button" id="resend-mobile-otp" class="register-btn" style="flex: 1; background: #6b7280;">Resend OTP</button>
+                    </div>
                     <div id="otpError" class="error-message">Please enter valid OTP</div>
+                    <div id="otpSuccess" class="success-message">OTP sent to your mobile! Please check your messages.</div>
                 </div>
                 
                 <div class="form-group">
@@ -522,19 +526,20 @@
             }
         });
         
-        // Send OTP via Firebase Phone Auth
-        document.getElementById('send-otp').addEventListener('click', async function() {
+        // Function to send OTP via Firebase Phone Auth
+        async function sendMobileOTP(buttonElement) {
             const countryCode = document.getElementById('country-code').value;
             const mobileNumber = document.getElementById('mobile').value.trim();
             const fullPhone = countryCode + mobileNumber;
             
             if (mobileNumber.length < 10) {
                 alert('Please enter a valid mobile number');
-                return;
+                return false;
             }
             
-            this.textContent = 'Sending OTP...';
-            this.disabled = true;
+            const originalText = buttonElement.textContent;
+            buttonElement.textContent = 'Sending OTP...';
+            buttonElement.disabled = true;
             
             try {
                 // Clear any existing reCAPTCHA
@@ -559,13 +564,15 @@
                 confirmationResult = await firebase.auth().signInWithPhoneNumber(fullPhone, window.recaptchaVerifier);
                 
                 document.getElementById('otp-group').style.display = 'block';
-                this.textContent = 'OTP Sent!';
-                this.style.background = '#10b981';
+                document.getElementById('otpSuccess').style.display = 'block';
+                document.getElementById('otpError').style.display = 'none';
+                buttonElement.textContent = 'OTP Sent!';
+                buttonElement.style.background = '#10b981';
                 
                 // Hide reCAPTCHA after sending OTP
                 document.getElementById('recaptcha-container').style.display = 'none';
                 
-                alert('OTP sent');
+                return true;
                 
             } catch (error) {
                 console.error('Firebase Phone Auth Error:', error);

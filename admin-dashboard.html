@@ -2077,22 +2077,8 @@
         
         // Function to set up Quick Actions buttons
         function setupQuickActions() {
-            // Edit Dashboard button
-            document.getElementById('edit-dashboard-btn').addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Show loading effect
-                const icon = this.querySelector('i');
-                const originalIcon = icon.className;
-                icon.className = 'fas fa-spinner fa-spin';
-                
-                // Simulate loading and redirect
-                setTimeout(() => {
-                    window.location.href = 'dashboard-editor.html';
-                }, 500);
-            });
-            
-            // Add Admin button - moved to setupQuickActions function
+            // Add Admin button
+            document.getElementById('add-admin-btn').addEventListener('click', function(e) {
                 e.preventDefault();
                 
                 // Show loading effect
@@ -2208,6 +2194,21 @@
                 document.getElementById('addAdminModal').addEventListener('hidden.bs.modal', function() {
                     document.body.removeChild(modalContainer);
                 });
+            });
+            
+            // Edit Dashboard button
+            document.getElementById('edit-dashboard-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading effect
+                const icon = this.querySelector('i');
+                const originalIcon = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                // Simulate loading and redirect
+                setTimeout(() => {
+                    window.location.href = 'dashboard-editor.html';
+                }, 500);
             });
             
             // Add Exam button

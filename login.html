@@ -336,8 +336,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                    <label for="login-password" class="form-label">Password</label>
+                    <input type="password" id="login-password" name="password" class="form-input" placeholder="Enter your password" autocomplete="current-password" required>
                     <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
                 </div>
                 
@@ -419,7 +419,7 @@
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+            const password = document.getElementById('login-password').value;
             const remember = document.getElementById('remember').checked;
             
             // Basic validation
@@ -439,7 +439,16 @@
             loginBtn.disabled = true;
             
             try {
-                // Check for admin users in Firestore first
+                // Check for superadmin login first
+                if (email === "admin@prepsharp.in" && password === "6263636696") {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('adminName', 'Super Admin');
+                    sessionStorage.setItem('adminEmail', 'admin@prepsharp.in');
+                    window.location.href = "admin-dashboard.html";
+                    return;
+                }
+                
+                // Check for admin users in Firestore
                 const adminSnapshot = await db.collection('admins').where('email', '==', email).get();
                 
                 if (!adminSnapshot.empty) {
@@ -540,6 +549,17 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Debug password field
+            const passwordField = document.getElementById('login-password');
+            passwordField.addEventListener('input', function() {
+                console.log('Password input detected:', this.value.length > 0 ? 'Text entered' : 'Empty');
+            });
+            passwordField.addEventListener('focus', function() {
+                console.log('Password field focused');
+            });
+            passwordField.addEventListener('blur', function() {
+                console.log('Password field blurred');
+            });
             // Create particles
             createParticles();
             
