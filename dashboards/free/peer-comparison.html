@@ -206,6 +206,106 @@
             border-radius: 10px;
             margin-left: 5px;
         }
+        /* Premium Overlay */
+        .premium-overlay {
+            position: fixed;
+            top: 0;
+            left: 250px; /* Width of the sidebar */
+            width: calc(100% - 250px); /* Full width minus sidebar width */
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .premium-overlay {
+                left: 0;
+                width: 100%;
+            }
+        }
+        
+        .premium-overlay:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .premium-icon {
+            font-size: 48px;
+            color: #9ca3af;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .premium-overlay:hover .premium-icon {
+            transform: scale(1.2) rotate(10deg);
+            color: #4f46e5;
+            opacity: 1;
+        }
+        
+        .premium-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-overlay:hover .premium-text {
+            color: #111827;
+        }
+        
+        .premium-description {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-overlay:hover .premium-description {
+            color: #374151;
+        }
+        
+        .premium-btn {
+            background: linear-gradient(to right, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
+        }
+        
+        .premium-btn:hover {
+            background: linear-gradient(to right, #4338ca, #4f46e5);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .premium-btn::after {
+            content: '\2192';
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .premium-btn:hover::after {
+            transform: translateX(5px);
+        }
     </style>
 </head>
 <body>
@@ -244,7 +344,7 @@
                         <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
                     </li>
                     <li>
-                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
                 </ul>
             </nav>
@@ -506,5 +606,14 @@
             });
         });
     </script>
+    <!-- Premium Overlay -->
+    <div class="premium-overlay" id="premiumOverlay" onclick="window.location.href='../../subscription.html'">
+        <div class="premium-icon">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="premium-text">Premium Feature</div>
+        <div class="premium-description">Peer Comparison is a premium feature that allows you to compare your performance with other students and see where you stand.</div>
+        <button class="premium-btn">Upgrade to Premium</button>
+    </div>
 </body>
 </html>

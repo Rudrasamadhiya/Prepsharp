@@ -430,6 +430,106 @@
             color: #ffffff;
             border-color: rgba(99, 102, 241, 0.3);
         }
+        /* Premium Overlay */
+        .premium-overlay {
+            position: fixed;
+            top: 0;
+            left: 250px; /* Width of the sidebar */
+            width: calc(100% - 250px); /* Full width minus sidebar width */
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .premium-overlay {
+                left: 0;
+                width: 100%;
+            }
+        }
+        
+        .premium-overlay:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .premium-icon {
+            font-size: 48px;
+            color: #9ca3af;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .premium-overlay:hover .premium-icon {
+            transform: scale(1.2) rotate(10deg);
+            color: #4f46e5;
+            opacity: 1;
+        }
+        
+        .premium-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-overlay:hover .premium-text {
+            color: #111827;
+        }
+        
+        .premium-description {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-overlay:hover .premium-description {
+            color: #374151;
+        }
+        
+        .premium-btn {
+            background: linear-gradient(to right, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.2);
+        }
+        
+        .premium-btn:hover {
+            background: linear-gradient(to right, #4338ca, #4f46e5);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .premium-btn::after {
+            content: '\2192';
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .premium-btn:hover::after {
+            transform: translateX(5px);
+        }
     </style>
 </head>
 <body>
@@ -467,9 +567,7 @@
                     <li>
                         <a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a>
                     </li>
-                    <li>
-                        <a href="mock-interviews.html"><i class="fas fa-video"></i> <span>Mock Interviews</span></a>
-                    </li>
+
                     <li>
                         <a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a>
                     </li>
@@ -546,7 +644,7 @@
                             </li>
                             <li class="topic-item">
                                 <div class="topic-icon"><i class="fas fa-graduation-cap"></i></div>
-                                <div>College Admissions</div>
+                                <div>Study Strategies</div>
                             </li>
                         </ul>
                     </div>
@@ -703,12 +801,12 @@
                         {role: 'ai', text: '<p>With 6 months remaining for JEE, here\'s a strategic study plan:</p><p><strong>Month 1-2: Concept Strengthening</strong></p><ul><li>Complete syllabus overview and identify weak areas</li><li>Focus on understanding fundamental concepts in all subjects</li><li>Solve basic to moderate problems from each chapter</li><li>Take chapter-wise tests to assess understanding</li></ul><p><strong>Month 3-4: Problem Solving & Practice</strong></p><ul><li>Increase problem-solving speed and accuracy</li><li>Practice previous years\'questions</li><li>Take subject-wise mock tests</li><li>Revise formulas and important concepts regularly</li></ul><p><strong>Month 5-6: Mock Tests & Revision</strong></p><ul><li>Take full-length mock tests under timed conditions</li><li>Analyze mistakes and work on weak areas</li><li>Revise all important formulas and concepts</li><li>Focus on high-yield topics and question patterns</li></ul><p><strong>Daily Schedule Recommendation:</strong></p><ul><li>6-7 hours of focused study (excluding breaks)</li><li>Alternate between subjects to maintain interest</li><li>Include short breaks using Pomodoro technique</li><li>Weekly revision of covered topics</li></ul><p>Would you like more specific tips for any particular subject?</p>', time: '4:38 PM'}
                     ]
                 },
-                'College Admissions': {
+                'Study Strategies': {
                     icon: 'fas fa-graduation-cap',
                     messages: [
-                        {role: 'ai', text: 'Welcome to College Admissions guidance! How can I help you with your engineering college applications?', time: '5:45 PM'},
-                        {role: 'user', text: 'What are the top engineering colleges I can target with a JEE Main rank of around 5000?', time: '5:47 PM'},
-                        {role: 'ai', text: '<p>With a JEE Main rank of around 5000, you can target several good engineering colleges. Here are some options:</p><p><strong>NITs (National Institutes of Technology):</strong></p><ul><li>NIT Raipur, Jamshedpur, or Jalandhar (depending on category and home state quota)</li><li>Possible branches: Chemical, Civil, Metallurgical, or Production Engineering</li></ul><p><strong>IIITs (Indian Institutes of Information Technology):</strong></p><ul><li>IIIT Pune, Kota, Nagpur (depending on category)</li><li>Good options for Computer Science related branches</li></ul><p><strong>GFTIs (Government Funded Technical Institutes):</strong></p><ul><li>JNTU Hyderabad, PEC Chandigarh</li><li>Various engineering disciplines available</li></ul><p><strong>State Engineering Colleges:</strong></p><ul><li>Top colleges in your home state might be accessible</li><li>Often have separate state-level counseling</li></ul><p>Remember that actual cutoffs vary year to year and depend on factors like:</p><ul><li>Your category (General, OBC, SC, ST)</li><li>Home state advantage</li><li>Specific branch popularity</li></ul><p>Would you like more specific information about any of these institutions or admission processes?</p>', time: '5:53 PM'}
+                        {role: 'ai', text: 'Welcome to Study Strategies! How can I help you optimize your JEE preparation?', time: '5:45 PM'},
+                        {role: 'user', text: 'What are some effective study techniques for JEE preparation?', time: '5:47 PM'},
+                        {role: 'ai', text: '<p>Here are some effective study techniques for JEE preparation:</p><p><strong>Spaced Repetition:</strong></p><ul><li>Review material at increasing intervals</li><li>Use flashcards or spaced repetition software</li><li>Helps move information to long-term memory</li></ul><p><strong>Active Recall:</strong></p><ul><li>Test yourself frequently without looking at notes</li><li>Solve problems without referring to solutions</li><li>Create your own questions and answer them</li></ul><p><strong>Pomodoro Technique:</strong></p><ul><li>Study in focused 25-minute blocks</li><li>Take short 5-minute breaks between blocks</li><li>Take longer breaks after 4 blocks</li></ul><p><strong>Concept Mapping:</strong></p><ul><li>Create visual connections between related concepts</li><li>Draw diagrams linking different topics</li><li>Helps understand the big picture</li></ul><p>Would you like more specific strategies for any particular subject or topic?</p>', time: '5:53 PM'}
                     ]
                 }
             };
@@ -835,5 +933,14 @@
             });
         });
     </script>
+    <!-- Premium Overlay -->
+    <div class="premium-overlay" id="premiumOverlay" onclick="window.location.href='../../subscription.html'">
+        <div class="premium-icon">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="premium-text">Premium Feature</div>
+        <div class="premium-description">AI Coach is a premium feature that provides personalized guidance and instant answers to your academic questions.</div>
+        <button class="premium-btn">Upgrade to Premium</button>
+    </div>
 </body>
 </html>
