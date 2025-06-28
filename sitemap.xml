@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
 <urlset
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -11,51 +14,89 @@
 
 <url>
   <loc>https://prepsharp.in/index.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/register.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/login.html</loc>
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/about.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/contact.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/faq.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://prepsharp.in/login.html</loc>
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/privacy.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/terms.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://prepsharp.in/forgot-password.html</loc>
+<<<<<<< HEAD
   <lastmod>2025-06-28T05:02:59+00:00</lastmod>
+=======
+  <lastmod>2025-06-28T05:33:08+00:00</lastmod>
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
   <priority>0.64</priority>
 </url>
 
 
+<<<<<<< HEAD
 </urlset>
 =======
 =======
@@ -91,6 +132,8 @@
     <lastmod>2025-06-28</lastmod>
     <priority>0.64</priority>
   </url>
+=======
+>>>>>>> 3e1972a8b97b86eb37ae178288b5df658ee7b463
 </urlset>
 <<<<<<< HEAD
 >>>>>>> 9c8be591be6e03e7a34601982f4707c5bb53287e
