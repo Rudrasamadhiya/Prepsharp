@@ -477,8 +477,8 @@
                         sessionStorage.setItem('adminName', adminData.name);
                         sessionStorage.setItem('adminEmail', adminData.email);
                         
-                        // Redirect to admin dashboard
-                        window.location.href = "admin/manage-users.html";
+                        // Redirect to collaborate exams page
+                        window.location.href = "admin/collaborate-exams.html";
                         return;
                     }
                 }
@@ -578,7 +578,13 @@
             
             // Check if admin is logged in
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-                window.location.href = "admin/manage-users.html";
+                // If it's the superadmin, go to admin dashboard
+                if (sessionStorage.getItem('adminEmail') === 'admin@prepsharp.in') {
+                    window.location.href = "admin-dashboard.html";
+                } else {
+                    // Regular admins go to collaborate exams
+                    window.location.href = "admin/collaborate-exams.html";
+                }
             }
         });
     </script>
