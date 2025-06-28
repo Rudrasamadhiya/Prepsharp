@@ -263,6 +263,83 @@
             height: 100%;
         }
         
+        /* List View */
+        .list-view {
+            display: table;
+            width: 100%;
+        }
+        
+        .list-view .col-md-4 {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+            margin-bottom: 0;
+            display: table-row;
+        }
+        
+        .list-view .exam-card {
+            display: table-row;
+            height: auto;
+            background: transparent;
+            box-shadow: none;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+        
+        .list-view .exam-card:hover {
+            background-color: #f8f9fa;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .list-view .card-header {
+            display: table-cell;
+            vertical-align: middle;
+            background: transparent;
+            color: #333;
+            border-radius: 0;
+            padding: 12px 15px;
+            width: 30%;
+        }
+        
+        .list-view .card-header h5 {
+            color: #4f46e5;
+            margin: 0;
+            display: inline;
+            font-size: 16px;
+        }
+        
+        .list-view .card-body {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 12px 15px;
+            width: 50%;
+        }
+        
+        .list-view .card-body .mb-3 {
+            margin-bottom: 0 !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .list-view .card-body .d-flex {
+            display: inline-block !important;
+            margin-right: 20px;
+        }
+        
+        .list-view .card-footer {
+            display: table-cell;
+            vertical-align: middle;
+            background: transparent;
+            padding: 12px 15px;
+            width: 20%;
+            text-align: right;
+        }
+        
+        .list-view .btn-group {
+            display: inline-flex;
+        }
+        
         .exam-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
@@ -443,6 +520,11 @@
             <!-- All Papers Tab -->
             <div class="tab-pane fade show active" id="all-papers">
                 <div class="row g-4" id="exams-container">
+                    <div class="table-header" style="display: none; width: 100%; background-color: #f8f9fa; padding: 10px 15px; font-weight: 600; border-bottom: 2px solid #dee2e6;">
+                        <div style="display: inline-block; width: 30%;">Exam Name</div>
+                        <div style="display: inline-block; width: 50%;">Details</div>
+                        <div style="display: inline-block; width: 20%; text-align: right;">Actions</div>
+                    </div>
                     <div class="col-12 text-center py-5">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -455,6 +537,11 @@
             <!-- My Created Papers Tab -->
             <div class="tab-pane fade" id="my-papers">
                 <div class="row g-4" id="my-exams-container">
+                    <div class="table-header" style="display: none; width: 100%; background-color: #f8f9fa; padding: 10px 15px; font-weight: 600; border-bottom: 2px solid #dee2e6;">
+                        <div style="display: inline-block; width: 30%;">Exam Name</div>
+                        <div style="display: inline-block; width: 50%;">Details</div>
+                        <div style="display: inline-block; width: 20%; text-align: right;">Actions</div>
+                    </div>
                     <div class="col-12 text-center py-5">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -476,141 +563,198 @@
                 </div>
                 <div class="modal-body">
                     <form id="create-exam-form">
-                        <div class="mb-3">
-                            <label for="new-exam-type" class="form-label">Exam Type</label>
-                            <select class="form-select" id="new-exam-type" required onchange="updateExamFields()">
-                                <option value="">Select Type</option>
-                                <option value="jee-main">JEE Main</option>
-                                <option value="jee-advanced">JEE Advanced</option>
-                                <option value="neet">NEET</option>
-                                <option value="mock-test">Mock Test</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new-exam-year" class="form-label">Year</label>
-                            <select class="form-select" id="new-exam-year" required onchange="updateExamName()">
-                                <option value="">Select Year</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                                <option value="2021">2021</option>
-                            </select>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <label for="new-exam-type" class="form-label" style="color: #4f46e5; font-weight: 600;">Exam Type</label>
+                                        <select class="form-select" id="new-exam-type" required onchange="updateExamFields()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                            <option value="">Select Type</option>
+                                            <option value="jee-main">JEE Main</option>
+                                            <option value="jee-advanced">JEE Advanced</option>
+                                            <option value="neet">NEET</option>
+                                            <option value="mock-test">Mock Test</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <label for="new-exam-year" class="form-label" style="color: #4f46e5; font-weight: 600;">Year</label>
+                                        <select class="form-select" id="new-exam-year" required onchange="updateExamName()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                            <option value="">Select Year</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- JEE Main specific fields -->
                         <div id="jee-main-fields" class="exam-type-fields" style="display: none;">
-                            <div class="row mb-3">
+                            <div class="row mb-4">
                                 <div class="col-md-6">
-                                    <label for="new-exam-date" class="form-label">Date</label>
-                                    <div class="input-group">
-                                        <select class="form-select" id="new-exam-day" onchange="updateExamName()">
-                                            <option value="">Day</option>
-                                            <option value="01">1</option>
-                                            <option value="02">2</option>
-                                            <option value="03">3</option>
-                                            <option value="04">4</option>
-                                            <option value="05">5</option>
-                                            <option value="06">6</option>
-                                            <option value="07">7</option>
-                                            <option value="08">8</option>
-                                            <option value="09">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                            <option value="13">13</option>
-                                            <option value="14">14</option>
-                                            <option value="15">15</option>
-                                            <option value="16">16</option>
-                                            <option value="17">17</option>
-                                            <option value="18">18</option>
-                                            <option value="19">19</option>
-                                            <option value="20">20</option>
-                                            <option value="21">21</option>
-                                            <option value="22">22</option>
-                                            <option value="23">23</option>
-                                            <option value="24">24</option>
-                                            <option value="25">25</option>
-                                            <option value="26">26</option>
-                                            <option value="27">27</option>
-                                            <option value="28">28</option>
-                                            <option value="29">29</option>
-                                            <option value="30">30</option>
-                                            <option value="31">31</option>
-                                        </select>
-                                        <select class="form-select" id="new-exam-month" onchange="updateExamName()">
-                                            <option value="">Month</option>
-                                            <option value="Jan">Jan</option>
-                                            <option value="Feb">Feb</option>
-                                            <option value="Mar">Mar</option>
-                                            <option value="Apr">Apr</option>
-                                            <option value="May">May</option>
-                                            <option value="Jun">Jun</option>
-                                            <option value="Jul">Jul</option>
-                                            <option value="Aug">Aug</option>
-                                            <option value="Sep">Sep</option>
-                                            <option value="Oct">Oct</option>
-                                            <option value="Nov">Nov</option>
-                                            <option value="Dec">Dec</option>
-                                        </select>
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <label for="new-exam-date" class="form-label" style="color: #4f46e5; font-weight: 600;">Date</label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="new-exam-day" onchange="updateExamName()" style="border-radius: 10px 0 0 10px; border: 2px solid #e2e8f0;">
+                                                    <option value="">Day</option>
+                                                    <option value="01">1</option>
+                                                    <option value="02">2</option>
+                                                    <option value="03">3</option>
+                                                    <option value="04">4</option>
+                                                    <option value="05">5</option>
+                                                    <option value="06">6</option>
+                                                    <option value="07">7</option>
+                                                    <option value="08">8</option>
+                                                    <option value="09">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                    <option value="13">13</option>
+                                                    <option value="14">14</option>
+                                                    <option value="15">15</option>
+                                                    <option value="16">16</option>
+                                                    <option value="17">17</option>
+                                                    <option value="18">18</option>
+                                                    <option value="19">19</option>
+                                                    <option value="20">20</option>
+                                                    <option value="21">21</option>
+                                                    <option value="22">22</option>
+                                                    <option value="23">23</option>
+                                                    <option value="24">24</option>
+                                                    <option value="25">25</option>
+                                                    <option value="26">26</option>
+                                                    <option value="27">27</option>
+                                                    <option value="28">28</option>
+                                                    <option value="29">29</option>
+                                                    <option value="30">30</option>
+                                                    <option value="31">31</option>
+                                                </select>
+                                                <select class="form-select" id="new-exam-month" onchange="updateExamName()" style="border-radius: 0 10px 10px 0; border: 2px solid #e2e8f0; border-left: none;">
+                                                    <option value="">Month</option>
+                                                    <option value="Jan">Jan</option>
+                                                    <option value="Feb">Feb</option>
+                                                    <option value="Mar">Mar</option>
+                                                    <option value="Apr">Apr</option>
+                                                    <option value="May">May</option>
+                                                    <option value="Jun">Jun</option>
+                                                    <option value="Jul">Jul</option>
+                                                    <option value="Aug">Aug</option>
+                                                    <option value="Sep">Sep</option>
+                                                    <option value="Oct">Oct</option>
+                                                    <option value="Nov">Nov</option>
+                                                    <option value="Dec">Dec</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="new-exam-shift" class="form-label">Shift</label>
-                                    <select class="form-select" id="new-exam-shift" onchange="updateExamName()">
-                                        <option value="">Select Shift</option>
-                                        <option value="Shift 1">Shift 1</option>
-                                        <option value="Shift 2">Shift 2</option>
-                                        <option value="Shift 3">Shift 3</option>
-                                    </select>
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <label for="new-exam-shift" class="form-label" style="color: #4f46e5; font-weight: 600;">Shift</label>
+                                            <select class="form-select" id="new-exam-shift" onchange="updateExamName()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                                <option value="">Select Shift</option>
+                                                <option value="Shift 1">Shift 1</option>
+                                                <option value="Shift 2">Shift 2</option>
+                                                <option value="Shift 3">Shift 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="new-exam-difficulty" class="form-label">Difficulty Level</label>
-                                <select class="form-select" id="new-exam-difficulty" onchange="updateDescription()">
-                                    <option value="">Select Difficulty</option>
-                                    <option value="Easy">Easy</option>
-                                    <option value="Moderate">Moderate</option>
-                                    <option value="Hard">Hard</option>
-                                    <option value="Very Hard">Very Hard</option>
-                                </select>
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <label for="new-exam-difficulty" class="form-label" style="color: #4f46e5; font-weight: 600;">Difficulty Level</label>
+                                            <select class="form-select" id="new-exam-difficulty" onchange="updateDescription()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                                <option value="">Select Difficulty</option>
+                                                <option value="Easy">Easy</option>
+                                                <option value="Moderate">Moderate</option>
+                                                <option value="Hard">Hard</option>
+                                                <option value="Very Hard">Very Hard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- JEE Advanced specific fields -->
                         <div id="jee-advanced-fields" class="exam-type-fields" style="display: none;">
-                            <div class="mb-3">
-                                <label for="new-exam-paper" class="form-label">Paper</label>
-                                <select class="form-select" id="new-exam-paper" onchange="updateExamName()">
-                                    <option value="">Select Paper</option>
-                                    <option value="Paper 1">Paper 1</option>
-                                    <option value="Paper 2">Paper 2</option>
-                                </select>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <label for="new-exam-paper" class="form-label" style="color: #4f46e5; font-weight: 600;">Paper</label>
+                                            <select class="form-select" id="new-exam-paper" onchange="updateExamName()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                                <option value="">Select Paper</option>
+                                                <option value="Paper 1">Paper 1</option>
+                                                <option value="Paper 2">Paper 2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <label for="new-exam-difficulty-adv" class="form-label" style="color: #4f46e5; font-weight: 600;">Difficulty Level</label>
+                                            <select class="form-select" id="new-exam-difficulty-adv" onchange="updateDescription()" style="border-radius: 10px; border: 2px solid #e2e8f0;">
+                                                <option value="">Select Difficulty</option>
+                                                <option value="Easy">Easy</option>
+                                                <option value="Moderate">Moderate</option>
+                                                <option value="Hard">Hard</option>
+                                                <option value="Very Hard">Very Hard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="new-exam-difficulty" class="form-label">Difficulty Level</label>
-                                <select class="form-select" id="new-exam-difficulty-adv" onchange="updateDescription()">
-                                    <option value="">Select Difficulty</option>
-                                    <option value="Easy">Easy</option>
-                                    <option value="Moderate">Moderate</option>
-                                    <option value="Hard">Hard</option>
-                                    <option value="Very Hard">Very Hard</option>
-                                </select>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <label for="new-exam-name" class="form-label" style="color: #4f46e5; font-weight: 600;">Exam Name</label>
+                                        <div class="p-3 bg-light rounded" style="border: 1px dashed #cbd5e1;">
+                                            <span id="new-exam-name" class="fw-bold" style="color: #1e293b;"></span>
+                                        </div>
+                                        <small class="form-text text-muted d-block mt-2">Name will be generated automatically based on selections above</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <label for="new-exam-total-questions" class="form-label" style="color: #4f46e5; font-weight: 600;">Total Questions</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="new-exam-total-questions" min="1" value="75" style="border-radius: 10px 0 0 10px; border: 2px solid #e2e8f0;">
+                                            <span class="input-group-text" style="background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white; border: none;">Q</span>
+                                        </div>
+                                        <small class="form-text text-muted d-block mt-2" id="questions-hint">For JEE Main: 75 questions (20 MCQs per subject + 5 numerical per subject)</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="new-exam-name" class="form-label">Exam Name</label>
-                            <input type="text" class="form-control" id="new-exam-name" required readonly>
-                            <small class="form-text text-muted">Name will be generated automatically based on selections above</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new-exam-total-questions" class="form-label">Total Questions</label>
-                            <input type="number" class="form-control" id="new-exam-total-questions" min="1" value="75">
-                            <small class="form-text text-muted" id="questions-hint">For JEE Main: 75 questions (20 MCQs per subject + 5 numerical per subject)</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new-exam-description" class="form-label">Description</label>
-                            <textarea class="form-control" id="new-exam-description" rows="4" readonly></textarea>
-                            <small class="form-text text-muted">Description will be generated automatically</small>
+                        <div class="mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header" style="background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white;">
+                                    <h5 class="mb-0">Exam Description</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="p-2 rounded" style="background: linear-gradient(to right bottom, #ffffff, #f8fafc); border: 1px solid #e2e8f0; max-height: 200px; overflow-y: auto;">
+                                        <div id="new-exam-description" style="white-space: pre-line;"></div>
+                                    </div>
+                                    <small class="form-text text-muted d-block mt-3 text-center">Description is generated automatically based on exam type and year</small>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -716,12 +860,24 @@
                 this.classList.add('active');
                 document.getElementById('list-view-btn').classList.remove('active');
                 document.getElementById('exams-container').classList.remove('list-view');
+                document.getElementById('my-exams-container').classList.remove('list-view');
+                
+                // Hide table headers
+                document.querySelectorAll('.table-header').forEach(header => {
+                    header.style.display = 'none';
+                });
             });
             
             document.getElementById('list-view-btn').addEventListener('click', function() {
                 this.classList.add('active');
                 document.getElementById('grid-view-btn').classList.remove('active');
                 document.getElementById('exams-container').classList.add('list-view');
+                document.getElementById('my-exams-container').classList.add('list-view');
+                
+                // Show table headers
+                document.querySelectorAll('.table-header').forEach(header => {
+                    header.style.display = 'block';
+                });
             });
         });
         
@@ -1145,7 +1301,7 @@
                 examName = `${typeText} ${yearSelect.value}`;
             }
             
-            nameField.value = examName;
+            nameField.textContent = examName;
             updateDescription();
         }
         
@@ -1163,11 +1319,13 @@
                 const difficulty = difficultySelect.value || 'Moderate';
                 const totalQuestions = totalQuestionsInput.value || '75';
                 
-                description = `JEE Main ${yearSelect.value} exam with ${totalQuestions} questions. ` +
-                    `This paper has ${difficulty.toLowerCase()} difficulty level. ` +
-                    `It contains 20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics). ` +
-                    `Each MCQ carries 4 marks for correct answer and -1 mark for incorrect answer. ` +
-                    `Each numerical value question carries 4 marks for correct answer and no negative marking.`;
+                description = `<div class="exam-description">
+                    <h6 class="mb-1">JEE Main ${yearSelect.value}</h6>
+                    <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics).</span></div>
+                    <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each MCQ carries 4 marks for correct answer and -1 mark for incorrect answer. Each numerical value question carries 4 marks for correct answer and no negative marking.</span></div>
+                </div>`;
             } else if (typeSelect.value === 'jee-advanced') {
                 const difficultySelect = document.getElementById('new-exam-difficulty-adv');
                 const paperSelect = document.getElementById('new-exam-paper');
@@ -1232,32 +1390,43 @@
                 // Update total questions input
                 totalQuestionsInput.value = totalQuestions;
                 
-                description = `JEE Advanced ${yearSelect.value} ${paper} with ${totalQuestions} questions. ` +
-                    `This paper has ${difficulty.toLowerCase()} difficulty level. ` +
-                    questionPattern + ' ' + markingScheme;
+                description = `<div class="exam-description">
+                    <h6 class="mb-1">JEE Advanced ${yearSelect.value} ${paper}</h6>
+                    <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">${questionPattern}</span></div>
+                    <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">${markingScheme}</span></div>
+                </div>`;
             } else if (typeSelect.value === 'neet') {
                 const totalQuestions = totalQuestionsInput.value || '180';
                 
-                description = `NEET ${yearSelect.value} exam with ${totalQuestions} questions. ` +
-                    `It contains 45 multiple-choice questions each from Physics, Chemistry, Botany, and Zoology. ` +
-                    `Each question carries 4 marks for correct answer and -1 mark for incorrect answer.`;
+                description = `<div class="exam-description">
+                    <h6 class="mb-1">NEET ${yearSelect.value}</h6>
+                    <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">45 multiple-choice questions each from Physics, Chemistry, Botany, and Zoology.</span></div>
+                    <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each question carries 4 marks for correct answer and -1 mark for incorrect answer.</span></div>
+                </div>`;
             } else if (typeSelect.value === 'mock-test') {
                 const totalQuestions = totalQuestionsInput.value || '75';
                 
-                description = `Mock Test for ${yearSelect.value} with ${totalQuestions} questions. ` +
-                    `This is a practice test designed to simulate the actual exam pattern and difficulty level. ` +
-                    `It follows the latest exam pattern and marking scheme.`;
+                description = `<div class="exam-description">
+                    <h6 class="mb-1">Mock Test ${yearSelect.value}</h6>
+                    <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Test Type:</span> <span class="small">This is a practice test designed to simulate the actual exam pattern and difficulty level.</span></div>
+                    <div><span class="fw-bold small">Pattern:</span> <span class="small">Follows the latest exam pattern and marking scheme.</span></div>
+                </div>`;
             }
             
-            descriptionField.value = description;
+            descriptionField.innerHTML = description;
         }
         
         // Function to create a new exam
         function createExam() {
-            const name = document.getElementById('new-exam-name').value.trim();
+            const name = document.getElementById('new-exam-name').textContent.trim();
             const type = document.getElementById('new-exam-type').value;
             const year = document.getElementById('new-exam-year').value;
-            const description = document.getElementById('new-exam-description').value.trim();
+            const descriptionElement = document.getElementById('new-exam-description');
+            const description = descriptionElement.innerHTML.trim();
             const totalQuestions = document.getElementById('new-exam-total-questions').value;
             
             if (!name || !type || !year) {
