@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrepSharp - Student Details</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -28,9 +29,17 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f6f9fc, #f1f5f9);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
             overflow-x: hidden;
             margin: 0;
             padding: 0;
+        }
+        
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         /* Sidebar */
@@ -56,7 +65,7 @@
         }
         
         .sidebar-header img {
-            height: 60px;
+            height: 90px;
             margin-bottom: 12px;
             filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
@@ -497,7 +506,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <img src="logo for index (1).png" alt="PrepSharp Logo">
+            <img src="images/logo.png" alt="PrepSharp Logo">
             <h5>PrepSharp Admin</h5>
         </div>
         <ul class="sidebar-menu">

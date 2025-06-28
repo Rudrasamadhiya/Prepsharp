@@ -1,3 +1,5 @@
+// Updated renderExams and renderMyExams functions
+
 // Function to render exams
 function renderExams(exams) {
     const container = document.getElementById('exams-container');
@@ -11,13 +13,13 @@ function renderExams(exams) {
         const tableHeader = document.createElement('div');
         tableHeader.className = 'table-header';
         tableHeader.innerHTML = `
-            <div style="display: inline-block; width: 25%; font-weight: 600; color: #4f46e5;">NAME</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">STATUS</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">YEAR</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-            <div style="display: inline-block; width: 15%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+            <div style="display: inline-block; width: 25%; font-weight: 600; color: white;">NAME</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">STATUS</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">YEAR</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">QUESTIONS</div>
+            <div style="display: inline-block; width: 15%; font-weight: 600; color: white;">CREATED BY</div>
+            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: white;">EDIT</div>
+            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: white;">PREVIEW</div>
         `;
         container.appendChild(tableHeader);
     }
@@ -81,12 +83,12 @@ function renderExams(exams) {
                     <span style="color: #64748b; font-weight: 500;">${createdBy}</span>
                 </div>
                 <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
+                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);">
                         <i class="fas fa-edit me-1"></i> Edit
                     </a>
                 </div>
                 <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                    <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-secondary" style="border-radius: 6px; min-width: 80px;">
+                    <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-outline-info" style="border-radius: 6px; min-width: 80px; border-color: #0ea5e9; color: #0ea5e9; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.15);">
                         <i class="fas fa-eye me-1"></i> Preview
                     </a>
                 </div>
@@ -133,7 +135,7 @@ function renderExams(exams) {
                             <a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
                                 <i class="fas fa-edit me-1"></i> Edit
                             </a>
-                            <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-secondary">
+                            <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-info" style="border-color: #0ea5e9; color: #0ea5e9;">
                                 <i class="fas fa-eye me-1"></i> Preview
                             </a>
                         </div>
@@ -158,13 +160,13 @@ function renderMyExams(exams) {
         const tableHeader = document.createElement('div');
         tableHeader.className = 'table-header';
         tableHeader.innerHTML = `
-            <div style="display: inline-block; width: 25%; font-weight: 600; color: #4f46e5;">NAME</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">STATUS</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">YEAR</div>
-            <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-            <div style="display: inline-block; width: 15%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+            <div style="display: inline-block; width: 25%; font-weight: 600; color: white;">NAME</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">STATUS</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">YEAR</div>
+            <div style="display: inline-block; width: 10%; font-weight: 600; color: white;">QUESTIONS</div>
+            <div style="display: inline-block; width: 15%; font-weight: 600; color: white;">CREATED BY</div>
+            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: white;">EDIT</div>
+            <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: white;">PREVIEW</div>
         `;
         container.appendChild(tableHeader);
     }
@@ -225,12 +227,12 @@ function renderMyExams(exams) {
                     <span style="color: #64748b; font-weight: 500;">${createdBy}</span>
                 </div>
                 <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
+                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);">
                         <i class="fas fa-edit me-1"></i> Edit
                     </a>
                 </div>
                 <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                    <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-secondary" style="border-radius: 6px; min-width: 80px;">
+                    <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-outline-info" style="border-radius: 6px; min-width: 80px; border-color: #0ea5e9; color: #0ea5e9; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.15);">
                         <i class="fas fa-eye me-1"></i> Preview
                     </a>
                 </div>
@@ -277,7 +279,7 @@ function renderMyExams(exams) {
                             <a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
                                 <i class="fas fa-edit me-1"></i> Edit
                             </a>
-                            <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-secondary">
+                            <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-info" style="border-color: #0ea5e9; color: #0ea5e9;">
                                 <i class="fas fa-eye me-1"></i> Preview
                             </a>
                         </div>

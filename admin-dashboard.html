@@ -32,7 +32,15 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f6f9fc, #f1f5f9);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
             overflow-x: hidden;
+        }
+        
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         /* Sidebar */
@@ -58,7 +66,7 @@
         }
         
         .sidebar-header img {
-            height: 60px;
+            height: 90px;
             margin-bottom: 12px;
             filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
