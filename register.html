@@ -501,20 +501,27 @@
                 try {
                     this.textContent = 'Verifying...';
                     this.disabled = true;
+                    document.getElementById('otpError').style.display = 'none';
                     
                     await confirmationResult.confirm(otp);
                     mobileVerified = true;
                     updateRegisterButton();
                     document.getElementById('otp').style.borderColor = '#10b981';
-                    document.getElementById('otpError').style.display = 'none';
+                    document.getElementById('otpSuccess').textContent = 'Mobile verified successfully!';
+                    document.getElementById('otpSuccess').style.display = 'block';
                     this.textContent = 'Verified!';
                     this.style.background = '#10b981';
+                    
+                    // Disable resend button after successful verification
+                    document.getElementById('resend-mobile-otp').disabled = true;
+                    document.getElementById('resend-mobile-otp').style.background = '#9ca3af';
                     
                     // Hide reCAPTCHA after verification
                     document.getElementById('recaptcha-container').style.display = 'none';
                     
                 } catch (error) {
-                    document.getElementById('otpError').textContent = 'Invalid OTP';
+                    console.error('OTP verification error:', error);
+                    document.getElementById('otpError').textContent = 'Invalid OTP. Please try again.';
                     document.getElementById('otpError').style.display = 'block';
                     document.getElementById('otp').style.borderColor = '#ef4444';
                     this.textContent = 'Verify OTP';
@@ -523,6 +530,7 @@
             } else {
                 document.getElementById('otpError').textContent = 'Please enter a valid 6-digit OTP';
                 document.getElementById('otpError').style.display = 'block';
+                document.getElementById('otp').style.borderColor = '#ef4444';
             }
         });
         
@@ -591,12 +599,27 @@
                 }
                 
                 alert(errorMsg);
-                this.textContent = 'Send Mobile OTP';
-                this.disabled = false;
+                buttonElement.textContent = originalText;
+                buttonElement.disabled = false;
                 
                 if (window.recaptchaVerifier) {
                     window.recaptchaVerifier.clear();
                 }
+                
+                return false;
+            }
+        }
+        
+        // Send OTP button click handler
+        document.getElementById('send-otp').addEventListener('click', async function() {
+            await sendMobileOTP(this);
+        });
+        
+        // Resend OTP button click handler
+        document.getElementById('resend-mobile-otp').addEventListener('click', async function() {
+            const success = await sendMobileOTP(this);
+            if (success) {
+                document.getElementById('otpSuccess').textContent = 'OTP resent to your mobile! Please check your messages.';
             }
         });
         
