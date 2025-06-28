@@ -238,6 +238,7 @@
                 <div class="form-group" id="otp-group" style="display: none;">
                     <label for="otp" class="form-label">Enter OTP</label>
                     <input type="text" id="otp" class="form-input" placeholder="Enter 6-digit OTP" maxlength="6">
+                    <button type="button" id="verify-mobile-otp" class="register-btn" style="margin-top: 10px; background: #3b82f6;">Verify OTP</button>
                     <div id="otpError" class="error-message">Please enter valid OTP</div>
                 </div>
                 
@@ -490,20 +491,34 @@
         document.getElementById('country-code').addEventListener('change', validateMobile);
         
         // Verify OTP via Firebase
-        document.getElementById('otp').addEventListener('input', async function() {
-            const otp = this.value.trim();
+        document.getElementById('verify-mobile-otp').addEventListener('click', async function() {
+            const otp = document.getElementById('otp').value.trim();
             if (otp.length === 6 && confirmationResult) {
                 try {
+                    this.textContent = 'Verifying...';
+                    this.disabled = true;
+                    
                     await confirmationResult.confirm(otp);
                     mobileVerified = true;
                     updateRegisterButton();
-                    this.style.borderColor = '#10b981';
+                    document.getElementById('otp').style.borderColor = '#10b981';
                     document.getElementById('otpError').style.display = 'none';
+                    this.textContent = 'Verified!';
+                    this.style.background = '#10b981';
+                    
+                    // Hide reCAPTCHA after verification
+                    document.getElementById('recaptcha-container').style.display = 'none';
+                    
                 } catch (error) {
                     document.getElementById('otpError').textContent = 'Invalid OTP';
                     document.getElementById('otpError').style.display = 'block';
-                    this.style.borderColor = '#ef4444';
+                    document.getElementById('otp').style.borderColor = '#ef4444';
+                    this.textContent = 'Verify OTP';
+                    this.disabled = false;
                 }
+            } else {
+                document.getElementById('otpError').textContent = 'Please enter a valid 6-digit OTP';
+                document.getElementById('otpError').style.display = 'block';
             }
         });
         
@@ -546,6 +561,9 @@
                 document.getElementById('otp-group').style.display = 'block';
                 this.textContent = 'OTP Sent!';
                 this.style.background = '#10b981';
+                
+                // Hide reCAPTCHA after sending OTP
+                document.getElementById('recaptcha-container').style.display = 'none';
                 
                 alert('OTP sent');
                 
