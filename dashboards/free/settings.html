@@ -599,25 +599,26 @@
                                 <div style="background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border: 2px solid rgba(79, 70, 229, 0.1); transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(79, 70, 229, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.08)';">
                                     <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
                                     
-                                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #111827;">Monthly</h3>
+                                    <div style="background-color: rgba(79, 70, 229, 0.1); color: #4f46e5; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: inline-block;">MONTHLY PLAN</div>
                                     <div style="font-size: 32px; font-weight: 800; margin-bottom: 15px; color: #4f46e5;">₹199<span style="font-size: 16px; font-weight: 500; color: #6b7280;">/month</span></div>
+                                    <div style="font-size: 16px; color: #6b7280; font-weight: 500; margin-bottom: 15px;">30 days of access</div>
                                     
                                     <ul style="list-style: none; padding: 0; margin: 0 0 20px 0;">
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Full access to all practice papers</span>
+                                            <span>JEE Main papers + selected Advanced content</span>
+                                        </li>
+                                        <li style="display: flex; align-items: center; margin-bottom: 10px;">
+                                            <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
+                                            <span>Basic performance analytics</span>
+                                        </li>
+                                        <li style="display: flex; align-items: center; margin-bottom: 10px;">
+                                            <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
+                                            <span>Limited question bank access</span>
                                         </li>
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
                                             <span>AI Coach for personalized help</span>
-                                        </li>
-                                        <li style="display: flex; align-items: center; margin-bottom: 10px;">
-                                            <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Study Plan with task management</span>
-                                        </li>
-                                        <li style="display: flex; align-items: center; margin-bottom: 10px;">
-                                            <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Peer comparison analytics</span>
                                         </li>
                                         <li style="display: flex; align-items: center;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
@@ -625,49 +626,51 @@
                                         </li>
                                     </ul>
                                     
-                                    <button onclick="window.location.href='../../subscription.html'" style="width: 100%; background: linear-gradient(to right, #4f46e5, #6366f1); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(79, 70, 229, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(79, 70, 229, 0.2)';">Subscribe Monthly</button>
+                                    <button onclick="window.location.href='../../subscription.html'" style="width: 100%; background: linear-gradient(to right, #4f46e5, #6366f1); color: white; border: none; border-radius: 30px; padding: 16px 0; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(79, 70, 229, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(79, 70, 229, 0.2)';">Subscribe Now</button>
                                 </div>
                                 
                                 <!-- Annual Plan -->
-                                <div style="background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border: 2px solid #4f46e5; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(79, 70, 229, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.08)';">
+                                <div style="background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border: 3px solid #f59e0b; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; transform: scale(1.05); z-index: 10; box-shadow: 0 20px 30px rgba(245, 158, 11, 0.3); animation: float 3s ease-in-out infinite; background: linear-gradient(to bottom, white, rgba(245, 158, 11, 0.05));" onmouseover="this.style.boxShadow='0 25px 40px rgba(245, 158, 11, 0.4)';" onmouseout="this.style.boxShadow='0 20px 30px rgba(245, 158, 11, 0.3)';">
                                     <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
-                                    <div style="position: absolute; top: 10px; right: 10px; background: linear-gradient(to right, #f59e0b, #f97316); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">BEST VALUE</div>
+                                    <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, transparent 10px, #f59e0b 0); color: white; padding: 5px 20px; font-weight: bold; font-size: 11px; transform: translateX(20%) translateY(-10%) rotate(45deg); transform-origin: top left; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); z-index: 5; width: 100px; text-align: center;">BEST VALUE</div>
+                                    <div style="background-color: #fff; color: #f59e0b; font-weight: 700; padding: 3px 12px; font-size: 10px; display: inline-block; border-radius: 15px; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">MOST POPULAR</div>
                                     
-                                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #111827;">Annual</h3>
-                                    <div style="font-size: 32px; font-weight: 800; margin-bottom: 15px; color: #4f46e5;">₹1,999<span style="font-size: 16px; font-weight: 500; color: #6b7280;">/year</span></div>
-                                    <div style="font-size: 14px; color: #10b981; font-weight: 600; margin-bottom: 15px;">Save ₹389 (16% off)</div>
+                                    <div style="background-color: rgba(255,255,255,0.25); font-size: 12px; letter-spacing: 0.5px; padding: 4px 10px; margin-bottom: 5px; display: inline-block; border-radius: 20px; color: #f59e0b; background-color: rgba(245, 158, 11, 0.1);">YEARLY PLAN</div>
+                                    <div style="font-size: 32px; font-weight: 800; margin-bottom: 15px; color: #f59e0b;">₹999<span style="font-size: 16px; font-weight: 500; color: #6b7280;">/year</span></div>
+                                    <div style="font-size: 16px; color: #6b7280; font-weight: 500; margin-bottom: 5px;">365 days of full access</div>
+                                    <div style="color: #f59e0b; font-weight: 600; font-size: 14px; margin-top: 8px; margin-bottom: 15px;">Save 59% compared to monthly plan</div>
                                     
                                     <ul style="list-style: none; padding: 0; margin: 0 0 20px 0;">
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>All features in monthly plan</span>
+                                            <span>Access to all exam papers</span>
                                         </li>
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Priority customer support</span>
+                                            <span>Performance analytics</span>
                                         </li>
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Early access to new features</span>
+                                            <span>Complete question bank access</span>
                                         </li>
                                         <li style="display: flex; align-items: center; margin-bottom: 10px;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>Downloadable study materials</span>
+                                            <span>Personalized study plan</span>
                                         </li>
                                         <li style="display: flex; align-items: center;">
                                             <i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i>
-                                            <span>16% discount compared to monthly</span>
+                                            <span>AI-powered doubt solving</span>
                                         </li>
                                     </ul>
                                     
-                                    <button onclick="window.location.href='../../subscription.html'" style="width: 100%; background: linear-gradient(to right, #4f46e5, #6366f1); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(79, 70, 229, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(79, 70, 229, 0.2)';">Subscribe Annually</button>
+                                    <button onclick="window.location.href='../../subscription.html'" style="width: 100%; background: linear-gradient(to right, #f59e0b, #d97706); color: white; border: none; border-radius: 30px; padding: 16px 0; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 25px rgba(245, 158, 11, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(245, 158, 11, 0.3)';">Subscribe Now</button>
                                 </div>
                             </div>
                             
-                            <div style="margin-top: 30px; background-color: rgba(79, 70, 229, 0.05); border-radius: 12px; padding: 20px; border-left: 3px solid #4f46e5;">
-                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Why Upgrade to Premium?</h3>
-                                <p style="margin-bottom: 15px;">Unlock the full potential of PrepSharp with our Premium subscription. Get access to all features and take your JEE preparation to the next level.</p>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="margin-top: 30px; background: linear-gradient(145deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.12)); border-radius: 12px; padding: 20px; border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1); position: relative; overflow: hidden;">
+                                <h3 style="color: #2563eb; margin-top: 0; margin-bottom: 15px; font-size: 24px; font-weight: 700; position: relative; z-index: 1;">Why Upgrade to Premium?</h3>
+                                <p style="color: #1e293b; font-size: 16px; line-height: 1.6; margin-bottom: 20px; position: relative; z-index: 1; max-width: 600px;">Unlock the full potential of PrepSharp with our Premium subscription. Get access to all features and take your JEE preparation to the next level.</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; position: relative; z-index: 1;">
                                     <div style="display: flex; align-items: flex-start; gap: 10px;">
                                         <i class="fas fa-robot" style="color: #4f46e5; margin-top: 3px;"></i>
                                         <span>AI Coach for personalized guidance</span>

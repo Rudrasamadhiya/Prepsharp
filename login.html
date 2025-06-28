@@ -331,7 +331,7 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" class="form-input" placeholder="Enter your email" required>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
                     <div id="emailError" class="error-message">Please enter a valid email address</div>
                 </div>
                 
@@ -381,22 +381,38 @@
             db = firebase.firestore();
             auth = firebase.auth();
             console.log("Firebase initialized successfully");
-            window.db = db;
-            window.auth = auth;
         } catch (error) {
             console.error("Firebase initialization error:", error);
-            window.db = null;
-            window.auth = null;
         }
-    </script>
-    <script>
-        // Backup test accounts (if Firestore fails)
-        const testUsers = {
-            "admin@prepsharp.in": { password: "6263636696", isAdmin: true, name: "Admin" },
-            "user@example.com": { password: "password123", subscription: "basic", name: "Test User" }
-        };
         
-
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 15 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const side = i < particleCount/2 ? 'left' : 'right';
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                if (side === 'left') {
+                    particle.style.left = `${Math.random() * 30}%`;
+                } else {
+                    particle.style.left = `${70 + Math.random() * 30}%`;
+                }
+                
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
         
         // Handle login form submission
         async function handleLogin(e) {
@@ -423,88 +439,72 @@
             loginBtn.disabled = true;
             
             try {
-                // Debug Firebase connection
-                console.log('Firebase apps:', window.firebase ? window.firebase.apps.length : 'Firebase not loaded');
-                console.log('Database:', window.db ? 'Connected' : 'Not connected');
-                console.log('Auth:', window.auth ? 'Connected' : 'Not connected');
+                // Check for admin users in Firestore first
+                const adminSnapshot = await db.collection('admins').where('email', '==', email).get();
                 
-                // Check for admin login first
-                if (email === "admin@prepsharp.in" && password === "6263636696") {
-                    sessionStorage.setItem('adminLoggedIn', 'true');
-                    window.location.href = "admin-dashboard.html";
-                    return;
-                }
-                
-                // Check test users first (works without Firebase)
-                if (testUsers[email] && testUsers[email].password === password) {
-                    if (testUsers[email].isAdmin) {
+                if (!adminSnapshot.empty) {
+                    const adminDoc = adminSnapshot.docs[0];
+                    const adminData = adminDoc.data();
+                    
+                    // Check if this is a first-time login (temporary password)
+                    if (adminData.tempPassword && adminData.tempPassword === password) {
+                        // Store admin info in session storage
                         sessionStorage.setItem('adminLoggedIn', 'true');
-                        window.location.href = "admin-dashboard.html";
+                        sessionStorage.setItem('adminId', adminDoc.id);
+                        sessionStorage.setItem('adminName', adminData.name);
+                        sessionStorage.setItem('adminEmail', adminData.email);
+                        sessionStorage.setItem('firstLogin', 'true');
+                        
+                        // Redirect to password change page
+                        window.location.href = "admin/change-password.html";
+                        return;
+                    }
+                    
+                    // Check regular password
+                    if (adminData.password === password) {
+                        // Store admin info in session storage
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        sessionStorage.setItem('adminId', adminDoc.id);
+                        sessionStorage.setItem('adminName', adminData.name);
+                        sessionStorage.setItem('adminEmail', adminData.email);
+                        
+                        // Redirect to admin dashboard
+                        window.location.href = "admin/manage-users.html";
+                        return;
+                    }
+                }
+                
+                // If not an admin, try regular Firebase Auth for students
+                try {
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    // Get additional user data from Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    const userData = userDoc.exists ? userDoc.data() : {};
+                    
+                    // Store user info
+                    const userInfo = {
+                        id: user.uid,
+                        email: user.email,
+                        name: userData.name || user.displayName || '',
+                        subscription: userData.subscription || 'free'
+                    };
+                    
+                    if (remember) {
+                        localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                     } else {
-                        handleSuccessfulLogin({
-                            email: email,
-                            name: testUsers[email].name,
-                            subscription: testUsers[email].subscription
-                        }, remember);
+                        sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                     }
+                    
+                    // Redirect based on subscription
+                    redirectToDashboard(userInfo.subscription);
                     return;
+                } catch (authError) {
+                    console.log('Firebase Auth error:', authError.message);
                 }
                 
-
-                
-                // Try Firestore database first (for existing users like yours)
-                if (window.db && window.firebase && window.firebase.apps.length > 0) {
-                    try {
-                        console.log('Searching for email:', email);
-                        const usersSnapshot = await db.collection('users').where('email', '==', email).get();
-                        console.log('Found users:', usersSnapshot.size);
-                        
-                        if (!usersSnapshot.empty) {
-                            const userDoc = usersSnapshot.docs[0];
-                            const userData = userDoc.data();
-                            console.log('User data:', userData);
-                            console.log('Entered password:', password);
-                            console.log('Stored password:', userData.password);
-                            
-                            // Check password
-                            if (userData.password === password) {
-                                console.log('Password match! Logging in...');
-                                handleSuccessfulLogin({
-                                    id: userDoc.id,
-                                    email: userData.email,
-                                    name: userData.name,
-                                    subscription: userData.subscription || 'free'
-                                }, remember);
-                                return;
-                            } else {
-                                console.log('Password mismatch!');
-                            }
-                        } else {
-                            console.log('No user found with this email');
-                        }
-                        
-                        // Try Firebase Auth as backup
-                        if (window.auth) {
-                            try {
-                                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                                const user = userCredential.user;
-                                handleSuccessfulLogin({
-                                    id: user.uid,
-                                    email: user.email,
-                                    name: user.displayName || '',
-                                    subscription: 'free'
-                                }, remember);
-                                return;
-                            } catch (authError) {
-                                console.log('Firebase Auth also failed:', authError.message);
-                            }
-                        }
-                        
-                    } catch (firebaseError) {
-                        console.log('Firestore query failed:', firebaseError.message);
-                    }
-                }
-                
+                // If we get here, login failed
                 alert('Invalid email or password. Please try again.');
                 
             } catch (error) {
@@ -515,61 +515,6 @@
                 loginBtn.textContent = originalText;
                 loginBtn.disabled = false;
             }
-        }
-        
-        // Map subscription plan names to dashboard types
-        function mapSubscriptionPlan(plan) {
-            if (!plan) return 'free';
-            const planLower = plan.toLowerCase();
-            if (planLower.includes('premium')) return 'premium';
-            if (planLower.includes('standard')) return 'standard';
-            if (planLower.includes('basic')) return 'basic';
-            return 'free';
-        }
-        
-        function handleSuccessfulLogin(user, remember) {
-            // Check subscription expiry
-            let activeSubscription = user.subscription || 'free';
-            if (user.subscriptionEndDate) {
-                const isExpired = new Date() > new Date(user.subscriptionEndDate);
-                if (isExpired) activeSubscription = 'free';
-            }
-            
-            const userData = {
-                email: user.email,
-                firstName: user.firstName || '',
-                lastName: user.lastName || '',
-                subscription: activeSubscription
-            };
-            
-            if (remember) {
-                localStorage.setItem('loggedInUser', JSON.stringify(userData));
-            } else {
-                sessionStorage.setItem('loggedInUser', JSON.stringify(userData));
-            }
-            
-            redirectToDashboard(activeSubscription);
-        }
-        
-        // Attach event listener
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
-            
-            // Also check if already logged in
-            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                const userData = JSON.parse(loggedInUser);
-                redirectToDashboard(userData.subscription);
-            }
-        });
-        
-        // Email validation function
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
         }
         
         // Redirect to appropriate dashboard based on subscription
@@ -592,43 +537,30 @@
                     break;
             }
         }
-    
-        // Create animated particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 40; // Increased count for more particles
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 5px and 20px
-                const size = Math.random() * 15 + 5;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Position particles on both sides
-                const side = i < particleCount/2 ? 'left' : 'right';
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                if (side === 'left') {
-                    particle.style.left = `${Math.random() * 30}%`; // Left 30% of screen
-                } else {
-                    particle.style.left = `${70 + Math.random() * 30}%`; // Right 30% of screen
-                }
-                
-                // Random opacity
-                particle.style.opacity = Math.random() * 0.5 + 0.1;
-                
-                // Random animation delay
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
         
-        // Initialize particles on page load
-        window.addEventListener('load', createParticles);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create particles
+            createParticles();
+            
+            // Set up login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            // Check if already logged in
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                redirectToDashboard(userData.subscription);
+            }
+            
+            // Check if admin is logged in
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                window.location.href = "admin/manage-users.html";
+            }
+        });
     </script>
 </body>
 </html>
