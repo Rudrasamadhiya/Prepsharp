@@ -65,6 +65,8 @@ function updateQuestionFields(index) {
 
 // Function to jump to a specific section
 function jumpToSection(index) {
+    console.log('Jumping to section index:', index);
+    currentQuestionIndex = index;
     updateQuestionFields(index);
 }
 

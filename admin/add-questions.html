@@ -371,7 +371,7 @@
         <div id="add-question-form" style="display: block;">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Add Question to <span id="exam-name"></span></h5>
+                    <h5 class="mb-0">Add Question to <span id="exam-name" style="color: white;">Loading...</span></h5>
                     <div>
                         <span class="badge bg-primary me-2">Question <span id="question-number">1</span> of 75</span>
                         <span class="badge bg-info me-2" id="current-section">Physics - Section 1 (MCQ)</span>
@@ -393,28 +393,28 @@
                     
                     <!-- JEE Main Sections -->
                     <div id="jee-main-sections" class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0)">Physics MCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20)">Physics Num</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(25)">Chemistry MCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(45)">Chemistry Num</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(50)">Math MCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(70)">Math Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0); return false;">Physics MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20); return false;">Physics Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(25); return false;">Chemistry MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(45); return false;">Chemistry Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(50); return false;">Math MCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(70); return false;">Math Num</button>
                     </div>
                     
                     <!-- JEE Advanced Sections -->
                     <div id="jee-advanced-sections" class="btn-group" style="display: none;">
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0)">Phy MCQ-M</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(3)">Phy SCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(7)">Phy Num</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(13)">Phy Match</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(17)">Chem MCQ-M</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20)">Chem SCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(24)">Chem Num</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(30)">Chem Match</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(34)">Math MCQ-M</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(37)">Math SCQ</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(41)">Math Num</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(47)">Math Match</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(0); return false;">Phy MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(3); return false;">Phy SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(7); return false;">Phy Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(13); return false;">Phy Match</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(17); return false;">Chem MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(20); return false;">Chem SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(24); return false;">Chem Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(30); return false;">Chem Match</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(34); return false;">Math MCQ-M</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(37); return false;">Math SCQ</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(41); return false;">Math Num</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="jumpToSection(47); return false;">Math Match</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -638,6 +638,17 @@
             document.getElementById('loading-container').style.display = 'none';
             document.getElementById('add-question-form').style.display = 'block';
             
+            // Format exam ID into a proper name
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('examId') || 'jee-advanced-2023-paper1';
+            let examName = examId;
+            if (examId.includes('jee-advanced')) {
+                examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
+            } else if (examId.includes('jee-main')) {
+                examName = examId.replace('jee-main-', 'JEE Main ');
+            }
+            document.getElementById('exam-name').textContent = examName;
+            
             // Initialize with first question
             updateQuestionFields(0);
         };
@@ -701,8 +712,14 @@
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
             
-            // Just use the exam ID as the name
-            document.getElementById('exam-name').textContent = examId;
+            // Format exam ID into a proper name
+            let examName = examId;
+            if (examId.includes('jee-advanced')) {
+                examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
+            } else if (examId.includes('jee-main')) {
+                examName = examId.replace('jee-main-', 'JEE Main ');
+            }
+            document.getElementById('exam-name').textContent = examName;
             
             // Initialize chapters dropdown
             loadChapters();
