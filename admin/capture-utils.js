@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pdfIframe.style.width = '100%';
                 pdfIframe.style.height = '100%';
                 pdfIframe.style.border = 'none';
-                pdfIframe.style.pointerEvents = 'none'; // Disable iframe events to allow selection
+                // Don't disable pointer events by default to allow scrolling
                 pdfIframe.id = 'pdf-iframe';
                 pdfViewer.appendChild(pdfIframe);
             }
@@ -421,32 +421,43 @@ function handleMouseUp(e) {
 // Capture the selected area
 function captureSelectedArea() {
     try {
+        // Hide the selection box and overlay temporarily for the screenshot
+        const selectionBoxDisplay = selectionBox.style.display;
+        const overlayDisplay = screenOverlay.style.display;
+        selectionBox.style.display = 'none';
+        screenOverlay.style.display = 'none';
+        
+        // Remove any selection message
+        const message = document.getElementById('selection-message');
+        if (message) message.style.display = 'none';
+        
         // Get selection dimensions
-        const rect = selectionBox.getBoundingClientRect();
+        const rect = {
+            left: parseInt(selectionBox.style.left),
+            top: parseInt(selectionBox.style.top),
+            width: parseInt(selectionBox.style.width),
+            height: parseInt(selectionBox.style.height)
+        };
         
-        // Create a canvas element
-        const canvas = document.createElement('canvas');
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        
-        // Create a new html2canvas instance
+        // Use the simpler html2canvas approach
         html2canvas(document.documentElement, {
-            x: window.scrollX + rect.left,
-            y: window.scrollY + rect.top,
-            width: rect.width,
-            height: rect.height,
-            backgroundColor: null,
-            logging: false,
-            imageTimeout: 0,
-            useCORS: true,
+            windowWidth: document.documentElement.offsetWidth,
+            windowHeight: document.documentElement.offsetHeight,
             allowTaint: true,
-            scale: 1,
-            ignoreElements: (element) => {
-                return element.id === 'selection-box' || element.id === 'screen-overlay' || element.id === 'selection-message';
-            }
+            useCORS: true,
+            logging: false
         }).then(canvas => {
+            // Create a new canvas for the cropped area
+            const croppedCanvas = document.createElement('canvas');
+            croppedCanvas.width = rect.width;
+            croppedCanvas.height = rect.height;
+            const ctx = croppedCanvas.getContext('2d');
+            
+            // Draw only the selected portion
+            ctx.drawImage(canvas, rect.left, rect.top, rect.width, rect.height, 0, 0, rect.width, rect.height);
+            
             // Convert canvas to image data
-            const imageData = canvas.toDataURL('image/png');
+            const imageData = croppedCanvas.toDataURL('image/png');
             
             // Show screenshot area
             const screenshotArea = document.getElementById('screenshot-area');
@@ -466,6 +477,11 @@ function captureSelectedArea() {
         }).catch(err => {
             console.error('Error capturing area:', err);
             alert('Error capturing selected area. Please try again.');
+            
+            // Restore selection box and overlay if there's an error
+            selectionBox.style.display = selectionBoxDisplay;
+            screenOverlay.style.display = overlayDisplay;
+            if (message) message.style.display = 'block';
         });
     } catch (err) {
         console.error('Error in captureSelectedArea:', err);
