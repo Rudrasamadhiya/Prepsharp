@@ -482,6 +482,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="paper-utils.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -549,6 +550,7 @@
         
         // Function to load exam details
         function loadExamDetails(examId) {
+            // First get the paper document
             db.collection("papers").doc(examId).get()
                 .then(doc => {
                     if (!doc.exists) {
@@ -566,26 +568,41 @@
                     document.getElementById('exam-status').value = exam.status || 'Draft';
                     document.getElementById('exam-description').innerHTML = exam.description || '';
                     
-                    // Populate stats
-                    const questionCount = exam.questions ? exam.questions.length : 0;
-                    document.getElementById('total-questions').textContent = questionCount;
+                    // Populate creator info and dates
                     document.getElementById('created-by').textContent = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
                     
                     // Format dates
                     if (exam.createdAt) {
-                        const createdDate = exam.createdAt.toDate();
+                        const createdDate = new Date(exam.createdAt);
                         document.getElementById('created-on').textContent = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString();
                     }
                     
                     if (exam.lastUpdated) {
-                        const updatedDate = exam.lastUpdated.toDate();
+                        const updatedDate = new Date(exam.lastUpdated);
                         document.getElementById('last-updated').textContent = updatedDate.toLocaleDateString() + ' ' + updatedDate.toLocaleTimeString();
                     }
                     
+                    // Now get the questions from the subcollection
+                    return db.collection("papers").doc(examId).collection("questions").get();
+                })
+                .then(snapshot => {
+                    if (!snapshot) return; // Handle case where first promise rejected
+                    
+                    // Update question count
+                    const questionCount = snapshot.size;
+                    document.getElementById('total-questions').textContent = questionCount;
+                    
                     // Load questions
-                    if (exam.questions && exam.questions.length > 0) {
+                    if (questionCount > 0) {
                         document.getElementById('no-questions-message').style.display = 'none';
-                        renderQuestions(exam.questions);
+                        
+                        // Convert to array of questions
+                        const questions = [];
+                        snapshot.forEach(doc => {
+                            questions.push(doc.data());
+                        });
+                        
+                        renderQuestions(questions);
                     }
                     
                     // Show exam details and hide loading
@@ -671,28 +688,31 @@
             const urlParams = new URLSearchParams(window.location.search);
             const examId = urlParams.get('id');
             
-            db.collection("papers").doc(examId).get()
-                .then(doc => {
-                    if (!doc.exists) {
-                        alert('Exam not found.');
-                        return;
-                    }
-                    
-                    const exam = doc.data();
-                    if (!exam.questions || !Array.isArray(exam.questions)) {
+            // Get all questions to find the one to delete
+            db.collection("papers").doc(examId).collection("questions").get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
                         alert('No questions found in this exam.');
                         return;
                     }
                     
-                    // Remove the question at the specified index
-                    const updatedQuestions = [...exam.questions];
-                    updatedQuestions.splice(index, 1);
-                    
-                    // Update the document
-                    return db.collection("papers").doc(examId).update({
-                        questions: updatedQuestions,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    // Convert to array to find the question at the specified index
+                    const questions = [];
+                    snapshot.forEach(doc => {
+                        questions.push({
+                            id: doc.id,
+                            data: doc.data()
+                        });
                     });
+                    
+                    if (index >= questions.length) {
+                        alert('Question not found.');
+                        return;
+                    }
+                    
+                    // Delete the question document
+                    const questionToDelete = questions[index];
+                    return db.collection("papers").doc(examId).collection("questions").doc(questionToDelete.id).delete();
                 })
                 .then(() => {
                     alert('Question deleted successfully!');

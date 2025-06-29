@@ -1,6 +1,6 @@
-// Initialize pricing manager functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to pricing plans button
+// Pricing Plans Initialization for Admin Dashboard
+window.addEventListener('load', function() {
+    // Add event listener to the pricing plans button
     const pricingBtn = document.getElementById('manage-pricing-btn');
     if (pricingBtn) {
         pricingBtn.addEventListener('click', function(e) {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const originalIcon = icon.className;
             icon.className = 'fas fa-spinner fa-spin';
             
-            // Reset icon after a short delay
+            // Reset icon after a short delay and show pricing manager
             setTimeout(() => {
                 icon.className = originalIcon;
                 showPricingManager();
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Add event listener to pricing option in reports modal
+    // Add event listener for pricing option in reports modal
     document.addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('report-btn') && e.target.getAttribute('data-report') === 'pricing') {
             showPricingManager();

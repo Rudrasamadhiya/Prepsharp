@@ -626,7 +626,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- No external scripts needed -->
+    <script src="exam-utils.js"></script>
     <script>
         // Current question index
         let currentQuestionIndex = 0;
@@ -724,9 +724,12 @@
                 examId = "jee-main---31-jan-shift-2-2024";
             }
             
-            // Force show form immediately
-            document.getElementById('loading-container').style.display = 'none';
-            document.getElementById('add-question-form').style.display = 'block';
+            // Show loading state
+            document.getElementById('loading-container').style.display = 'flex';
+            document.getElementById('add-question-form').style.display = 'none';
+            
+            // Validate paper existence before showing the form
+            validatePaper(examId);
             
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
@@ -1028,19 +1031,11 @@
                 return;
             }
             
-            // Save to Firebase - check if exam exists first
+            // Save to Firebase - no need to check paper existence again
             try {
                 if (db) {
-                    // First check if the exam exists
-                    db.collection('exams').doc(examId).get()
-                        .then(examDoc => {
-                            if (!examDoc.exists) {
-                                // If exam doesn't exist, show error
-                                throw new Error('This paper does not exist in the database yet. Please create it first.');
-                            }
-                            // If exam exists, get question count
-                            return db.collection('exams').doc(examId).collection('questions').get();
-                        })
+                    // Get question count directly (paper existence was already checked on page load)
+                    db.collection('papers').doc(examId).collection('questions').get()
                         .then(snapshot => {
                             // Update question number based on existing questions
                             const questionNo = snapshot.size + 1;
@@ -1057,8 +1052,8 @@
                             question.id = finalQuestionId;
                             question.questionNo = questionNo;
                             
-                            // Save the question to the exam's questions subcollection
-                            return db.collection('exams').doc(examId).collection('questions').doc(finalQuestionId).set(question);
+                            // Save the question to the paper's questions subcollection
+                            return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question);
                         })
                         .then(() => {
                             // Show success message with question ID

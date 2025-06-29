@@ -1273,8 +1273,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="reports.js"></script>
-    <script src="pricing-manager.js"></script>
-    <script src="pricing-init.js"></script>
+    <script src="pricing-direct-fix.js"></script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -2225,6 +2224,8 @@
                         icon.className = originalIcon;
                     });
             });
+            
+            // Manage Pricing button is handled by pricing-direct-fix.js
             
             // View Reports button
             document.getElementById('view-reports-btn').addEventListener('click', function(e) {
