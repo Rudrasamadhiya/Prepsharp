@@ -860,6 +860,10 @@
             background: linear-gradient(135deg, #6366f1, #4338ca);
         }
         
+        .bg-gradient-blue {
+            background: linear-gradient(135deg, #0ea5e9, #0369a1);
+        }
+        
         .action-card {
             display: flex;
             flex-direction: column;
@@ -1192,6 +1196,12 @@
                                     <span>Reports</span>
                                 </a>
                             </div>
+                            <div class="col-6">
+                                <a href="#" id="manage-pricing-btn" class="action-card bg-gradient-blue">
+                                    <i class="fas fa-tags"></i>
+                                    <span>Pricing Plans</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1263,6 +1273,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="reports.js"></script>
+    <script src="pricing-manager.js"></script>
+    <script src="pricing-init.js"></script>
     <script>
         // Check if admin is logged in
         if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -2271,6 +2283,16 @@
                                                     <h5>Growth Analytics</h5>
                                                     <p class="text-muted">View user growth and retention metrics</p>
                                                     <button class="btn btn-danger report-btn" data-report="growth">View Report</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-tags fa-3x mb-3 text-info"></i>
+                                                    <h5>Manage Pricing</h5>
+                                                    <p class="text-muted">Update subscription plans and features</p>
+                                                    <button class="btn btn-info report-btn" data-report="pricing">Manage Plans</button>
                                                 </div>
                                             </div>
                                         </div>

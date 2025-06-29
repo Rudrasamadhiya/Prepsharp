@@ -585,7 +585,7 @@
     <script src="js/auth-check-disabled.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
     <script src="../../js/mobile.js"></script>
-    <script>
+    <script src="js/free-papers.js"></script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
@@ -713,8 +713,8 @@
                 // Only show published papers
                 if (paper.status !== 'Published') return false;
                 
-                // Only show papers EXPLICITLY marked for free dashboard
-                if (paper.dashboards?.free !== true) return false;
+                // Only show papers EXPLICITLY marked for free dashboard AND published
+                if (paper.status !== 'Published' || paper.dashboards?.free !== true) return false;
                 
                 const typeMatch = !window.examTypeFilter || 
                                   (paper.type === 'jee-main' && window.examTypeFilter === 'JEE Main') ||

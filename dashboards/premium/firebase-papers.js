@@ -27,6 +27,7 @@ try {
 // Function to load papers
 function loadPapers() {
     const papersGrid = document.querySelector('.papers-container');
+    console.log('Loading premium papers...');
     
     // Clear existing content
     papersGrid.innerHTML = `
@@ -49,6 +50,7 @@ function loadPapers() {
                 
                 // Only include published papers EXPLICITLY marked for premium dashboard
                 if (paper.status === 'Published' && paper.dashboards?.premium === true) {
+                    console.log('Found premium paper:', paper.name);
                     papers.push(paper);
                 }
             });
@@ -81,6 +83,7 @@ function loadPapers() {
 // Function to render papers
 function renderPapers(papers) {
     const papersGrid = document.querySelector('.papers-container');
+    console.log('Rendering premium papers, count:', papers.length);
     
     if (papers.length === 0) {
         papersGrid.innerHTML = `
@@ -88,6 +91,7 @@ function renderPapers(papers) {
                 <i class="fas fa-search fa-3x text-muted mb-3"></i>
                 <h4>No Papers Found</h4>
                 <p>No papers are available for your plan at this time.</p>
+                <p class="text-muted">Please check that papers are marked for the premium dashboard in the admin panel.</p>
             </div>
         `;
         return;
