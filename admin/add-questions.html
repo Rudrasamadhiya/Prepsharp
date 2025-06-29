@@ -268,6 +268,12 @@
             color: white;
         }
         
+        .section-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+        }
+        
         /* Option Styling */
         .option-container {
             background: #f8fafc;
@@ -348,6 +354,11 @@
             <div class="dashboard-title">
                 <h2 style="color: white; margin: 0;">Add Questions</h2>
             </div>
+            <div class="d-flex align-items-center">
+                <button id="pdf-btn" class="btn btn-success me-3">
+                    <i class="fas fa-file-pdf me-1"></i> Upload PDF
+                </button>
+            </div>
             <div class="user-menu">
                 <div class="user-profile">
                     <div class="user-avatar" id="user-initial">A</div>
@@ -381,15 +392,28 @@
                 <div class="card-body bg-light p-2 mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
-                            <label for="question-type" class="form-label mb-0 me-2">Question Type:</label>
-                            <select id="question-type" class="form-select form-select-sm d-inline-block" style="width: auto;" onchange="toggleQuestionFields()">
-                                <option value="mcq-single">Single Correct Option</option>
-                                <option value="mcq-multiple">Multiple Correct Options</option>
-                                <option value="numerical">Numerical Answer</option>
-                                <option value="match-list">Match List</option>
-                            </select>
+                            <span id="question-number" class="badge bg-primary me-3">Question 1 of 75</span>
+                            <span id="section-name" class="badge bg-secondary">Physics - Section 1</span>
                         </div>
                     </div>
+                    <!-- Section Navigation -->
+                    <div class="section-navigation mt-3">
+                        <div class="btn-group btn-group-sm mb-2">
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(0)">Physics - MCQ</button>
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(1)">Physics - Numerical</button>
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(2)">Chemistry - MCQ</button>
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(3)">Chemistry - Numerical</button>
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(4)">Mathematics - MCQ</button>
+                            <button type="button" class="btn btn-outline-primary section-btn" onclick="return jumpToSection(5)">Mathematics - Numerical</button>
+                        </div>
+                    </div>
+                    <!-- Hidden fields for question type and subject -->
+                    <select id="question-type" class="form-select form-select-sm d-none">
+                        <option value="mcq-single">Single Correct Option</option>
+                        <option value="mcq-multiple">Multiple Correct Options</option>
+                        <option value="numerical">Numerical Answer</option>
+                        <option value="match-list">Match List</option>
+                    </select>
                 </div>
                 <div class="card-body">
                     <form id="question-form">
@@ -397,13 +421,13 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="question-subject" class="form-label">Subject</label>
-                                    <select class="form-select" id="question-subject" required onchange="updateChapters(this.value)">
-                                        <option value="">Select Subject</option>
+                                    <select class="form-select d-none" id="question-subject" required>
                                         <option value="Physics">Physics</option>
                                         <option value="Chemistry">Chemistry</option>
                                         <option value="Mathematics">Mathematics</option>
                                         <option value="Biology">Biology</option>
                                     </select>
+                                    <div class="form-control" id="subject-display">Physics</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -455,7 +479,10 @@
                         </div>
                         <div class="mb-3">
                             <label for="question-image" class="form-label">Question Image (Optional)</label>
-                            <input type="file" class="form-control" id="question-image" accept="image/*">
+                            <div class="d-flex">
+                                <input type="file" class="form-control me-2" id="question-image" accept="image/*">
+                                <button type="button" class="btn btn-success" id="capture-question-btn">Capture</button>
+                            </div>
                             <div id="question-image-preview" class="mt-2" style="max-width: 300px; display: none;">
                                 <img id="question-image-preview-img" class="img-fluid rounded" src="">
                                 <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeQuestionImage()">Remove Image</button>
@@ -476,7 +503,10 @@
                                 <textarea class="form-control" id="option-a-text" rows="2"></textarea>
                                 <div class="mt-2">
                                     <label for="option-a-image" class="form-label">Option Image (Optional)</label>
-                                    <input type="file" class="form-control" id="option-a-image" accept="image/*">
+                                    <div class="d-flex">
+                                        <input type="file" class="form-control me-2" id="option-a-image" accept="image/*">
+                                        <button type="button" class="btn btn-success option-capture-btn" data-option="a">Capture</button>
+                                    </div>
                                     <div id="option-a-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-a-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('a')">Remove</button>
@@ -494,7 +524,10 @@
                                 <textarea class="form-control" id="option-b-text" rows="2"></textarea>
                                 <div class="mt-2">
                                     <label for="option-b-image" class="form-label">Option Image (Optional)</label>
-                                    <input type="file" class="form-control" id="option-b-image" accept="image/*">
+                                    <div class="d-flex">
+                                        <input type="file" class="form-control me-2" id="option-b-image" accept="image/*">
+                                        <button type="button" class="btn btn-success option-capture-btn" data-option="b">Capture</button>
+                                    </div>
                                     <div id="option-b-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-b-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('b')">Remove</button>
@@ -512,7 +545,10 @@
                                 <textarea class="form-control" id="option-c-text" rows="2"></textarea>
                                 <div class="mt-2">
                                     <label for="option-c-image" class="form-label">Option Image (Optional)</label>
-                                    <input type="file" class="form-control" id="option-c-image" accept="image/*">
+                                    <div class="d-flex">
+                                        <input type="file" class="form-control me-2" id="option-c-image" accept="image/*">
+                                        <button type="button" class="btn btn-success option-capture-btn" data-option="c">Capture</button>
+                                    </div>
                                     <div id="option-c-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-c-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('c')">Remove</button>
@@ -530,7 +566,10 @@
                                 <textarea class="form-control" id="option-d-text" rows="2"></textarea>
                                 <div class="mt-2">
                                     <label for="option-d-image" class="form-label">Option Image (Optional)</label>
-                                    <input type="file" class="form-control" id="option-d-image" accept="image/*">
+                                    <div class="d-flex">
+                                        <input type="file" class="form-control me-2" id="option-d-image" accept="image/*">
+                                        <button type="button" class="btn btn-success option-capture-btn" data-option="d">Capture</button>
+                                    </div>
                                     <div id="option-d-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-d-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('d')">Remove</button>
@@ -623,10 +662,35 @@
         </div>
     </div>
 
+    <!-- PDF Viewer Container -->
+<div id="pdf-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column;">
+    <div class="pdf-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1001;">
+        <button id="close-pdf-btn" class="btn btn-danger">Close PDF</button>
+    </div>
+    <div id="pdf-viewer" style="height: 80%; width: 100%; overflow: auto;"></div>
+    <div id="screenshot-area" style="height: 20%; background-color: #f5f5f5; border-top: 2px solid #4f46e5; padding: 10px; display: none; flex-direction: column; align-items: center; justify-content: center;">
+        <p id="paste-instructions">Click and drag to select an area</p>
+        <img id="screenshot-preview" style="display: none; max-height: 80%; max-width: 90%; margin-bottom: 10px;">
+        <div id="screenshot-buttons" style="display: none;">
+            <button id="use-for-question-btn" class="btn btn-primary">Use for Question</button>
+            <button id="use-for-option-btn" class="btn btn-secondary">Use for Option</button>
+            <button id="cancel-screenshot-btn" class="btn btn-danger">Cancel</button>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="exam-utils.js"></script>
+    <script src="capture-utils.js"></script>
+    <script src="jee-main-structure.js"></script>
+    <script src="section-navigation.js"></script>
+    <script src="jee-advanced-config.js"></script>
+    <script src="folder-image-loader.js"></script>
+    <script src="ensure-folder-button.js"></script>
     <script>
         // Current question index
         let currentQuestionIndex = 0;
@@ -672,10 +736,16 @@
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
             
-            // Initialize form with Physics selected by default
-            document.getElementById('question-subject').value = 'Physics';
-            updateChapters('Physics');
-            toggleQuestionFields();
+            // Initialize based on exam type
+            if (examId && examId.includes('jee-advanced')) {
+                // For JEE Advanced, initialize with the advanced structure
+                initializeAdvancedStructure(examId);
+            } else {
+                // For JEE Main, use the standard structure
+                currentQuestionIndex = 0;
+                updateQuestionFields();
+                highlightCurrentSection();
+            }
         };
     </script>
     <script>
@@ -731,6 +801,27 @@
             // Validate paper existence before showing the form
             validatePaper(examId);
             
+            // Check if this is a JEE Advanced paper and show configuration modal
+            if (examId && examId.includes('jee-advanced')) {
+                // Add a configure button next to the back button
+                const backButtonContainer = document.querySelector('#back-to-exam').parentElement;
+                const configButton = document.createElement('button');
+                configButton.className = 'btn btn-sm btn-info ms-2';
+                configButton.innerHTML = '<i class="fas fa-cog me-1"></i> Configure Sections';
+                configButton.onclick = function() { showAdvancedConfigModal(examId); };
+                backButtonContainer.appendChild(configButton);
+                
+                // Check if structure exists, if not show modal immediately
+                const savedStructure = localStorage.getItem(`structure-${examId}`);
+                if (!savedStructure) {
+                    // Show the modal with a slight delay to ensure DOM is ready
+                    setTimeout(() => showAdvancedConfigModal(examId), 500);
+                } else {
+                    // Initialize with saved structure
+                    initializeAdvancedStructure(examId);
+                }
+            }
+            
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
             
@@ -746,10 +837,12 @@
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
             
-            // Initialize chapters dropdown with Physics selected by default
-            document.getElementById('question-subject').value = 'Physics';
-            updateChapters('Physics');
-            toggleQuestionFields();
+            // Initialize the question fields based on the first question
+            currentQuestionIndex = 0;
+            updateQuestionFields();
+            
+            // Highlight the first section button
+            highlightCurrentSection();
             
             // Set up event listeners
             document.getElementById('sidebar-logout').addEventListener('click', function(e) {
@@ -764,17 +857,19 @@
             
             // Simplified navigation buttons
             document.getElementById('prev-question-btn').addEventListener('click', function() {
-                document.getElementById('question-form').reset();
-                document.getElementById('question-subject').value = 'Physics';
-                updateChapters('Physics');
-                toggleQuestionFields();
+                if (examId && examId.includes('jee-advanced')) {
+                    prevAdvancedQuestion();
+                } else {
+                    prevQuestion();
+                }
             });
             
             document.getElementById('next-question-btn').addEventListener('click', function() {
-                document.getElementById('question-form').reset();
-                document.getElementById('question-subject').value = 'Physics';
-                updateChapters('Physics');
-                toggleQuestionFields();
+                if (examId && examId.includes('jee-advanced')) {
+                    nextAdvancedQuestion();
+                } else {
+                    nextQuestion();
+                }
             });
         });
         
@@ -902,6 +997,16 @@
         
         // Function to save question
         function saveQuestion(examId) {
+            // Get the current question number (1-based)
+            const questionNumber = currentQuestionIndex + 1;
+            
+            // Get section info for current question based on exam type
+            let sectionInfo;
+            if (examId && examId.includes('jee-advanced')) {
+                sectionInfo = getAdvancedSectionInfo(questionNumber);
+            } else {
+                sectionInfo = getSectionInfo(questionNumber);
+            }
             // Get form values
             const questionType = document.getElementById('question-type').value;
             const subject = document.getElementById('question-subject').value;
@@ -1066,6 +1171,9 @@
                             // Re-enable save button
                             saveBtn.disabled = false;
                             saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                            
+                            // Move to next question
+                            nextQuestion();
                         })
                         .catch(error => {
                             console.error('Error saving question:', error);
@@ -1086,6 +1194,9 @@
                         // Re-enable save button
                         saveBtn.disabled = false;
                         saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                        
+                        // Move to next question
+                        nextQuestion();
                     }, 1000);
                 }
             } catch (error) {
@@ -1097,5 +1208,30 @@
         }
     </script>
 
+    <script src="direct-folder-fix.js"></script>
+    <script src="question-loader.js"></script>
+    <script src="question-editor.js"></script>
+    <script src="direct-image-fix.js"></script>
+    <script>
+        // Last resort inline script to add the folder button
+        setTimeout(function() {
+            const topButtonGroup = document.querySelector('.top-navbar .d-flex.align-items-center');
+            if (topButtonGroup && !document.getElementById('folder-images-btn')) {
+                const folderButton = document.createElement('button');
+                folderButton.id = 'folder-images-btn';
+                folderButton.className = 'btn btn-info me-3';
+                folderButton.innerHTML = '<i class="fas fa-folder-open me-1"></i> Load Images from Folder';
+                folderButton.onclick = function() {
+                    if (typeof showFolderSelectionModal === 'function') {
+                        showFolderSelectionModal();
+                    } else {
+                        alert('Please refresh the page and try again');
+                    }
+                };
+                topButtonGroup.appendChild(folderButton);
+                console.log('Folder button added by inline script');
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
