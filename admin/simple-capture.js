@@ -45,10 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
     screenOverlay.style.pointerEvents = 'auto';
     document.body.appendChild(screenOverlay);
     
-    // Add event listeners to the overlay for selection
-    screenOverlay.addEventListener('mousedown', handleMouseDown);
-    screenOverlay.addEventListener('mousemove', handleMouseMove);
-    screenOverlay.addEventListener('mouseup', handleMouseUp);
+    // Add event listeners to the document for selection
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
 
     // PDF upload button
     document.getElementById('pdf-btn').addEventListener('click', function() {
