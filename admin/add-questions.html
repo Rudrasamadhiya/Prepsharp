@@ -397,7 +397,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="question-subject" class="form-label">Subject</label>
-                                    <select class="form-select" id="question-subject" required onchange="loadChapters()">
+                                    <select class="form-select" id="question-subject" required onchange="updateChapters(this.value)">
                                         <option value="">Select Subject</option>
                                         <option value="Physics">Physics</option>
                                         <option value="Chemistry">Chemistry</option>
@@ -411,6 +411,28 @@
                                     <label for="question-chapter" class="form-label">Chapter</label>
                                     <select class="form-select" id="question-chapter" required>
                                         <option value="">Select Chapter</option>
+                                        <!-- Physics chapters -->
+                                        <option value="Mechanics">Mechanics</option>
+                                        <option value="Kinematics">Kinematics</option>
+                                        <option value="Laws of Motion">Laws of Motion</option>
+                                        <option value="Work, Energy and Power">Work, Energy and Power</option>
+                                        <option value="Rotational Motion">Rotational Motion</option>
+                                        <option value="Gravitation">Gravitation</option>
+                                        <option value="Properties of Solids and Liquids">Properties of Solids and Liquids</option>
+                                        <option value="Thermodynamics">Thermodynamics</option>
+                                        <option value="Kinetic Theory of Gases">Kinetic Theory of Gases</option>
+                                        <option value="Oscillations and Waves">Oscillations and Waves</option>
+                                        <option value="Electrostatics">Electrostatics</option>
+                                        <option value="Current Electricity">Current Electricity</option>
+                                        <option value="Magnetic Effects of Current">Magnetic Effects of Current</option>
+                                        <option value="Magnetism">Magnetism</option>
+                                        <option value="Electromagnetic Induction">Electromagnetic Induction</option>
+                                        <option value="Alternating Current">Alternating Current</option>
+                                        <option value="Electromagnetic Waves">Electromagnetic Waves</option>
+                                        <option value="Optics">Optics</option>
+                                        <option value="Dual Nature of Matter and Radiation">Dual Nature of Matter and Radiation</option>
+                                        <option value="Atoms and Nuclei">Atoms and Nuclei</option>
+                                        <option value="Electronic Devices">Electronic Devices</option>
                                     </select>
                                 </div>
                             </div>
@@ -604,7 +626,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- Removed external script references -->
+    <!-- No external scripts needed -->
     <script>
         // Current question index
         let currentQuestionIndex = 0;
@@ -652,7 +674,7 @@
             
             // Initialize form with Physics selected by default
             document.getElementById('question-subject').value = 'Physics';
-            loadChapters();
+            updateChapters('Physics');
             toggleQuestionFields();
         };
     </script>
@@ -723,7 +745,7 @@
             
             // Initialize chapters dropdown with Physics selected by default
             document.getElementById('question-subject').value = 'Physics';
-            loadChapters();
+            updateChapters('Physics');
             toggleQuestionFields();
             
             // Set up event listeners
@@ -740,13 +762,15 @@
             // Simplified navigation buttons
             document.getElementById('prev-question-btn').addEventListener('click', function() {
                 document.getElementById('question-form').reset();
-                loadChapters();
+                document.getElementById('question-subject').value = 'Physics';
+                updateChapters('Physics');
                 toggleQuestionFields();
             });
             
             document.getElementById('next-question-btn').addEventListener('click', function() {
                 document.getElementById('question-form').reset();
-                loadChapters();
+                document.getElementById('question-subject').value = 'Physics';
+                updateChapters('Physics');
                 toggleQuestionFields();
             });
         });
@@ -791,27 +815,65 @@
             ]
         };
         
-        // Function to load chapters based on selected subject
-        function loadChapters() {
-            const subject = document.getElementById('question-subject').value;
+        // Simple function to update chapters based on selected subject
+        function updateChapters(subject) {
             const chapterSelect = document.getElementById('question-chapter');
-            
-            // Clear existing options
             chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
             
-            // Add chapters for the selected subject
-            if (subject && chaptersBySubject[subject]) {
-                chaptersBySubject[subject].forEach(chapter => {
+            if (subject === 'Physics') {
+                const physicsChapters = ["Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
+                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
+                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"];
+                
+                physicsChapters.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter;
+                    option.textContent = chapter;
+                    chapterSelect.appendChild(option);
+                });
+            } else if (subject === 'Chemistry') {
+                const chemistryChapters = ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
+                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
+                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
+                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
+                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
+                    "Polymers", "Chemistry in Everyday Life"];
+                
+                chemistryChapters.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter;
+                    option.textContent = chapter;
+                    chapterSelect.appendChild(option);
+                });
+            } else if (subject === 'Mathematics') {
+                const mathChapters = ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
+                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
+                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
+                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
+                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
+                    "Mathematical Reasoning", "Mathematical Induction"];
+                
+                mathChapters.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter;
+                    option.textContent = chapter;
+                    chapterSelect.appendChild(option);
+                });
+            } else if (subject === 'Biology') {
+                const bioChapters = ["Diversity in Living World", "Structural Organization in Plants and Animals", "Cell Structure and Function", 
+                    "Plant Physiology", "Human Physiology", "Reproduction", "Genetics and Evolution", "Biology and Human Welfare", 
+                    "Biotechnology and its Applications", "Ecology and Environment"];
+                
+                bioChapters.forEach(chapter => {
                     const option = document.createElement('option');
                     option.value = chapter;
                     option.textContent = chapter;
                     chapterSelect.appendChild(option);
                 });
             }
-            
-            // Debug
-            console.log('Loading chapters for subject:', subject);
-            console.log('Available chapters:', subject ? chaptersBySubject[subject] : 'No subject selected');
         }
         
         // Initialize on page load
@@ -973,11 +1035,13 @@
                     db.collection('exams').doc(examId).get()
                         .then(examDoc => {
                             if (!examDoc.exists) {
-                                throw new Error('Paper does not exist. Please create the paper first.');
+                                // If exam doesn't exist, show error
+                                throw new Error('This paper does not exist in the database yet. Please create it first.');
                             }
                             // If exam exists, get question count
                             return db.collection('exams').doc(examId).collection('questions').get();
                         })
+                        .then(snapshot => {
                             // Update question number based on existing questions
                             const questionNo = snapshot.size + 1;
                             
@@ -1000,7 +1064,8 @@
                             // Show success message with question ID
                             alert('Question added successfully!\n\nQuestion ID: ' + question.id);
                             document.getElementById('question-form').reset();
-                            loadChapters();
+                            document.getElementById('question-subject').value = 'Physics';
+                            updateChapters('Physics');
                             toggleQuestionFields();
                             
                             // Re-enable save button
@@ -1019,7 +1084,8 @@
                     setTimeout(() => {
                         alert('Question would be added to ' + examId + ' (Firebase not available)');
                         document.getElementById('question-form').reset();
-                        loadChapters();
+                        document.getElementById('question-subject').value = 'Physics';
+                        updateChapters('Physics');
                         toggleQuestionFields();
                         
                         // Re-enable save button
