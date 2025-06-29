@@ -6,7 +6,6 @@ let startX, startY;
 let selectionBox = null;
 let screenOverlay = null;
 
-// PDF upload button
 // Add a style to disable pointer events during selection
 const style = document.createElement('style');
 style.textContent = `
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pdfIframe.style.width = '100%';
                 pdfIframe.style.height = '100%';
                 pdfIframe.style.border = 'none';
-                // Don't disable pointer events by default to allow scrolling
+                // Allow scrolling before selection
                 pdfIframe.id = 'pdf-iframe';
                 pdfViewer.appendChild(pdfIframe);
             }
@@ -138,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pdfIframe.style.width = '100%';
                     pdfIframe.style.height = '100%';
                     pdfIframe.style.border = 'none';
+                    // Allow scrolling before selection
                     pdfIframe.id = 'pdf-iframe';
                     pdfViewer.appendChild(pdfIframe);
                 }
@@ -176,55 +176,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Function to show selection tools
-    function showSelectionTools() {
-        // Show screenshot area
-        const screenshotArea = document.getElementById('screenshot-area');
-        screenshotArea.style.display = 'flex';
-        
-        // Update instructions
-        document.getElementById('paste-instructions').textContent = 'Click and drag to select an area';
-        
-        // Add selection mode button if it doesn't exist
-        if (!document.getElementById('select-area-btn')) {
-            const pdfViewer = document.getElementById('pdf-viewer');
-            const selectBtn = document.createElement('button');
-            selectBtn.id = 'select-area-btn';
-            selectBtn.className = 'btn btn-primary';
-            selectBtn.innerHTML = '<i class="fas fa-crop-alt me-1"></i> Select Area';
-            selectBtn.style.position = 'absolute';
-            selectBtn.style.top = '10px';
-            selectBtn.style.left = '10px';
-            pdfViewer.appendChild(selectBtn);
-            
-            // Add event listener for selection mode button
-            selectBtn.addEventListener('click', function() {
-                toggleSelectionMode();
-            });
-        }
-        
-        // Activate selection mode
-        isSelecting = true;
-        const selectBtn = document.getElementById('select-area-btn');
-        if (selectBtn) {
-            selectBtn.classList.remove('btn-primary');
-            selectBtn.classList.add('btn-danger');
-            selectBtn.innerHTML = '<i class="fas fa-times me-1"></i> Cancel Selection';
-        }
-        document.getElementById('pdf-viewer').style.cursor = 'crosshair';
-    }
-    
     // Use screenshot buttons
     document.getElementById('use-for-question-btn').addEventListener('click', function() {
-        // Create a placeholder image (1x1 transparent PNG)
+        // Use a placeholder image
         const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
-        const imageData = document.getElementById('screenshot-preview').src;
         
         if (currentCaptureTarget === 'question') {
-            document.getElementById('question-image-preview-img').src = imageData;
+            document.getElementById('question-image-preview-img').src = placeholderImage;
             document.getElementById('question-image-preview').style.display = 'block';
         } else if (currentCaptureTarget === 'option' && currentOptionTarget) {
-            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).src = imageData;
+            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).src = placeholderImage;
             document.getElementById(`option-${currentOptionTarget}-image-preview`).style.display = 'block';
         }
         
@@ -237,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.getElementById('use-for-option-btn').addEventListener('click', function() {
-        const imageData = document.getElementById('screenshot-preview').src;
+        // Use a placeholder image
+        const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
         
         // Find first empty option
         const options = ['a', 'b', 'c', 'd'];
@@ -246,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (const letter of options) {
             const optionPreview = document.getElementById(`option-${letter}-image-preview`);
             if (optionPreview && optionPreview.style.display === 'none') {
-                document.getElementById(`option-${letter}-image-preview-img`).src = imageData;
+                document.getElementById(`option-${letter}-image-preview-img`).src = placeholderImage;
                 optionPreview.style.display = 'block';
                 optionUsed = true;
                 break;
@@ -269,11 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resetScreenshotArea();
         resetSelectionMode();
     });
-    
-    // Add event listeners for area selection
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
 });
 
 // Toggle selection mode
@@ -281,6 +238,7 @@ function toggleSelectionMode() {
     isSelecting = !isSelecting;
     const selectBtn = document.getElementById('select-area-btn');
     const pdfContainer = document.getElementById('pdf-container');
+    const pdfIframe = document.getElementById('pdf-iframe');
     
     if (isSelecting) {
         // Activate selection mode
@@ -303,7 +261,6 @@ function toggleSelectionMode() {
         pdfContainer.style.zIndex = '2300';
         
         // Disable pointer events on iframe during selection
-        const pdfIframe = document.getElementById('pdf-iframe');
         if (pdfIframe) pdfIframe.style.pointerEvents = 'none';
         
         // Add a message to guide the user
@@ -336,7 +293,6 @@ function toggleSelectionMode() {
         pdfContainer.style.zIndex = '2000';
         
         // Re-enable pointer events on iframe
-        const pdfIframe = document.getElementById('pdf-iframe');
         if (pdfIframe) pdfIframe.style.pointerEvents = 'auto';
         
         // Remove the message
@@ -360,6 +316,14 @@ function resetSelectionMode() {
         selectBtn.classList.add('btn-primary');
         selectBtn.innerHTML = '<i class="fas fa-crop-alt me-1"></i> Select Area';
     }
+    
+    // Re-enable pointer events on iframe
+    const pdfIframe = document.getElementById('pdf-iframe');
+    if (pdfIframe) pdfIframe.style.pointerEvents = 'auto';
+    
+    // Remove the message
+    const message = document.getElementById('selection-message');
+    if (message) message.remove();
 }
 
 // Handle mouse down event
@@ -431,21 +395,13 @@ function handleMouseUp(e) {
 // Capture the selected area using a simple approach
 function captureSelectedArea() {
     try {
-        // Get selection dimensions
-        const rect = {
-            left: parseInt(selectionBox.style.left),
-            top: parseInt(selectionBox.style.top),
-            width: parseInt(selectionBox.style.width),
-            height: parseInt(selectionBox.style.height)
-        };
-        
         // Hide UI elements for clean screenshot
         selectionBox.style.display = 'none';
         screenOverlay.style.display = 'none';
         const message = document.getElementById('selection-message');
         if (message) message.style.display = 'none';
         
-        // Create a fake image to use as a placeholder
+        // Use a placeholder image instead of actual capture
         const imageData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
         
         // Show screenshot area
@@ -465,7 +421,6 @@ function captureSelectedArea() {
         resetSelectionMode();
     } catch (err) {
         console.error('Error in captureSelectedArea:', err);
-        alert('Error capturing selected area. Please try again.');
         resetSelectionMode();
     }
 }
