@@ -297,6 +297,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="../../firebase-config.js"></script>
+    <script src="../../js/auth-redirect.js"></script>
     <script src="../../js/database.js"></script>
     <script src="../../js/dashboard.js"></script>
     <script src="../../js/user-profile.js"></script>
@@ -306,14 +307,6 @@
     <script src="../../js/sidebar-logout.js"></script>
     <script src="../../js/plan-tabs.js"></script>
     <script>
-        // Check if user is logged in, redirect to login page if not
-        (function() {
-            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
-            
-            if (!loggedInUser) {
-                window.location.href = '../../login.html';
-            }
-        })();
         
         // Add user profile dropdown toggle
         document.addEventListener('DOMContentLoaded', function() {

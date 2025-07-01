@@ -587,8 +587,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(16, 185, 129, 0.2);
-            transition: .4s;
+            background-color: rgba(239, 68, 68, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -603,23 +603,21 @@
             left: 4px;
             bottom: 4px;
             background-color: white;
-            transition: .4s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         input:checked + .slider {
-            background-color: rgba(239, 68, 68, 0.2);
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
+            background-color: rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
         }
         
         input:checked + .slider:before {
             transform: translateX(30px);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
         }
         
-        /* Rounded sliders */
         .slider.round {
             border-radius: 34px;
         }
@@ -628,24 +626,40 @@
             border-radius: 50%;
         }
         
-        .lock-icon {
-            color: #ef4444;
+        .lock-icon, .unlock-icon {
             font-size: 12px;
             z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .lock-icon {
+            color: #ef4444;
+            transform: scale(1);
         }
         
         .unlock-icon {
             color: #10b981;
-            font-size: 12px;
-            z-index: 1;
+            transform: scale(1);
         }
         
-        input:not(:checked) + .slider .lock-icon {
+        input:not(:checked) + .slider .unlock-icon {
             opacity: 0;
+            transform: scale(0.5);
+        }
+        
+        input:checked + .slider .lock-icon {
+            opacity: 0;
+            transform: scale(0.5);
         }
         
         input:checked + .slider .unlock-icon {
-            opacity: 0;
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        input:not(:checked) + .slider .lock-icon {
+            opacity: 1;
+            transform: scale(1.2);
         }
         
         /* Status switch */
@@ -1018,12 +1032,13 @@
                             <th>Status</th>
                             <th>Created By</th>
                             <th>Access</th>
+                            <th>Edit Access</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="exams-list">
                         <tr>
-                            <td colspan="8" class="text-center py-5">
+                            <td colspan="9" class="text-center py-5">
                                 <div class="spinner-border text-primary mb-3" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
@@ -1050,6 +1065,29 @@
                             <span class="visually-hidden">Loading...</span>
                         </div>
                         <p class="mt-3">Loading paper details...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin List Modal -->
+    <div class="modal fade" id="adminListModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white;">
+                    <h5 class="modal-title">Admin Access List</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="adminListContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading admin list...</p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1387,6 +1425,8 @@
                 const accessText = isFree ? 'Free' : 'Premium';
                 const accessIcon = isFree ? 'fa-unlock' : 'fa-lock';
                 
+                const canEdit = paper.editAccess !== false;
+                
                 row.innerHTML = `
                     <td><a href="#" class="fw-medium" style="color: #4f46e5; text-decoration: none;" onclick="showPaperDetails('${paperId}'); return false;">${paper.name || 'Unnamed Exam'}</a></td>
                     <td>${getExamTypeDisplay(paper.type || 'unknown')}</td>
@@ -1416,6 +1456,20 @@
                                 <i class="fas fa-lock-open unlock-icon"></i>
                             </span>
                         </label>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <label class="switch me-2">
+                                <input type="checkbox" ${canEdit ? 'checked' : ''} onchange="toggleEditAccess('${paperId}', this.checked)">
+                                <span class="slider round">
+                                    <i class="fas fa-edit unlock-icon"></i>
+                                    <i class="fas fa-ban lock-icon"></i>
+                                </span>
+                            </label>
+                            <button class="btn btn-sm btn-outline-info" onclick="showAdminList('${paperId}')" style="border-radius: 6px;">
+                                <i class="fas fa-users"></i>
+                            </button>
+                        </div>
                     </td>
                     <td class="actions">
                         <a href="exam.html?id=${paperId}" class="btn secondary btn-sm"><i class="fas fa-eye me-1"></i> View</a>
@@ -1767,6 +1821,152 @@
                 console.error('Error getting paper details:', error);
                 alert('Failed to get paper details. Please try again.');
                 document.getElementById(`${dashboardType}-${paperId}`).checked = !isEnabled;
+            });
+        }
+        
+        // Function to toggle edit access
+        function toggleEditAccess(paperId, canEdit) {
+            db.collection("papers").doc(paperId).update({
+                editAccess: canEdit
+            }).then(() => {
+                console.log(`Edit access ${canEdit ? 'enabled' : 'disabled'} for paper ${paperId}`);
+            }).catch(error => {
+                console.error('Error updating edit access:', error);
+                alert('Failed to update edit access');
+            });
+        }
+        
+        // Function to show admin list
+        function showAdminList(paperId) {
+            const modal = new bootstrap.Modal(document.getElementById('adminListModal'));
+            modal.show();
+            
+            document.getElementById('adminListContent').innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading admin list...</p>
+                </div>
+            `;
+            
+            // Load admins from admin collection
+            db.collection("admin").get().then(adminSnapshot => {
+                const allAdmins = [];
+                adminSnapshot.forEach(doc => {
+                    allAdmins.push(doc.data().email || doc.id);
+                });
+                
+                db.collection("papers").doc(paperId).get().then(doc => {
+                    if (doc.exists) {
+                        const paper = doc.data();
+                        const adminList = paper.adminList || [];
+                        const editAccess = paper.editAccess !== false;
+                    
+                        document.getElementById('adminListContent').innerHTML = `
+                            <div class="mb-3">
+                                <h6>Paper: ${paper.name}</h6>
+                                <p class="text-muted">Edit Access: <span class="badge ${editAccess ? 'bg-success' : 'bg-danger'}">${editAccess ? 'Enabled' : 'Disabled'}</span></p>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <select class="form-select" id="adminSelect">
+                                        <option value="">Select admin to add...</option>
+                                        ${allAdmins.filter(admin => !adminList.includes(admin) && admin !== paper.createdBy).map(admin => 
+                                            `<option value="${admin}">${admin.split('@')[0]} (${admin})</option>`
+                                        ).join('')}
+                                    </select>
+                                    <button class="btn btn-primary" onclick="addAdmin('${paperId}')">
+                                        <i class="fas fa-plus me-1"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="creatorEditToggle" ${paper.creatorCanEdit !== false ? 'checked' : ''} onchange="toggleCreatorEdit('${paperId}', this.checked)">
+                                    <label class="form-check-label" for="creatorEditToggle">
+                                        Creator can edit
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-crown me-2 text-warning"></i>
+                                        ${paper.createdBy.split('@')[0]}
+                                        <span class="badge bg-warning ms-2">Creator</span>
+                                    </div>
+                                    <small class="text-muted">${paper.createdBy}</small>
+                                </div>
+                                ${adminList.map(admin => `
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fas fa-user-shield me-2 text-primary"></i>
+                                            ${admin.split('@')[0]}
+                                        </div>
+                                        <div>
+                                            <small class="text-muted me-2">${admin}</small>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="removeAdmin('${paperId}', '${admin}')">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    } else {
+                        document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Paper not found</div>';
+                    }
+                }).catch(error => {
+                    document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Error loading admin list</div>';
+                });
+            }).catch(error => {
+                document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Error loading admins</div>';
+            });
+        }
+        
+        // Function to add admin
+        function addAdmin(paperId) {
+            const email = document.getElementById('adminSelect').value;
+            if (!email) return;
+            
+            db.collection("papers").doc(paperId).get().then(doc => {
+                if (doc.exists) {
+                    const paper = doc.data();
+                    const adminList = paper.adminList || [];
+                    
+                    if (!adminList.includes(email)) {
+                        adminList.push(email);
+                        db.collection("papers").doc(paperId).update({
+                            adminList: adminList
+                        }).then(() => {
+                            showAdminList(paperId);
+                        });
+                    }
+                }
+            });
+        }
+        
+        // Function to toggle creator edit access
+        function toggleCreatorEdit(paperId, canEdit) {
+            db.collection("papers").doc(paperId).update({
+                creatorCanEdit: canEdit
+            });
+        }
+        
+        // Function to remove admin
+        function removeAdmin(paperId, email) {
+            db.collection("papers").doc(paperId).get().then(doc => {
+                if (doc.exists) {
+                    const paper = doc.data();
+                    const adminList = (paper.adminList || []).filter(admin => admin !== email);
+                    
+                    db.collection("papers").doc(paperId).update({
+                        adminList: adminList
+                    }).then(() => {
+                        showAdminList(paperId);
+                    });
+                }
             });
         }
         

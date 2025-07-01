@@ -454,6 +454,58 @@
             padding: 10px 15px;
         }
         
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ef4444;
+            transition: .4s;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+        
+        input:checked + .slider {
+            background-color: #10b981;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+        
+        .slider.round {
+            border-radius: 25px;
+        }
+        
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
@@ -716,7 +768,6 @@
                                                 <option value="">Select Shift</option>
                                                 <option value="Shift 1">Shift 1</option>
                                                 <option value="Shift 2">Shift 2</option>
-                                                <option value="Shift 3">Shift 3</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1018,13 +1069,15 @@
                 const tableHeader = document.createElement('div');
                 tableHeader.className = 'table-header';
                 tableHeader.innerHTML = `
-                    <div style="display: inline-block; width: 25%; font-weight: 600; color: #4f46e5;">NAME</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">STATUS</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">YEAR</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-                    <div style="display: inline-block; width: 15%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-                    <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-                    <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+                    <div style="display: inline-block; width: 20%; font-weight: 600; color: #4f46e5;">NAME</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">STATUS</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">YEAR</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT ACCESS</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+                    <div style="display: inline-block; width: 8%; text-align: center; font-weight: 600; color: #4f46e5;">ADMINS</div>
                 `;
                 container.appendChild(tableHeader);
             }
@@ -1049,6 +1102,7 @@
                 const examYear = exam.year || 'N/A';
                 const status = exam.status || 'Draft';
                 const createdBy = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
+                const canEdit = exam.editAccess !== false;
                 
                 // Count questions
                 let questionCount = 0;
@@ -1072,30 +1126,41 @@
                     listRow.style.cursor = 'pointer';
                     
                     listRow.innerHTML = `
-                        <div style="display: inline-block; width: 25%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 20%; padding: 12px 15px; vertical-align: middle;">
                             <span class="fw-medium" style="color: #4f46e5;">${examName}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span class="badge ${statusClass}" style="font-size: 11px; padding: 5px 8px;">${status}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${examYear}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${questionCount}</span>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${createdBy}</span>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                            <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
-                                <i class="fas fa-edit me-1"></i> Edit
-                            </a>
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            <label class="switch">
+                                <input type="checkbox" ${canEdit ? 'checked' : ''} onchange="toggleEditAccess('${exam.id}', this.checked)">
+                                <span class="slider round"></span>
+                            </label>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            ${canEdit ? `<a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>` : '<span class="text-muted">Disabled</span>'}
+                        </div>
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
                             <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-secondary" style="border-radius: 6px; min-width: 80px;">
                                 <i class="fas fa-eye me-1"></i> Preview
                             </a>
+                        </div>
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            <button class="btn btn-sm btn-outline-info" onclick="showAdminList('${exam.id}')" style="border-radius: 6px;">
+                                <i class="fas fa-users"></i>
+                            </button>
                         </div>
                     `;
                     
@@ -1137,9 +1202,9 @@
                             </div>
                             <div class="card-footer p-0">
                                 <div class="btn-group w-100">
-                                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
+                                    ${canEdit ? `<a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
                                         <i class="fas fa-edit me-1"></i> Edit
-                                    </a>
+                                    </a>` : '<span class="btn btn-outline-secondary disabled">Edit Disabled</span>'}
                                     <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-secondary">
                                         <i class="fas fa-eye me-1"></i> Preview
                                     </a>
@@ -1166,7 +1231,7 @@
                 if (typeFilter && exam.type !== typeFilter) return false;
                 
                 // Year filter
-                if (yearFilter && exam.year !== yearFilter) return false;
+                if (yearFilter && exam.year != yearFilter) return false;
                 
                 // Status filter
                 if (statusFilter && exam.status !== statusFilter) return false;
@@ -1228,7 +1293,6 @@
             
             db.collection("papers")
                 .where("createdBy", "==", adminEmail)
-                .orderBy("createdAt", "desc")
                 .get()
                 .then((snapshot) => {
                     if (snapshot.empty) {
@@ -1290,13 +1354,15 @@
                 const tableHeader = document.createElement('div');
                 tableHeader.className = 'table-header';
                 tableHeader.innerHTML = `
-                    <div style="display: inline-block; width: 25%; font-weight: 600; color: #4f46e5;">NAME</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">STATUS</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">YEAR</div>
-                    <div style="display: inline-block; width: 10%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-                    <div style="display: inline-block; width: 15%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-                    <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-                    <div style="display: inline-block; width: 15%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+                    <div style="display: inline-block; width: 20%; font-weight: 600; color: #4f46e5;">NAME</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">STATUS</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">YEAR</div>
+                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT ACCESS</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
+                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
+                    <div style="display: inline-block; width: 8%; text-align: center; font-weight: 600; color: #4f46e5;">ADMINS</div>
                 `;
                 container.appendChild(tableHeader);
             }
@@ -1318,6 +1384,7 @@
                 const examYear = exam.year || 'N/A';
                 const status = exam.status || 'Draft';
                 const createdBy = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
+                const canEdit = exam.editAccess !== false;
                 
                 // Count questions
                 let questionCount = 0;
@@ -1341,30 +1408,41 @@
                     listRow.style.cursor = 'pointer';
                     
                     listRow.innerHTML = `
-                        <div style="display: inline-block; width: 25%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 20%; padding: 12px 15px; vertical-align: middle;">
                             <span class="fw-medium" style="color: #4f46e5;">${examName}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span class="badge ${statusClass}" style="font-size: 11px; padding: 5px 8px;">${status}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${examYear}</span>
                         </div>
-                        <div style="display: inline-block; width: 10%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${questionCount}</span>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle;">
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle;">
                             <span style="color: #64748b; font-weight: 500;">${createdBy}</span>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
-                            <a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
-                                <i class="fas fa-edit me-1"></i> Edit
-                            </a>
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            <label class="switch">
+                                <input type="checkbox" ${canEdit ? 'checked' : ''} onchange="toggleEditAccess('${exam.id}', this.checked)">
+                                <span class="slider round"></span>
+                            </label>
                         </div>
-                        <div style="display: inline-block; width: 15%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            ${canEdit ? `<a href="edit-exam.html?id=${exam.id}" class="btn btn-sm btn-primary" style="border-radius: 6px; min-width: 80px;">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>` : '<span class="text-muted">Disabled</span>'}
+                        </div>
+                        <div style="display: inline-block; width: 12%; padding: 12px 15px; vertical-align: middle; text-align: center;">
                             <a href="preview-exam.html?id=${exam.id}" class="btn btn-sm btn-secondary" style="border-radius: 6px; min-width: 80px;">
                                 <i class="fas fa-eye me-1"></i> Preview
                             </a>
+                        </div>
+                        <div style="display: inline-block; width: 8%; padding: 12px 15px; vertical-align: middle; text-align: center;">
+                            <button class="btn btn-sm btn-outline-info" onclick="showAdminList('${exam.id}')" style="border-radius: 6px;">
+                                <i class="fas fa-users"></i>
+                            </button>
                         </div>
                     `;
                     
@@ -1406,9 +1484,9 @@
                             </div>
                             <div class="card-footer p-0">
                                 <div class="btn-group w-100">
-                                    <a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
+                                    ${canEdit ? `<a href="edit-exam.html?id=${exam.id}" class="btn btn-outline-primary">
                                         <i class="fas fa-edit me-1"></i> Edit
-                                    </a>
+                                    </a>` : '<span class="btn btn-outline-secondary disabled">Edit Disabled</span>'}
                                     <a href="preview-exam.html?id=${exam.id}" class="btn btn-outline-secondary">
                                         <i class="fas fa-eye me-1"></i> Preview
                                     </a>
@@ -1520,15 +1598,27 @@
             
             if (typeSelect.value === 'jee-main') {
                 const difficultySelect = document.getElementById('new-exam-difficulty');
+                const daySelect = document.getElementById('new-exam-day');
+                const monthSelect = document.getElementById('new-exam-month');
+                const shiftSelect = document.getElementById('new-exam-shift');
                 const difficulty = difficultySelect.value || 'Moderate';
                 const totalQuestions = totalQuestionsInput.value || '75';
                 
+                let dateShiftInfo = '';
+                if (daySelect.value && monthSelect.value) {
+                    dateShiftInfo += `<div class="mb-1"><span class="fw-bold small">Date:</span> <span class="badge bg-info">${daySelect.value} ${monthSelect.value} ${yearInput.value}</span></div>`;
+                }
+                if (shiftSelect.value) {
+                    dateShiftInfo += `<div class="mb-1"><span class="fw-bold small">Shift:</span> <span class="badge bg-secondary">${shiftSelect.value}</span></div>`;
+                }
+                
                 description = `<div class="exam-description">
                     <h6 class="mb-1">JEE Main ${yearInput.value}</h6>
+                    ${dateShiftInfo}
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics).</span></div>
-                    <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each MCQ carries 4 marks for correct answer and -1 mark for incorrect answer. Each numerical value question carries 4 marks for correct answer and no negative marking.</span></div>
+                    <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each MCQ carries 4 marks for correct answer and -1 mark for incorrect answer. Each numerical value question carries 4 marks for correct answer and -1 mark for incorrect answer.</span></div>
                 </div>`;
             } else if (typeSelect.value === 'jee-advanced') {
                 const difficultySelect = document.getElementById('new-exam-difficulty-adv');
@@ -1624,7 +1714,28 @@
             descriptionField.innerHTML = description;
         }
         
-        // Function declaration removed - now using the one from create-exam.js
+        // Function to toggle edit access
+        function toggleEditAccess(paperId, canEdit) {
+            db.collection("papers").doc(paperId).update({
+                editAccess: canEdit
+            }).then(() => {
+                console.log(`Edit access ${canEdit ? 'enabled' : 'disabled'} for paper ${paperId}`);
+                // Reload current view
+                if (document.getElementById('all-papers').classList.contains('active')) {
+                    loadExams();
+                } else {
+                    loadMyExams();
+                }
+            }).catch(error => {
+                console.error('Error updating edit access:', error);
+                alert('Failed to update edit access');
+            });
+        }
+        
+        // Function to show admin list
+        function showAdminList(paperId) {
+            alert(`Admin list for paper ${paperId} - Feature coming soon!`);
+        }
     </script>
 </body>
 </html>

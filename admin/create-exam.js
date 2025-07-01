@@ -16,8 +16,25 @@ function createExam() {
     const adminEmail = sessionStorage.getItem('adminEmail') || 'admin@prepsharp.com';
     const adminName = sessionStorage.getItem('adminName') || 'Admin';
     
+    // Generate paper ID
+    let paperId = '';
+    if (examType === 'jee-main') {
+        const day = document.getElementById('new-exam-day').value;
+        const month = document.getElementById('new-exam-month').value.toLowerCase();
+        const shift = document.getElementById('new-exam-shift').value.toLowerCase().replace(' ', '-');
+        paperId = `jee-main---${day}-${month}-${shift}-${examYear}`;
+    } else if (examType === 'jee-advanced') {
+        const paper = document.getElementById('new-exam-paper').value.toLowerCase().replace(' ', '-');
+        paperId = `jee-advanced---${paper}-${examYear}`;
+    } else if (examType === 'neet') {
+        paperId = `neet---${examYear}`;
+    } else if (examType === 'mock-test') {
+        paperId = `mock-test---${examYear}-${Date.now()}`;
+    }
+    
     // Create exam object
     const exam = {
+        id: paperId,
         name: examName,
         type: examType === 'jee-main' ? 'JEE Main' : 
               examType === 'jee-advanced' ? 'JEE Advanced' : 
@@ -58,9 +75,9 @@ function createExam() {
     saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
     
     // Save to Firestore
-    db.collection('papers').add(exam)
-        .then((docRef) => {
-            console.log('Exam created successfully:', docRef.id);
+    db.collection('papers').doc(paperId).set(exam)
+        .then(() => {
+            console.log('Exam created successfully:', paperId);
             
             // Close modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('createExamModal'));

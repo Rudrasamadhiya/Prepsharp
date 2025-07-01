@@ -471,6 +471,12 @@
                             const adminDoc = adminSnapshot.docs[0];
                             const adminData = adminDoc.data();
                             
+                            // Check if admin is enabled
+                            if (adminData.disabled === true) {
+                                alert('Your admin account has been disabled. Please contact the super admin.');
+                                return;
+                            }
+                            
                             // Check if this is a first-time login (temporary password)
                             if (adminData.tempPassword && adminData.tempPassword === password) {
                                 // Store admin info in session storage
