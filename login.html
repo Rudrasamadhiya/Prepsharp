@@ -336,8 +336,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="login-password" class="form-label">Password</label>
-                    <input type="password" id="login-password" name="password" class="form-input" placeholder="Enter your password" autocomplete="current-password" required>
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" autocomplete="current-password" required>
                     <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
                 </div>
                 
@@ -419,7 +419,7 @@
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('login-password').value;
+            const password = document.getElementById('password').value;
             const remember = document.getElementById('remember').checked;
             
             // Basic validation
@@ -439,65 +439,106 @@
             loginBtn.disabled = true;
             
             try {
-                // Check for superadmin login first
-                if (email === "admin@prepsharp.in" && password === "6263636696") {
-                    sessionStorage.setItem('adminLoggedIn', 'true');
-                    sessionStorage.setItem('adminName', 'Super Admin');
-                    sessionStorage.setItem('adminEmail', 'admin@prepsharp.in');
-                    window.location.href = "admin-dashboard.html";
-                    return;
-                }
-                
-                // Check for admin users in Firestore
-                const adminSnapshot = await db.collection('admins').where('email', '==', email).get();
-                
-                if (!adminSnapshot.empty) {
-                    const adminDoc = adminSnapshot.docs[0];
-                    const adminData = adminDoc.data();
-                    
-                    // Check if this is a first-time login (temporary password)
-                    if (adminData.tempPassword && adminData.tempPassword === password) {
-                        // Store admin info in session storage
-                        sessionStorage.setItem('adminLoggedIn', 'true');
-                        sessionStorage.setItem('adminId', adminDoc.id);
-                        sessionStorage.setItem('adminName', adminData.name);
-                        sessionStorage.setItem('adminEmail', adminData.email);
-                        sessionStorage.setItem('firstLogin', 'true');
+                // 1. Check for superadmin login
+                if (email === "admin@prepsharp.in") {
+                    try {
+                        // Get superadmin password from Firestore
+                        const superadminDoc = await db.collection('superadmin').doc('admin@prepsharp').get();
                         
-                        // Redirect to password change page
-                        window.location.href = "admin/change-password.html";
-                        return;
-                    }
-                    
-                    // Check regular password
-                    if (adminData.password === password) {
-                        // Store admin info in session storage
-                        sessionStorage.setItem('adminLoggedIn', 'true');
-                        sessionStorage.setItem('adminId', adminDoc.id);
-                        sessionStorage.setItem('adminName', adminData.name);
-                        sessionStorage.setItem('adminEmail', adminData.email);
-                        
-                        // Redirect to collaborate exams page
-                        window.location.href = "admin/collaborate-exams.html";
-                        return;
+                        if (superadminDoc.exists) {
+                            const superadminData = superadminDoc.data();
+                            
+                            if (superadminData.password === password) {
+                                sessionStorage.setItem('adminLoggedIn', 'true');
+                                sessionStorage.setItem('adminName', 'Super Admin');
+                                sessionStorage.setItem('adminEmail', 'admin@prepsharp.in');
+                                window.location.href = "admin-dashboard.html";
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error checking superadmin:', e);
                     }
                 }
                 
-                // If not an admin, try regular Firebase Auth for students
+                // 2. Check for admin users with @prepsharp.in email
+                if (email.endsWith('@prepsharp.in')) {
+                    try {
+                        // Check for admin users in Firestore
+                        const adminSnapshot = await db.collection('admins').where('email', '==', email).get();
+                        
+                        if (!adminSnapshot.empty) {
+                            const adminDoc = adminSnapshot.docs[0];
+                            const adminData = adminDoc.data();
+                            
+                            // Check if this is a first-time login (temporary password)
+                            if (adminData.tempPassword && adminData.tempPassword === password) {
+                                // Store admin info in session storage
+                                sessionStorage.setItem('adminLoggedIn', 'true');
+                                sessionStorage.setItem('adminId', adminDoc.id);
+                                sessionStorage.setItem('adminName', adminData.name);
+                                sessionStorage.setItem('adminEmail', adminData.email);
+                                sessionStorage.setItem('firstLogin', 'true');
+                                
+                                // Redirect to password change page
+                                window.location.href = "admin/change-password.html";
+                                return;
+                            }
+                            
+                            // Check regular password
+                            if (adminData.password === password) {
+                                // Store admin info in session storage
+                                sessionStorage.setItem('adminLoggedIn', 'true');
+                                sessionStorage.setItem('adminId', adminDoc.id);
+                                sessionStorage.setItem('adminName', adminData.name);
+                                sessionStorage.setItem('adminEmail', adminData.email);
+                                
+                                // Redirect to collaborate exams page
+                                window.location.href = "admin/collaborate-exams.html";
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking admin:', error);
+                    }
+                }
+                
+                // 4. Check for regular users in /users collection
+                const userSnapshot = await db.collection('/users').where('email', '==', email).get();
+                
+                if (!userSnapshot.empty) {
+                    const userDoc = userSnapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    if (userData.password === password) {
+                        const userInfo = {
+                            id: userDoc.id,
+                            email: userData.email,
+                            name: userData.name || '',
+                            subscription: userData.subscription || 'free'
+                        };
+                        
+                        if (remember) {
+                            localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                        } else {
+                            sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                        }
+                        
+                        redirectToDashboard(userInfo.subscription);
+                        return;
+                    }
+                }
+                
+                // 5. If all else fails, try Firebase Auth
                 try {
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
                     
-                    // Get additional user data from Firestore
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    const userData = userDoc.exists ? userDoc.data() : {};
-                    
-                    // Store user info
                     const userInfo = {
                         id: user.uid,
                         email: user.email,
-                        name: userData.name || user.displayName || '',
-                        subscription: userData.subscription || 'free'
+                        name: user.displayName || '',
+                        subscription: 'free'
                     };
                     
                     if (remember) {
@@ -506,7 +547,6 @@
                         sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                     }
                     
-                    // Redirect based on subscription
                     redirectToDashboard(userInfo.subscription);
                     return;
                 } catch (authError) {
@@ -523,6 +563,34 @@
                 // Reset button state
                 loginBtn.textContent = originalText;
                 loginBtn.disabled = false;
+            }
+        }
+        
+        // Check for specific user document
+        async function checkSpecificUser() {
+            try {
+                // Check for specific user IDs
+                const userIds = ['4qUklgZcWRHZdxPdL4uw', 'BT95naEPMsaTStQgJPS9', 'hkeGnrIiiXqlsXUoGtN5'];
+                
+                for (const userId of userIds) {
+                    const specificDoc = await db.collection('/users').doc(userId).get();
+                    if (specificDoc.exists) {
+                        const userData = specificDoc.data();
+                        console.log(`Found user document ${userId}:`, userData);
+                        
+                        // Test if we can log in with this user
+                        if (userData.email && userData.password) {
+                            console.log(`User ${userId} has email and password, can be used for login`);
+                        }
+                    } else {
+                        console.log(`User document ${userId} not found`);
+                    }
+                }
+                
+                return true;
+            } catch (e) {
+                console.error('Error checking specific user documents:', e);
+                return false;
             }
         }
         
@@ -548,9 +616,11 @@
         }
         
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check for specific user document
+            await checkSpecificUser();
             // Debug password field
-            const passwordField = document.getElementById('login-password');
+            const passwordField = document.getElementById('password');
             passwordField.addEventListener('input', function() {
                 console.log('Password input detected:', this.value.length > 0 ? 'Text entered' : 'Empty');
             });

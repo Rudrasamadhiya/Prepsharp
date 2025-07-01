@@ -533,6 +533,27 @@
             }
             
             try {
+                this.textContent = 'Checking email...';
+                this.disabled = true;
+                
+                // Clear previous error messages
+                document.getElementById('emailError').style.display = 'none';
+                document.getElementById('emailSuccess').style.display = 'none';
+                
+                // Check if email already exists
+                console.log('Checking email:', email);
+                const userDoc = await db.collection('users').doc(email).get();
+                console.log('User doc exists:', userDoc.exists);
+                if (userDoc.exists) {
+                    console.log('Email already exists in database');
+                    document.getElementById('emailError').textContent = 'Email already registered. Please use a different email.';
+                    document.getElementById('emailError').style.display = 'block';
+                    this.textContent = 'Verify Email';
+                    this.disabled = false;
+                    return;
+                }
+                console.log('Email is available, proceeding with OTP');
+                
                 this.textContent = 'Sending OTP...';
                 this.disabled = true;
                 
@@ -849,13 +870,15 @@
                 
                 // Save user data to Firestore
                 if (window.db) {
-                    await db.collection('users').doc(user.uid).set({
+                    await db.collection('users').doc(email).set({
                         name: name,
                         email: email,
                         mobile: mobile,
                         subscriptionPlan: 'Free',
                         createdAt: new Date(),
                         class: '',
+                        schoolCollege: '',
+                        targetYear: '',
                         phoneVerified: false
                     });
                 }

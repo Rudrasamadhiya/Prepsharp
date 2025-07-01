@@ -1325,88 +1325,17 @@
         // Function to load exam papers
         async function loadExamPapers() {
             try {
-                console.log("Attempting to fetch papers from Firestore...");
-                // Try to fetch papers from Firestore
                 const snapshot = await db.collection("papers").get();
-                console.log("Firestore query completed, documents:", snapshot.size);
-                
                 const papers = [];
                 
-                // Check for new papers that need notifications
-                const lastCheckTime = localStorage.getItem('lastPaperCheckTime');
-                const currentTime = new Date().getTime();
-                
                 snapshot.forEach((doc) => {
-                    const paperData = doc.data();
-                    console.log("Document data:", doc.id, paperData);
-                    papers.push({...paperData, id: doc.id});
-                    
-                    // Create notifications for new papers if they were added since last check
-                    if (lastCheckTime && paperData.createdAt) {
-                        const paperCreatedTime = paperData.createdAt.toDate().getTime();
-                        if (paperCreatedTime > parseInt(lastCheckTime) && paperData.status === 'Draft') {
-                            createNotification({
-                                type: 'new',
-                                title: 'New Paper Added',
-                                message: `${paperData.name} has been added to the system`,
-                                paperId: doc.id,
-                                read: false,
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-                        }
-                        
-                        // Create notifications for papers that moved to Review status
-                        if (paperData.status === 'Review' && paperData.statusUpdatedAt && 
-                            paperData.statusUpdatedAt.toDate().getTime() > parseInt(lastCheckTime)) {
-                            createNotification({
-                                type: 'review',
-                                title: 'Paper Ready for Review',
-                                message: `${paperData.name} is ready for review and publishing`,
-                                paperId: doc.id,
-                                read: false,
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-                        }
-                    }
+                    papers.push({...doc.data(), id: doc.id});
                 });
                 
-                // Update the last check time
-                localStorage.setItem('lastPaperCheckTime', currentTime.toString());
-                
-                console.log("Papers array:", papers);
                 renderPapers(papers);
-                
-                // Refresh notifications after checking for new papers
-                loadNotifications();
             } catch (error) {
                 console.error('Error fetching papers from Firestore:', error);
-                
-                // Fallback to local storage
-                const papersJson = localStorage.getItem('papers');
-                if (papersJson) {
-                    try {
-                        const papers = JSON.parse(papersJson);
-                        console.log("Using papers from localStorage:", papers);
-                        renderPapers(papers);
-                    } catch (e) {
-                        console.error("Error parsing papers JSON:", e);
-                        showError('Error parsing papers data');
-                    }
-                } else {
-                    // Try to load from papers.json directly
-                    fetch('db/papers.json')
-                        .then(response => response.json())
-                        .then(papers => {
-                            console.log("Using papers from papers.json:", papers);
-                            renderPapers(papers);
-                            // Save to localStorage for future use
-                            localStorage.setItem('papers', JSON.stringify(papers));
-                        })
-                        .catch(error => {
-                            console.error('Error loading papers.json:', error);
-                            showError('Failed to load exam papers');
-                        });
-                }
+                showError('Failed to load exam papers');
             }
         }
         
@@ -1473,10 +1402,10 @@
                             </span>
                         </label>` : ''}
                         <span class="badge bg-${statusClass} ms-2">${status}</span>
-                        ${paper.dashboards?.free ? '<span class="badge bg-secondary ms-1">Free</span>' : ''}
-                        ${paper.dashboards?.basic ? '<span class="badge bg-primary ms-1">Basic</span>' : ''}
-                        ${paper.dashboards?.standard ? '<span class="badge bg-success ms-1">Standard</span>' : ''}
-                        ${paper.dashboards?.premium ? '<span class="badge bg-warning ms-1">Premium</span>' : ''}
+                        ${status !== 'Draft' ? (paper.dashboards?.free ? '<span class="badge bg-secondary ms-1">Free</span>' : '') : ''}
+                        ${status !== 'Draft' ? (paper.dashboards?.basic ? '<span class="badge bg-primary ms-1">Basic</span>' : '') : ''}
+                        ${status !== 'Draft' ? (paper.dashboards?.standard ? '<span class="badge bg-success ms-1">Standard</span>' : '') : ''}
+                        ${status !== 'Draft' ? (paper.dashboards?.premium ? '<span class="badge bg-warning ms-1">Premium</span>' : '') : ''}
                     </td>
                     <td>${createdBy}</td>
                     <td>

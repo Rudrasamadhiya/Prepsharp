@@ -1,29 +1,94 @@
-// Function to create a new exam document in Firestore
-function createExam(examId, examName) {
-    // Validate inputs
-    if (!examId || !examName) {
-        console.error('Exam ID and name are required');
-        return Promise.reject(new Error('Exam ID and name are required'));
+// Function to create a new exam from the modal form
+function createExam() {
+    const examType = document.getElementById('new-exam-type').value;
+    const examYear = document.getElementById('new-exam-year').value;
+    const examName = document.getElementById('new-exam-name').textContent;
+    const totalQuestions = document.getElementById('new-exam-total-questions').value;
+    const description = document.getElementById('new-exam-description').innerHTML;
+    
+    // Validate required fields
+    if (!examType || !examYear || !examName) {
+        alert('Please fill in all required fields');
+        return;
     }
+    
+    // Get admin info
+    const adminEmail = sessionStorage.getItem('adminEmail') || 'admin@prepsharp.com';
+    const adminName = sessionStorage.getItem('adminName') || 'Admin';
     
     // Create exam object
     const exam = {
-        id: examId,
         name: examName,
-        createdAt: new Date().getTime(),
+        type: examType === 'jee-main' ? 'JEE Main' : 
+              examType === 'jee-advanced' ? 'JEE Advanced' : 
+              examType === 'neet' ? 'NEET' : 'Mock Test',
+        year: examYear,
         status: 'Draft',
-        questionCount: 0
+        totalQuestions: parseInt(totalQuestions),
+        description: description,
+        questions: [],
+        createdBy: adminEmail,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     
+    // Add type-specific fields
+    if (examType === 'jee-main') {
+        const day = document.getElementById('new-exam-day').value;
+        const month = document.getElementById('new-exam-month').value;
+        const shift = document.getElementById('new-exam-shift').value;
+        const difficulty = document.getElementById('new-exam-difficulty').value;
+        
+        if (day) exam.day = day;
+        if (month) exam.month = month;
+        if (shift) exam.shift = shift;
+        if (difficulty) exam.difficulty = difficulty;
+    } else if (examType === 'jee-advanced') {
+        const paper = document.getElementById('new-exam-paper').value;
+        const difficulty = document.getElementById('new-exam-difficulty-adv').value;
+        
+        if (paper) exam.paper = paper;
+        if (difficulty) exam.difficulty = difficulty;
+    }
+    
+    // Show loading state
+    const saveBtn = document.getElementById('save-exam-btn');
+    const originalText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+    
     // Save to Firestore
-    return db.collection('exams').doc(examId).set(exam)
-        .then(() => {
-            console.log('Exam created successfully:', examId);
-            return exam;
+    db.collection('papers').add(exam)
+        .then((docRef) => {
+            console.log('Exam created successfully:', docRef.id);
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createExamModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('create-exam-form').reset();
+            document.getElementById('new-exam-name').textContent = '';
+            document.getElementById('new-exam-description').innerHTML = '';
+            
+            // Refresh the exam list
+            if (document.getElementById('all-papers').classList.contains('active')) {
+                loadExams();
+            } else {
+                loadMyExams();
+            }
+            
+            // Show success message
+            alert('Exam created successfully!');
         })
         .catch(error => {
             console.error('Error creating exam:', error);
-            throw error;
+            alert('Error creating exam. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
         });
 }
 
