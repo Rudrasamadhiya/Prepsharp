@@ -876,6 +876,8 @@
     <script src="paper-utils.js"></script>
     <script src="updated-functions.js"></script>
     <script src="create-exam.js"></script>
+    <script src="question-count.js"></script>
+    <script src="fix-question-count.js"></script>
 
     <script>
         // Initialize Firebase
@@ -920,8 +922,10 @@
             // Check which tab is active and load appropriate content
             if (document.getElementById('my-papers').classList.contains('active')) {
                 loadMyExams();
+                setTimeout(updateQuestionCounts, 1000); // Update counts after exams load
             } else {
                 loadExams();
+                setTimeout(updateQuestionCounts, 1000); // Update counts after exams load
             }
             
             // Set up event listeners
@@ -1096,13 +1100,17 @@
                 return;
             }
             
+            const currentAdminEmail = sessionStorage.getItem('adminEmail');
+            
             exams.forEach((exam, index) => {
                 const examName = exam.name || 'Unnamed Exam';
                 const examType = exam.type || 'Unknown';
                 const examYear = exam.year || 'N/A';
                 const status = exam.status || 'Draft';
                 const createdBy = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
-                const canEdit = exam.editAccess !== false;
+                const canEdit = exam.editAccess !== false && 
+                    (exam.adminList?.includes(currentAdminEmail) || 
+                     (exam.creatorCanEdit !== false && exam.createdBy === currentAdminEmail));
                 
                 // Count questions
                 let questionCount = 0;
@@ -1215,6 +1223,15 @@
                     container.appendChild(examCard);
                 }
             });
+            
+            // Fetch question counts for all exams
+            exams.forEach(exam => {
+                db.collection('papers').doc(exam.id).collection('questions').get().then(snapshot => {
+                    document.querySelectorAll(`[data-exam-id="${exam.id}"] .question-count`).forEach(el => {
+                        el.textContent = snapshot.size;
+                    });
+                }).catch(() => {});
+            });
         }
         
         // Function to apply filters
@@ -1253,6 +1270,7 @@
             });
             
             renderExams(filteredExams);
+            setTimeout(updateQuestionCounts, 1000); // Update counts after filtering
         }
         
         // Function to reset filters
@@ -1378,13 +1396,17 @@
                 return;
             }
             
+            const currentAdminEmail = sessionStorage.getItem('adminEmail');
+            
             exams.forEach((exam, index) => {
                 const examName = exam.name || 'Unnamed Exam';
                 const examType = exam.type || 'Unknown';
                 const examYear = exam.year || 'N/A';
                 const status = exam.status || 'Draft';
                 const createdBy = exam.createdBy ? exam.createdBy.split('@')[0] : 'Unknown';
-                const canEdit = exam.editAccess !== false;
+                const canEdit = exam.editAccess !== false && 
+                    (exam.adminList?.includes(currentAdminEmail) || 
+                     (exam.creatorCanEdit !== false && exam.createdBy === currentAdminEmail));
                 
                 // Count questions
                 let questionCount = 0;

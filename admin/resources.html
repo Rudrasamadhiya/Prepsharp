@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - PrepSharp Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../images/logo.png">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        :root {
+            --primary: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --purple-gradient: linear-gradient(45deg, #6366f1, #8b5cf6);
+            --green-gradient: linear-gradient(45deg, #10b981, #059669);
+            --orange-gradient: linear-gradient(45deg, #f59e0b, #d97706);
+            --blue-gradient: linear-gradient(45deg, #3b82f6, #2563eb);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc, #f1f5f9);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header img {
+            height: 70px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+            vertical-align: middle;
+        }
+        
+        .sidebar-header:hover img {
+            transform: scale(1.05);
+        }
+        
+        .sidebar-header h5 {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 0;
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+            padding: 0 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05));
+            color: #f97316;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.3), rgba(249, 115, 22, 0.1));
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            color: #f97316;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover i, .sidebar-menu a.active i {
+            transform: scale(1.2);
+            color: #f97316;
+        }
+        
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 15px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            transform: translateY(-3px);
+        }
+        
+        .logout-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* Navbar */
+        .top-navbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 18px 30px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .top-navbar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0) 50%);
+            animation: rotate 15s linear infinite;
+        }
+        
+        .top-navbar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.1));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .dashboard-title h2 {
+            color: white;
+            margin: 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .notification-bell {
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        .notification-bell::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(249, 115, 22, 0.5), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .notification-bell:hover {
+            color: white;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 25px rgba(249, 115, 22, 0.3);
+            border-color: rgba(249, 115, 22, 0.5);
+        }
+        
+        .notification-bell:hover::before {
+            opacity: 0.8;
+        }
+        
+        .notification-bell i {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .notification-bell:hover i {
+            animation: ring 1s ease;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(-15deg); }
+            40%, 80% { transform: rotate(15deg); }
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid rgba(15, 23, 42, 0.8);
+            box-shadow: 0 5px 10px rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+            z-index: 3;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            padding: 8px 20px 8px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .user-profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .user-profile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        
+        .user-profile:hover::before {
+            opacity: 1;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+            position: relative;
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover .user-avatar {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 500;
+        }
+        
+        .user-profile i {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-profile:hover i {
+            color: #f97316;
+            transform: translateY(3px);
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Resource Cards */
+        .resource-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resource-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            z-index: 1;
+        }
+        
+        .resource-header h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .resource-header p {
+            margin: 5px 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .resource-body {
+            padding: 20px;
+            flex-grow: 1;
+            background: white;
+        }
+        
+        .resource-footer {
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-meta {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .resource-actions .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .resource-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            opacity: 0.5;
+            z-index: 2;
+        }
+        
+        .resource-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .resource-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+        }
+        
+        .resource-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .resource-list li i {
+            margin-right: 10px;
+            color: #4f46e5;
+        }
+        
+        .resource-type-pdf .resource-header {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+        
+        .resource-type-video .resource-header {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+        
+        .resource-type-doc .resource-header {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        
+        .resource-type-quiz .resource-header {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        /* Upload Form */
+        .upload-form {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        
+        .form-control {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: #4f46e5;
+            background: #f1f5f9;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-upload i {
+            font-size: 48px;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+        
+        .file-upload p {
+            margin: 0;
+            color: #64748b;
+        }
+        
+        .file-upload .file-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -250px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content.active {
+                margin-left: 0;
+                position: relative;
+                left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../images/logo.png" alt="PrepSharp Logo">
+            <h5>PrepSharp Admin</h5>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="../admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="../admin-students.html"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="../manage-exams.html"><i class="fas fa-file-alt"></i> Exams</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> Questions</a></li>
+            <li><a href="resources.html" class="active"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="#"><i class="fas fa-comment-alt"></i> Doubts</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="#" id="sidebar-logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="dashboard-title">
+                <h2>Learning Resources</h2>
+            </div>
+            <div class="user-menu">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Super Admin</div>
+                    </div>
+                    <i class="fas fa-chevron-down ms-1" style="font-size: 12px;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="container-fluid">
+            <!-- Action Buttons -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Manage Learning Resources</h5>
+                            <div>
+                                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadResourceModal">
+                                    <i class="fas fa-upload me-2"></i> Upload Resource
+                                </button>
+                                <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#adminResourceModal">
+                                    <i class="fas fa-user-shield me-2"></i> Upload For Admin
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-filter me-2"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resource Categories -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-book fa-3x text-primary"></i>
+                            </div>
+                            <h5>Study Materials</h5>
+                            <p class="text-muted">Notes, textbooks, and reference materials</p>
+                            <button class="btn btn-sm btn-primary">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-video fa-3x text-warning"></i>
+                            </div>
+                            <h5>Video Lectures</h5>
+                            <p class="text-muted">Recorded lectures and tutorials</p>
+                            <button class="btn btn-sm btn-warning">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-file-pdf fa-3x text-danger"></i>
+                            </div>
+                            <h5>Practice Papers</h5>
+                            <p class="text-muted">Previous year papers and mock tests</p>
+                            <button class="btn btn-sm btn-danger">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-puzzle-piece fa-3x text-success"></i>
+                            </div>
+                            <h5>Interactive Content</h5>
+                            <p class="text-muted">Quizzes, simulations, and interactive exercises</p>
+                            <button class="btn btn-sm btn-success">View All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Resources -->
+            <div class="row mb-4">
+                <div class="col-12 mb-2">
+                    <h5>Admin Resources</h5>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-user-shield fa-3x text-primary"></i>
+                            </div>
+                            <h5>Assigned Resources</h5>
+                            <p class="text-muted">Resources assigned to admins</p>
+                            <button class="btn btn-sm btn-outline-primary" id="viewAssignedBtn">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100 border-success">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-tasks fa-3x text-success"></i>
+                            </div>
+                            <h5>Pending Tasks</h5>
+                            <p class="text-muted">Resources waiting for processing</p>
+                            <button class="btn btn-sm btn-outline-success" id="viewPendingBtn">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-clock fa-3x text-warning"></i>
+                            </div>
+                            <h5>Unassigned Resources</h5>
+                            <p class="text-muted">Resources waiting for assignment</p>
+                            <button class="btn btn-sm btn-outline-warning" id="viewUnassignedBtn">View All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100 border-info">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-check-circle fa-3x text-info"></i>
+                            </div>
+                            <h5>Completed Resources</h5>
+                            <p class="text-muted">Resources processed and completed</p>
+                            <button class="btn btn-sm btn-outline-info" id="viewCompletedBtn">View All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Resources -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>Recent Resources</div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="featuredOnly">
+                                <label class="form-check-label" for="featuredOnly">Featured Only</label>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Subject</th>
+                                            <th>Added By</th>
+                                            <th>Date Added</th>
+                                            <th>Downloads</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resourcesTableBody">
+                                        <tr>
+                                            <td colspan="7" class="text-center">No resources found. Click "Upload Resource" to add new resources.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Resources -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <h5>Featured Resources</h5>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="resource-card resource-type-pdf">
+                        <div class="resource-header">
+                            <i class="fas fa-file-pdf resource-icon"></i>
+                            <h5>JEE Advanced Physics Notes</h5>
+                            <p>Complete formula compilation</p>
+                        </div>
+                        <div class="resource-body">
+                            <p>Comprehensive notes covering all important formulas and concepts for JEE Advanced Physics preparation.</p>
+                            <ul class="resource-list">
+                                <li><i class="fas fa-check-circle"></i> Mechanics</li>
+                                <li><i class="fas fa-check-circle"></i> Electromagnetism</li>
+                                <li><i class="fas fa-check-circle"></i> Modern Physics</li>
+                            </ul>
+                        </div>
+                        <div class="resource-footer">
+                            <div class="resource-meta">
+                                <i class="fas fa-download me-1"></i> 425 downloads
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-sm btn-primary">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="resource-card resource-type-video">
+                        <div class="resource-header">
+                            <i class="fas fa-video resource-icon"></i>
+                            <h5>Organic Chemistry Series</h5>
+                            <p>Video lecture series</p>
+                        </div>
+                        <div class="resource-body">
+                            <p>Complete video series covering all major topics in organic chemistry with practice problems.</p>
+                            <ul class="resource-list">
+                                <li><i class="fas fa-check-circle"></i> 15 video lectures</li>
+                                <li><i class="fas fa-check-circle"></i> Practice worksheets</li>
+                                <li><i class="fas fa-check-circle"></i> Solution explanations</li>
+                            </ul>
+                        </div>
+                        <div class="resource-footer">
+                            <div class="resource-meta">
+                                <i class="fas fa-eye me-1"></i> 312 views
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-sm btn-warning">Watch</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="resource-card resource-type-doc">
+                        <div class="resource-header">
+                            <i class="fas fa-file-alt resource-icon"></i>
+                            <h5>Mathematics Problem Bank</h5>
+                            <p>Practice question collection</p>
+                        </div>
+                        <div class="resource-body">
+                            <p>Extensive collection of mathematics problems from previous JEE papers with detailed solutions.</p>
+                            <ul class="resource-list">
+                                <li><i class="fas fa-check-circle"></i> 500+ problems</li>
+                                <li><i class="fas fa-check-circle"></i> Difficulty-wise sorting</li>
+                                <li><i class="fas fa-check-circle"></i> Step-by-step solutions</li>
+                            </ul>
+                        </div>
+                        <div class="resource-footer">
+                            <div class="resource-meta">
+                                <i class="fas fa-download me-1"></i> 289 downloads
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-sm btn-primary">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="resource-card resource-type-quiz">
+                        <div class="resource-header">
+                            <i class="fas fa-puzzle-piece resource-icon"></i>
+                            <h5>Chemistry Quiz Series</h5>
+                            <p>Interactive practice tests</p>
+                        </div>
+                        <div class="resource-body">
+                            <p>Interactive quizzes to test your knowledge of chemistry concepts with instant feedback.</p>
+                            <ul class="resource-list">
+                                <li><i class="fas fa-check-circle"></i> 10 topic-wise quizzes</li>
+                                <li><i class="fas fa-check-circle"></i> Instant scoring</li>
+                                <li><i class="fas fa-check-circle"></i> Detailed explanations</li>
+                            </ul>
+                        </div>
+                        <div class="resource-footer">
+                            <div class="resource-meta">
+                                <i class="fas fa-users me-1"></i> 156 attempts
+                            </div>
+                            <div class="resource-actions">
+                                <button class="btn btn-sm btn-success">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Resource Modal -->
+    <div class="modal fade" id="uploadResourceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload New Resource</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="resourceUploadForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="resourceTitle" class="form-label">Resource Title</label>
+                                <input type="text" class="form-control" id="resourceTitle" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="resourceType" class="form-label">Resource Type</label>
+                                <select class="form-select" id="resourceType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="pdf">PDF Document</option>
+                                    <option value="video">Video</option>
+                                    <option value="document">Document</option>
+                                    <option value="interactive">Interactive Content</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="resourceSubject" class="form-label">Subject</label>
+                                <select class="form-select" id="resourceSubject" required>
+                                    <option value="">Select Subject</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="resourceCategory" class="form-label">Category</label>
+                                <select class="form-select" id="resourceCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="notes">Study Notes</option>
+                                    <option value="practice">Practice Material</option>
+                                    <option value="reference">Reference Material</option>
+                                    <option value="exam">Exam Preparation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="resourceDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload File</label>
+                            <div class="file-upload">
+                                <input type="file" id="resourceFile" required>
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag and drop files here or click to browse</p>
+                                <div class="file-info">Max file size: 50MB</div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="resourceFeatured">
+                                    <label class="form-check-label" for="resourceFeatured">
+                                        Feature this resource
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="resourcePremium">
+                                    <label class="form-check-label" for="resourcePremium">
+                                        Premium content (paid users only)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="uploadResourceBtn">Upload Resource</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload For Admin Modal -->
+    <div class="modal fade" id="adminResourceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Upload Resource For Admin</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminResourceForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="adminResourceTitle" class="form-label">Resource Title (Auto-generated)</label>
+                                <input type="text" class="form-control" id="adminResourceTitle" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="adminResourceType" class="form-label">Resource Type</label>
+                                <select class="form-select" id="adminResourceType" required onchange="updateResourceOptions()">
+                                    <option value="">Select Type</option>
+                                    <option value="question_pdf">Question Papers (PDF)</option>
+                                    <option value="question_doc">Question Papers (DOC)</option>
+                                    <option value="solution_pdf">Solutions & Details (PDF)</option>
+                                    <option value="solution_doc">Solutions & Details (DOC)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="adminResourceSubject" class="form-label">Subject</label>
+                                <select class="form-select" id="adminResourceSubject" required onchange="generateResourceTitle()">
+                                    <option value="">Select Subject</option>
+                                    <option value="complete">Complete Paper</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="paperType" class="form-label">Paper Type</label>
+                                <select class="form-select" id="paperType" required onchange="showRelevantFields(); generateResourceTitle();">
+                                    <option value="">Select Paper Type</option>
+                                    <option value="jee_main">JEE Main</option>
+                                    <option value="jee_advanced">JEE Advanced</option>
+                                    <option value="neet">NEET</option>
+                                    <option value="mock_test">Mock Test</option>
+                                    <option value="practice">Practice Paper</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="assignToAdmin" class="form-label">Assign To Admin</label>
+                                <select class="form-select" id="assignToAdmin" required>
+                                    <option value="">Select Admin</option>
+                                    <option value="later">Will Do Later</option>
+                                    <!-- Admin options will be loaded dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Dynamic fields that appear based on paper type -->
+                        <div class="row mb-3" id="yearRow">
+                            <div class="col-md-4">
+                                <label for="paperYear" class="form-label">Year</label>
+                                <select class="form-select" id="paperYear" onchange="generateResourceTitle()">
+                                    <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            
+                            <!-- JEE Main specific fields -->
+                            <div class="col-md-8" id="jeeMainFields" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="paperMonth" class="form-label">Month</label>
+                                        <select class="form-select" id="paperMonth" onchange="generateResourceTitle()">
+                                            <option value="">Select Month</option>
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="paperDate" class="form-label">Date</label>
+                                        <input type="number" class="form-control" id="paperDate" min="1" max="31" placeholder="Date" onchange="generateResourceTitle()">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="paperShift" class="form-label">Shift</label>
+                                        <select class="form-select" id="paperShift" onchange="generateResourceTitle()">
+                                            <option value="">Select Shift</option>
+                                            <option value="Morning">Morning</option>
+                                            <option value="Evening">Evening</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- JEE Advanced specific fields -->
+                            <div class="col-md-4" id="jeeAdvancedFields" style="display: none;">
+                                <label for="paperNumber" class="form-label">Paper</label>
+                                <select class="form-select" id="paperNumber" onchange="generateResourceTitle()">
+                                    <option value="">Select Paper</option>
+                                    <option value="Paper 1">Paper 1</option>
+                                    <option value="Paper 2">Paper 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminResourceDescription" class="form-label">Description (Auto-generated)</label>
+                            <textarea class="form-control" id="adminResourceDescription" rows="3" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload File</label>
+                            <div class="file-upload">
+                                <input type="file" id="adminResourceFile" accept=".pdf,.doc,.docx" required>
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag and drop PDF or Word files here or click to browse</p>
+                                <div class="file-info">Max file size: 50MB</div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="adminResourcePriority">
+                            <label class="form-check-label" for="adminResourcePriority">
+                                Mark as high priority
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="adminUploadBtn">Assign Resource</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+            measurementId: "G-LLJSLMXMNY"
+        };
+        
+        // Initialize Firebase
+        let db, auth, storage;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            auth = firebase.auth();
+            storage = firebase.storage();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+        
+        // Check if admin is logged in
+        function checkAdminAuth() {
+            const adminLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            
+            if (!adminLoggedIn) {
+                alert('You must be logged in as an admin to access this page.');
+                window.location.href = '../login.html';
+            }
+        }
+        
+        // Handle file selection for regular uploads
+        document.getElementById('resourceFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file selected';
+            const fileSize = e.target.files[0]?.size || 0;
+            const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+            
+            const fileInfo = document.querySelector('#uploadResourceModal .file-info');
+            fileInfo.textContent = `${fileName} (${fileSizeMB} MB)`;
+        });
+        
+        // Handle file selection for admin uploads
+        document.getElementById('adminResourceFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file selected';
+            const fileSize = e.target.files[0]?.size || 0;
+            const fileSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+            
+            const fileInfo = document.querySelector('#adminResourceModal .file-info');
+            fileInfo.textContent = `${fileName} (${fileSizeMB} MB)`;
+        });
+        
+        // Handle resource upload
+        document.getElementById('uploadResourceBtn').addEventListener('click', function() {
+            const form = document.getElementById('resourceUploadForm');
+            
+            // Basic form validation
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const title = document.getElementById('resourceTitle').value;
+            const type = document.getElementById('resourceType').value;
+            const subject = document.getElementById('resourceSubject').value;
+            const category = document.getElementById('resourceCategory').value;
+            const description = document.getElementById('resourceDescription').value;
+            const file = document.getElementById('resourceFile').files[0];
+            const featured = document.getElementById('resourceFeatured').checked;
+            const premium = document.getElementById('resourcePremium').checked;
+            
+            if (!file) {
+                alert('Please select a file to upload');
+                return;
+            }
+            
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Uploading...';
+            
+            // Simulate upload (in a real app, you would upload to Firebase Storage)
+            setTimeout(() => {
+                // Create resource document in Firestore
+                db.collection('resources').add({
+                    title,
+                    type,
+                    subject,
+                    category,
+                    description,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    featured,
+                    premium,
+                    downloads: 0,
+                    views: 0,
+                    addedBy: sessionStorage.getItem('adminName') || 'Admin',
+                    dateAdded: new Date().toISOString()
+                })
+                .then(() => {
+                    alert('Resource uploaded successfully!');
+                    
+                    // Close modal and reset form
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadResourceModal'));
+                    modal.hide();
+                    form.reset();
+                    document.querySelector('.file-info').textContent = 'Max file size: 50MB';
+                    
+                    // Reset button
+                    this.disabled = false;
+                    this.innerHTML = 'Upload Resource';
+                    
+                    // In a real app, you would refresh the resources list here
+                })
+                .catch(error => {
+                    console.error('Error adding resource:', error);
+                    alert('Error uploading resource. Please try again.');
+                    
+                    // Reset button
+                    this.disabled = false;
+                    this.innerHTML = 'Upload Resource';
+                });
+            }, 1500);
+        });
+        
+        // Event listeners
+        // Function to update resource options based on type selection
+        function updateResourceOptions() {
+            const resourceType = document.getElementById('adminResourceType').value;
+            const paperTypeSelect = document.getElementById('paperType');
+            const subjectSelect = document.getElementById('adminResourceSubject');
+            
+            // Enable paper type and subject selection
+            paperTypeSelect.disabled = false;
+            subjectSelect.disabled = false;
+            
+            // Show/hide relevant fields
+            showRelevantFields();
+            
+            // Generate title and description based on current selections
+            generateResourceTitle();
+        }
+        
+        // Function to show/hide fields based on paper type
+        function showRelevantFields() {
+            const paperType = document.getElementById('paperType').value;
+            const yearRow = document.getElementById('yearRow');
+            const jeeMainFields = document.getElementById('jeeMainFields');
+            const jeeAdvancedFields = document.getElementById('jeeAdvancedFields');
+            
+            // Hide all specific fields first
+            yearRow.style.display = 'none';
+            jeeMainFields.style.display = 'none';
+            jeeAdvancedFields.style.display = 'none';
+            
+            // Show relevant fields based on paper type
+            if (paperType) {
+                yearRow.style.display = 'flex'; // Show year for all paper types
+                
+                if (paperType === 'jee_main') {
+                    jeeMainFields.style.display = 'block';
+                } else if (paperType === 'jee_advanced') {
+                    jeeAdvancedFields.style.display = 'block';
+                }
+            }
+        }
+        
+        // Function to generate resource title and description
+        function generateResourceTitle() {
+            const resourceType = document.getElementById('adminResourceType').value;
+            const subject = document.getElementById('adminResourceSubject').value;
+            const paperType = document.getElementById('paperType').value;
+            const titleInput = document.getElementById('adminResourceTitle');
+            const descriptionInput = document.getElementById('adminResourceDescription');
+            
+            if (!resourceType || !subject || !paperType) {
+                return; // Not enough info to generate title
+            }
+            
+            // Get readable names
+            const resourceTypeName = resourceType.includes('question') ? 'Question Paper' : 'Solution & Details';
+            const formatType = resourceType.includes('pdf') ? 'PDF' : 'DOC';
+            let paperTypeName = '';
+            
+            switch(paperType) {
+                case 'jee_main': paperTypeName = 'JEE Main'; break;
+                case 'jee_advanced': paperTypeName = 'JEE Advanced'; break;
+                case 'neet': paperTypeName = 'NEET'; break;
+                case 'mock_test': paperTypeName = 'Mock Test'; break;
+                case 'practice': paperTypeName = 'Practice Paper'; break;
+                default: paperTypeName = paperType;
+            }
+            
+            let subjectName = '';
+            switch(subject) {
+                case 'complete': subjectName = 'Complete Paper'; break;
+                case 'physics': subjectName = 'Physics'; break;
+                case 'chemistry': subjectName = 'Chemistry'; break;
+                case 'mathematics': subjectName = 'Mathematics'; break;
+                case 'general': subjectName = 'General'; break;
+                default: subjectName = subject;
+            }
+            
+            // Get additional details based on paper type
+            let additionalInfo = '';
+            const paperYear = document.getElementById('paperYear').value;
+            
+            if (paperType === 'jee_main' && paperYear) {
+                const paperMonth = document.getElementById('paperMonth').value;
+                const paperDate = document.getElementById('paperDate').value;
+                const paperShift = document.getElementById('paperShift').value;
+                
+                if (paperMonth && paperDate && paperShift) {
+                    additionalInfo = ` (${paperYear} ${paperMonth} ${paperDate}, ${paperShift} Shift)`;
+                } else if (paperYear) {
+                    additionalInfo = ` (${paperYear})`;
+                }
+            } else if (paperType === 'jee_advanced' && paperYear) {
+                const paperNumber = document.getElementById('paperNumber').value;
+                
+                if (paperNumber) {
+                    additionalInfo = ` (${paperYear}, ${paperNumber})`;
+                } else if (paperYear) {
+                    additionalInfo = ` (${paperYear})`;
+                }
+            } else if (paperYear) {
+                additionalInfo = ` (${paperYear})`;
+            }
+            
+            // Generate title
+            const title = `${paperTypeName} ${resourceTypeName} - ${subjectName}${additionalInfo} (${formatType})`;
+            titleInput.value = title;
+            
+            // Generate description
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = currentDate.toLocaleString('default', { month: 'long' });
+            
+            let description = `${resourceTypeName} for ${paperTypeName} ${subjectName}${additionalInfo}. `;
+            
+            if (resourceType.includes('question')) {
+                if (subject === 'complete') {
+                    description += `This document contains the complete question paper for ${paperTypeName}${additionalInfo}. Use this for adding exam paper to the system.`;
+                } else {
+                    description += `This document contains important questions for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding exam questions to the system.`;
+                }
+            } else {
+                if (subject === 'complete') {
+                    description += `This document contains detailed solutions for the complete ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
+                } else {
+                    description += `This document contains detailed solutions and explanations for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
+                }
+            }
+            
+            description += ` Created in ${month} ${year}.`;
+            
+            descriptionInput.value = description;
+        }
+        
+        // Load admins for the dropdown
+        async function loadAdmins() {
+            const adminSelect = document.getElementById('assignToAdmin');
+            
+            try {
+                // Clear existing options
+                adminSelect.innerHTML = '';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "Select Admin";
+                adminSelect.appendChild(defaultOption);
+                
+                // Add "Will Do Later" option
+                const laterOption = document.createElement('option');
+                laterOption.value = "later";
+                laterOption.textContent = "Will Do Later";
+                adminSelect.appendChild(laterOption);
+                
+                // Get admins from Firestore
+                const adminsSnapshot = await db.collection('admins').get();
+                
+                if (!adminsSnapshot.empty) {
+                    adminsSnapshot.forEach(doc => {
+                        const admin = doc.data();
+                        if (!admin.disabled) { // Only show enabled admins
+                            const option = document.createElement('option');
+                            option.value = doc.id;
+                            option.textContent = admin.name || admin.email;
+                            option.dataset.email = admin.email;
+                            adminSelect.appendChild(option);
+                        }
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.textContent = "No admins found";
+                    option.disabled = true;
+                    adminSelect.appendChild(option);
+                }
+            } catch (error) {
+                console.error('Error loading admins:', error);
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "Error loading admins";
+                option.disabled = true;
+                adminSelect.appendChild(option);
+            }
+        }
+        
+        // Handle admin resource upload
+        document.getElementById('adminUploadBtn').addEventListener('click', function() {
+            const form = document.getElementById('adminResourceForm');
+            
+            // Basic form validation
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const title = document.getElementById('adminResourceTitle').value;
+            const type = document.getElementById('adminResourceType').value;
+            const subject = document.getElementById('adminResourceSubject').value;
+            const paperType = document.getElementById('paperType').value;
+            const paperYear = document.getElementById('paperYear').value;
+            
+            // Get paper-specific details
+            let paperDetails = { year: paperYear };
+            if (paperType === 'jee_main') {
+                paperDetails.month = document.getElementById('paperMonth').value;
+                paperDetails.date = document.getElementById('paperDate').value;
+                paperDetails.shift = document.getElementById('paperShift').value;
+            } else if (paperType === 'jee_advanced') {
+                paperDetails.paperNumber = document.getElementById('paperNumber').value;
+            }
+            
+            const adminId = document.getElementById('assignToAdmin').value;
+            const adminEmail = adminId === 'later' ? 'Will do later' : 
+                document.getElementById('assignToAdmin').selectedOptions[0].dataset.email || '';
+            const description = document.getElementById('adminResourceDescription').value;
+            const file = document.getElementById('adminResourceFile').files[0];
+            const priority = document.getElementById('adminResourcePriority').checked;
+            
+            if (!file) {
+                alert('Please select a file to upload');
+                return;
+            }
+            
+            if (!adminId) {
+                alert('Please select an admin to assign this resource to');
+                return;
+            }
+            
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Uploading & Assigning...';
+            
+            // Create a unique file path in Firebase Storage
+            const docId = title.replace(/[\/\s.#$[\]]/g, '_');
+            const storageRef = storage.ref(`adminResources/${docId}/${file.name}`);
+            
+            // Upload the file to Firebase Storage
+            const uploadTask = storageRef.put(file);
+            
+            // Monitor upload progress
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    // Calculate upload progress
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    this.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> Uploading... ${Math.round(progress)}%`;
+                }, 
+                (error) => {
+                    // Handle unsuccessful uploads
+                    console.error('Error uploading file:', error);
+                    alert('Error uploading file. Please try again.');
+                    this.disabled = false;
+                    this.innerHTML = 'Assign Resource';
+                }, 
+                () => {
+                    // Handle successful upload
+                    // Get the download URL
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        // Create resource assignment in Firestore using title as document ID
+                        db.collection('adminResources').doc(docId).set({
+                            title,
+                            type,
+                            subject,
+                            paperType,
+                            paperDetails,
+                            description,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            fileURL: downloadURL,  // Store the download URL
+                            storagePath: `adminResources/${docId}/${file.name}`,  // Store the storage path
+                            priority,
+                            adminId,
+                            adminEmail,
+                            assignedBy: sessionStorage.getItem('adminEmail') || 'Super Admin',
+                            status: adminId === 'later' ? 'unassigned' : 'pending',
+                            dateAssigned: new Date().toISOString()
+                        })
+                .then(() => {
+                    alert('Resource assigned to admin successfully!');
+                    
+                    // Close modal and reset form
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('adminResourceModal'));
+                    modal.hide();
+                    form.reset();
+                    document.querySelector('#adminResourceModal .file-info').textContent = 'Max file size: 50MB';
+                    
+                    // Reset button
+                    this.disabled = false;
+                    this.innerHTML = 'Assign Resource';
+                })
+                .catch(error => {
+                    console.error('Error assigning resource:', error);
+                    alert('Error assigning resource. Please try again.');
+                    
+                    // Reset button
+                    this.disabled = false;
+                    this.innerHTML = 'Assign Resource';
+                });
+            }, 1500);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadAdmins(); // Load admins for the dropdown
+            
+            // Sidebar toggle functionality
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                mainContent.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                window.location.href = '../login.html';
+            });
+            
+            // Featured toggle
+            document.getElementById('featuredOnly').addEventListener('change', function() {
+                // In a real app, you would filter the resources based on this toggle
+                console.log('Featured only:', this.checked);
+            });
+            
+            // Admin resource category buttons
+            document.getElementById('viewAssignedBtn').addEventListener('click', function() {
+                // Filter resources to show only assigned ones
+                alert('Viewing assigned resources');
+                // In a real app, you would filter the table to show only assigned resources
+            });
+            
+            document.getElementById('viewPendingBtn').addEventListener('click', function() {
+                // Filter resources to show only pending ones
+                alert('Viewing pending resources');
+                // In a real app, you would filter the table to show only pending resources
+            });
+            
+            document.getElementById('viewUnassignedBtn').addEventListener('click', function() {
+                // Filter resources to show only unassigned ones
+                alert('Viewing unassigned resources');
+                // In a real app, you would filter the table to show only unassigned resources
+            });
+            
+            document.getElementById('viewCompletedBtn').addEventListener('click', function() {
+                // Filter resources to show only completed ones
+                alert('Viewing completed resources');
+                // In a real app, you would filter the table to show only completed resources
+            });
+            
+            // Initialize admin resource modal
+            document.getElementById('adminResourceModal').addEventListener('show.bs.modal', function() {
+                loadAdmins(); // Refresh admin list when modal opens
+                
+                // Reset form fields
+                document.getElementById('adminResourceType').value = '';
+                document.getElementById('adminResourceSubject').value = '';
+                document.getElementById('paperType').value = '';
+                document.getElementById('paperYear').value = '';
+                document.getElementById('paperMonth').value = '';
+                document.getElementById('paperDate').value = '';
+                document.getElementById('paperShift').value = '';
+                document.getElementById('paperNumber').value = '';
+                document.getElementById('adminResourceTitle').value = '';
+                document.getElementById('adminResourceDescription').value = '';
+                document.getElementById('adminResourcePriority').checked = false;
+                document.querySelector('#adminResourceModal .file-info').textContent = 'Max file size: 50MB';
+                
+                // Hide dynamic fields
+                document.getElementById('yearRow').style.display = 'none';
+                document.getElementById('jeeMainFields').style.display = 'none';
+                document.getElementById('jeeAdvancedFields').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

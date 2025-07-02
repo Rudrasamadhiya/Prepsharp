@@ -91,8 +91,10 @@ function createExam() {
             // Refresh the exam list
             if (document.getElementById('all-papers').classList.contains('active')) {
                 loadExams();
+                setTimeout(updateQuestionCounts, 1000); // Update counts after exams load
             } else {
                 loadMyExams();
+                setTimeout(updateQuestionCounts, 1000); // Update counts after exams load
             }
             
             // Show success message

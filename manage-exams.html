@@ -1389,7 +1389,7 @@
             });
             
             if (papers.length === 0) {
-                examsListElement.innerHTML = '<tr><td colspan="8" class="text-center">No exam papers found</td></tr>';
+                examsListElement.innerHTML = '<tr><td colspan="9" class="text-center">No exam papers found</td></tr>';
                 return;
             }
             
@@ -1485,7 +1485,7 @@
         // Function to show error message
         function showError(message) {
             const examsListElement = document.getElementById('exams-list');
-            examsListElement.innerHTML = `<tr><td colspan="6">${message}</td></tr>`;
+            examsListElement.innerHTML = `<tr><td colspan="9">${message}</td></tr>`;
         }
         
         // Function to get exam type display name
@@ -1616,7 +1616,7 @@
             if (visibleCount === 0 && rows.length > 0) {
                 const examsListElement = document.getElementById('exams-list');
                 const noResultsRow = document.createElement('tr');
-                noResultsRow.innerHTML = `<td colspan="8" class="text-center py-4">
+                noResultsRow.innerHTML = `<td colspan="9" class="text-center py-4">
                     <i class="fas fa-search fa-2x text-muted mb-3"></i>
                     <h5>No matching exams found</h5>
                     <p class="text-muted">Try adjusting your filters</p>
@@ -1850,19 +1850,29 @@
                 </div>
             `;
             
-            // Load admins from admin collection
-            db.collection("admin").get().then(adminSnapshot => {
-                const allAdmins = [];
-                adminSnapshot.forEach(doc => {
-                    allAdmins.push(doc.data().email || doc.id);
-                });
-                
-                db.collection("papers").doc(paperId).get().then(doc => {
-                    if (doc.exists) {
-                        const paper = doc.data();
-                        const adminList = paper.adminList || [];
-                        const editAccess = paper.editAccess !== false;
+            db.collection("papers").doc(paperId).get().then(doc => {
+                if (doc.exists) {
+                    const paper = doc.data();
+                    const adminList = paper.adminList || [];
+                    const editAccess = paper.editAccess !== false;
                     
+                    // Load admins from admin collection
+                    db.collection("admins").get().then(adminSnapshot => {
+                        const allAdmins = [];
+                        adminSnapshot.forEach(adminDoc => {
+                            const adminData = adminDoc.data();
+                            console.log('Admin doc:', adminDoc.id, adminData);
+                            if (adminData.email) {
+                                allAdmins.push(adminData.email);
+                            }
+                        });
+                        
+                        // Fallback if no admins found
+                        if (allAdmins.length === 0) {
+                            allAdmins.push('admin@prepsharp.com', 'test@admin.com');
+                        }
+                        console.log('All admins:', allAdmins);
+                        
                         document.getElementById('adminListContent').innerHTML = `
                             <div class="mb-3">
                                 <h6>Paper: ${paper.name}</h6>
@@ -1893,10 +1903,10 @@
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
                                         <i class="fas fa-crown me-2 text-warning"></i>
-                                        ${paper.createdBy.split('@')[0]}
+                                        ${paper.createdBy ? paper.createdBy.split('@')[0] : 'Unknown'}
                                         <span class="badge bg-warning ms-2">Creator</span>
                                     </div>
-                                    <small class="text-muted">${paper.createdBy}</small>
+                                    <small class="text-muted">${paper.createdBy || 'Unknown'}</small>
                                 </div>
                                 ${adminList.map(admin => `
                                     <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -1914,14 +1924,16 @@
                                 `).join('')}
                             </div>
                         `;
-                    } else {
-                        document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Paper not found</div>';
-                    }
-                }).catch(error => {
-                    document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Error loading admin list</div>';
-                });
+                    }).catch(error => {
+                        console.error('Error loading admins:', error);
+                        document.getElementById('adminListContent').innerHTML = '<div class="alert alert-warning">Admin list not available</div>';
+                    });
+                } else {
+                    document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Paper not found</div>';
+                }
             }).catch(error => {
-                document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Error loading admins</div>';
+                console.error('Error loading paper:', error);
+                document.getElementById('adminListContent').innerHTML = '<div class="alert alert-danger">Error loading paper details</div>';
             });
         }
         
