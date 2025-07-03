@@ -221,11 +221,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const imageData = document.getElementById('screenshot-preview').src;
         
         if (currentCaptureTarget === 'question') {
+            // Hide text field, label, and file input
+            document.getElementById('question-text').style.display = 'none';
+            
+            // Use helper function if available, otherwise try direct selectors
+            if (typeof hideQuestionImageElements === 'function') {
+                hideQuestionImageElements();
+            } else {
+                try {
+                    document.querySelector('label[for="question-image"]').style.display = 'none';
+                    document.querySelector('.d-flex:has(#question-image)').style.display = 'none';
+                } catch (e) {
+                    console.log('Selector not supported, using fallback');
+                    const fileInput = document.getElementById('question-image');
+                    if (fileInput && fileInput.parentElement) {
+                        fileInput.parentElement.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Ensure image is displayed properly
             document.getElementById('question-image-preview-img').src = imageData;
             document.getElementById('question-image-preview').style.display = 'block';
+            document.getElementById('question-image-preview-img').style.display = 'block';
+            document.getElementById('question-image-preview-img').style.maxWidth = '100%';
         } else if (currentCaptureTarget === 'option' && currentOptionTarget) {
+            // Hide option text field
+            document.getElementById(`option-${currentOptionTarget}-text`).style.display = 'none';
+            
+            // Hide option image label and file input
+            if (typeof hideOptionImageElements === 'function') {
+                hideOptionImageElements(currentOptionTarget);
+            } else {
+                try {
+                    document.querySelector(`label[for="option-${currentOptionTarget}-image"]`).style.display = 'none';
+                    document.querySelector(`.d-flex:has(#option-${currentOptionTarget}-image)`).style.display = 'none';
+                } catch (e) {
+                    console.log('Selector not supported, using fallback');
+                    const fileInput = document.getElementById(`option-${currentOptionTarget}-image`);
+                    if (fileInput && fileInput.parentElement) {
+                        fileInput.parentElement.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Ensure image is displayed properly
             document.getElementById(`option-${currentOptionTarget}-image-preview-img`).src = imageData;
             document.getElementById(`option-${currentOptionTarget}-image-preview`).style.display = 'block';
+            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).style.display = 'block';
+            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).style.maxWidth = '100%';
         }
         
         // Reset screenshot area
@@ -445,8 +489,8 @@ function captureSelectedArea() {
         const message = document.getElementById('selection-message');
         if (message) message.style.display = 'none';
         
-        // Create a fake image to use as a placeholder
-        const imageData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+        // Create a visible test image with blue background
+        const imageData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QgFCgkJKPMPBQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAGAElEQVR42u3dMW7bQBBAUdLI979y0gVpUqQJUgSIi4Wh5fJ/3hvABfhjZ7jLcRwHAIH+eQUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWAGEFQFgBhBVAWAGEFUBYAYQVAGEFEFYAYQUQVgBhBRBWAIQVQFgBhBVAWAGEFUBYARBWAGEFEFYAYQUQVgBhBUBYAYQVQFgBhBVAWAGEFQBhBRBWAGEFEFYAYQUQVgCEFUBYAYQVQFgBhBVAWAEQVgBhBRBWAGEFEFYAYQVAWAGEFUBYAYQVQFgBhBUAYQUQVgBhBRBWAGEFEFYAhBVAWAGEFUBYAYQVQFgBEFYAYQUQVgBhBRBWgGv9BxVXZ7C6rC7OAAAAAElFTkSuQmCC';
         
         // Show screenshot area
         const screenshotArea = document.getElementById('screenshot-area');
@@ -456,6 +500,8 @@ function captureSelectedArea() {
         const screenshotPreview = document.getElementById('screenshot-preview');
         screenshotPreview.src = imageData;
         screenshotPreview.style.display = 'block';
+        screenshotPreview.style.maxWidth = '300px';
+        screenshotPreview.style.height = 'auto';
         
         // Hide instructions and show buttons
         document.getElementById('paste-instructions').style.display = 'none';
@@ -463,6 +509,9 @@ function captureSelectedArea() {
         
         // Reset selection mode
         resetSelectionMode();
+        
+        // Log to console for debugging
+        console.log('Image set to:', imageData.substring(0, 50) + '...');
     } catch (err) {
         console.error('Error in captureSelectedArea:', err);
         alert('Error capturing selected area. Please try again.');
@@ -483,6 +532,8 @@ function removeQuestionImage() {
     document.getElementById('question-image-preview-img').src = '';
     document.getElementById('question-image-preview').style.display = 'none';
     document.getElementById('question-image').value = '';
+    // Keep question text visible
+    document.getElementById('question-text').style.display = 'block';
 }
 
 // Function to remove option image
@@ -490,4 +541,6 @@ function removeOptionImage(option) {
     document.getElementById(`option-${option}-image-preview-img`).src = '';
     document.getElementById(`option-${option}-image-preview`).style.display = 'none';
     document.getElementById(`option-${option}-image`).value = '';
+    // Keep option text visible
+    document.getElementById(`option-${option}-text`).style.display = 'block';
 }

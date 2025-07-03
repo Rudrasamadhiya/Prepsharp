@@ -523,7 +523,7 @@
             updateRegisterButton();
         });
         
-        // Verify Email - Send OTP via Firebase
+        // Verify Email - Check existence and simulate OTP
         document.getElementById('verify-email').addEventListener('click', async function() {
             const email = document.getElementById('email').value.trim();
             
@@ -541,63 +541,38 @@
                 document.getElementById('emailSuccess').style.display = 'none';
                 
                 // Check if email already exists
-                console.log('Checking email:', email);
                 const userDoc = await db.collection('users').doc(email).get();
-                console.log('User doc exists:', userDoc.exists);
                 if (userDoc.exists) {
-                    console.log('Email already exists in database');
                     document.getElementById('emailError').textContent = 'Email already registered. Please use a different email.';
                     document.getElementById('emailError').style.display = 'block';
                     this.textContent = 'Verify Email';
                     this.disabled = false;
                     return;
                 }
-                console.log('Email is available, proceeding with OTP');
                 
-                this.textContent = 'Sending OTP...';
-                this.disabled = true;
-                
-                // Generate a 6-digit OTP
+                // Generate OTP and show in alert (for testing)
                 const emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                alert(`Your email OTP is: ${emailOTP}`);
                 
-                // Store OTP in Firestore for verification
+                // Store OTP in Firestore
                 await db.collection('emailOTPs').doc(email).set({
                     otp: emailOTP,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    expires: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 10 * 60 * 1000)) // 10 minutes
-                });
-                
-                // Send custom email with OTP using Firebase Cloud Functions
-                // This requires a Cloud Function to be set up
-                await db.collection('mail').add({
-                    to: email,
-                    message: {
-                        subject: 'Your PrepSharp Email Verification Code',
-                        html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
-                                <h2 style="color: #4f46e5;">PrepSharp Email Verification</h2>
-                                <p>Hello,</p>
-                                <p>Your email verification code is:</p>
-                                <h1 style="font-size: 32px; letter-spacing: 5px; text-align: center; margin: 30px 0; padding: 10px; background: #f3f4f6; border-radius: 5px;">${emailOTP}</h1>
-                                <p>This code will expire in 10 minutes.</p>
-                                <p>If you didn't request this code, please ignore this email.</p>
-                                <p>Thanks,<br>The PrepSharp Team</p>
-                              </div>`
-                    }
+                    expires: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 10 * 60 * 1000))
                 });
                 
                 // Show OTP input field
                 document.getElementById('email-otp-group').style.display = 'block';
                 document.getElementById('emailSuccess').style.display = 'block';
-                document.getElementById('emailSuccess').textContent = 'OTP sent to your email! Please check your inbox.';
-                this.textContent = 'OTP Sent!';
+                document.getElementById('emailSuccess').textContent = 'OTP generated! Enter the code shown in the alert.';
+                this.textContent = 'OTP Generated!';
                 this.style.background = '#3b82f6';
                 
-                // Store email for verification
                 window.verifyingEmail = email;
                 
             } catch (error) {
-                console.error('Error sending email OTP:', error);
-                alert('Error sending OTP: ' + error.message);
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
                 this.textContent = 'Verify Email';
                 this.disabled = false;
             }

@@ -2,12 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Function to update resource options based on type selection
+        function updateResourceOptions() {
+            const resourceType = document.getElementById('adminResourceType').value;
+            const paperTypeSelect = document.getElementById('paperType');
+            const subjectSelect = document.getElementById('adminResourceSubject');
+            
+            // Enable paper type and subject selection
+            paperTypeSelect.disabled = false;
+            subjectSelect.disabled = false;
+            
+            // Show/hide relevant fields
+            showRelevantFields();
+            
+            // Generate title and description based on current selections
+            generateResourceTitle();
+        }
+        
+        // Function to show/hide fields based on paper type
+        function showRelevantFields() {
+            const paperType = document.getElementById('paperType').value;
+            const yearRow = document.getElementById('yearRow');
+            const jeeMainFields = document.getElementById('jeeMainFields');
+            const jeeAdvancedFields = document.getElementById('jeeAdvancedFields');
+            
+            // Hide all specific fields first
+            yearRow.style.display = 'none';
+            jeeMainFields.style.display = 'none';
+            jeeAdvancedFields.style.display = 'none';
+            
+            // Show relevant fields based on paper type
+            if (paperType) {
+                yearRow.style.display = 'flex'; // Show year for all paper types
+                
+                if (paperType === 'jee_main') {
+                    jeeMainFields.style.display = 'block';
+                } else if (paperType === 'jee_advanced') {
+                    jeeAdvancedFields.style.display = 'block';
+                }
+            }
+        }
+        
+        // Function to generate resource title and description
+        function generateResourceTitle() {
+            const resourceType = document.getElementById('adminResourceType').value;
+            const subject = document.getElementById('adminResourceSubject').value;
+            const paperType = document.getElementById('paperType').value;
+            const titleInput = document.getElementById('adminResourceTitle');
+            const descriptionInput = document.getElementById('adminResourceDescription');
+            
+            if (!resourceType || !subject || !paperType) {
+                return; // Not enough info to generate title
+            }
+            
+            // Get readable names
+            const resourceTypeName = resourceType.includes('question') ? 'Question Paper' : 'Solution & Details';
+            const formatType = resourceType.includes('pdf') ? 'PDF' : 'DOC';
+            let paperTypeName = '';
+            
+            switch(paperType) {
+                case 'jee_main': paperTypeName = 'JEE Main'; break;
+                case 'jee_advanced': paperTypeName = 'JEE Advanced'; break;
+                case 'neet': paperTypeName = 'NEET'; break;
+                case 'mock_test': paperTypeName = 'Mock Test'; break;
+                case 'practice': paperTypeName = 'Practice Paper'; break;
+                default: paperTypeName = paperType;
+            }
+            
+            let subjectName = '';
+            switch(subject) {
+                case 'complete': subjectName = 'Complete Paper'; break;
+                case 'physics': subjectName = 'Physics'; break;
+                case 'chemistry': subjectName = 'Chemistry'; break;
+                case 'mathematics': subjectName = 'Mathematics'; break;
+                case 'general': subjectName = 'General'; break;
+                default: subjectName = subject;
+            }
+            
+            // Get additional details based on paper type
+            let additionalInfo = '';
+            const paperYear = document.getElementById('paperYear').value;
+            
+            if (paperType === 'jee_main' && paperYear) {
+                const paperMonth = document.getElementById('paperMonth').value;
+                const paperDate = document.getElementById('paperDate').value;
+                const paperShift = document.getElementById('paperShift').value;
+                
+                if (paperMonth && paperDate && paperShift) {
+                    additionalInfo = ` (${paperYear} ${paperMonth} ${paperDate}, ${paperShift} Shift)`;
+                } else if (paperYear) {
+                    additionalInfo = ` (${paperYear})`;
+                }
+            } else if (paperType === 'jee_advanced' && paperYear) {
+                const paperNumber = document.getElementById('paperNumber').value;
+                
+                if (paperNumber) {
+                    additionalInfo = ` (${paperYear}, ${paperNumber})`;
+                } else if (paperYear) {
+                    additionalInfo = ` (${paperYear})`;
+                }
+            } else if (paperYear) {
+                additionalInfo = ` (${paperYear})`;
+            }
+            
+            // Generate title
+            const title = `${paperTypeName} ${resourceTypeName} - ${subjectName}${additionalInfo} (${formatType})`;
+            titleInput.value = title;
+            
+            // Generate description
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = currentDate.toLocaleString('default', { month: 'long' });
+            
+            let description = `${resourceTypeName} for ${paperTypeName} ${subjectName}${additionalInfo}. `;
+            
+            if (resourceType.includes('question')) {
+                if (subject === 'complete') {
+                    description += `This document contains the complete question paper for ${paperTypeName}${additionalInfo}. Use this for adding exam paper to the system.`;
+                } else {
+                    description += `This document contains important questions for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding exam questions to the system.`;
+                }
+            } else {
+                if (subject === 'complete') {
+                    description += `This document contains detailed solutions for the complete ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
+                } else {
+                    description += `This document contains detailed solutions and explanations for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
+                }
+            }
+            
+            description += ` Created in ${month} ${year}.`;
+            
+            descriptionInput.value = description;
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resources - PrepSharp Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="../images/logo.png">
+    <link rel="stylesheet" href="panel-styles.css">
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -825,11 +960,11 @@
             </div>
             
             <!-- Admin Resources -->
-            <div class="row mb-4">
+            <div class="row mb-4 admin-resources-row">
                 <div class="col-12 mb-2">
                     <h5>Admin Resources</h5>
                 </div>
-                <div class="col-md-3 col-sm-6 mb-4">
+                <div class="col-md-3 col-sm-6 mb-4" id="assigned-row">
                     <div class="card h-100 border-primary">
                         <div class="card-body text-center">
                             <div class="mb-3">
@@ -837,11 +972,11 @@
                             </div>
                             <h5>Assigned Resources</h5>
                             <p class="text-muted">Resources assigned to admins</p>
-                            <button class="btn btn-sm btn-outline-primary" id="viewAssignedBtn">View All</button>
+                            <button class="btn btn-sm btn-outline-primary admin-resource-btn" id="viewAssignedBtn">View All</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 mb-4">
+                <div class="col-md-3 col-sm-6 mb-4" id="pending-row">
                     <div class="card h-100 border-success">
                         <div class="card-body text-center">
                             <div class="mb-3">
@@ -849,11 +984,11 @@
                             </div>
                             <h5>Pending Tasks</h5>
                             <p class="text-muted">Resources waiting for processing</p>
-                            <button class="btn btn-sm btn-outline-success" id="viewPendingBtn">View All</button>
+                            <button class="btn btn-sm btn-outline-success admin-resource-btn" id="viewPendingBtn">View All</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 mb-4">
+                <div class="col-md-3 col-sm-6 mb-4" id="unassigned-row">
                     <div class="card h-100 border-warning">
                         <div class="card-body text-center">
                             <div class="mb-3">
@@ -861,11 +996,11 @@
                             </div>
                             <h5>Unassigned Resources</h5>
                             <p class="text-muted">Resources waiting for assignment</p>
-                            <button class="btn btn-sm btn-outline-warning" id="viewUnassignedBtn">View All</button>
+                            <button class="btn btn-sm btn-outline-warning admin-resource-btn" id="viewUnassignedBtn">View All</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 mb-4">
+                <div class="col-md-3 col-sm-6 mb-4" id="completed-row">
                     <div class="card h-100 border-info">
                         <div class="card-body text-center">
                             <div class="mb-3">
@@ -873,7 +1008,7 @@
                             </div>
                             <h5>Completed Resources</h5>
                             <p class="text-muted">Resources processed and completed</p>
-                            <button class="btn btn-sm btn-outline-info" id="viewCompletedBtn">View All</button>
+                            <button class="btn btn-sm btn-outline-info admin-resource-btn" id="viewCompletedBtn">View All</button>
                         </div>
                     </div>
                 </div>
@@ -898,9 +1033,9 @@
                                             <th>Title</th>
                                             <th>Type</th>
                                             <th>Subject</th>
-                                            <th>Added By</th>
+                                            <th>Assigned To</th>
                                             <th>Date Added</th>
-                                            <th>Downloads</th>
+                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -1262,12 +1397,164 @@
             </div>
         </div>
     </div>
+    
+    <!-- Resource View Modals -->
+    
+    <!-- Assigned Resources Modal -->
+    <div class="modal fade" id="assignedResourcesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Upload Resource For Admin</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminResourceForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="adminResourceTitle" class="form-label">Resource Title (Auto-generated)</label>
+                                <input type="text" class="form-control" id="adminResourceTitle" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="adminResourceType" class="form-label">Resource Type</label>
+                                <select class="form-select" id="adminResourceType" required onchange="updateResourceOptions()">
+                                    <option value="">Select Type</option>
+                                    <option value="question_pdf">Question Papers (PDF)</option>
+                                    <option value="question_doc">Question Papers (DOC)</option>
+                                    <option value="solution_pdf">Solutions & Details (PDF)</option>
+                                    <option value="solution_doc">Solutions & Details (DOC)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="adminResourceSubject" class="form-label">Subject</label>
+                                <select class="form-select" id="adminResourceSubject" required onchange="generateResourceTitle()">
+                                    <option value="">Select Subject</option>
+                                    <option value="complete">Complete Paper</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="paperType" class="form-label">Paper Type</label>
+                                <select class="form-select" id="paperType" required onchange="showRelevantFields(); generateResourceTitle();">
+                                    <option value="">Select Paper Type</option>
+                                    <option value="jee_main">JEE Main</option>
+                                    <option value="jee_advanced">JEE Advanced</option>
+                                    <option value="neet">NEET</option>
+                                    <option value="mock_test">Mock Test</option>
+                                    <option value="practice">Practice Paper</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="assignToAdmin" class="form-label">Assign To Admin</label>
+                                <select class="form-select" id="assignToAdmin" required>
+                                    <option value="">Select Admin</option>
+                                    <option value="later">Will Do Later</option>
+                                    <!-- Admin options will be loaded dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Dynamic fields that appear based on paper type -->
+                        <div class="row mb-3" id="yearRow">
+                            <div class="col-md-4">
+                                <label for="paperYear" class="form-label">Year</label>
+                                <select class="form-select" id="paperYear" onchange="generateResourceTitle()">
+                                    <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            
+                            <!-- JEE Main specific fields -->
+                            <div class="col-md-8" id="jeeMainFields" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="paperMonth" class="form-label">Month</label>
+                                        <select class="form-select" id="paperMonth" onchange="generateResourceTitle()">
+                                            <option value="">Select Month</option>
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="paperDate" class="form-label">Date</label>
+                                        <input type="number" class="form-control" id="paperDate" min="1" max="31" placeholder="Date" onchange="generateResourceTitle()">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="paperShift" class="form-label">Shift</label>
+                                        <select class="form-select" id="paperShift" onchange="generateResourceTitle()">
+                                            <option value="">Select Shift</option>
+                                            <option value="Morning">Morning</option>
+                                            <option value="Evening">Evening</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- JEE Advanced specific fields -->
+                            <div class="col-md-4" id="jeeAdvancedFields" style="display: none;">
+                                <label for="paperNumber" class="form-label">Paper</label>
+                                <select class="form-select" id="paperNumber" onchange="generateResourceTitle()">
+                                    <option value="">Select Paper</option>
+                                    <option value="Paper 1">Paper 1</option>
+                                    <option value="Paper 2">Paper 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminResourceDescription" class="form-label">Description (Auto-generated)</label>
+                            <textarea class="form-control" id="adminResourceDescription" rows="3" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload File</label>
+                            <div class="file-upload">
+                                <input type="file" id="adminResourceFile" accept=".pdf,.doc,.docx" required>
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag and drop PDF or Word files here or click to browse</p>
+                                <div class="file-info">Max file size: 50MB</div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="adminResourcePriority">
+                            <label class="form-check-label" for="adminResourcePriority">
+                                Mark as high priority
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="adminUploadBtn">Assign Resource</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="category-modals.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -1397,138 +1684,6 @@
         });
         
         // Event listeners
-        // Function to update resource options based on type selection
-        function updateResourceOptions() {
-            const resourceType = document.getElementById('adminResourceType').value;
-            const paperTypeSelect = document.getElementById('paperType');
-            const subjectSelect = document.getElementById('adminResourceSubject');
-            
-            // Enable paper type and subject selection
-            paperTypeSelect.disabled = false;
-            subjectSelect.disabled = false;
-            
-            // Show/hide relevant fields
-            showRelevantFields();
-            
-            // Generate title and description based on current selections
-            generateResourceTitle();
-        }
-        
-        // Function to show/hide fields based on paper type
-        function showRelevantFields() {
-            const paperType = document.getElementById('paperType').value;
-            const yearRow = document.getElementById('yearRow');
-            const jeeMainFields = document.getElementById('jeeMainFields');
-            const jeeAdvancedFields = document.getElementById('jeeAdvancedFields');
-            
-            // Hide all specific fields first
-            yearRow.style.display = 'none';
-            jeeMainFields.style.display = 'none';
-            jeeAdvancedFields.style.display = 'none';
-            
-            // Show relevant fields based on paper type
-            if (paperType) {
-                yearRow.style.display = 'flex'; // Show year for all paper types
-                
-                if (paperType === 'jee_main') {
-                    jeeMainFields.style.display = 'block';
-                } else if (paperType === 'jee_advanced') {
-                    jeeAdvancedFields.style.display = 'block';
-                }
-            }
-        }
-        
-        // Function to generate resource title and description
-        function generateResourceTitle() {
-            const resourceType = document.getElementById('adminResourceType').value;
-            const subject = document.getElementById('adminResourceSubject').value;
-            const paperType = document.getElementById('paperType').value;
-            const titleInput = document.getElementById('adminResourceTitle');
-            const descriptionInput = document.getElementById('adminResourceDescription');
-            
-            if (!resourceType || !subject || !paperType) {
-                return; // Not enough info to generate title
-            }
-            
-            // Get readable names
-            const resourceTypeName = resourceType.includes('question') ? 'Question Paper' : 'Solution & Details';
-            const formatType = resourceType.includes('pdf') ? 'PDF' : 'DOC';
-            let paperTypeName = '';
-            
-            switch(paperType) {
-                case 'jee_main': paperTypeName = 'JEE Main'; break;
-                case 'jee_advanced': paperTypeName = 'JEE Advanced'; break;
-                case 'neet': paperTypeName = 'NEET'; break;
-                case 'mock_test': paperTypeName = 'Mock Test'; break;
-                case 'practice': paperTypeName = 'Practice Paper'; break;
-                default: paperTypeName = paperType;
-            }
-            
-            let subjectName = '';
-            switch(subject) {
-                case 'complete': subjectName = 'Complete Paper'; break;
-                case 'physics': subjectName = 'Physics'; break;
-                case 'chemistry': subjectName = 'Chemistry'; break;
-                case 'mathematics': subjectName = 'Mathematics'; break;
-                case 'general': subjectName = 'General'; break;
-                default: subjectName = subject;
-            }
-            
-            // Get additional details based on paper type
-            let additionalInfo = '';
-            const paperYear = document.getElementById('paperYear').value;
-            
-            if (paperType === 'jee_main' && paperYear) {
-                const paperMonth = document.getElementById('paperMonth').value;
-                const paperDate = document.getElementById('paperDate').value;
-                const paperShift = document.getElementById('paperShift').value;
-                
-                if (paperMonth && paperDate && paperShift) {
-                    additionalInfo = ` (${paperYear} ${paperMonth} ${paperDate}, ${paperShift} Shift)`;
-                } else if (paperYear) {
-                    additionalInfo = ` (${paperYear})`;
-                }
-            } else if (paperType === 'jee_advanced' && paperYear) {
-                const paperNumber = document.getElementById('paperNumber').value;
-                
-                if (paperNumber) {
-                    additionalInfo = ` (${paperYear}, ${paperNumber})`;
-                } else if (paperYear) {
-                    additionalInfo = ` (${paperYear})`;
-                }
-            } else if (paperYear) {
-                additionalInfo = ` (${paperYear})`;
-            }
-            
-            // Generate title
-            const title = `${paperTypeName} ${resourceTypeName} - ${subjectName}${additionalInfo} (${formatType})`;
-            titleInput.value = title;
-            
-            // Generate description
-            const currentDate = new Date();
-            const year = currentDate.getFullYear();
-            const month = currentDate.toLocaleString('default', { month: 'long' });
-            
-            let description = `${resourceTypeName} for ${paperTypeName} ${subjectName}${additionalInfo}. `;
-            
-            if (resourceType.includes('question')) {
-                if (subject === 'complete') {
-                    description += `This document contains the complete question paper for ${paperTypeName}${additionalInfo}. Use this for adding exam paper to the system.`;
-                } else {
-                    description += `This document contains important questions for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding exam questions to the system.`;
-                }
-            } else {
-                if (subject === 'complete') {
-                    description += `This document contains detailed solutions for the complete ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
-                } else {
-                    description += `This document contains detailed solutions and explanations for ${subjectName} section of ${paperTypeName}${additionalInfo}. Use this for adding solution content to the system.`;
-                }
-            }
-            
-            description += ` Created in ${month} ${year}.`;
-            
-            descriptionInput.value = description;
-        }
         
         // Load admins for the dropdown
         async function loadAdmins() {
@@ -1672,28 +1827,35 @@
                             status: adminId === 'later' ? 'unassigned' : 'pending',
                             dateAssigned: new Date().toISOString()
                         })
-                .then(() => {
-                    alert('Resource assigned to admin successfully!');
-                    
-                    // Close modal and reset form
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('adminResourceModal'));
-                    modal.hide();
-                    form.reset();
-                    document.querySelector('#adminResourceModal .file-info').textContent = 'Max file size: 50MB';
-                    
-                    // Reset button
-                    this.disabled = false;
-                    this.innerHTML = 'Assign Resource';
+                        .then(() => {
+                            alert('Resource uploaded and assigned successfully!');
+                            
+                            // Close modal and reset form
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('adminResourceModal'));
+                            modal.hide();
+                            form.reset();
+                            document.querySelector('#adminResourceModal .file-info').textContent = 'Max file size: 50MB';
+                            
+                            // Reset button
+                            this.disabled = false;
+                            this.innerHTML = 'Assign Resource';
+                        })
+                        .catch(error => {
+                            console.error('Error saving resource data:', error);
+                            alert('Error saving resource data. Please try again.');
+                            
+                            // Reset button
+                            this.disabled = false;
+                            this.innerHTML = 'Assign Resource';
+                        });
+                    }).catch(error => {
+                        console.error('Error getting download URL:', error);
+                        alert('Error getting download URL. Please try again.');
+                        this.disabled = false;
+                        this.innerHTML = 'Assign Resource';
+                    });
                 })
-                .catch(error => {
-                    console.error('Error assigning resource:', error);
-                    alert('Error assigning resource. Please try again.');
-                    
-                    // Reset button
-                    this.disabled = false;
-                    this.innerHTML = 'Assign Resource';
-                });
-            }, 1500);
+            );
         });
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -1723,30 +1885,9 @@
                 console.log('Featured only:', this.checked);
             });
             
-            // Admin resource category buttons
-            document.getElementById('viewAssignedBtn').addEventListener('click', function() {
-                // Filter resources to show only assigned ones
-                alert('Viewing assigned resources');
-                // In a real app, you would filter the table to show only assigned resources
-            });
+            // Admin resource functions are defined in admin-resources.js
             
-            document.getElementById('viewPendingBtn').addEventListener('click', function() {
-                // Filter resources to show only pending ones
-                alert('Viewing pending resources');
-                // In a real app, you would filter the table to show only pending resources
-            });
-            
-            document.getElementById('viewUnassignedBtn').addEventListener('click', function() {
-                // Filter resources to show only unassigned ones
-                alert('Viewing unassigned resources');
-                // In a real app, you would filter the table to show only unassigned resources
-            });
-            
-            document.getElementById('viewCompletedBtn').addEventListener('click', function() {
-                // Filter resources to show only completed ones
-                alert('Viewing completed resources');
-                // In a real app, you would filter the table to show only completed resources
-            });
+            // Admin resource buttons are handled in admin-resources.js
             
             // Initialize admin resource modal
             document.getElementById('adminResourceModal').addEventListener('show.bs.modal', function() {
@@ -1774,4 +1915,148 @@
         });
     </script>
 </body>
-</html>
+</html>< ! - -   A s s i g n e d   R e s o u r c e s   M o d a l   - - > 
+ < d i v   c l a s s = " m o d a l   f a d e "   i d = " a s s i g n e d R e s o u r c e s M o d a l "   t a b i n d e x = " - 1 "   a r i a - h i d d e n = " t r u e " > 
+         < d i v   c l a s s = " m o d a l - d i a l o g   m o d a l - x l " > 
+                 < d i v   c l a s s = " m o d a l - c o n t e n t " > 
+                         < d i v   c l a s s = " m o d a l - h e a d e r   b g - p r i m a r y   t e x t - w h i t e " > 
+                                 < h 5   c l a s s = " m o d a l - t i t l e " > A s s i g n e d   R e s o u r c e s < / h 5 > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n - c l o s e   b t n - c l o s e - w h i t e "   d a t a - b s - d i s m i s s = " m o d a l "   a r i a - l a b e l = " C l o s e " > < / b u t t o n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - b o d y " > 
+                                 < d i v   c l a s s = " t a b l e - r e s p o n s i v e " > 
+                                         < t a b l e   c l a s s = " t a b l e   t a b l e - h o v e r " > 
+                                                 < t h e a d > 
+                                                         < t r > 
+                                                                 < t h > T i t l e < / t h > 
+                                                                 < t h > T y p e < / t h > 
+                                                                 < t h > S u b j e c t < / t h > 
+                                                                 < t h > A s s i g n e d   T o < / t h > 
+                                                                 < t h > D a t e   A d d e d < / t h > 
+                                                                 < t h > S t a t u s < / t h > 
+                                                                 < t h > A c t i o n s < / t h > 
+                                                         < / t r > 
+                                                 < / t h e a d > 
+                                                 < t b o d y   i d = " a s s i g n e d R e s o u r c e s T a b l e " > 
+                                                         < t r > 
+                                                                 < t d   c o l s p a n = " 7 "   c l a s s = " t e x t - c e n t e r " > L o a d i n g   r e s o u r c e s . . . < / t d > 
+                                                         < / t r > 
+                                                 < / t b o d y > 
+                                         < / t a b l e > 
+                                 < / d i v > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - f o o t e r " > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - b s - d i s m i s s = " m o d a l " > C l o s e < / b u t t o n > 
+                         < / d i v > 
+                 < / d i v > 
+         < / d i v > 
+ < / d i v > 
+ 
+ < ! - -   P e n d i n g   T a s k s   M o d a l   - - > 
+ < d i v   c l a s s = " m o d a l   f a d e "   i d = " p e n d i n g T a s k s M o d a l "   t a b i n d e x = " - 1 "   a r i a - h i d d e n = " t r u e " > 
+         < d i v   c l a s s = " m o d a l - d i a l o g   m o d a l - x l " > 
+                 < d i v   c l a s s = " m o d a l - c o n t e n t " > 
+                         < d i v   c l a s s = " m o d a l - h e a d e r   b g - s u c c e s s   t e x t - w h i t e " > 
+                                 < h 5   c l a s s = " m o d a l - t i t l e " > P e n d i n g   T a s k s < / h 5 > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n - c l o s e   b t n - c l o s e - w h i t e "   d a t a - b s - d i s m i s s = " m o d a l "   a r i a - l a b e l = " C l o s e " > < / b u t t o n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - b o d y " > 
+                                 < d i v   c l a s s = " t a b l e - r e s p o n s i v e " > 
+                                         < t a b l e   c l a s s = " t a b l e   t a b l e - h o v e r " > 
+                                                 < t h e a d > 
+                                                         < t r > 
+                                                                 < t h > T i t l e < / t h > 
+                                                                 < t h > T y p e < / t h > 
+                                                                 < t h > S u b j e c t < / t h > 
+                                                                 < t h > A s s i g n e d   T o < / t h > 
+                                                                 < t h > D a t e   A d d e d < / t h > 
+                                                                 < t h > S t a t u s < / t h > 
+                                                                 < t h > A c t i o n s < / t h > 
+                                                         < / t r > 
+                                                 < / t h e a d > 
+                                                 < t b o d y   i d = " p e n d i n g T a s k s T a b l e " > 
+                                                         < t r > 
+                                                                 < t d   c o l s p a n = " 7 "   c l a s s = " t e x t - c e n t e r " > L o a d i n g   r e s o u r c e s . . . < / t d > 
+                                                         < / t r > 
+                                                 < / t b o d y > 
+                                         < / t a b l e > 
+                                 < / d i v > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - f o o t e r " > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - b s - d i s m i s s = " m o d a l " > C l o s e < / b u t t o n > 
+                         < / d i v > 
+                 < / d i v > 
+         < / d i v > 
+ < / d i v > 
+ 
+ < ! - -   U n a s s i g n e d   R e s o u r c e s   M o d a l   - - > 
+ < d i v   c l a s s = " m o d a l   f a d e "   i d = " u n a s s i g n e d R e s o u r c e s M o d a l "   t a b i n d e x = " - 1 "   a r i a - h i d d e n = " t r u e " > 
+         < d i v   c l a s s = " m o d a l - d i a l o g   m o d a l - x l " > 
+                 < d i v   c l a s s = " m o d a l - c o n t e n t " > 
+                         < d i v   c l a s s = " m o d a l - h e a d e r   b g - w a r n i n g   t e x t - d a r k " > 
+                                 < h 5   c l a s s = " m o d a l - t i t l e " > U n a s s i g n e d   R e s o u r c e s < / h 5 > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n - c l o s e "   d a t a - b s - d i s m i s s = " m o d a l "   a r i a - l a b e l = " C l o s e " > < / b u t t o n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - b o d y " > 
+                                 < d i v   c l a s s = " t a b l e - r e s p o n s i v e " > 
+                                         < t a b l e   c l a s s = " t a b l e   t a b l e - h o v e r " > 
+                                                 < t h e a d > 
+                                                         < t r > 
+                                                                 < t h > T i t l e < / t h > 
+                                                                 < t h > T y p e < / t h > 
+                                                                 < t h > S u b j e c t < / t h > 
+                                                                 < t h > D a t e   A d d e d < / t h > 
+                                                                 < t h > S t a t u s < / t h > 
+                                                                 < t h > A c t i o n s < / t h > 
+                                                         < / t r > 
+                                                 < / t h e a d > 
+                                                 < t b o d y   i d = " u n a s s i g n e d R e s o u r c e s T a b l e " > 
+                                                         < t r > 
+                                                                 < t d   c o l s p a n = " 6 "   c l a s s = " t e x t - c e n t e r " > L o a d i n g   r e s o u r c e s . . . < / t d > 
+                                                         < / t r > 
+                                                 < / t b o d y > 
+                                         < / t a b l e > 
+                                 < / d i v > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - f o o t e r " > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - b s - d i s m i s s = " m o d a l " > C l o s e < / b u t t o n > 
+                         < / d i v > 
+                 < / d i v > 
+         < / d i v > 
+ < / d i v > 
+ 
+ < ! - -   C o m p l e t e d   R e s o u r c e s   M o d a l   - - > 
+ < d i v   c l a s s = " m o d a l   f a d e "   i d = " c o m p l e t e d R e s o u r c e s M o d a l "   t a b i n d e x = " - 1 "   a r i a - h i d d e n = " t r u e " > 
+         < d i v   c l a s s = " m o d a l - d i a l o g   m o d a l - x l " > 
+                 < d i v   c l a s s = " m o d a l - c o n t e n t " > 
+                         < d i v   c l a s s = " m o d a l - h e a d e r   b g - i n f o   t e x t - w h i t e " > 
+                                 < h 5   c l a s s = " m o d a l - t i t l e " > C o m p l e t e d   R e s o u r c e s < / h 5 > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n - c l o s e   b t n - c l o s e - w h i t e "   d a t a - b s - d i s m i s s = " m o d a l "   a r i a - l a b e l = " C l o s e " > < / b u t t o n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - b o d y " > 
+                                 < d i v   c l a s s = " t a b l e - r e s p o n s i v e " > 
+                                         < t a b l e   c l a s s = " t a b l e   t a b l e - h o v e r " > 
+                                                 < t h e a d > 
+                                                         < t r > 
+                                                                 < t h > T i t l e < / t h > 
+                                                                 < t h > T y p e < / t h > 
+                                                                 < t h > S u b j e c t < / t h > 
+                                                                 < t h > C o m p l e t e d   B y < / t h > 
+                                                                 < t h > D a t e   C o m p l e t e d < / t h > 
+                                                                 < t h > A c t i o n s < / t h > 
+                                                         < / t r > 
+                                                 < / t h e a d > 
+                                                 < t b o d y   i d = " c o m p l e t e d R e s o u r c e s T a b l e " > 
+                                                         < t r > 
+                                                                 < t d   c o l s p a n = " 6 "   c l a s s = " t e x t - c e n t e r " > L o a d i n g   r e s o u r c e s . . . < / t d > 
+                                                         < / t r > 
+                                                 < / t b o d y > 
+                                         < / t a b l e > 
+                                 < / d i v > 
+                         < / d i v > 
+                         < d i v   c l a s s = " m o d a l - f o o t e r " > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - b s - d i s m i s s = " m o d a l " > C l o s e < / b u t t o n > 
+                         < / d i v > 
+                 < / d i v > 
+         < / d i v > 
+ < / d i v > 

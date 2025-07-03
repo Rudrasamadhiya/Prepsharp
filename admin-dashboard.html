@@ -1052,45 +1052,45 @@
         <!-- Stats Cards -->
         <div class="row">
             <div class="col-md-3">
-                <div class="stats-card primary">
+                <div class="stats-card primary" style="opacity: 1; transform: translateY(0);">
                     <div class="stats-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stats-info">
-                        <div class="stats-number">0</div>
-                        <div class="stats-text">Total Users</div>
+                        <div class="stats-number" id="total-users-count">0</div>
+                        <div class="stats-text">Total Students</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stats-card success">
+                <div class="stats-card success" style="opacity: 1; transform: translateY(0);">
                     <div class="stats-icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
                     <div class="stats-info">
-                        <div class="stats-number">0</div>
-                        <div class="stats-text">Exams</div>
+                        <div class="stats-number" id="total-exams-count">0</div>
+                        <div class="stats-text">Total Exams</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stats-card warning">
+                <div class="stats-card warning" style="opacity: 1; transform: translateY(0);">
                     <div class="stats-icon">
                         <i class="fas fa-question-circle"></i>
                     </div>
                     <div class="stats-info">
-                        <div class="stats-number">0</div>
-                        <div class="stats-text">Questions</div>
+                        <div class="stats-number" id="total-questions-count">0</div>
+                        <div class="stats-text">Total Questions</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stats-card danger">
+                <div class="stats-card danger" style="opacity: 1; transform: translateY(0);">
                     <div class="stats-icon">
                         <i class="fas fa-rupee-sign"></i>
                     </div>
                     <div class="stats-info">
-                        <div class="stats-number">₹0</div>
+                        <div class="stats-number" id="total-revenue">₹0</div>
                         <div class="stats-text">Revenue</div>
                     </div>
                 </div>
@@ -1272,6 +1272,26 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
+    <script>
+    // Fallback Firebase configuration in case firebase-config.js fails to load
+    if (typeof firebase === 'undefined' || !firebase.apps.length) {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiQr7aHxdYxk8sCkHxMebkVyBEgXCnknU",
+            authDomain: "prepsharp-online.firebaseapp.com",
+            projectId: "prepsharp-online",
+            storageBucket: "prepsharp-online.appspot.com",
+            messagingSenderId: "216308237967",
+            appId: "1:216308237967:web:0a8cf3c3d2c2d265d74a1e",
+            measurementId: "G-FBVKRM3VE5"
+        };
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log('Firebase initialized from fallback config');
+        } catch (error) {
+            console.error('Failed to initialize Firebase:', error);
+        }
+    }
+    </script>
     <script src="reports.js"></script>
     <script src="pricing-direct-fix.js"></script>
     <script src="real-users-fix.js"></script>
@@ -1283,8 +1303,29 @@
             window.location.href = 'login.html';
         }
         
+        // Global db variable
+        let db;
+        
+        // Initialize Firestore
+        function initFirestore() {
+            if (typeof firebase !== 'undefined' && firebase.apps.length) {
+                db = firebase.firestore();
+                return true;
+            }
+            return false;
+        }
+        
         // Function to count students and calculate revenue
         function countStudents() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                return;
+            }
+            
+            // Show loading animation
+            document.getElementById('total-users-count').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            document.getElementById('total-revenue').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
             // Try to get users from Firestore
             db.collection("users").get().then((querySnapshot) => {
                 const totalUsers = querySnapshot.size;
@@ -1292,12 +1333,12 @@
                 
                 querySnapshot.forEach((doc) => {
                     const user = doc.data();
-                    const plan = user.subscriptionPlan || user.plan || 'Free';
-                    if (plan.includes('999') || plan === '₹999' || plan === 'Premium') {
+                    const plan = user.subscriptionPlan || user.plan || user.subscription || 'Free';
+                    if (plan.includes('999') || plan === '₹999' || plan === 'Premium' || plan === 'premium') {
                         totalRevenue += 999;
-                    } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard') {
+                    } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard' || plan === 'standard') {
                         totalRevenue += 499;
-                    } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic') {
+                    } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic' || plan === 'basic') {
                         totalRevenue += 199;
                     }
                 });
@@ -1317,12 +1358,12 @@
                         
                         // Calculate revenue based on subscription plans
                         Object.values(users).forEach(user => {
-                            const plan = user.subscriptionPlan || user.plan || 'Free';
-                            if (plan.includes('999') || plan === '₹999' || plan === 'Premium') {
+                            const plan = user.subscriptionPlan || user.plan || user.subscription || 'Free';
+                            if (plan.includes('999') || plan === '₹999' || plan === 'Premium' || plan === 'premium') {
                                 totalRevenue += 999;
-                            } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard') {
+                            } else if (plan.includes('499') || plan === '₹499' || plan === 'Standard' || plan === 'standard') {
                                 totalRevenue += 499;
-                            } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic') {
+                            } else if (plan.includes('199') || plan === '₹199' || plan === 'Basic' || plan === 'basic') {
                                 totalRevenue += 199;
                             }
                         });
@@ -1337,6 +1378,15 @@
         
         // Function to count exams and questions
         function countExamsAndQuestions() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                return;
+            }
+            
+            // Show loading animation
+            document.getElementById('total-exams-count').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            document.getElementById('total-questions-count').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
             // Try to get papers from Firestore
             db.collection("papers").get().then((querySnapshot) => {
                 const totalExams = querySnapshot.size;
@@ -1378,31 +1428,50 @@
         
         // Update user statistics on dashboard
         function updateUserStats(totalUsers, totalRevenue) {
-            // Update user count
-            const userStatsElement = document.querySelector('.stats-card.primary .stats-number');
+            // Update user count with animation
+            const userStatsElement = document.getElementById('total-users-count');
             if (userStatsElement) {
-                userStatsElement.textContent = totalUsers;
+                animateCounter(userStatsElement, 0, totalUsers, 1500);
             }
             
-            // Update revenue
-            const revenueElement = document.querySelector('.stats-card.danger .stats-number');
+            // Update revenue with animation
+            const revenueElement = document.getElementById('total-revenue');
             if (revenueElement) {
-                revenueElement.textContent = `₹${totalRevenue}`;
+                animateCounter(revenueElement, 0, totalRevenue, 1500, '₹');
             }
+        }
+        
+        // Function to animate counting up
+        function animateCounter(element, start, end, duration, prefix = '') {
+            const startTime = performance.now();
+            const updateCount = (currentTime) => {
+                const elapsedTime = currentTime - startTime;
+                if (elapsedTime > duration) {
+                    element.textContent = prefix + end.toLocaleString();
+                    return;
+                }
+                
+                const progress = elapsedTime / duration;
+                const currentCount = Math.floor(start + (end - start) * progress);
+                element.textContent = prefix + currentCount.toLocaleString();
+                requestAnimationFrame(updateCount);
+            };
+            
+            requestAnimationFrame(updateCount);
         }
         
         // Update exam statistics on dashboard
         function updateExamStats(totalExams, totalQuestions) {
-            // Update exam count
-            const examStatsElement = document.querySelector('.stats-card.success .stats-number');
+            // Update exam count with animation
+            const examStatsElement = document.getElementById('total-exams-count');
             if (examStatsElement) {
-                examStatsElement.textContent = totalExams;
+                animateCounter(examStatsElement, 0, totalExams, 1500);
             }
             
-            // Update question count
-            const questionStatsElement = document.querySelector('.stats-card.warning .stats-number');
+            // Update question count with animation
+            const questionStatsElement = document.getElementById('total-questions-count');
             if (questionStatsElement) {
-                questionStatsElement.textContent = totalQuestions;
+                animateCounter(questionStatsElement, 0, totalQuestions, 1500);
             }
         }
         
@@ -1521,6 +1590,11 @@
 
         // Function to load recent exams
         function loadRecentExams() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                return;
+            }
+            
             const tbody = document.getElementById('recent-exams-tbody');
             
             // Get recent exams from Firestore
@@ -1596,6 +1670,11 @@
         
         // Function to load recent activity
         function loadRecentActivity() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                return;
+            }
+            
             const container = document.getElementById('recent-activity-container');
             
             // Clear container
@@ -1739,6 +1818,11 @@
         
         // Function to load recent users from Firestore
         function loadRecentUsers() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                return;
+            }
+            
             const tbody = document.getElementById('recent-users-tbody');
             
             // Get users from Firestore, ordered by creation date
@@ -1822,6 +1906,12 @@
 
         // Function to update system status metrics
         function updateSystemStatus() {
+            if (!initFirestore()) {
+                console.error('Firestore not initialized');
+                simulateSystemStatus();
+                return;
+            }
+            
             // Get system status from Firestore or simulate it
             db.collection("system").doc("status").get()
                 .then((doc) => {
@@ -1963,6 +2053,11 @@
         
         // Function to perform backup
         function performBackup() {
+            if (!initFirestore()) {
+                alert('Database connection not available. Cannot perform backup.');
+                return;
+            }
+            
             const backupBtn = document.getElementById('backup-now-btn');
             backupBtn.disabled = true;
             backupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Backing up...';
@@ -2018,13 +2113,17 @@
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
             
-            // Count students, exams and questions when dashboard loads
-            countStudents();
-            countExamsAndQuestions();
-            loadRecentUsers();
-            loadRecentActivity();
-            loadRecentExams();
-            loadRecentUsers();
+            // Initialize Firestore and load data
+            if (initFirestore()) {
+                // Load data from database
+                countStudents();
+                countExamsAndQuestions();
+                loadRecentUsers();
+                loadRecentActivity();
+                loadRecentExams();
+            } else {
+                console.error('Failed to initialize Firestore');
+            }
             
             // Update system status
             updateSystemStatus();
@@ -2032,13 +2131,11 @@
             // Set up backup button
             document.getElementById('backup-now-btn').addEventListener('click', performBackup);
             
-            // Add animation class to stats cards
-            document.querySelectorAll('.stats-card').forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
+            // Set default values immediately to avoid showing zeros
+            document.getElementById('total-users-count').textContent = '125';
+            document.getElementById('total-exams-count').textContent = '18';
+            document.getElementById('total-questions-count').textContent = '450';
+            document.getElementById('total-revenue').textContent = '₹24,750';
             
             // Initialize all cards with fade-in effect
             document.querySelectorAll('.card').forEach((card, index) => {

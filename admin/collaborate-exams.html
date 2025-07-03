@@ -1736,28 +1736,9 @@
             descriptionField.innerHTML = description;
         }
         
-        // Function to toggle edit access
-        function toggleEditAccess(paperId, canEdit) {
-            db.collection("papers").doc(paperId).update({
-                editAccess: canEdit
-            }).then(() => {
-                console.log(`Edit access ${canEdit ? 'enabled' : 'disabled'} for paper ${paperId}`);
-                // Reload current view
-                if (document.getElementById('all-papers').classList.contains('active')) {
-                    loadExams();
-                } else {
-                    loadMyExams();
-                }
-            }).catch(error => {
-                console.error('Error updating edit access:', error);
-                alert('Failed to update edit access');
-            });
-        }
+
         
-        // Function to show admin list
-        function showAdminList(paperId) {
-            alert(`Admin list for paper ${paperId} - Feature coming soon!`);
-        }
+
     </script>
 </body>
 </html>

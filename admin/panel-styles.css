@@ -1,0 +1,38 @@
+/* Panel styles */
+.resource-panel {
+    animation: slideDown 0.3s ease-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px !important;
+    margin-bottom: 30px !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resource-panel .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.resource-panel .btn-close {
+    font-size: 0.8rem;
+}
+
+.resource-panel .table {
+    margin-bottom: 0;
+}
+
+.resource-panel .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+}
