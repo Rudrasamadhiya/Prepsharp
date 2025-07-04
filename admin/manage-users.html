@@ -942,6 +942,19 @@
             
             // Show modal
             adminModal.style.display = 'flex';
+            
+            // Add event listener to name input to auto-generate email and password
+            nameInput.addEventListener('blur', generateEmailAndPassword);
+        }
+        
+        // Generate email and temporary password based on first name
+        function generateEmailAndPassword() {
+            const fullName = nameInput.value.trim();
+            if (fullName) {
+                const firstName = fullName.split(' ')[0].toLowerCase();
+                emailInput.value = `${firstName}@prepsharp.com`;
+                tempPasswordInput.value = `${firstName}@123`;
+            }
         }
         
         // Handle form submission
@@ -1023,6 +1036,8 @@
             closeButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     adminModal.style.display = 'none';
+                    // Remove event listener when modal is closed
+                    nameInput.removeEventListener('blur', generateEmailAndPassword);
                 });
             });
             

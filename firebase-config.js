@@ -1,32 +1,115 @@
-// Firebase configuration for PrepSharp - REAL CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-  authDomain: "prepsharp-c91fd.firebaseapp.com",
-  projectId: "prepsharp-c91fd",
-  storageBucket: "prepsharp-c91fd.firebasestorage.app",
-  messagingSenderId: "688294848433",
-  appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-  measurementId: "G-LLJSLMXMNY"
-};
+// Firebase configuration for PrepSharp
+// IMPORTANT: This file should be loaded from a secure source in production
+// For local development, you can use environment variables or a secure local config
+
+// Function to load Firebase config securely
+async function loadFirebaseConfig() {
+  try {
+    // Wait for environment variables to be loaded
+    if (!window.env) {
+      await new Promise(resolve => {
+        if (document.readyState === 'loading') {
+          document.addEventListener('envVariablesLoaded', resolve);
+          // Set a timeout in case the event never fires
+          setTimeout(resolve, 5000);
+        } else if (window.loadEnvVariables) {
+          window.loadEnvVariables().then(resolve);
+        } else {
+          // If env-loader.js is not included, resolve immediately
+          resolve();
+        }
+      });
+    }
+    
+    // In production, you should fetch this from a secure API endpoint
+    // that requires proper authentication
+    // const response = await fetch('/api/get-firebase-config', {
+    //   headers: { 'Authorization': 'Bearer ' + userToken }
+    // });
+    // return await response.json();
+    
+    // Get config from environment variables
+    const env = window.env || {};
+    
+    return {
+      apiKey: env.FIREBASE_API_KEY || '',
+      authDomain: env.FIREBASE_AUTH_DOMAIN || '',
+      projectId: env.FIREBASE_PROJECT_ID || '',
+      storageBucket: env.FIREBASE_STORAGE_BUCKET || '',
+      messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID || '',
+      appId: env.FIREBASE_APP_ID || '',
+      measurementId: env.FIREBASE_MEASUREMENT_ID || ''
+    };
+  } catch (error) {
+    console.error("Error loading Firebase config:", error);
+    throw error;
+  }
+}
+
+// Load config asynchronously
+let firebaseConfig = null;
 
 // Initialize Firebase and make db globally accessible
 let db, auth;
-try {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+
+// Async initialization function
+async function initializeFirebase() {
+  try {
+    // Load config first
+    firebaseConfig = await loadFirebaseConfig();
+    
+    // Check if config is valid
+    if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.includes('<')) {
+      throw new Error('Invalid Firebase configuration. Please set up environment variables.');
+    }
+    
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    db = firebase.firestore();
+    auth = firebase.auth();
+    console.log("Firebase initialized successfully");
+    
+    // Dispatch event to notify app that Firebase is ready
+    document.dispatchEvent(new Event('firebaseReady'));
+    
+    return { db, auth };
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    db = null;
+    auth = null;
+    
+    // Dispatch event to notify app that Firebase failed to initialize
+    document.dispatchEvent(new CustomEvent('firebaseError', { detail: error }));
+    
+    throw error;
   }
-  db = firebase.firestore();
-  auth = firebase.auth();
-  console.log("Firebase initialized successfully");
-} catch (error) {
-  console.error("Firebase initialization error:", error);
-  db = null;
-  auth = null;
 }
 
+// Initialize Firebase when the script loads
+initializeFirebase().catch(error => {
+  console.error('Failed to initialize Firebase:', error);
+  // Show user-friendly error message
+  setTimeout(() => {
+    alert('Failed to connect to the database. Please contact the administrator.');
+  }, 1000);
+});
+
 // Helper function to add sample data to Firestore
-function addSampleData() {
-  if (!db) return;
+async function addSampleData() {
+  // Make sure Firebase is initialized
+  if (!db) {
+    try {
+      const { db: firestore } = await initializeFirebase();
+      if (!firestore) throw new Error('Firebase not initialized');
+      db = firestore;
+    } catch (error) {
+      console.error('Cannot add sample data:', error);
+      return;
+    }
+  }
   
   const sampleUsers = {
     "user1": {
@@ -57,9 +140,20 @@ function addSampleData() {
     }
   };
   
-  Object.entries(sampleUsers).forEach(([id, userData]) => {
-    db.collection("users").doc(id).set(userData)
-      .then(() => console.log(`User ${id} added successfully`))
-      .catch(error => console.error(`Error adding user ${id}:`, error));
-  });
+  // Use Promise.all to add all users in parallel
+  try {
+    const promises = Object.entries(sampleUsers).map(([id, userData]) => {
+      return db.collection("users").doc(id).set(userData)
+        .then(() => console.log(`User ${id} added successfully`))
+        .catch(error => {
+          console.error(`Error adding user ${id}:`, error);
+          throw error;
+        });
+    });
+    
+    await Promise.all(promises);
+    console.log('All sample users added successfully');
+  } catch (error) {
+    console.error('Error adding sample data:', error);
+  }
 }

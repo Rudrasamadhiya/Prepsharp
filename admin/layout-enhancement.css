@@ -1,0 +1,121 @@
+/* Layout enhancements for the add-questions page */
+
+/* Improved button styling */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Better spacing for form elements */
+.form-control, .form-select {
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Improved card styling */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: none;
+}
+
+.card-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Better option containers */
+.option-container {
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.option-container:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-color: #cbd5e1;
+}
+
+/* Improved image preview */
+#question-image-preview, [id^="option-"][id$="-image-preview"] {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    background-color: #f8fafc;
+    margin-top: 15px;
+}
+
+#question-image-preview-img, [id^="option-"][id$="-image-preview-img"] {
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* PDF viewer enhancements */
+#pdf-container {
+    background-color: rgba(15, 23, 42, 0.95);
+}
+
+#pdf-viewer {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    margin: 20px;
+}
+
+/* Screenshot area styling */
+#screenshot-area {
+    background-color: #1e293b;
+    border-top: 2px solid #4f46e5;
+    padding: 15px;
+}
+
+#screenshot-preview {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    max-height: 80%;
+    max-width: 90%;
+}
+
+/* Button group improvements */
+.btn-group {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-btn {
+    border-radius: 0 !important;
+    font-weight: 500;
+}
+
+/* Top navbar enhancement */
+.top-navbar {
+    margin-bottom: 25px;
+    border-radius: 15px;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 15px 10px;
+    }
+    
+    .option-container {
+        padding: 10px;
+    }
+}

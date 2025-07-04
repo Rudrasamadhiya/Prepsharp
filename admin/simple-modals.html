@@ -1,0 +1,165 @@
+<!-- Simple Resource Modals -->
+
+<!-- Assigned Resources Modal -->
+<div class="modal fade" id="assignedResourcesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Assigned Resources</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Overview</h5>
+                                <p>Resources that have been assigned to admins for processing.</p>
+                                <ul>
+                                    <li>Question papers waiting for review</li>
+                                    <li>Solution documents in progress</li>
+                                    <li>Materials being prepared for students</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="fas fa-user-shield fa-4x text-primary mb-3"></i>
+                                <h3>Admin Resources</h3>
+                                <p class="text-muted">Manage resources assigned to admins</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Tasks Modal -->
+<div class="modal fade" id="pendingTasksModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Pending Tasks</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Overview</h5>
+                                <p>Tasks that are currently in progress and waiting to be completed.</p>
+                                <ul>
+                                    <li>Question papers being processed</li>
+                                    <li>Solutions being written</li>
+                                    <li>Materials being formatted</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="fas fa-tasks fa-4x text-success mb-3"></i>
+                                <h3>Pending Tasks</h3>
+                                <p class="text-muted">Manage resources waiting for processing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Unassigned Resources Modal -->
+<div class="modal fade" id="unassignedResourcesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Unassigned Resources</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Overview</h5>
+                                <p>Resources that have not yet been assigned to any admin.</p>
+                                <ul>
+                                    <li>Newly uploaded question papers</li>
+                                    <li>Solution documents waiting for assignment</li>
+                                    <li>Materials needing admin attention</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="fas fa-clock fa-4x text-warning mb-3"></i>
+                                <h3>Unassigned Resources</h3>
+                                <p class="text-muted">Manage resources waiting for assignment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Completed Resources Modal -->
+<div class="modal fade" id="completedResourcesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Completed Resources</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Overview</h5>
+                                <p>Resources that have been fully processed and completed.</p>
+                                <ul>
+                                    <li>Finalized question papers</li>
+                                    <li>Completed solution documents</li>
+                                    <li>Ready-to-use study materials</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <i class="fas fa-check-circle fa-4x text-info mb-3"></i>
+                                <h3>Completed Resources</h3>
+                                <p class="text-muted">View resources that have been processed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

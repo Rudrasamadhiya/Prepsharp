@@ -717,7 +717,93 @@
     <script src="pdf-capture.js"></script>
     <script src="capture-utils.js"></script>
     <script src="screenshot.js"></script>
-    <script src="simple-capture.js"></script>
+    <script src="direct-snipping-fix.js"></script>
+    <script src="add-paste-button.js"></script>
+    <script src="layout-fixes.js"></script>
+    <script src="question-preview-fix.js"></script>
+    <script src="fix-required-fields.js"></script>
+    <script src="direct-firebase-check.js"></script>
+    <script src="direct-image-save.js"></script>
+    <script src="next-unanswered.js"></script>
+
+    <script>
+        // Script to hide folder buttons and fix required fields
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide folder buttons when PDF is uploaded
+            const pdfBtn = document.getElementById('pdf-btn');
+            if (pdfBtn) {
+                pdfBtn.addEventListener('click', function() {
+                    setTimeout(function() {
+                        const folderButtons = document.querySelectorAll('[id*="folder-images"], [id*="load-all"]');
+                        folderButtons.forEach(button => {
+                            button.style.display = 'none';
+                        });
+                    }, 1000);
+                });
+            }
+            
+            // Override the saveQuestion function to handle required fields
+            if (typeof saveQuestion === 'function') {
+                const originalSaveQuestion = saveQuestion;
+                window.saveQuestion = function(examId) {
+                    // Auto-fill required fields if image is present
+                    const questionPreviewImg = document.getElementById('question-image-preview-img');
+                    const questionPreviewContainer = document.getElementById('question-image-preview');
+                    
+                    if (questionPreviewImg && questionPreviewContainer && 
+                        questionPreviewContainer.style.display !== 'none' && 
+                        questionPreviewImg.src && 
+                        questionPreviewImg.src !== '') {
+                        
+                        // Set default values for required fields
+                        const subjectField = document.getElementById('question-subject');
+                        const chapterField = document.getElementById('question-chapter');
+                        const difficultyField = document.getElementById('question-difficulty');
+                        const questionTextField = document.getElementById('question-text');
+                        
+                        if (subjectField && !subjectField.value) subjectField.value = 'Physics';
+                        if (chapterField && !chapterField.value) chapterField.value = 'Mechanics';
+                        if (difficultyField && !difficultyField.value) difficultyField.value = 'Medium';
+                        if (questionTextField && !questionTextField.value) questionTextField.value = 'See image';
+                    }
+                    
+                    // Check if we need to fill in option text for options with images
+                    const questionType = document.getElementById('question-type').value;
+                    if (questionType === 'mcq-single') {
+                        // Check each option
+                        const optionLetters = ['a', 'b', 'c', 'd'];
+                        let hasOptionImage = false;
+                        
+                        optionLetters.forEach(letter => {
+                            const optionPreviewImg = document.getElementById(`option-${letter}-image-preview-img`);
+                            const optionPreviewContainer = document.getElementById(`option-${letter}-image-preview`);
+                            const optionTextField = document.getElementById(`option-${letter}-text`);
+                            
+                            // If option has image but no text, add default text
+                            if (optionPreviewImg && optionPreviewContainer && 
+                                optionPreviewContainer.style.display !== 'none' && 
+                                optionPreviewImg.src && optionPreviewImg.src !== '') {
+                                
+                                hasOptionImage = true;
+                                if (optionTextField && !optionTextField.value) {
+                                    optionTextField.value = `Option ${letter.toUpperCase()} image`;
+                                }
+                            }
+                        });
+                        
+                        // If we have option images but no correct option selected, select the first one
+                        if (hasOptionImage && !document.querySelector('input[name="correct-option"]:checked')) {
+                            const firstOption = document.getElementById('option-a-correct');
+                            if (firstOption) firstOption.checked = true;
+                        }
+                    }
+                    
+                    // Call the original function
+                    return originalSaveQuestion(examId);
+                };
+            }
+        });
+    </script>
     <script src="html2canvas-capture.js"></script>
     <script src="image-fix.js"></script>
     <script src="direct-image-fix.js"></script>
@@ -1061,15 +1147,11 @@
             // Get the next question number
             let questionNo = 1;
             
-            // Create question ID based on paper name, subject, chapter, type, and question number
-            // Format: papername-subject-chapter-type-questionno
-            // Clean up chapter name for ID (remove spaces, special chars)
-            const cleanChapter = chapter.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-            const cleanSubject = subject.toLowerCase();
-            const cleanType = questionType.replace('mcq-', '').toLowerCase();
+            // Create question ID based on paper name and question number only
+            // Format: papername-questionno
             
-            // Create the question ID
-            const questionId = `${examId}-${cleanSubject}-${cleanChapter}-${cleanType}-${questionNo}`;
+            // Create the question ID with just exam ID and question number
+            const questionId = `${examId}-question-${questionNo}`;
             
             // Create timestamp
             const timestamp = new Date().getTime();

@@ -1,72 +1,66 @@
-# PrepSharp - JEE Preparation Platform
+# PrepSharp Admin Dashboard
 
-PrepSharp is a comprehensive web application designed to help students prepare for JEE (Joint Entrance Examination) with different subscription tiers.
+## Security Notice
 
-## Getting Started
+This project previously contained hardcoded Firebase API keys and credentials in the source code, which posed a security risk. The code has been updated to use a more secure approach.
 
-1. Open `index.html` in your web browser to access the main landing page
-2. Choose between Basic, Standard, or Premium dashboard to explore different features
-3. Navigate through the various pages using the sidebar navigation
+## Setup Instructions
 
-## Features
+1. Copy the `.env.example` file to `.env`:
+   ```
+   cp .env.example .env
+   ```
 
-### Basic Dashboard
-- JEE Main Practice Papers
-- Basic Analytics
-- Limited Question Bank
-- Settings
+2. Edit the `.env` file and add your Firebase configuration values:
+   ```
+   FIREBASE_API_KEY=your-api-key-here
+   FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+   FIREBASE_PROJECT_ID=your-project-id
+   FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+   FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   FIREBASE_APP_ID=your-app-id
+   FIREBASE_MEASUREMENT_ID=your-measurement-id
+   ```
 
-### Standard Dashboard
-- JEE Main & Advanced Practice Papers
-- Detailed Analytics
-- Full Question Bank
-- Personalized Study Plan
-- Settings
+3. For production deployment, consider using environment variables or a secure API endpoint to provide Firebase configuration.
 
-### Premium Dashboard
-- All Standard Features
-- AI Coach
-- Peer Comparison
-- Mock Interviews
-- Predictive Analytics
+## Security Best Practices
 
-## File Structure
+1. Never commit API keys or credentials to version control
+2. Use environment variables for sensitive configuration
+3. Implement proper authentication and authorization
+4. Set up Firebase Security Rules to restrict access to your data
+5. Regularly rotate API keys and credentials
+6. Monitor your Firebase project for unusual activity
+
+## Firebase Security Rules
+
+Make sure to set up proper security rules in your Firebase console to restrict access to your data. Here's an example:
 
 ```
-PrepSharp/
-├── assets/
-│   └── css/
-│       └── dashboard.css
-├── dashboards/
-│   ├── basic/
-│   │   ├── dashboard.html
-│   │   ├── practice-papers.html
-│   │   ├── analytics.html
-│   │   ├── question-bank.html
-│   │   └── settings.html
-│   ├── standard/
-│   │   ├── dashboard.html
-│   │   ├── practice-papers.html
-│   │   ├── analytics.html
-│   │   ├── question-bank.html
-│   │   ├── study-plan.html
-│   │   └── settings.html
-│   └── premium/
-│       ├── dashboard.html
-│       ├── practice-papers.html
-│       ├── analytics.html
-│       ├── question-bank.html
-│       ├── study-plan.html
-│       ├── ai-coach.html
-│       ├── peer-comparison.html
-│       ├── mock-interviews.html
-│       └── settings.html
-├── prepsharp-logo.svg
-└── index.html
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only authenticated users can read and write
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // More specific rules for collections
+    match /users/{userId} {
+      // Users can only read/write their own data
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Admin access
+    match /{document=**} {
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+  }
+}
 ```
 
-## Notes
+## Contact
 
-- This is a frontend prototype with no backend functionality
-- All data shown is static and for demonstration purposes only
-- The application is responsive and works on desktop and mobile devices
+If you discover any security issues, please contact the administrator immediately.
