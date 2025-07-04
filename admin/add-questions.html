@@ -730,18 +730,7 @@
     <script>
         // Script to hide folder buttons and fix required fields
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide folder buttons when PDF is uploaded
-            const pdfBtn = document.getElementById('pdf-btn');
-            if (pdfBtn) {
-                pdfBtn.addEventListener('click', function() {
-                    setTimeout(function() {
-                        const folderButtons = document.querySelectorAll('[id*="folder-images"], [id*="load-all"]');
-                        folderButtons.forEach(button => {
-                            button.style.display = 'none';
-                        });
-                    }, 1000);
-                });
-            }
+            // Hide folder buttons when PDF is uploaded - handled by pdf-capture.js
             
             // Override the saveQuestion function to handle required fields
             if (typeof saveQuestion === 'function') {
