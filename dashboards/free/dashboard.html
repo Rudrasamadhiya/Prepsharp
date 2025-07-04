@@ -376,8 +376,8 @@
                     </div>
                     
                     <div class="user-profile" id="userProfile">
-                        <div class="avatar-initials" id="userInitials">JS</div>
-                        <span class="user-name" id="loggedInUserName">John Smith</span>
+                        <div class="avatar-initials" id="userInitials">TU</div>
+                        <span class="user-name" id="loggedInUserName">Test User</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
@@ -703,8 +703,22 @@
     <script src="../../js/free-theme-manager.js"></script>
     <script src="js/pricing-loader.js"></script>
     <script>
+        // Load logged-in user info
+        function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || userData.email || 'User';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('loggedInUserName').textContent = userName;
+                document.getElementById('userInitials').textContent = initials;
+            }
+        }
+        
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
             // Mobile functionality is now in mobile.js
             
             const userProfile = document.getElementById('userProfile');
