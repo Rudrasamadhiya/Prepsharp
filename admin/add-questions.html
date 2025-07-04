@@ -1260,13 +1260,8 @@
                             // Update question number based on existing questions
                             const questionNo = snapshot.size + 1;
                             
-                            // Update the question ID with the correct question number
-                            const cleanChapter = chapter.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-                            const cleanSubject = subject.toLowerCase();
-                            const cleanType = questionType.replace('mcq-', '').toLowerCase();
-                            
-                            // Create the final question ID
-                            const finalQuestionId = `${examId}-${cleanSubject}-${cleanChapter}-${cleanType}-${questionNo}`;
+                            // Create simple question ID: examId-question-number
+                            const finalQuestionId = `${examId}-question-${questionNo}`;
                             
                             // Update the question object with the final ID
                             question.id = finalQuestionId;

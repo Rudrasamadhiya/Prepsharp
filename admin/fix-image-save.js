@@ -1,13 +1,21 @@
 // Fix image saving to Firebase
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Firebase Storage
+    // Initialize Firebase Storage with proper config
     let storage;
     try {
         if (firebase && firebase.storage) {
             storage = firebase.storage();
+            // Test Firebase connection
+            storage.ref().child('test').getDownloadURL().catch(() => {
+                console.log('Firebase Storage connected but no test file');
+            });
+        } else {
+            console.error('Firebase not initialized');
+            return;
         }
     } catch (error) {
-        console.error("Firebase Storage not available:", error);
+        console.error("Firebase Storage error:", error);
+        return;
     }
 
     // Override the saveQuestion function to handle images
@@ -39,22 +47,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 const questionNumber = (window.currentQuestionIndex || 0) + 1;
                 const questionId = `${examId}-question-${questionNumber}`;
 
-                // Upload question image
-                if (hasQuestionImage) {
-                    const blob = dataURLtoBlob(questionImg.src);
-                    const ref = storage.ref(`papers/${examId}/questions/${questionId}/question-image`);
-                    const snapshot = await ref.put(blob);
-                    const url = await snapshot.ref.getDownloadURL();
-                    questionImg.src = url;
-                }
+                // Set 30-second timeout
+                const uploadTimeout = setTimeout(() => {
+                    console.error('Upload timeout');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                    alert('Image upload timeout. Please try again.');
+                    return;
+                }, 30000);
 
-                // Upload option images
-                for (const option of optionImages) {
-                    const blob = dataURLtoBlob(option.img.src);
-                    const ref = storage.ref(`papers/${examId}/questions/${questionId}/option-${option.letter}-image`);
-                    const snapshot = await ref.put(blob);
-                    const url = await snapshot.ref.getDownloadURL();
-                    option.img.src = url;
+                try {
+                    // Upload question image
+                    if (hasQuestionImage) {
+                        console.log('Uploading question image...');
+                        const blob = dataURLtoBlob(questionImg.src);
+                        const ref = storage.ref(`papers/${examId}/questions/${questionId}/question-image.jpg`);
+                        const snapshot = await ref.put(blob, { contentType: 'image/jpeg' });
+                        const url = await snapshot.ref.getDownloadURL();
+                        questionImg.src = url;
+                        console.log('Question image uploaded:', url);
+                    }
+
+                    // Upload option images
+                    for (const option of optionImages) {
+                        console.log(`Uploading option ${option.letter} image...`);
+                        const blob = dataURLtoBlob(option.img.src);
+                        const ref = storage.ref(`papers/${examId}/questions/${questionId}/option-${option.letter}-image.jpg`);
+                        const snapshot = await ref.put(blob, { contentType: 'image/jpeg' });
+                        const url = await snapshot.ref.getDownloadURL();
+                        option.img.src = url;
+                        console.log(`Option ${option.letter} image uploaded:`, url);
+                    }
+
+                    clearTimeout(uploadTimeout);
+                    console.log('All images uploaded successfully');
+                } catch (uploadError) {
+                    clearTimeout(uploadTimeout);
+                    console.error('Upload failed:', uploadError);
+                    alert('Image upload failed: ' + uploadError.message);
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                    return;
                 }
 
                 saveBtn.disabled = false;
@@ -62,8 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Image upload error:', error);
+            alert('Error: ' + error.message);
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+            return;
         }
 
         return originalSaveQuestion(examId);
