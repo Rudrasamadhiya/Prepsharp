@@ -384,7 +384,7 @@
                             <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="dropdown-item" id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -714,6 +714,13 @@
                 document.getElementById('loggedInUserName').textContent = userName;
                 document.getElementById('userInitials').textContent = initials;
             }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = '../../login.html';
         }
         
         // User profile dropdown functionality
