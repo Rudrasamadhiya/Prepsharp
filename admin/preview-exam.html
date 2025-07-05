@@ -531,11 +531,14 @@
                     if (questionCount > 0) {
                         document.getElementById('no-questions-message').style.display = 'none';
                         
-                        // Convert to array of questions
+                        // Convert to array of questions and sort by questionNo
                         const questions = [];
                         snapshot.forEach(doc => {
                             questions.push(doc.data());
                         });
+                        
+                        // Sort questions by questionNo
+                        questions.sort((a, b) => (a.questionNo || 0) - (b.questionNo || 0));
                         
                         renderQuestions(questions);
                     }
@@ -555,19 +558,26 @@
             const container = document.getElementById('questions-container');
             
             questions.forEach((question, index) => {
+                console.log('Question type:', question.type, 'Question:', question);
+                
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question-container';
                 
+                // Add question image if exists
+                let questionImageHtml = '';
+                if (question.questionImage) {
+                    questionImageHtml = `<div class="mb-3"><img src="${question.questionImage}" class="img-fluid" style="max-width: 500px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>`;
+                }
+                
                 let optionsHtml = '';
                 
-                // Check if the question has options
-                if (question.options && Array.isArray(question.options)) {
+                // Only show options for MCQ questions that have options
+                if ((question.type === 'mcq-single' || question.type === 'mcq-multiple') && question.options && question.options.length > 0) {
                     question.options.forEach((option, optIndex) => {
                         const isCorrect = question.correctOption === optIndex;
                         const optionClass = isCorrect ? 'option-container correct' : 'option-container';
-                        const optionLabel = String.fromCharCode(65 + optIndex); // A, B, C, D...
+                        const optionLabel = String.fromCharCode(65 + optIndex);
                         
-                        // Check for option image
                         let optionImageHtml = '';
                         if (question.optionImages && question.optionImages[optIndex]) {
                             optionImageHtml = `<div class="mt-2"><img src="${question.optionImages[optIndex]}" class="img-fluid" style="max-width: 200px; border-radius: 5px;"></div>`;
@@ -589,7 +599,7 @@
                     });
                 }
                 
-                // For numerical questions
+                // For numerical questions, show answer
                 if (question.type === 'numerical' && question.answer) {
                     optionsHtml = `
                         <div class="option-container correct">
@@ -605,21 +615,14 @@
                     `;
                 }
                 
-                // Add question image if exists
-                let questionImageHtml = '';
-                if (question.questionImage) {
-                    questionImageHtml = `<div class="mb-3"><img src="${question.questionImage}" class="img-fluid" style="max-width: 500px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>`;
-                }
-                
                 questionElement.innerHTML = `
-                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-number">Question ${question.questionNo || index + 1}</div>
                     <div class="question-text">${question.text || 'No question text'}</div>
                     ${questionImageHtml}
-                    <div class="options-container">
-                        ${optionsHtml}
-                    </div>
+                    ${optionsHtml ? `<div class="options-container">${optionsHtml}</div>` : ''}
                     <div class="mt-3">
                         <span class="badge bg-primary me-2">${question.subject || 'Unknown'}</span>
+                        <span class="badge bg-secondary me-2">${question.type || 'Unknown'}</span>
                         <span class="badge bg-secondary">${question.difficulty || 'Medium'}</span>
                     </div>
                 `;

@@ -2129,6 +2129,14 @@
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
         
+        // Check device type
+        const isDesktop = window.innerWidth >= 1024;
+        
+        if (isDesktop) {
+            installBtn.style.display = 'inline-block';
+            installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
+        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;

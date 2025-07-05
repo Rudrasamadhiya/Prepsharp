@@ -337,8 +337,8 @@
             }
         }
         
-        // Function to load question by index
-        function loadQuestion(examId, questionIndex) {
+        // Function to load question by questionNo
+        function loadQuestion(examId, questionNo) {
             if (!db) {
                 showError("Firebase not available");
                 return;
@@ -359,85 +359,75 @@
             }
             document.getElementById('exam-name').textContent = examName;
             
-            // Get all questions for this exam
-            db.collection('papers').doc(examId).collection('questions')
+            // Get specific question by questionNo
+            const questionId = `question-${questionNo}`;
+            db.collection('papers').doc(examId).collection('questions').doc(questionId)
                 .get()
-                .then(snapshot => {
-                    // Convert to array for easier handling
-                    const questions = snapshot.docs.map(doc => {
-                        return {
-                            id: doc.id,
-                            ...doc.data()
-                        };
-                    });
-                    
-                    // Sort by questionNo if available
-                    questions.sort((a, b) => {
-                        if (a.questionNo && b.questionNo) {
-                            return a.questionNo - b.questionNo;
-                        }
-                        return 0;
-                    });
-                    
-                    // Get the question at the specified index
-                    const question = questions[questionIndex];
-                    
-                    if (question) {
-                        // Update question number display
-                        document.getElementById('question-number').textContent = 
-                            `Question ${question.questionNo || (questionIndex + 1)} of ${questions.length}`;
+                .then(doc => {
+                    if (doc.exists) {
+                        const question = { id: doc.id, ...doc.data() };
                         
-                        // Update section name if available
-                        if (question.subject) {
-                            document.getElementById('section-name').textContent = 
-                                `${question.subject} - ${question.type === 'numerical' ? 'Numerical' : 'MCQ'}`;
-                        }
-                        
-                        // Populate form with question data
-                        populateForm(question);
-                        
-                        // Set up navigation buttons
-                        document.getElementById('prev-question-btn').disabled = questionIndex <= 0;
-                        document.getElementById('next-question-btn').disabled = questionIndex >= questions.length - 1;
-                        
-                        // Set up back button
-                        document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
-                        
-                        // Set up navigation button handlers
-                        document.getElementById('prev-question-btn').onclick = function() {
-                            if (questionIndex > 0) {
-                                window.location.href = `edit-question.html?examId=${examId}&questionIndex=${questionIndex - 1}`;
-                            }
-                        };
-                        
-                        document.getElementById('next-question-btn').onclick = function() {
-                            if (questionIndex < questions.length - 1) {
-                                window.location.href = `edit-question.html?examId=${examId}&questionIndex=${questionIndex + 1}`;
-                            }
-                        };
-                        
-                        // Set up update button handler
-                        document.getElementById('update-question-btn').onclick = function() {
-                            updateQuestion(examId, question.id);
-                        };
-                        
-                        // Set up delete button handler
-                        document.getElementById('delete-question-btn').onclick = function() {
-                            if (confirm(`Are you sure you want to delete Question ${question.questionNo || (questionIndex + 1)}?`)) {
-                                deleteQuestion(examId, question.id, questionIndex);
-                            }
-                        };
-                        
-                        // Show the form
-                        document.getElementById('loading-container').style.display = 'none';
-                        document.getElementById('edit-question-form').style.display = 'block';
+                        // Get total questions count
+                        return db.collection('papers').doc(examId).collection('questions').get()
+                            .then(snapshot => {
+                                const totalQuestions = snapshot.size;
+                                
+                                // Update question number display
+                                document.getElementById('question-number').textContent = 
+                                    `Question ${questionNo} of ${totalQuestions}`;
+                                
+                                // Update section name if available
+                                if (question.subject) {
+                                    document.getElementById('section-name').textContent = 
+                                        `${question.subject} - ${question.type === 'numerical' ? 'Numerical' : 'MCQ'}`;
+                                }
+                                
+                                // Populate form with question data
+                                populateForm(question);
+                                
+                                // Set up navigation buttons
+                                document.getElementById('prev-question-btn').disabled = questionNo <= 1;
+                                document.getElementById('next-question-btn').disabled = questionNo >= totalQuestions;
+                                
+                                // Set up back button
+                                document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
+                                
+                                // Set up navigation button handlers
+                                document.getElementById('prev-question-btn').onclick = function() {
+                                    if (questionNo > 1) {
+                                        window.location.href = `edit-question.html?examId=${examId}&questionNo=${questionNo - 1}`;
+                                    }
+                                };
+                                
+                                document.getElementById('next-question-btn').onclick = function() {
+                                    if (questionNo < totalQuestions) {
+                                        window.location.href = `edit-question.html?examId=${examId}&questionNo=${questionNo + 1}`;
+                                    }
+                                };
+                                
+                                // Set up update button handler
+                                document.getElementById('update-question-btn').onclick = function() {
+                                    updateQuestion(examId, question.id);
+                                };
+                                
+                                // Set up delete button handler
+                                document.getElementById('delete-question-btn').onclick = function() {
+                                    if (confirm(`Are you sure you want to delete Question ${questionNo}?`)) {
+                                        deleteQuestion(examId, question.id, questionNo);
+                                    }
+                                };
+                                
+                                // Show the form
+                                document.getElementById('loading-container').style.display = 'none';
+                                document.getElementById('edit-question-form').style.display = 'block';
+                            });
                     } else {
-                        showError(`Question at index ${questionIndex} not found`);
+                        showError(`Question ${questionNo} not found`);
                     }
                 })
                 .catch(error => {
-                    console.error("Error loading questions:", error);
-                    showError("Error loading questions: " + error.message);
+                    console.error("Error loading question:", error);
+                    showError("Error loading question: " + error.message);
                 });
         }
         
@@ -622,10 +612,10 @@
         
         // Load question on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Get exam ID and question index from URL
+            // Get exam ID and question number from URL
             const urlParams = new URLSearchParams(window.location.search);
             const examId = urlParams.get('examId');
-            const questionIndex = parseInt(urlParams.get('questionIndex') || '0');
+            const questionNo = parseInt(urlParams.get('questionNo') || urlParams.get('questionIndex') || '1');
             
             if (!examId) {
                 showError("No exam ID provided");
@@ -633,7 +623,7 @@
             }
             
             // Load the question
-            loadQuestion(examId, questionIndex);
+            loadQuestion(examId, questionNo);
         });
     </script>
 </body>
