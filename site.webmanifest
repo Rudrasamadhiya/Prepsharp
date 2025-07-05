@@ -1,1 +1,21 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+    "name": "PrepSharp - JEE Preparation Platform",
+    "short_name": "PrepSharp",
+    "description": "Your Ultimate JEE Preparation Platform",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#2563eb",
+    "theme_color": "#2563eb",
+    "icons": [
+        {
+            "src": "images/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Section Upload</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <h3>Section Image Upload Fix</h3>
+    <input type="file" id="sectionFile" accept="image/*">
+    <button onclick="uploadSection()">Upload Section-1.png</button>
+    <div id="status"></div>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+        async function uploadSection() {
+            const file = document.getElementById('sectionFile').files[0];
+            if (!file) {
+                alert('Please select Section-1.png file');
+                return;
+            }
+
+            const status = document.getElementById('status');
+            status.innerHTML = 'Uploading...';
+
+            try {
+                const storageRef = storage.ref(`papers/2024-2/sections/Section-1.png`);
+                const uploadTask = await storageRef.put(file);
+                const downloadURL = await uploadTask.ref.getDownloadURL();
+                
+                status.innerHTML = `✓ Upload successful: ${downloadURL}`;
+                console.log('Section-1.png uploaded:', downloadURL);
+            } catch (error) {
+                status.innerHTML = `✗ Upload failed: ${error.message}`;
+                console.error('Upload error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
