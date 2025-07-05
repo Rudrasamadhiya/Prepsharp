@@ -866,6 +866,13 @@
         // Load existing question data
         async function loadExistingQuestion(examId, questionNo) {
             try {
+                // Clear previous data first
+                document.getElementById('question-form').reset();
+                document.getElementById('question-image-preview').style.display = 'none';
+                ['a', 'b', 'c', 'd'].forEach(opt => {
+                    document.getElementById(`option-${opt}-image-preview`).style.display = 'none';
+                });
+                
                 const questionId = `question-${questionNo}`;
                 const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
                 
@@ -897,6 +904,12 @@
                     if (data.chapter) document.getElementById('question-chapter').value = data.chapter;
                     if (data.difficulty) document.getElementById('question-difficulty').value = data.difficulty;
                     if (data.marks) document.getElementById('question-marks').value = data.marks;
+                } else {
+                    // New question - set defaults
+                    document.getElementById('question-text').value = 'See image';
+                    document.getElementById('question-chapter').value = 'Mechanics';
+                    document.getElementById('question-difficulty').value = 'Medium';
+                    document.getElementById('question-marks').value = '4';
                 }
             } catch (error) {
                 console.error('Error loading question:', error);
@@ -1332,6 +1345,16 @@
                             // Re-enable save button
                             saveBtn.disabled = false;
                             saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
+                            
+                            // Move to next question automatically
+                            setTimeout(() => {
+                                currentQuestionIndex++;
+                                const nextQuestionNo = currentQuestionIndex + 1;
+                                loadExistingQuestion(examId, nextQuestionNo);
+                                
+                                // Update question number display
+                                document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of 75`;
+                            }, 1000);
                         })
                         .catch(error => {
                             console.error('Error saving question:', error);

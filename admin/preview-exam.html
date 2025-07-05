@@ -567,6 +567,12 @@
                         const optionClass = isCorrect ? 'option-container correct' : 'option-container';
                         const optionLabel = String.fromCharCode(65 + optIndex); // A, B, C, D...
                         
+                        // Check for option image
+                        let optionImageHtml = '';
+                        if (question.optionImages && question.optionImages[optIndex]) {
+                            optionImageHtml = `<div class="mt-2"><img src="${question.optionImages[optIndex]}" class="img-fluid" style="max-width: 200px; border-radius: 5px;"></div>`;
+                        }
+                        
                         optionsHtml += `
                             <div class="${optionClass}">
                                 <div class="d-flex align-items-center">
@@ -575,6 +581,7 @@
                                     </div>
                                     <div>
                                         <p class="option-text mb-0">${option}</p>
+                                        ${optionImageHtml}
                                     </div>
                                 </div>
                             </div>
@@ -598,9 +605,16 @@
                     `;
                 }
                 
+                // Add question image if exists
+                let questionImageHtml = '';
+                if (question.questionImage) {
+                    questionImageHtml = `<div class="mb-3"><img src="${question.questionImage}" class="img-fluid" style="max-width: 500px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>`;
+                }
+                
                 questionElement.innerHTML = `
                     <div class="question-number">Question ${index + 1}</div>
                     <div class="question-text">${question.text || 'No question text'}</div>
+                    ${questionImageHtml}
                     <div class="options-container">
                         ${optionsHtml}
                     </div>
