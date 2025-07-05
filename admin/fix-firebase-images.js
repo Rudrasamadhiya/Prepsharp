@@ -11,13 +11,35 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Add paste event listener for images
+    document.addEventListener('paste', function(e) {
+        const items = e.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                const blob = items[i].getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Show in question image preview
+                    const questionPreviewImg = document.getElementById('question-image-preview-img');
+                    const questionPreviewContainer = document.getElementById('question-image-preview');
+                    if (questionPreviewImg && questionPreviewContainer) {
+                        questionPreviewImg.src = event.target.result;
+                        questionPreviewContainer.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(blob);
+                break;
+            }
+        }
+    });
+
     // Override the original saveQuestion function
     const originalSaveQuestion = window.saveQuestion;
     window.saveQuestion = function(examId) {
         const questionPreviewImg = document.getElementById('question-image-preview-img');
         const questionPreviewContainer = document.getElementById('question-image-preview');
         
-        // Check if question has image
+        // Check if question has image (captured or pasted)
         const hasQuestionImage = questionPreviewImg && 
                                 questionPreviewContainer && 
                                 questionPreviewContainer.style.display !== 'none' && 
@@ -27,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (hasQuestionImage && storage) {
             // Get question number
             const questionNumber = (window.currentQuestionIndex || 0) + 1;
-            const questionId = `${examId}-question-${questionNumber}`;
+            const questionId = `question-${questionNumber}`;
             
             // Convert data URL to blob
             const blob = dataURLtoBlob(questionPreviewImg.src);

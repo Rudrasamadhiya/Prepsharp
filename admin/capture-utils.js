@@ -221,55 +221,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const imageData = document.getElementById('screenshot-preview').src;
         
         if (currentCaptureTarget === 'question') {
-            // Hide text field, label, and file input
-            document.getElementById('question-text').style.display = 'none';
+            const questionPreviewImg = document.getElementById('question-image-preview-img');
+            const questionPreviewContainer = document.getElementById('question-image-preview');
             
-            // Use helper function if available, otherwise try direct selectors
-            if (typeof hideQuestionImageElements === 'function') {
-                hideQuestionImageElements();
-            } else {
-                try {
-                    document.querySelector('label[for="question-image"]').style.display = 'none';
-                    document.querySelector('.d-flex:has(#question-image)').style.display = 'none';
-                } catch (e) {
-                    console.log('Selector not supported, using fallback');
-                    const fileInput = document.getElementById('question-image');
-                    if (fileInput && fileInput.parentElement) {
-                        fileInput.parentElement.style.display = 'none';
-                    }
-                }
-            }
-            
-            // Ensure image is displayed properly
-            document.getElementById('question-image-preview-img').src = imageData;
-            document.getElementById('question-image-preview').style.display = 'block';
-            document.getElementById('question-image-preview-img').style.display = 'block';
-            document.getElementById('question-image-preview-img').style.maxWidth = '100%';
+            questionPreviewImg.src = imageData;
+            questionPreviewImg.onload = function() {
+                questionPreviewContainer.style.display = 'block';
+                questionPreviewImg.style.display = 'block';
+            };
         } else if (currentCaptureTarget === 'option' && currentOptionTarget) {
-            // Hide option text field
-            document.getElementById(`option-${currentOptionTarget}-text`).style.display = 'none';
+            const optionPreviewImg = document.getElementById(`option-${currentOptionTarget}-image-preview-img`);
+            const optionPreviewContainer = document.getElementById(`option-${currentOptionTarget}-image-preview`);
             
-            // Hide option image label and file input
-            if (typeof hideOptionImageElements === 'function') {
-                hideOptionImageElements(currentOptionTarget);
-            } else {
-                try {
-                    document.querySelector(`label[for="option-${currentOptionTarget}-image"]`).style.display = 'none';
-                    document.querySelector(`.d-flex:has(#option-${currentOptionTarget}-image)`).style.display = 'none';
-                } catch (e) {
-                    console.log('Selector not supported, using fallback');
-                    const fileInput = document.getElementById(`option-${currentOptionTarget}-image`);
-                    if (fileInput && fileInput.parentElement) {
-                        fileInput.parentElement.style.display = 'none';
-                    }
-                }
+            if (optionPreviewImg && optionPreviewContainer) {
+                optionPreviewImg.src = imageData;
+                optionPreviewImg.onload = function() {
+                    optionPreviewContainer.style.display = 'block';
+                    optionPreviewImg.style.display = 'block';
+                };
             }
-            
-            // Ensure image is displayed properly
-            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).src = imageData;
-            document.getElementById(`option-${currentOptionTarget}-image-preview`).style.display = 'block';
-            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).style.display = 'block';
-            document.getElementById(`option-${currentOptionTarget}-image-preview-img`).style.maxWidth = '100%';
         }
         
         // Reset screenshot area
@@ -283,22 +253,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('use-for-option-btn').addEventListener('click', function() {
         const imageData = document.getElementById('screenshot-preview').src;
         
-        // Find first empty option
-        const options = ['a', 'b', 'c', 'd'];
-        let optionUsed = false;
-        
-        for (const letter of options) {
-            const optionPreview = document.getElementById(`option-${letter}-image-preview`);
-            if (optionPreview && optionPreview.style.display === 'none') {
-                document.getElementById(`option-${letter}-image-preview-img`).src = imageData;
-                optionPreview.style.display = 'block';
-                optionUsed = true;
-                break;
-            }
-        }
-        
-        if (!optionUsed) {
-            alert('All options already have images. Remove an image first.');
+        // Use the specific option that was clicked for capture
+        if (currentOptionTarget) {
+            const optionPreviewImg = document.getElementById(`option-${currentOptionTarget}-image-preview-img`);
+            const optionPreview = document.getElementById(`option-${currentOptionTarget}-image-preview`);
+            
+            optionPreviewImg.src = imageData;
+            optionPreview.style.display = 'block';
         }
         
         // Reset screenshot area

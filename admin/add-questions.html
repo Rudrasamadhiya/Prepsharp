@@ -502,11 +502,7 @@
                             <textarea class="form-control" id="question-text" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="question-image" class="form-label">Question Image (Optional)</label>
-                            <div class="d-flex">
-                                <input type="file" class="form-control me-2" id="question-image" accept="image/*">
-                                <button type="button" class="btn btn-success" id="capture-question-btn">Capture</button>
-                            </div>
+                            <button type="button" class="btn btn-primary" id="capture-question-btn">Capture</button>
                             <div id="question-image-preview" class="mt-2" style="max-width: 500px; display: none;">
                                 <img id="question-image-preview-img" class="img-fluid rounded" src="" style="display: block; max-width: 100%; height: auto; border: 1px solid #ddd;">
                                 <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeQuestionImage()">Remove Image</button>
@@ -526,11 +522,7 @@
                                 </div>
                                 <textarea class="form-control" id="option-a-text" rows="2"></textarea>
                                 <div class="mt-2">
-                                    <label for="option-a-image" class="form-label">Option Image (Optional)</label>
-                                    <div class="d-flex">
-                                        <input type="file" class="form-control me-2" id="option-a-image" accept="image/*">
-                                        <button type="button" class="btn btn-success option-capture-btn" data-option="a">Capture</button>
-                                    </div>
+                                    <button type="button" class="btn btn-success btn-sm option-capture-btn" data-option="a">Capture</button>
                                     <div id="option-a-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-a-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('a')">Remove</button>
@@ -547,11 +539,7 @@
                                 </div>
                                 <textarea class="form-control" id="option-b-text" rows="2"></textarea>
                                 <div class="mt-2">
-                                    <label for="option-b-image" class="form-label">Option Image (Optional)</label>
-                                    <div class="d-flex">
-                                        <input type="file" class="form-control me-2" id="option-b-image" accept="image/*">
-                                        <button type="button" class="btn btn-success option-capture-btn" data-option="b">Capture</button>
-                                    </div>
+                                    <button type="button" class="btn btn-success btn-sm option-capture-btn" data-option="b">Capture</button>
                                     <div id="option-b-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-b-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('b')">Remove</button>
@@ -568,11 +556,7 @@
                                 </div>
                                 <textarea class="form-control" id="option-c-text" rows="2"></textarea>
                                 <div class="mt-2">
-                                    <label for="option-c-image" class="form-label">Option Image (Optional)</label>
-                                    <div class="d-flex">
-                                        <input type="file" class="form-control me-2" id="option-c-image" accept="image/*">
-                                        <button type="button" class="btn btn-success option-capture-btn" data-option="c">Capture</button>
-                                    </div>
+                                    <button type="button" class="btn btn-success btn-sm option-capture-btn" data-option="c">Capture</button>
                                     <div id="option-c-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-c-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('c')">Remove</button>
@@ -589,11 +573,7 @@
                                 </div>
                                 <textarea class="form-control" id="option-d-text" rows="2"></textarea>
                                 <div class="mt-2">
-                                    <label for="option-d-image" class="form-label">Option Image (Optional)</label>
-                                    <div class="d-flex">
-                                        <input type="file" class="form-control me-2" id="option-d-image" accept="image/*">
-                                        <button type="button" class="btn btn-success option-capture-btn" data-option="d">Capture</button>
-                                    </div>
+                                    <button type="button" class="btn btn-success btn-sm option-capture-btn" data-option="d">Capture</button>
                                     <div id="option-d-image-preview" class="mt-2" style="max-width: 200px; display: none;">
                                         <img id="option-d-image-preview-img" class="img-fluid rounded" src="">
                                         <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('d')">Remove</button>
@@ -728,6 +708,7 @@
     <script src="fix-required-fields.js"></script>
     <script src="direct-firebase-check.js"></script>
     <script src="fix-firebase-images.js"></script>
+    <script src="fix-image-display.js"></script>
 
     <script>
         // Script to hide folder buttons and fix required fields
@@ -1142,8 +1123,8 @@
             // Create question ID based on paper name and question number only
             // Format: papername-questionno
             
-            // Create the question ID with just exam ID and question number
-            const questionId = `${examId}-question-${questionNo}`;
+            // Create the question ID with just question number
+            const questionId = `question-${questionNo}`;
             
             // Create timestamp
             const timestamp = new Date().getTime();
@@ -1251,8 +1232,8 @@
                             // Update question number based on existing questions
                             const questionNo = snapshot.size + 1;
                             
-                            // Create simple question ID: examId-question-number
-                            const finalQuestionId = `${examId}-question-${questionNo}`;
+                            // Create simple question ID: question-number
+                            const finalQuestionId = `question-${questionNo}`;
                             
                             // Update the question object with the final ID
                             question.id = finalQuestionId;
