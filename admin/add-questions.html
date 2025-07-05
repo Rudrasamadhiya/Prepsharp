@@ -688,7 +688,6 @@
     <script src="capture-direct-fix.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="exam-utils.js"></script>
     <script src="simple-solution.js"></script>
     <script src="jee-main-structure.js"></script>
@@ -783,8 +782,10 @@
     <script src="image-display-fix.js"></script>
     <script src="quick-image-fix.js"></script>
     <script>
-        // Current question index
-        let currentQuestionIndex = 0;
+        // Current question index (check if already declared)
+        if (typeof currentQuestionIndex === 'undefined') {
+            var currentQuestionIndex = 0;
+        }
         
         // Function to toggle question fields based on type
         function toggleQuestionFields() {
@@ -862,6 +863,46 @@
             console.error("Firebase initialization error:", error);
         }
         
+        // Load existing question data
+        async function loadExistingQuestion(examId, questionNo) {
+            try {
+                const questionId = `question-${questionNo}`;
+                const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    console.log('Loading existing question:', data);
+                    
+                    // Load question text
+                    if (data.text) {
+                        document.getElementById('question-text').value = data.text;
+                    }
+                    
+                    // Load question image
+                    if (data.questionImage) {
+                        document.getElementById('question-image-preview-img').src = data.questionImage;
+                        document.getElementById('question-image-preview').style.display = 'block';
+                    }
+                    
+                    // Load option images
+                    if (data.optionImages) {
+                        Object.entries(data.optionImages).forEach(([index, base64]) => {
+                            const optionLetter = String.fromCharCode(97 + parseInt(index)); // a, b, c, d
+                            document.getElementById(`option-${optionLetter}-image-preview-img`).src = base64;
+                            document.getElementById(`option-${optionLetter}-image-preview`).style.display = 'block';
+                        });
+                    }
+                    
+                    // Load other fields
+                    if (data.chapter) document.getElementById('question-chapter').value = data.chapter;
+                    if (data.difficulty) document.getElementById('question-difficulty').value = data.difficulty;
+                    if (data.marks) document.getElementById('question-marks').value = data.marks;
+                }
+            } catch (error) {
+                console.error('Error loading question:', error);
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Skip login check for direct access
             // if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
@@ -932,6 +973,9 @@
             currentQuestionIndex = 0;
             updateQuestionFields();
             
+            // Load existing question data
+            loadExistingQuestion(examId, 1);
+            
             // Highlight the first section button
             highlightCurrentSection();
             
@@ -943,6 +987,9 @@
             });
             
             document.getElementById('save-question-btn').addEventListener('click', function() {
+                console.log('Save button clicked');
+                const examId = urlParams.get('examId') || 'jee-advanced---paper-1-2024';
+                console.log('Using examId:', examId);
                 saveQuestion(examId);
             });
             
@@ -1087,30 +1134,26 @@
         }
         
         // Function to save question
-        function saveQuestion(examId) {
-            // Get the current question number (1-based)
-            const questionNumber = currentQuestionIndex + 1;
+        window.saveQuestion = function(examId) {
+            console.log('Save question called with examId:', examId);
             
-            // Get section info for current question based on exam type
-            let sectionInfo;
-            if (examId && examId.includes('jee-advanced')) {
-                sectionInfo = getAdvancedSectionInfo(questionNumber);
-            } else {
-                sectionInfo = getSectionInfo(questionNumber);
-            }
             // Get form values
-            const questionType = document.getElementById('question-type').value;
-            const subject = document.getElementById('question-subject').value;
-            const chapter = document.getElementById('question-chapter').value;
-            const questionText = document.getElementById('question-text').value;
-            const difficulty = document.getElementById('question-difficulty').value;
-            const marks = document.getElementById('question-marks').value;
+            const questionType = document.getElementById('question-type').value || 'mcq-single';
+            const subject = document.getElementById('question-subject').value || 'Physics';
+            const chapter = document.getElementById('question-chapter').value || 'Mechanics';
+            const questionText = document.getElementById('question-text').value || 'See image';
+            const difficulty = document.getElementById('question-difficulty').value || 'Medium';
+            const marks = document.getElementById('question-marks').value || '4';
             
-            // Validate required fields
-            if (!questionType || !subject || !chapter || !questionText || !difficulty) {
-                alert('Please fill in all required fields');
+            console.log('Form values:', {questionType, subject, chapter, questionText, difficulty, marks});
+            
+            if (!db) {
+                console.error('Firebase not initialized');
+                alert('Firebase not initialized');
                 return;
             }
+            
+            console.log('Starting save process...');
             
             // Disable save button
             const saveBtn = document.getElementById('save-question-btn');
@@ -1141,6 +1184,24 @@
                 examId: examId,
                 createdAt: timestamp
             };
+            
+            // Add captured images as base64
+            const questionImg = document.getElementById('question-image-preview-img');
+            if (questionImg && questionImg.src && questionImg.src.startsWith('data:')) {
+                question.questionImage = questionImg.src;
+            }
+            
+            // Add option images
+            const optionImages = {};
+            ['a', 'b', 'c', 'd'].forEach((option, index) => {
+                const optionImg = document.getElementById(`option-${option}-image-preview-img`);
+                if (optionImg && optionImg.src && optionImg.src.startsWith('data:')) {
+                    optionImages[index] = optionImg.src;
+                }
+            });
+            if (Object.keys(optionImages).length > 0) {
+                question.optionImages = optionImages;
+            }
             
             // Add type-specific data
             if (questionType === 'mcq-single') {
@@ -1223,39 +1284,54 @@
                 return;
             }
             
-            // Save to Firebase - no need to check paper existence again
+            // Save to Firebase Firestore directly (no Storage)
             try {
                 if (db) {
-                    // Get question count directly (paper existence was already checked on page load)
+                    // Get question count
                     db.collection('papers').doc(examId).collection('questions').get()
                         .then(snapshot => {
-                            // Update question number based on existing questions
                             const questionNo = snapshot.size + 1;
-                            
-                            // Create simple question ID: question-number
                             const finalQuestionId = `question-${questionNo}`;
                             
-                            // Update the question object with the final ID
                             question.id = finalQuestionId;
                             question.questionNo = questionNo;
                             
-                            // Save the question to the paper's questions subcollection
+                            console.log('Saving question to Firestore:', question);
+                            
+                            // Save directly to Firestore (no Storage)
                             return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question);
                         })
                         .then(() => {
-                            // Show success message with question ID
-                            alert('Question added successfully!\n\nQuestion ID: ' + question.id);
+                            console.log('Question saved successfully');
+                            
+                            // Show success with images
+                            let successMsg = `Question saved successfully!\n\nQuestion ID: ${question.id}\n\n`;
+                            
+                            if (question.questionImage) {
+                                successMsg += 'Question image: [IMAGE SAVED]\n';
+                            }
+                            
+                            if (question.optionImages) {
+                                Object.keys(question.optionImages).forEach(index => {
+                                    const optionLetter = String.fromCharCode(65 + parseInt(index));
+                                    successMsg += `Option ${optionLetter} image: [IMAGE SAVED]\n`;
+                                });
+                            }
+                            
+                            alert(successMsg);
+                            
+                            // Clear form and images
                             document.getElementById('question-form').reset();
-                            document.getElementById('question-subject').value = 'Physics';
-                            updateChapters('Physics');
-                            toggleQuestionFields();
+                            document.getElementById('question-image-preview').style.display = 'none';
+                            document.getElementById('question-image-preview-img').src = '';
+                            ['a', 'b', 'c', 'd'].forEach(opt => {
+                                document.getElementById(`option-${opt}-image-preview`).style.display = 'none';
+                                document.getElementById(`option-${opt}-image-preview-img`).src = '';
+                            });
                             
                             // Re-enable save button
                             saveBtn.disabled = false;
                             saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
-                            
-                            // Move to next question
-                            nextQuestion();
                         })
                         .catch(error => {
                             console.error('Error saving question:', error);
@@ -1264,22 +1340,10 @@
                             saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
                         });
                 } else {
-                    // Fallback for when Firebase is not available
-                    console.log('Firebase not initialized. Would save question to exam:', examId, question);
-                    setTimeout(() => {
-                        alert('Question would be added to ' + examId + ' (Firebase not available)');
-                        document.getElementById('question-form').reset();
-                        document.getElementById('question-subject').value = 'Physics';
-                        updateChapters('Physics');
-                        toggleQuestionFields();
-                        
-                        // Re-enable save button
-                        saveBtn.disabled = false;
-                        saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
-                        
-                        // Move to next question
-                        nextQuestion();
-                    }, 1000);
+                    console.log('Firebase not initialized');
+                    alert('Firebase not available');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i> Save Question';
                 }
             } catch (error) {
                 console.error('Error in save process:', error);
