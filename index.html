@@ -2127,7 +2127,7 @@
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
         
-        // Check device type
+        // Always show on desktop
         const isDesktop = window.innerWidth >= 1024;
         
         if (isDesktop) {
@@ -2139,6 +2139,9 @@
             e.preventDefault();
             deferredPrompt = e;
             installBtn.style.display = 'inline-block';
+            if (!isDesktop) {
+                installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
+            }
         });
         
         installBtn.addEventListener('click', async () => {

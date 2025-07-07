@@ -460,7 +460,6 @@
                                     <select class="form-select" id="question-chapter" required>
                                         <option value="">Select Chapter</option>
                                         <!-- Physics chapters -->
-                                        <option value="Mechanics">Mechanics</option>
                                         <option value="Kinematics">Kinematics</option>
                                         <option value="Laws of Motion">Laws of Motion</option>
                                         <option value="Work, Energy and Power">Work, Energy and Power</option>
@@ -688,6 +687,7 @@
     <script src="capture-direct-fix.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <script src="exam-utils.js"></script>
     <script src="simple-solution.js"></script>
     <script src="jee-main-structure.js"></script>
@@ -734,7 +734,7 @@
                         const questionTextField = document.getElementById('question-text');
                         
                         if (subjectField && !subjectField.value) subjectField.value = 'Physics';
-                        if (chapterField && !chapterField.value) chapterField.value = 'Mechanics';
+                        if (chapterField && !chapterField.value) chapterField.value = 'Kinematics';
                         if (difficultyField && !difficultyField.value) difficultyField.value = 'Medium';
                         if (questionTextField && !questionTextField.value) questionTextField.value = 'See image';
                     }
@@ -907,7 +907,7 @@
                 } else {
                     // New question - set defaults
                     document.getElementById('question-text').value = 'See image';
-                    document.getElementById('question-chapter').value = 'Mechanics';
+                    document.getElementById('question-chapter').value = 'Kinematics';
                     document.getElementById('question-difficulty').value = 'Medium';
                     document.getElementById('question-marks').value = '4';
                 }
@@ -1070,7 +1070,7 @@
             chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
             
             if (subject === 'Physics') {
-                const physicsChapters = ["Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                const physicsChapters = ["Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
                     "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
                     "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
                     "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
