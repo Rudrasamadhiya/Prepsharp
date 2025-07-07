@@ -2150,6 +2150,11 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
+            } else {
+                // Force PWA install for desktop
+                if ('serviceWorker' in navigator) {
+                    window.open(window.location.href, '_blank');
+                }
             }
         });
         
