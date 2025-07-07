@@ -472,6 +472,23 @@
                 }
             }
             
+            // Load question image if exists
+            if (question.questionImage) {
+                document.getElementById('question-image-preview-img').src = question.questionImage;
+                document.getElementById('question-image-preview').style.display = 'block';
+            }
+            
+            // Load option images if they exist
+            if (question.optionImages) {
+                const optionLetters = ['a', 'b', 'c', 'd'];
+                optionLetters.forEach((letter, index) => {
+                    if (question.optionImages[index]) {
+                        document.getElementById(`option-${letter}-image-preview-img`).src = question.optionImages[index];
+                        document.getElementById(`option-${letter}-image-preview`).style.display = 'block';
+                    }
+                });
+            }
+            
             // Set up subject change handler
             document.getElementById('question-subject').addEventListener('change', function() {
                 updateChapters(this.value);
