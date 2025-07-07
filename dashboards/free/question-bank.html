@@ -388,11 +388,11 @@
                         <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
-                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
                             <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <a href="help.html" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="dropdown-item" id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -569,9 +569,12 @@
         </main>
     </div>
     
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/photo-loader.js"></script>
     <script src="js/auth-check-disabled.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
-    <script src="../../js/mobile.js"></script></script>
+    <script src="../../js/mobile.js"></script>
     <script>
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {

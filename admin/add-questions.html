@@ -693,13 +693,13 @@
     <script src="jee-main-structure.js"></script>
     <script src="section-navigation.js"></script>
     <script src="jee-advanced-config.js"></script>
-    <script src="folder-image-loader.js"></script>
-    <script src="ensure-folder-button.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="selector-fix.js"></script>
     <script src="pdf-capture.js"></script>
     <script src="capture-utils.js"></script>
     <script src="screenshot.js"></script>
+
     <script src="direct-snipping-fix.js"></script>
     <script src="add-paste-button.js"></script>
     <script src="layout-fixes.js"></script>
@@ -998,6 +998,8 @@
                 sessionStorage.removeItem('adminLoggedIn');
                 window.location.href = "../login.html";
             });
+            
+
             
             document.getElementById('save-question-btn').addEventListener('click', function() {
                 console.log('Save button clicked');
@@ -1377,27 +1379,6 @@
         }
     </script>
 
-    <script src="batch-image-loader.js"></script>
-    <script>
-        // Last resort inline script to add the folder button
-        setTimeout(function() {
-            const topButtonGroup = document.querySelector('.top-navbar .d-flex.align-items-center');
-            if (topButtonGroup && !document.getElementById('folder-images-btn')) {
-                const folderButton = document.createElement('button');
-                folderButton.id = 'folder-images-btn';
-                folderButton.className = 'btn btn-info me-3';
-                folderButton.innerHTML = '<i class="fas fa-folder-open me-1"></i> Load Images from Folder';
-                folderButton.onclick = function() {
-                    if (typeof showFolderSelectionModal === 'function') {
-                        showFolderSelectionModal();
-                    } else {
-                        alert('Please refresh the page and try again');
-                    }
-                };
-                topButtonGroup.appendChild(folderButton);
-                console.log('Folder button added by inline script');
-            }
-        }, 2000);
-    </script>
+
 </body>
 </html>

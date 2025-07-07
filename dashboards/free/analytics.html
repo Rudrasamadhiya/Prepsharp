@@ -393,11 +393,11 @@
                         <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
-                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
                             <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <a href="help.html" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="dropdown-item" id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -692,12 +692,69 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="js/auth-check-disabled.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
     <script src="../../js/mobile.js"></script>
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        
+        function getUserId() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                return userData.email || 'default-user';
+            }
+            return 'default-user';
+        }
+        
+        async function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || userData.email || 'User';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('loggedInUserName').textContent = userName;
+                document.getElementById('userInitials').textContent = initials;
+                
+                try {
+                    const userId = getUserId();
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        const avatar = document.getElementById('userInitials');
+                        avatar.style.backgroundImage = `url(${doc.data().photo})`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                        avatar.textContent = '';
+                    }
+                } catch (error) {
+                    console.log('No photo found');
+                }
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = '../../login.html';
+        }
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
             const userProfile = document.getElementById('userProfile');
             const userDropdown = document.querySelector('.user-dropdown');
             

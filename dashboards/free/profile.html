@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - PrepSharp</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                    <li><a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a></li>
+                    <li><a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a></li>
+                    <li><a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a></li>
+                    <li><a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="user-actions">
+                    <div class="user-profile">
+                        <div class="avatar-initials" id="userInitials">L</div>
+                        <span class="user-name" id="loggedInUserName">Loading...</span>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <h1>Profile Settings</h1>
+                <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+                        <div style="position: relative;">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: #4f46e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; background-size: cover; background-position: center;" id="profileInitials">JS</div>
+                            <div style="position: absolute; bottom: -5px; right: -5px; display: flex; gap: 5px;">
+                                <button onclick="changePhoto()" style="background: #10b981; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 12px;"><i class="fas fa-camera"></i></button>
+                                <button onclick="removePhoto()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 12px;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 id="profileName">John Smith</h2>
+                            <p style="color: #6b7280;" id="profileEmail">john.smith@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Full Name</label>
+                            <input type="text" id="nameInput" value="John Smith" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Email Address</label>
+                            <input type="email" id="emailInput" value="john.smith@example.com" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Phone Number</label>
+                            <input type="tel" id="phoneInput" value="+91 9876543210" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">School/College</label>
+                            <input type="text" id="schoolInput" value="Delhi Public School" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Target Exam Year</label>
+                            <select id="yearInput" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button onclick="saveProfile()" style="background: #4f46e5; color: white; border: none; padding: 12px 24px; border-radius: 8px; margin-top: 20px; cursor: pointer;">Save Changes</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        
+        function getUserId() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                return userData.email || 'default-user';
+            }
+            return 'default-user';
+        }
+        
+        async function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || 'John Smith';
+                const userEmail = userData.email || 'john.smith@example.com';
+                const phone = userData.phone || '+91 9876543210';
+                const school = userData.school || 'Delhi Public School';
+                const year = userData.year || '2026';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('loggedInUserName').textContent = userName;
+                document.getElementById('userInitials').textContent = initials;
+                
+                // Load photo for top nav avatar too
+                try {
+                    const userId = getUserId();
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        const topNavAvatar = document.getElementById('userInitials');
+                        topNavAvatar.style.backgroundImage = `url(${doc.data().photo})`;
+                        topNavAvatar.style.backgroundSize = 'cover';
+                        topNavAvatar.style.backgroundPosition = 'center';
+                        topNavAvatar.textContent = '';
+                    }
+                } catch (error) {
+                    console.log('No photo found for top nav');
+                }
+                document.getElementById('profileName').textContent = userName;
+                document.getElementById('profileEmail').textContent = userEmail;
+                document.getElementById('profileInitials').textContent = initials;
+                document.getElementById('nameInput').value = userName;
+                document.getElementById('emailInput').value = userEmail;
+                document.getElementById('phoneInput').value = phone;
+                document.getElementById('schoolInput').value = school;
+                document.getElementById('yearInput').value = year;
+                
+                // Load photo from Firebase
+                try {
+                    const userId = getUserId();
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        const profileDiv = document.getElementById('profileInitials');
+                        profileDiv.style.backgroundImage = `url(${doc.data().photo})`;
+                        profileDiv.textContent = '';
+                    }
+                } catch (error) {
+                    console.log('No photo found');
+                }
+            }
+        }
+        
+        function saveProfile() {
+            const name = document.getElementById('nameInput').value;
+            const email = document.getElementById('emailInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const school = document.getElementById('schoolInput').value;
+            const year = document.getElementById('yearInput').value;
+            
+            const userData = { name, email, phone, school, year };
+            localStorage.setItem('loggedInUser', JSON.stringify(userData));
+            
+            alert('Profile updated successfully!');
+            loadUserInfo();
+        }
+        
+        function changePhoto() {
+            document.getElementById('photoInput').click();
+        }
+        
+        async function removePhoto() {
+            try {
+                const userId = getUserId();
+                await db.collection('users').doc(userId).update({
+                    photo: firebase.firestore.FieldValue.delete()
+                });
+                
+                const profileDiv = document.getElementById('profileInitials');
+                profileDiv.style.backgroundImage = '';
+                profileDiv.style.background = '#4f46e5';
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser'));
+                const initials = (loggedInUser.name || 'User').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                profileDiv.textContent = initials;
+                
+                // Reset top nav avatar too
+                const topNavAvatar = document.getElementById('userInitials');
+                topNavAvatar.style.backgroundImage = '';
+                topNavAvatar.style.background = '#4f46e5';
+                topNavAvatar.textContent = initials;
+                
+                alert('Photo removed!');
+            } catch (error) {
+                alert('Error removing photo');
+            }
+        }
+        
+        document.getElementById('photoInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const base64 = event.target.result;
+                    
+                    try {
+                        const userId = getUserId();
+                        await db.collection('users').doc(userId).set({
+                            photo: base64
+                        }, { merge: true });
+                        
+                        const profileDiv = document.getElementById('profileInitials');
+                        profileDiv.style.backgroundImage = `url(${base64})`;
+                        profileDiv.textContent = '';
+                        
+                        // Update top nav avatar too
+                        const topNavAvatar = document.getElementById('userInitials');
+                        topNavAvatar.style.backgroundImage = `url(${base64})`;
+                        topNavAvatar.style.backgroundSize = 'cover';
+                        topNavAvatar.style.backgroundPosition = 'center';
+                        topNavAvatar.textContent = '';
+                        
+                        alert('Photo uploaded successfully!');
+                    } catch (error) {
+                        alert('Error uploading photo');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+        });
+    </script>
+</body>
+</html>

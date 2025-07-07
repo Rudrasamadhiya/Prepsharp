@@ -483,11 +483,11 @@
                         <span class="user-name" id="loggedInUserName">John Smith</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
-                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
                             <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <a href="help.html" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="dropdown-item" id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -540,13 +540,14 @@
                             
                             <div class="avatar-section">
                                 <div class="avatar-preview">
-                                    <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px;">JS</div>
+                                    <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px; background-size: cover; background-position: center;">JS</div>
                                 </div>
                                 <div class="avatar-upload">
-                                    <button class="btn-secondary">Change Photo</button>
-                                    <button class="btn-secondary">Remove</button>
+                                    <button class="btn-secondary" onclick="changePhoto()">Change Photo</button>
+                                    <button class="btn-secondary" onclick="removePhoto()">Remove</button>
                                 </div>
                             </div>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;">
                             
                             <form>
                                 <div class="form-group">
@@ -921,6 +922,9 @@
         </main>
     </div>
     
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/photo-loader.js"></script>
     <script src="js/auth-check-disabled.js"></script>
     <script src="../../js/mobile.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
@@ -1013,7 +1017,27 @@
             
             // Initialize profile initials
             updateProfileInitials();
+            
+            // Load photo for settings page
+            loadSettingsPhoto();
         });
+        
+        async function loadSettingsPhoto() {
+            try {
+                const userId = getUserId();
+                const db = firebase.firestore();
+                const doc = await db.collection('users').doc(userId).get();
+                if (doc.exists && doc.data().photo) {
+                    const profileDiv = document.getElementById('profileInitials');
+                    profileDiv.style.backgroundImage = `url(${doc.data().photo})`;
+                    profileDiv.style.backgroundSize = 'cover';
+                    profileDiv.style.backgroundPosition = 'center';
+                    profileDiv.textContent = '';
+                }
+            } catch (error) {
+                console.log('No photo found for settings');
+            }
+        }
         
         function showSuccessMessage(button) {
             // Create success message
@@ -1089,6 +1113,80 @@
                 document.getElementById('userInitials').textContent = initials.toUpperCase();
             }
         }
+        
+        function changePhoto() {
+            document.getElementById('photoInput').click();
+        }
+        
+        async function removePhoto() {
+            try {
+                const userId = getUserId();
+                const db = firebase.firestore();
+                await db.collection('users').doc(userId).update({
+                    photo: firebase.firestore.FieldValue.delete()
+                });
+                
+                const profileDiv = document.getElementById('profileInitials');
+                profileDiv.style.backgroundImage = '';
+                profileDiv.style.background = '#4f46e5';
+                const fullName = document.getElementById('fullName').value || 'User';
+                const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                profileDiv.textContent = initials;
+                
+                // Update top nav avatar too
+                const topNavAvatar = document.getElementById('userInitials');
+                topNavAvatar.style.backgroundImage = '';
+                topNavAvatar.style.background = '#4f46e5';
+                topNavAvatar.textContent = initials;
+                
+                alert('Photo removed!');
+            } catch (error) {
+                alert('Error removing photo');
+            }
+        }
+        
+        function getUserId() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                return userData.email || 'default-user';
+            }
+            return 'default-user';
+        }
+        
+        document.getElementById('photoInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const base64 = event.target.result;
+                    
+                    try {
+                        const userId = getUserId();
+                        const db = firebase.firestore();
+                        await db.collection('users').doc(userId).set({
+                            photo: base64
+                        }, { merge: true });
+                        
+                        const profileDiv = document.getElementById('profileInitials');
+                        profileDiv.style.backgroundImage = `url(${base64})`;
+                        profileDiv.textContent = '';
+                        
+                        // Update top nav avatar too
+                        const topNavAvatar = document.getElementById('userInitials');
+                        topNavAvatar.style.backgroundImage = `url(${base64})`;
+                        topNavAvatar.style.backgroundSize = 'cover';
+                        topNavAvatar.style.backgroundPosition = 'center';
+                        topNavAvatar.textContent = '';
+                        
+                        alert('Photo uploaded successfully!');
+                    } catch (error) {
+                        alert('Error uploading photo');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 </body>
 </html>
