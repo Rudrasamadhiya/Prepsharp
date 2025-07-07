@@ -539,7 +539,7 @@
                             <h2 class="settings-title">Profile Settings</h2>
                             
                             <div class="avatar-section">
-                                <div class="avatar-preview">
+                                <div class="avatar-preview" onclick="openCropModal()" style="cursor: pointer;">
                                     <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px; background-size: cover; background-position: center;">JS</div>
                                 </div>
                                 <div class="avatar-upload">
@@ -548,6 +548,21 @@
                                 </div>
                             </div>
                             <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                            
+                            <!-- Crop Modal -->
+                            <div id="cropModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+                                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 500px; width: 90%;">
+                                    <h3>Crop Photo</h3>
+                                    <div id="cropContainer" style="position: relative; width: 400px; height: 400px; margin: 20px auto; overflow: hidden; border: 1px solid #ccc;">
+                                        <img id="cropImage" style="width: 100%; height: 100%; object-fit: contain;">
+                                        <div id="cropCircle" style="position: absolute; width: 150px; height: 150px; border: 2px solid #4f46e5; border-radius: 50%; cursor: move; top: 125px; left: 125px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);"></div>
+                                    </div>
+                                    <div style="text-align: center; margin-top: 20px;">
+                                        <button onclick="saveCroppedImage()" class="btn-primary">Save</button>
+                                        <button onclick="closeCropModal()" class="btn-secondary" style="margin-left: 10px;">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <form>
                                 <div class="form-group">
@@ -1031,8 +1046,13 @@
                     const profileDiv = document.getElementById('profileInitials');
                     profileDiv.style.backgroundImage = `url(${doc.data().photo})`;
                     profileDiv.style.backgroundSize = 'cover';
-                    profileDiv.style.backgroundPosition = 'center';
                     profileDiv.textContent = '';
+                    
+                    if (doc.data().cropPosition) {
+                        applyCropPosition(doc.data().cropPosition);
+                    } else {
+                        profileDiv.style.backgroundPosition = 'center';
+                    }
                 }
             } catch (error) {
                 console.log('No photo found for settings');
@@ -1154,6 +1174,8 @@
             return 'default-user';
         }
         
+        let currentImageData = null;
+        
         document.getElementById('photoInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -1170,9 +1192,10 @@
                         
                         const profileDiv = document.getElementById('profileInitials');
                         profileDiv.style.backgroundImage = `url(${base64})`;
+                        profileDiv.style.backgroundSize = 'cover';
+                        profileDiv.style.backgroundPosition = 'center';
                         profileDiv.textContent = '';
                         
-                        // Update top nav avatar too
                         const topNavAvatar = document.getElementById('userInitials');
                         topNavAvatar.style.backgroundImage = `url(${base64})`;
                         topNavAvatar.style.backgroundSize = 'cover';
@@ -1181,12 +1204,93 @@
                         
                         alert('Photo uploaded successfully!');
                     } catch (error) {
-                        alert('Error uploading photo');
+                        console.error('Upload error:', error);
+                        alert('Error uploading photo: ' + error.message);
                     }
                 };
                 reader.readAsDataURL(file);
             }
         });
+        
+        function openCropModal() {
+            const profileDiv = document.getElementById('profileInitials');
+            if (profileDiv.style.backgroundImage) {
+                const imageUrl = profileDiv.style.backgroundImage.slice(5, -2);
+                document.getElementById('cropImage').src = imageUrl;
+                document.getElementById('cropModal').style.display = 'flex';
+                initializeCropCircle();
+            }
+        }
+        
+        function closeCropModal() {
+            document.getElementById('cropModal').style.display = 'none';
+        }
+        
+        function initializeCropCircle() {
+            const circle = document.getElementById('cropCircle');
+            let isDragging = false;
+            
+            circle.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    const container = document.getElementById('cropContainer');
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left - 75;
+                    const y = e.clientY - rect.top - 75;
+                    
+                    const maxX = container.offsetWidth - 150;
+                    const maxY = container.offsetHeight - 150;
+                    
+                    circle.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+                    circle.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+                }
+            });
+            
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+            });
+        }
+        
+        async function saveCroppedImage() {
+            const circle = document.getElementById('cropCircle');
+            const container = document.getElementById('cropContainer');
+            
+            const cropX = parseInt(circle.style.left) + 75;
+            const cropY = parseInt(circle.style.top) + 75;
+            
+            const cropPosition = {
+                x: (cropX / container.offsetWidth) * 100,
+                y: (cropY / container.offsetHeight) * 100
+            };
+            
+            try {
+                const userId = getUserId();
+                const db = firebase.firestore();
+                await db.collection('users').doc(userId).update({
+                    cropPosition: cropPosition
+                });
+                
+                applyCropPosition(cropPosition);
+                closeCropModal();
+                alert('Crop position saved!');
+            } catch (error) {
+                alert('Error saving crop position');
+            }
+        }
+        
+        function applyCropPosition(cropPosition) {
+            const profileDiv = document.getElementById('profileInitials');
+            const topNavAvatar = document.getElementById('userInitials');
+            
+            const backgroundPosition = `${cropPosition.x}% ${cropPosition.y}%`;
+            
+            profileDiv.style.backgroundPosition = backgroundPosition;
+            topNavAvatar.style.backgroundPosition = backgroundPosition;
+        }
     </script>
 </body>
 </html>

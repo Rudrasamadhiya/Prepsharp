@@ -35,7 +35,14 @@ function nextQuestion() {
     if (currentQuestionIndex < totalJeeMainQuestions - 1) {
         currentQuestionIndex++;
         updateQuestionFields();
-        document.getElementById('question-form').reset();
+        
+        // Load existing question data for the new question
+        const urlParams = new URLSearchParams(window.location.search);
+        const examId = urlParams.get('examId');
+        if (examId) {
+            loadExistingQuestion(examId, currentQuestionIndex + 1);
+        }
+        
         // Keep the subject and type set
         const sectionInfo = getSectionInfo(currentQuestionIndex + 1);
         document.getElementById('question-subject').value = sectionInfo.subject;
@@ -48,7 +55,14 @@ function prevQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         updateQuestionFields();
-        document.getElementById('question-form').reset();
+        
+        // Load existing question data for the new question
+        const urlParams = new URLSearchParams(window.location.search);
+        const examId = urlParams.get('examId');
+        if (examId) {
+            loadExistingQuestion(examId, currentQuestionIndex + 1);
+        }
+        
         // Keep the subject and type set
         const sectionInfo = getSectionInfo(currentQuestionIndex + 1);
         document.getElementById('question-subject').value = sectionInfo.subject;

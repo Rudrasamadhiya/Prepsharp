@@ -986,8 +986,8 @@
             currentQuestionIndex = 0;
             updateQuestionFields();
             
-            // Load existing question data
-            loadExistingQuestion(examId, 1);
+            // Load first non-uploaded question
+            findAndLoadFirstEmptyQuestion(examId);
             
             // Highlight the first section button
             highlightCurrentSection();
@@ -1031,6 +1031,34 @@
             // Show form and hide loading immediately
             document.getElementById('loading-container').style.display = 'none';
             document.getElementById('add-question-form').style.display = 'block';
+        }
+        
+        // Function to find first empty question
+        async function findAndLoadFirstEmptyQuestion(examId) {
+            try {
+                for (let i = 1; i <= 75; i++) {
+                    const questionId = `question-${i}`;
+                    const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
+                    
+                    if (!doc.exists) {
+                        currentQuestionIndex = i - 1;
+                        updateQuestionFields();
+                        loadExistingQuestion(examId, i);
+                        document.getElementById('question-number').textContent = `Question ${i} of 75`;
+                        return;
+                    }
+                }
+                
+                // All questions exist, load question 1
+                currentQuestionIndex = 0;
+                updateQuestionFields();
+                loadExistingQuestion(examId, 1);
+            } catch (error) {
+                // Fallback to question 1
+                currentQuestionIndex = 0;
+                updateQuestionFields();
+                loadExistingQuestion(examId, 1);
+            }
         }
         
         // Chapter data by subject
@@ -1353,6 +1381,7 @@
                                 currentQuestionIndex++;
                                 const nextQuestionNo = currentQuestionIndex + 1;
                                 loadExistingQuestion(examId, nextQuestionNo);
+                                updateQuestionFields();
                                 
                                 // Update question number display
                                 document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of 75`;

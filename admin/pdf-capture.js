@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Show PDF Viewer
-    function showPdfViewer() {
+    window.showPdfViewer = function() {
         if (!pdfFile) return;
         
         pdfContainer.style.display = 'flex';

@@ -41,8 +41,14 @@ async function loadUserInfo() {
             if (doc.exists && doc.data().photo && initialsElement) {
                 initialsElement.style.backgroundImage = `url(${doc.data().photo})`;
                 initialsElement.style.backgroundSize = 'cover';
-                initialsElement.style.backgroundPosition = 'center';
                 initialsElement.textContent = '';
+                
+                if (doc.data().cropPosition) {
+                    const pos = doc.data().cropPosition;
+                    initialsElement.style.backgroundPosition = `${pos.x}% ${pos.y}%`;
+                } else {
+                    initialsElement.style.backgroundPosition = 'center';
+                }
             }
         } catch (error) {
             console.log('No photo found');

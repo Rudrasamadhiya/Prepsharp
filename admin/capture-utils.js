@@ -51,31 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     screenOverlay.addEventListener('mousemove', handleMouseMove);
     screenOverlay.addEventListener('mouseup', handleMouseUp);
 
-    // PDF upload button
-    document.getElementById('pdf-btn').addEventListener('click', function() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/pdf';
-        
-        input.onchange = function(e) {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const url = URL.createObjectURL(file);
-                
-                // Store PDF URL in a global variable for later use
-                window.pdfUrl = url;
-                
-                // Change button text to indicate PDF is uploaded
-                const pdfBtn = document.getElementById('pdf-btn');
-                pdfBtn.innerHTML = '<i class="fas fa-check me-1"></i> PDF Uploaded';
-                pdfBtn.classList.remove('btn-success');
-                pdfBtn.classList.add('btn-secondary');
-                pdfBtn.disabled = true;
-            }
-        };
-        
-        input.click();
-    });
+    // PDF upload is handled by pdf-capture.js
     
     // Close PDF button
     document.getElementById('close-pdf-btn').addEventListener('click', function() {
@@ -87,31 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('capture-question-btn').addEventListener('click', function() {
         currentCaptureTarget = 'question';
         
-        if (window.pdfUrl) {
-            // Show PDF container
-            const pdfContainer = document.getElementById('pdf-container');
-            pdfContainer.style.display = 'flex';
-            
-            // Create iframe for PDF if it doesn't exist
-            let pdfIframe = document.getElementById('pdf-iframe');
-            if (!pdfIframe) {
-                const pdfViewer = document.getElementById('pdf-viewer');
-                pdfViewer.innerHTML = '';
-                
-                pdfIframe = document.createElement('iframe');
-                pdfIframe.src = window.pdfUrl;
-                pdfIframe.style.width = '100%';
-                pdfIframe.style.height = '100%';
-                pdfIframe.style.border = 'none';
-                // Don't disable pointer events by default to allow scrolling
-                pdfIframe.id = 'pdf-iframe';
-                pdfViewer.appendChild(pdfIframe);
-            }
-            
-            // Add select area button
+        if (typeof showPdfViewer === 'function') {
+            showPdfViewer();
             addSelectAreaButton();
         } else {
-            // PDF is not uploaded, show alert
             alert('Please upload a PDF first by clicking the "Upload PDF" button.');
         }
     });
@@ -122,30 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
             currentCaptureTarget = 'option';
             currentOptionTarget = this.getAttribute('data-option');
             
-            if (window.pdfUrl) {
-                // Show PDF container
-                const pdfContainer = document.getElementById('pdf-container');
-                pdfContainer.style.display = 'flex';
-                
-                // Create iframe for PDF if it doesn't exist
-                let pdfIframe = document.getElementById('pdf-iframe');
-                if (!pdfIframe) {
-                    const pdfViewer = document.getElementById('pdf-viewer');
-                    pdfViewer.innerHTML = '';
-                    
-                    pdfIframe = document.createElement('iframe');
-                    pdfIframe.src = window.pdfUrl;
-                    pdfIframe.style.width = '100%';
-                    pdfIframe.style.height = '100%';
-                    pdfIframe.style.border = 'none';
-                    pdfIframe.id = 'pdf-iframe';
-                    pdfViewer.appendChild(pdfIframe);
-                }
-                
-                // Add select area button
+            if (typeof showPdfViewer === 'function') {
+                showPdfViewer();
                 addSelectAreaButton();
             } else {
-                // PDF is not uploaded, show alert
                 alert('Please upload a PDF first by clicking the "Upload PDF" button.');
             }
         });
