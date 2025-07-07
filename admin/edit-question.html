@@ -598,16 +598,75 @@
                 </a>`;
         }
         
-        // Function to remove question image
+        // Image capture and management functions
+        async function captureQuestionImage() {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                for (const clipboardItem of clipboardItems) {
+                    for (const type of clipboardItem.types) {
+                        if (type.startsWith('image/')) {
+                            const blob = await clipboardItem.getType(type);
+                            const base64 = await blobToBase64(blob);
+                            
+                            document.getElementById('question-image-preview-img').src = base64;
+                            document.getElementById('question-image-preview').style.display = 'block';
+                            document.getElementById('question-image-upload').style.display = 'none';
+                            break;
+                        }
+                    }
+                }
+            } catch (error) {
+                alert('Please copy an image first (Ctrl+C)');
+            }
+        }
+        
+        async function captureOptionImage(option) {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                for (const clipboardItem of clipboardItems) {
+                    for (const type of clipboardItem.types) {
+                        if (type.startsWith('image/')) {
+                            const blob = await clipboardItem.getType(type);
+                            const base64 = await blobToBase64(blob);
+                            
+                            document.getElementById(`option-${option}-image-preview-img`).src = base64;
+                            document.getElementById(`option-${option}-image-preview`).style.display = 'block';
+                            document.getElementById(`option-${option}-image-upload`).style.display = 'none';
+                            break;
+                        }
+                    }
+                }
+            } catch (error) {
+                alert('Please copy an image first (Ctrl+C)');
+            }
+        }
+        
+        function replaceQuestionImage() {
+            captureQuestionImage();
+        }
+        
+        function replaceOptionImage(option) {
+            captureOptionImage(option);
+        }
+        
         function removeQuestionImage() {
             document.getElementById('question-image-preview').style.display = 'none';
             document.getElementById('question-image-preview-img').src = '';
+            document.getElementById('question-image-upload').style.display = 'block';
         }
         
-        // Function to remove option image
-        function removeOptionImage(optionId) {
-            document.getElementById(`option-${optionId}-image-preview`).style.display = 'none';
-            document.getElementById(`option-${optionId}-image-preview-img`).src = '';
+        function removeOptionImage(option) {
+            document.getElementById(`option-${option}-image-preview`).style.display = 'none';
+            document.getElementById(`option-${option}-image-preview-img`).src = '';
+            document.getElementById(`option-${option}-image-upload`).style.display = 'block';
+        }
+        
+        function blobToBase64(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
         }
         
         // Load question on page load

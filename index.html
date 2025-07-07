@@ -2149,6 +2149,8 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
+            } else if (isDesktop) {
+                alert('To install: Click the install icon in your browser address bar or use browser menu > Install PrepSharp');
             }
         });
         
