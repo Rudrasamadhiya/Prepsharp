@@ -1357,45 +1357,38 @@
                             
                             console.log('Saving question to Firestore:', question);
                             
-                            // Check if question already exists
+                            // Check if question exists in papers collection
                             return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).get()
                                 .then(existingDoc => {
                                     const isUpdate = existingDoc.exists;
+                                    const globalQuestionId = isUpdate ? 
+                                        (existingDoc.data().globalQuestionId || `${examId}-${finalQuestionId}`) : 
+                                        `${examId}-${Date.now()}`;
                                     
-                                    // Save/Update to papers collection
+                                    question.globalQuestionId = globalQuestionId;
+                                    
+                                    // Update papers collection
                                     return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question)
                                         .then(() => {
-                                            // Get exam details for questions collection
+                                            // Get exam type
                                             return db.collection('papers').doc(examId).get();
                                         })
                                         .then(examDoc => {
-                                            if (examDoc.exists) {
-                                                const examData = examDoc.data();
-                                                const examType = examData.type || 'Unknown';
-                                                const globalQuestionId = isUpdate ? 
-                                                    (existingDoc.data().globalQuestionId || `${examId}-${finalQuestionId}`) : 
-                                                    `${examId}-${Date.now()}`;
-                                                
-                                                // Save question ID for future updates
-                                                if (!isUpdate) {
-                                                    question.globalQuestionId = globalQuestionId;
-                                                    db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).update({globalQuestionId: globalQuestionId});
-                                                }
-                                                
-                                                // Save/Update to questions collection with new structure
-                                                return db.collection('questions')
-                                                    .doc(examType)
-                                                    .collection(subject)
-                                                    .doc(chapter)
-                                                    .collection('items')
-                                                    .doc(globalQuestionId)
-                                                    .set({
-                                                        ...question,
-                                                        paperId: examId,
-                                                        questionId: globalQuestionId,
-                                                        examType: examType
-                                                    });
-                                            }
+                                            const examType = examDoc.exists ? examDoc.data().type : 'Unknown';
+                                            
+                                            // Update questions collection
+                                            return db.collection('questions')
+                                                .doc(examType)
+                                                .collection(subject)
+                                                .doc(chapter)
+                                                .collection('items')
+                                                .doc(globalQuestionId)
+                                                .set({
+                                                    ...question,
+                                                    paperId: examId,
+                                                    questionId: globalQuestionId,
+                                                    examType: examType
+                                                });
                                         });
                                 });
                         })
