@@ -129,6 +129,30 @@
             };
 
             db.collection("papers").doc(examId).update(examData).then(() => {
+                // Also update all questions in the questions collection
+                return db.collection("papers").doc(examId).collection("questions").get();
+            }).then(snapshot => {
+                const batch = db.batch();
+                snapshot.forEach(doc => {
+                    const questionData = doc.data();
+                    if (questionData.subject && questionData.chapter) {
+                        const globalQuestionId = `${examId}-${questionData.createdAt || Date.now()}`;
+                        const questionRef = db.collection('questions')
+                            .doc(examData.type)
+                            .collection(questionData.subject)
+                            .doc(questionData.chapter)
+                            .collection('items')
+                            .doc(globalQuestionId);
+                        batch.set(questionRef, {
+                            ...questionData,
+                            paperId: examId,
+                            questionId: globalQuestionId,
+                            examType: examData.type
+                        });
+                    }
+                });
+                return batch.commit();
+            }).then(() => {
                 alert('Exam updated successfully');
                 window.location.href = '../../manage-exams.html';
             }).catch(error => {
