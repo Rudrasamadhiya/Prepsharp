@@ -38,3 +38,15 @@ function getSectionInfo(questionNumber) {
 
 // Total questions in JEE Main paper
 const totalJeeMainQuestions = jeeMainStructure.reduce((sum, section) => sum + section.count, 0);
+
+// Function to get section number based on question number
+function getSectionNumber(questionNumber) {
+    let currentIndex = 0;
+    for (let i = 0; i < jeeMainStructure.length; i++) {
+        if (questionNumber <= currentIndex + jeeMainStructure[i].count) {
+            return i + 1; // 1-based section number
+        }
+        currentIndex += jeeMainStructure[i].count;
+    }
+    return 1;
+}

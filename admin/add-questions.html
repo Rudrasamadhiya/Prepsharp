@@ -501,10 +501,13 @@
                             <textarea class="form-control" id="question-text" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <button type="button" class="btn btn-primary" id="capture-question-btn">Capture</button>
-                            <div id="question-image-preview" class="mt-2" style="max-width: 500px; display: none;">
-                                <img id="question-image-preview-img" class="img-fluid rounded" src="" style="display: block; max-width: 100%; height: auto; border: 1px solid #ddd;">
-                                <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeQuestionImage()">Remove Image</button>
+                            <label class="form-label">Question Image</label>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-success btn-sm" id="capture-question-btn">Capture</button>
+                                <div id="question-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                    <img id="question-image-preview-img" class="img-fluid rounded" src="">
+                                    <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeQuestionImage()">Remove</button>
+                                </div>
                             </div>
                         </div>
                         
@@ -1043,23 +1046,26 @@
                     const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
                     
                     if (!doc.exists) {
+                        console.log('Found empty question at index:', i, 'setting currentQuestionIndex to:', i - 1);
                         currentQuestionIndex = i - 1;
-                        updateQuestionFields();
+                        console.log('About to load question:', i);
                         loadExistingQuestion(examId, i);
-                        document.getElementById('question-number').textContent = `Question ${i} of 75`;
+                        updateQuestionFields();
                         return;
                     }
                 }
                 
                 // All questions exist, load question 1
+                console.log('All questions exist, loading question 1');
                 currentQuestionIndex = 0;
-                updateQuestionFields();
                 loadExistingQuestion(examId, 1);
+                updateQuestionFields();
             } catch (error) {
                 // Fallback to question 1
+                console.log('Error occurred, fallback to question 1');
                 currentQuestionIndex = 0;
-                updateQuestionFields();
                 loadExistingQuestion(examId, 1);
+                updateQuestionFields();
             }
         }
         
@@ -1217,6 +1223,10 @@
             // Create timestamp
             const timestamp = new Date().getTime();
             
+            // Get section info for current question
+            const questionNumber = currentQuestionIndex + 1;
+            const sectionInfo = getSectionInfo(questionNumber);
+            
             // Create question object
             let question = {
                 id: questionId,
@@ -1227,7 +1237,11 @@
                 difficulty: difficulty,
                 marks: parseInt(marks) || 4,
                 examId: examId,
-                createdAt: timestamp
+                createdAt: timestamp,
+                sectionName: sectionInfo ? sectionInfo.section : 'Unknown Section',
+                sectionNumber: getSectionNumber(questionNumber),
+                hasOptions: questionType === 'mcq-single' || questionType === 'mcq-multiple' ? 'yes' : 'no',
+                needsOnScreenKeyboard: questionType === 'numerical' ? 'yes' : 'no'
             };
             
             // Add captured images as base64

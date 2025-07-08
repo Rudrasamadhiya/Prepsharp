@@ -5,6 +5,7 @@ let currentQuestionIndex = 0;
 function updateQuestionFields() {
     // Get 1-based question number
     const questionNumber = currentQuestionIndex + 1;
+    console.log('updateQuestionFields called with questionNumber:', questionNumber, 'currentQuestionIndex:', currentQuestionIndex);
     
     // Get section info for current question
     const sectionInfo = getSectionInfo(questionNumber);

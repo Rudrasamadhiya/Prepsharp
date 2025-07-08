@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Capture buttons
     document.getElementById('capture-question-btn').addEventListener('click', function() {
         currentCaptureTarget = 'question';
+        currentOptionTarget = null; // Clear option target
+        console.log('Question capture clicked, target set to:', currentCaptureTarget);
         
         if (typeof showPdfViewer === 'function') {
             showPdfViewer();
@@ -76,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             currentCaptureTarget = 'option';
             currentOptionTarget = this.getAttribute('data-option');
+            console.log('Option capture clicked, target set to:', currentCaptureTarget, 'option:', currentOptionTarget);
             
             if (typeof showPdfViewer === 'function') {
                 showPdfViewer();
@@ -150,45 +153,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Use screenshot buttons
-    document.getElementById('use-for-question-btn').addEventListener('click', function() {
-        // Create a placeholder image (1x1 transparent PNG)
-        const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+    // Remove existing listeners and add clean ones
+    const useQuestionBtn = document.getElementById('use-for-question-btn');
+    const useOptionBtn = document.getElementById('use-for-option-btn');
+    
+    // Clone buttons to remove all event listeners
+    const newUseQuestionBtn = useQuestionBtn.cloneNode(true);
+    const newUseOptionBtn = useOptionBtn.cloneNode(true);
+    useQuestionBtn.parentNode.replaceChild(newUseQuestionBtn, useQuestionBtn);
+    useOptionBtn.parentNode.replaceChild(newUseOptionBtn, useOptionBtn);
+    
+    newUseQuestionBtn.addEventListener('click', function() {
         const imageData = document.getElementById('screenshot-preview').src;
+        const questionPreviewImg = document.getElementById('question-image-preview-img');
+        const questionPreviewContainer = document.getElementById('question-image-preview');
         
-        if (currentCaptureTarget === 'question') {
-            const questionPreviewImg = document.getElementById('question-image-preview-img');
-            const questionPreviewContainer = document.getElementById('question-image-preview');
-            
-            questionPreviewImg.src = imageData;
-            questionPreviewImg.onload = function() {
-                questionPreviewContainer.style.display = 'block';
-                questionPreviewImg.style.display = 'block';
-            };
-        } else if (currentCaptureTarget === 'option' && currentOptionTarget) {
-            const optionPreviewImg = document.getElementById(`option-${currentOptionTarget}-image-preview-img`);
-            const optionPreviewContainer = document.getElementById(`option-${currentOptionTarget}-image-preview`);
-            
-            if (optionPreviewImg && optionPreviewContainer) {
-                optionPreviewImg.src = imageData;
-                optionPreviewImg.onload = function() {
-                    optionPreviewContainer.style.display = 'block';
-                    optionPreviewImg.style.display = 'block';
-                };
-            }
-        }
+        questionPreviewImg.src = imageData;
+        questionPreviewContainer.style.display = 'block';
         
-        // Reset screenshot area
         resetScreenshotArea();
-        
-        // Close PDF viewer
         document.getElementById('pdf-container').style.display = 'none';
         resetSelectionMode();
     });
     
-    document.getElementById('use-for-option-btn').addEventListener('click', function() {
+    newUseOptionBtn.addEventListener('click', function() {
         const imageData = document.getElementById('screenshot-preview').src;
         
-        // Use the specific option that was clicked for capture
         if (currentOptionTarget) {
             const optionPreviewImg = document.getElementById(`option-${currentOptionTarget}-image-preview-img`);
             const optionPreview = document.getElementById(`option-${currentOptionTarget}-image-preview`);
@@ -197,10 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             optionPreview.style.display = 'block';
         }
         
-        // Reset screenshot area
         resetScreenshotArea();
-        
-        // Close PDF viewer
         document.getElementById('pdf-container').style.display = 'none';
         resetSelectionMode();
     });

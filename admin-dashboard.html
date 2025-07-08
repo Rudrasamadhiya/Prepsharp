@@ -1271,23 +1271,21 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- Load environment variables first -->
-    <script src="env-loader.js"></script>
-    <!-- Then load Firebase config -->
-    <script src="firebase-config.js"></script>
     <script>
-    // Fallback Firebase configuration in case firebase-config.js fails to load
-    if (typeof firebase === 'undefined' || !firebase.apps.length) {
-        // Don't include API keys directly in the code
-        // Instead, redirect to a configuration page or show an error
-        console.error('Firebase configuration not loaded. Please check firebase-config.js');
-        
-        // Redirect to config error page after a short delay
-        setTimeout(() => {
-            alert('Firebase configuration error. Please contact the administrator.');
-            // Optionally redirect to a setup page
-            // window.location.href = 'config-error.html';
-        }, 1000);
+    // Initialize Firebase directly
+    const firebaseConfig = {
+        apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+        authDomain: "prepsharp-c91fd.firebaseapp.com",
+        projectId: "prepsharp-c91fd",
+        storageBucket: "prepsharp-c91fd.firebasestorage.app",
+        messagingSenderId: "688294848433",
+        appId: "1:688294848433:web:dd93fc6d61d62392473f90",
+        measurementId: "G-LLJSLMXMNY"
+    };
+    
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
     }
     </script>
     <script src="reports.js"></script>

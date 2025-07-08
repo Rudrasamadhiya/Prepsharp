@@ -60,12 +60,39 @@ function createExam() {
         if (month) exam.month = month;
         if (shift) exam.shift = shift;
         if (difficulty) exam.difficulty = difficulty;
+        
+        // Add section details for JEE Main
+        exam.totalSections = 6;
+        exam.sections = [
+            { sectionNumber: 1, questionType: 'mcq-single', totalQuestions: 20, subject: 'Physics' },
+            { sectionNumber: 2, questionType: 'numerical', totalQuestions: 5, subject: 'Physics' },
+            { sectionNumber: 3, questionType: 'mcq-single', totalQuestions: 20, subject: 'Chemistry' },
+            { sectionNumber: 4, questionType: 'numerical', totalQuestions: 5, subject: 'Chemistry' },
+            { sectionNumber: 5, questionType: 'mcq-single', totalQuestions: 20, subject: 'Mathematics' },
+            { sectionNumber: 6, questionType: 'numerical', totalQuestions: 5, subject: 'Mathematics' }
+        ];
+        exam.imageStorageFormat = 'base64'; // Store images in base64 format
     } else if (examType === 'jee-advanced') {
         const paper = document.getElementById('new-exam-paper').value;
         const difficulty = document.getElementById('new-exam-difficulty-adv').value;
         
         if (paper) exam.paper = paper;
         if (difficulty) exam.difficulty = difficulty;
+        
+        // Add default section structure for JEE Advanced (will be configured later)
+        exam.totalSections = 9; // 3 sections per subject
+        exam.sections = [
+            { sectionNumber: 1, questionType: 'mcq-single', totalQuestions: 4, subject: 'Physics' },
+            { sectionNumber: 2, questionType: 'mcq-multiple', totalQuestions: 4, subject: 'Physics' },
+            { sectionNumber: 3, questionType: 'numerical', totalQuestions: 4, subject: 'Physics' },
+            { sectionNumber: 4, questionType: 'mcq-single', totalQuestions: 4, subject: 'Chemistry' },
+            { sectionNumber: 5, questionType: 'mcq-multiple', totalQuestions: 4, subject: 'Chemistry' },
+            { sectionNumber: 6, questionType: 'numerical', totalQuestions: 4, subject: 'Chemistry' },
+            { sectionNumber: 7, questionType: 'mcq-single', totalQuestions: 4, subject: 'Mathematics' },
+            { sectionNumber: 8, questionType: 'mcq-multiple', totalQuestions: 4, subject: 'Mathematics' },
+            { sectionNumber: 9, questionType: 'numerical', totalQuestions: 4, subject: 'Mathematics' }
+        ];
+        exam.configurable = true; // Mark as configurable through add-questions page
     }
     
     // Show loading state

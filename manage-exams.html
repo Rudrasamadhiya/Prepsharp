@@ -1472,8 +1472,9 @@
                         </div>
                     </td>
                     <td class="actions">
-                        <a href="exam.html?id=${paperId}" class="btn secondary btn-sm"><i class="fas fa-eye me-1"></i> View</a>
-                        ${getAddQuestionLink(paper, paperId)}
+                        <a href="admin/super-admin/view-exam.html?id=${paperId}" class="btn secondary btn-sm"><i class="fas fa-eye me-1"></i> View</a>
+                        <a href="admin/super-admin/add-questions.html?examId=${paperId}" class="btn primary btn-sm"><i class="fas fa-plus me-1"></i> Add</a>
+                        <button class="btn btn-warning btn-sm" onclick="editPaper('${paperId}')"><i class="fas fa-edit me-1"></i> Edit</button>
                         <button class="btn danger btn-sm" onclick="deletePaper('${paperId}')"><i class="fas fa-trash me-1"></i> Delete</button>
                     </td>
                 `;
@@ -1540,6 +1541,11 @@
             
             // Return default link for all other cases
             return defaultLink;
+        }
+        
+        // Function to edit a paper
+        function editPaper(paperId) {
+            window.location.href = `admin/super-admin/edit-exam.html?id=${paperId}`;
         }
         
         // Function to delete a paper

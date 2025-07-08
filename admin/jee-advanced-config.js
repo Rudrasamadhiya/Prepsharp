@@ -129,8 +129,9 @@ function updateSectionInputs() {
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Section Image (Optional)</label>
+                    <label class="form-label">Section Image (Optional - Base64 Format)</label>
                     <input type="file" class="form-control section-image" data-index="${i}" accept="image/*">
+                    <small class="form-text text-muted">Images will be stored in base64 format</small>
                 </div>
             </div>
         </div>`;
