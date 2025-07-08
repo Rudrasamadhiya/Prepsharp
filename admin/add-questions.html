@@ -1357,8 +1357,33 @@
                             
                             console.log('Saving question to Firestore:', question);
                             
-                            // Save directly to Firestore (no Storage)
-                            return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question);
+                            // Save to papers collection (existing pattern)
+                            return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question)
+                                .then(() => {
+                                    // Get exam details for questions collection
+                                    return db.collection('papers').doc(examId).get();
+                                })
+                                .then(examDoc => {
+                                    if (examDoc.exists) {
+                                        const examData = examDoc.data();
+                                        const examType = examData.type || 'Unknown';
+                                        const globalQuestionId = `${examId}-${Date.now()}`;
+                                        
+                                        // Also save to questions collection with new structure
+                                        return db.collection('questions')
+                                            .doc(examType)
+                                            .collection(subject)
+                                            .doc(chapter)
+                                            .collection('items')
+                                            .doc(globalQuestionId)
+                                            .set({
+                                                ...question,
+                                                paperId: examId,
+                                                questionId: globalQuestionId,
+                                                examType: examType
+                                            });
+                                    }
+                                });
                         })
                         .then(() => {
                             console.log('Question saved successfully');
