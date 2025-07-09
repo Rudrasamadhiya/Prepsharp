@@ -460,6 +460,7 @@
                                     <select class="form-select" id="question-chapter" required>
                                         <option value="">Select Chapter</option>
                                         <!-- Physics chapters -->
+                                        <option value="Units & Measurements">Units & Measurements</option>
                                         <option value="Kinematics">Kinematics</option>
                                         <option value="Laws of Motion">Laws of Motion</option>
                                         <option value="Work, Energy and Power">Work, Energy and Power</option>
@@ -1072,7 +1073,7 @@
         // Chapter data by subject
         const chaptersBySubject = {
             "Physics": [
-                "Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                "Units & Measurements", "Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
                 "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
                 "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
                 "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
@@ -1108,7 +1109,7 @@
             chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
             
             if (subject === 'Physics') {
-                const physicsChapters = ["Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                const physicsChapters = ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
                     "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
                     "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
                     "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
