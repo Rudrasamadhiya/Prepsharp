@@ -1541,8 +1541,14 @@
             // Show fields based on selected exam type
             if (typeSelect.value === 'jee-main') {
                 jeeMainFields.style.display = 'block';
-                totalQuestionsInput.value = '75';
-                questionsHint.textContent = 'For JEE Main: 75 questions (20 MCQs per subject + 5 numerical per subject)';
+                const year = parseInt(document.getElementById('new-exam-year').value);
+                if (year >= 2021 && year <= 2024) {
+                    totalQuestionsInput.value = '90';
+                    questionsHint.textContent = 'For JEE Main 2021-2024: 90 questions (20 MCQs + 10 numerical per subject)';
+                } else {
+                    totalQuestionsInput.value = '75';
+                    questionsHint.textContent = 'For JEE Main: 75 questions (20 MCQs + 5 numerical per subject)';
+                }
             } else if (typeSelect.value === 'jee-advanced') {
                 jeeAdvancedFields.style.display = 'block';
                 totalQuestionsInput.value = '54';
@@ -1643,7 +1649,7 @@
                     ${dateShiftInfo}
                     <div class="mb-1"><span class="fw-bold small">Total Questions:</span> <span class="badge bg-primary">${totalQuestions}</span></div>
                     <div class="mb-1"><span class="fw-bold small">Difficulty Level:</span> <span class="badge ${difficulty === 'Easy' ? 'bg-success' : difficulty === 'Moderate' ? 'bg-warning' : 'bg-danger'}">${difficulty}</span></div>
-                    <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics).</span></div>
+                    <div class="mb-1"><span class="fw-bold small">Question Pattern:</span> <span class="small">${year >= 2021 && year <= 2024 ? '20 multiple-choice questions (MCQs) and 10 numerical value questions from each subject (Physics, Chemistry, and Mathematics).' : '20 multiple-choice questions (MCQs) and 5 numerical value questions from each subject (Physics, Chemistry, and Mathematics).'}</span></div>
                     <div><span class="fw-bold small">Marking Scheme:</span> <span class="small">Each MCQ carries 4 marks for correct answer and -1 mark for incorrect answer. Each numerical value question carries 4 marks for correct answer and -1 mark for incorrect answer.</span></div>
                 </div>`;
             } else if (typeSelect.value === 'jee-advanced') {
