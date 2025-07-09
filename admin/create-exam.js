@@ -41,7 +41,7 @@ function createExam() {
               examType === 'neet' ? 'NEET' : 'Mock Test',
         year: examYear,
         status: 'Draft',
-        totalQuestions: (year >= 2021 && year <= 2024) ? 90 : 75,
+        totalQuestions: parseInt(totalQuestions),
         description: description,
         questions: [],
         createdBy: adminEmail,

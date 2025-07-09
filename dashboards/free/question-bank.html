@@ -15,48 +15,46 @@
         }
         
         .exam-panel {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
         
         .exam-panel:hover {
-            transform: translateY(-5px);
-        }
-        
-        .exam-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #4f46e5;
         }
         
         .exam-title {
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin: 15px 0;
         }
         
         .exam-description {
-            color: var(--text-light);
+            opacity: 0.9;
             margin-bottom: 20px;
         }
         
         .exam-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             border: none;
             border-radius: 30px;
             padding: 12px 30px;
-            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
         }
         
         .exam-btn:hover {
-            background-color: var(--primary-dark);
+            background: linear-gradient(135deg, #3730a3, #6b21a8);
+            transform: translateY(-2px);
         }
         
         .subject-selection, .chapter-selection, .questions-section {
@@ -70,6 +68,84 @@
             margin-top: 20px;
         }
         
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+        }
+        
+        .subject-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #059669, #0d9488);
+        }
+        
+        .subject-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+        }
+        
+        .subject-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1), transparent);
+            transform: translate(-50%, -50%);
+            transition: all 0.4s ease;
+            border-radius: 50%;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-12px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #4f46e5;
+        }
+        
+        .subject-card:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .subject-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .subject-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-color);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subject-total {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
         .chapter-grid {
             display: flex;
             flex-direction: column;
@@ -77,32 +153,35 @@
             margin-top: 20px;
         }
         
-        .subject-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .subject-card:hover {
-            transform: translateY(-5px);
-        }
-        
         .chapter-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 15px 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+        
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #4f46e5, #7c3aed);
+            border-radius: 12px 0 0 12px;
         }
         
         .chapter-card:hover {
-            transform: translateX(5px);
+            transform: translateX(8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #4f46e5;
         }
         
         .chapter-name {
@@ -110,28 +189,71 @@
         }
         
         .question-count {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
+            padding: 6px 15px;
+            border-radius: 20px;
             font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
         }
         
         .question-item {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .question-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .question-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .question-item img {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .question-item p {
+            margin: 10px 0;
+            font-weight: 500;
         }
         
         .back-btn {
-            background-color: var(--text-light);
+            background: linear-gradient(135deg, #6b7280, #4b5563);
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
+            border-radius: 25px;
+            padding: 10px 20px;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
     </style>
 </head>
@@ -188,13 +310,19 @@
                     <h2>Choose Subject</h2>
                     <div class="subject-grid">
                         <div class="subject-card" onclick="selectSubject('physics')">
+                            <div class="subject-icon">⚛️</div>
                             <h3>Physics</h3>
+                            <div class="subject-total" id="physics-total">Loading...</div>
                         </div>
                         <div class="subject-card" onclick="selectSubject('chemistry')">
+                            <div class="subject-icon">🧪</div>
                             <h3>Chemistry</h3>
+                            <div class="subject-total" id="chemistry-total">Loading...</div>
                         </div>
                         <div class="subject-card" onclick="selectSubject('mathematics')">
+                            <div class="subject-icon">📐</div>
                             <h3>Mathematics</h3>
+                            <div class="subject-total" id="mathematics-total">Loading...</div>
                         </div>
                     </div>
                 </div>
@@ -220,25 +348,30 @@
         let selectedExam = '';
         let selectedSubject = '';
         
-        // Firebase config
         const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "your-app-id"
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
         };
         
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
         }
-        const db = firebase.firestore();
         
         function selectExam(exam) {
             selectedExam = exam;
             document.getElementById('examPanels').style.display = 'none';
             document.getElementById('subjectSelection').style.display = 'block';
+            loadSubjectTotals();
         }
         
         function selectSubject(subject) {
@@ -248,44 +381,106 @@
             loadChapters(subject);
         }
         
-        async function loadChapters(subject) {
+        async function loadSubjectTotals() {
+            const subjects = ['physics', 'chemistry', 'mathematics'];
+            const chapters = {
+                physics: ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
+                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
+                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"],
+                chemistry: ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
+                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
+                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
+                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
+                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
+                    "Polymers", "Chemistry in Everyday Life"],
+                mathematics: ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
+                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
+                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
+                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
+                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
+                    "Mathematical Reasoning", "Mathematical Induction"]
+            };
+            
+            for (const subject of subjects) {
+                try {
+                    const examName = selectedExam === 'advanced' ? 'JEE Advanced' : 'JEE Main';
+                    const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                    let totalQuestions = 0;
+                    
+                    for (const chapter of chapters[subject]) {
+                        const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
+                        totalQuestions += itemsSnapshot.size;
+                    }
+                    
+                    document.getElementById(`${subject}-total`).textContent = `${totalQuestions} questions`;
+                } catch (error) {
+                    document.getElementById(`${subject}-total`).textContent = '0 questions';
+                }
+            }
+        }
+        
+        function loadChapters(subject) {
             const chapterGrid = document.getElementById('chapterGrid');
             chapterGrid.innerHTML = 'Loading chapters...';
             
+            const chapters = {
+                physics: ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
+                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
+                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
+                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"],
+                chemistry: ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
+                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
+                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
+                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
+                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
+                    "Polymers", "Chemistry in Everyday Life"],
+                mathematics: ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
+                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
+                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
+                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
+                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
+                    "Mathematical Reasoning", "Mathematical Induction"]
+            };
+            
+            chapterGrid.innerHTML = '';
+            
+            if (!chapters[subject]) {
+                chapterGrid.innerHTML = 'No chapters found for this subject.';
+                return;
+            }
+            
+            chapters[subject].forEach(chapter => {
+                const chapterCard = document.createElement('div');
+                chapterCard.className = 'chapter-card';
+                chapterCard.innerHTML = `
+                    <span class="chapter-name">${chapter}</span>
+                    <span class="question-count">Loading...</span>
+                `;
+                chapterCard.onclick = () => selectChapter(chapter);
+                chapterGrid.appendChild(chapterCard);
+                
+                loadQuestionCount(chapter, chapterCard);
+            });
+        }
+        
+        async function loadQuestionCount(chapter, chapterCard) {
             try {
                 const examName = selectedExam === 'advanced' ? 'JEE Advanced' : 'JEE Main';
-                const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                const subjectName = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
                 
-                const snapshot = await db.collection('questions').doc(examName).collection(subjectName).get();
+                const snapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
+                const questionCount = snapshot.size;
                 
-                chapterGrid.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    chapterGrid.innerHTML = 'No chapters found.';
-                    return;
-                }
-                
-                for (const doc of snapshot.docs) {
-                    const chapterName = doc.id;
-                    const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapterName).collection('items').get();
-                    
-                    let questionCount = 0;
-                    for (const itemDoc of itemsSnapshot.docs) {
-                        const questionsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapterName).collection('items').doc(itemDoc.id).collection('questions').get();
-                        questionCount += questionsSnapshot.size;
-                    }
-                    
-                    const chapterCard = document.createElement('div');
-                    chapterCard.className = 'chapter-card';
-                    chapterCard.innerHTML = `
-                        <span class="chapter-name">${chapterName}</span>
-                        <span class="question-count">${questionCount} questions</span>
-                    `;
-                    chapterCard.onclick = () => selectChapter(chapterName);
-                    chapterGrid.appendChild(chapterCard);
-                }
+                const countSpan = chapterCard.querySelector('.question-count');
+                countSpan.textContent = `${questionCount} questions`;
             } catch (error) {
-                chapterGrid.innerHTML = 'Error loading chapters: ' + error.message;
+                const countSpan = chapterCard.querySelector('.question-count');
+                countSpan.textContent = '0 questions';
             }
         }
         
@@ -305,36 +500,39 @@
                 
                 const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
                 
-                for (const itemDoc of itemsSnapshot.docs) {
-                    const questionsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').doc(itemDoc.id).collection('questions').get();
-                    
-                    questionsSnapshot.forEach(doc => {
-                        const question = doc.data();
-                        const questionDiv = document.createElement('div');
-                        questionDiv.className = 'question-item';
-                        questionDiv.innerHTML = `
-                            <h4>${question.question}</h4>
-                            <div>
-                                ${question.options.map((option, index) => 
-                                    `<p>${String.fromCharCode(65 + index)}. ${option}</p>`
-                                ).join('')}
-                            </div>
-                            <button onclick="showAnswer('${question.correctAnswer}')">Show Answer</button>
-                        `;
-                        questionsList.appendChild(questionDiv);
-                    });
+                questionsList.innerHTML = '';
+                
+                if (itemsSnapshot.empty) {
+                    questionsList.innerHTML = 'No questions found for this chapter.';
+                    return;
                 }
                 
-                questionsList.innerHTML = '';
-
+                itemsSnapshot.forEach(doc => {
+                    const question = doc.data();
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-item';
+                    
+                    let imageHtml = '';
+                    if (question.questionImage) {
+                        imageHtml = `<img src="${question.questionImage}" style="max-width: 100%; height: auto; margin-bottom: 10px;">`;
+                    }
+                    
+                    const paperInfo = question.examId || 'Unknown Paper';
+                    const year = paperInfo.match(/(202[0-9])/) ? paperInfo.match(/(202[0-9])/)[1] : 'Unknown Year';
+                    
+                    questionDiv.innerHTML = `
+                        ${imageHtml}
+                        <p><strong>Paper:</strong> ${paperInfo}</p>
+                        <p><strong>Year:</strong> ${year}</p>
+                    `;
+                    questionsList.appendChild(questionDiv);
+                });
             } catch (error) {
                 questionsList.innerHTML = 'Error loading questions: ' + error.message;
             }
         }
         
-        function showAnswer(answer) {
-            alert('Correct Answer: ' + answer);
-        }
+
         
         function showExamPanels() {
             document.getElementById('subjectSelection').style.display = 'none';
