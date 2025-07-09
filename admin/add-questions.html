@@ -976,17 +976,29 @@
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
             
-            // Format exam ID into a proper name
+            // Format exam ID into a proper name and set total questions
             let examName = examId;
+            let totalQuestions = 75; // default
+            
             if (examId.includes('jee-advanced')) {
                 examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
                 examName = examName.replace(/-/g, ' ');
             } else if (examId.includes('jee-main')) {
                 examName = examId.replace('jee-main---', 'JEE Main - ');
                 examName = examName.replace(/-/g, ' ');
+                
+                // Check year for JEE Main
+                const yearMatch = examId.match(/(202[1-4])/);
+                if (yearMatch) {
+                    totalQuestions = 90;
+                }
             }
+            
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
+            
+            // Update question counter
+            document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
             
             // Initialize the question fields based on the first question
             currentQuestionIndex = 0;
@@ -1042,7 +1054,13 @@
         // Function to find first empty question
         async function findAndLoadFirstEmptyQuestion(examId) {
             try {
-                for (let i = 1; i <= 90; i++) {
+                // Determine total questions based on exam
+                let maxQuestions = 75;
+                if (examId.includes('jee-main') && examId.match(/(202[1-4])/)) {
+                    maxQuestions = 90;
+                }
+                
+                for (let i = 1; i <= maxQuestions; i++) {
                     const questionId = `question-${i}`;
                     const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
                     
@@ -1433,7 +1451,11 @@
                                 updateQuestionFields();
                                 
                                 // Update question number display
-                                document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of 90`;
+                                let totalQuestions = 75;
+                                if (examId.includes('jee-main') && examId.match(/(202[1-4])/)) {
+                                    totalQuestions = 90;
+                                }
+                                document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of ${totalQuestions}`;
                             }, 1000);
                         })
                         .catch(error => {
