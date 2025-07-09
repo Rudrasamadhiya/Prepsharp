@@ -406,7 +406,7 @@
         <div id="add-question-form" style="display: block;">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Add Question to <span id="exam-name" style="color: white;">Loading...</span></h5>
+                    <h5 class="mb-0">Add Question to <span id="exam-name" style="color: white;">JEE Main Paper</span></h5>
                     <div>
                         <a href="#" id="back-to-exam" class="btn btn-sm btn-light">
                             <i class="fas fa-arrow-left me-1"></i> Back
@@ -838,6 +838,7 @@
                 }
             }
             
+            // Set exam name immediately
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
             
@@ -845,15 +846,25 @@
             window.totalQuestions = totalQuestions;
             document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
             
+            // Initialize question type to MCQ
+            document.getElementById('question-type').value = 'mcq-single';
+            toggleQuestionFields();
+            
             // Initialize based on exam type
             if (examId && examId.includes('jee-advanced')) {
                 // For JEE Advanced, initialize with the advanced structure
-                initializeAdvancedStructure(examId);
+                if (typeof initializeAdvancedStructure === 'function') {
+                    initializeAdvancedStructure(examId);
+                }
             } else {
                 // For JEE Main, use the standard structure
                 currentQuestionIndex = 0;
-                updateQuestionFields();
-                highlightCurrentSection();
+                if (typeof updateQuestionFields === 'function') {
+                    updateQuestionFields();
+                }
+                if (typeof highlightCurrentSection === 'function') {
+                    highlightCurrentSection();
+                }
             }
         };
     </script>
@@ -922,6 +933,11 @@
                     if (data.chapter) document.getElementById('question-chapter').value = data.chapter;
                     if (data.difficulty) document.getElementById('question-difficulty').value = data.difficulty;
                     if (data.marks) document.getElementById('question-marks').value = data.marks;
+                    
+                    // Load numerical answer if it exists
+                    if (data.answer && document.getElementById('numerical-value')) {
+                        document.getElementById('numerical-value').value = data.answer;
+                    }
                 } else {
                     console.log('No existing question found for:', questionId);
                     // New question - set defaults
@@ -958,12 +974,26 @@
                 examId = "jee-main---31-jan-shift-2-2024";
             }
             
-            // Show loading state
-            document.getElementById('loading-container').style.display = 'flex';
-            document.getElementById('add-question-form').style.display = 'none';
+            // Show form immediately
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('add-question-form').style.display = 'block';
             
-            // Validate paper existence before showing the form
-            validatePaper(examId);
+            // Show the form immediately
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('add-question-form').style.display = 'block';
+            
+            // Set exam name
+            let examName = examId.replace('jee-main---', 'JEE Main - ').replace(/-/g, ' ');
+            document.getElementById('exam-name').textContent = examName;
+            
+            // Set total questions to 75 for all papers
+            window.totalQuestions = 75;
+            document.getElementById('question-number').textContent = 'Question 1 of 75';
+            
+            // Initialize question type to MCQ and show options
+            document.getElementById('question-type').value = 'mcq-single';
+            document.getElementById('mcq-options').style.display = 'block';
+            document.getElementById('numerical-answer').style.display = 'none';
             
             // Check if this is a JEE Advanced paper and show configuration modal
             if (examId && examId.includes('jee-advanced')) {
@@ -989,45 +1019,15 @@
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
             
-            // Get exam details from Firebase
-            db.collection('papers').doc(examId).get().then(doc => {
-                if (doc.exists) {
-                    const examData = doc.data();
-                    const totalQuestions = examData.totalQuestions || 75;
-                    
-                    // Store exam data globally
-                    window.examData = examData;
-                    window.totalQuestions = totalQuestions;
-                    
-                    // Update question counter
-                    document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
-                    
-                    // Use exam name from Firebase
-                    document.getElementById('exam-name').textContent = examData.name;
-                    document.getElementById('exam-name').style.fontWeight = 'bold';
-                    
-                    // Update section navigation based on sections array
-                    if (examData.sections && examData.sections.length > 0) {
-                        updateSectionNavigation(examData.sections);
-                    }
-                } else {
-                    console.error('Exam not found in Firebase');
-                    window.totalQuestions = 75;
-                }
-            }).catch(error => {
-                console.error('Error getting exam details:', error);
-                window.totalQuestions = 75;
-            });
+
             
-            // Initialize the question fields based on the first question
+            // Initialize the question fields
             currentQuestionIndex = 0;
-            updateQuestionFields();
             
-            // Load first non-uploaded question
-            findAndLoadFirstEmptyQuestion(examId);
-            
-            // Highlight the first section button
-            highlightCurrentSection();
+            // Set total questions to 75 for all papers
+            window.totalQuestions = 75;
+            document.getElementById('question-number').textContent = 'Question 1 of 75';
+            document.getElementById('section-name').textContent = 'Physics - Section 1';
             
             // Set up event listeners
             document.getElementById('sidebar-logout').addEventListener('click', function(e) {
@@ -1068,44 +1068,20 @@
             // Show form and hide loading immediately
             document.getElementById('loading-container').style.display = 'none';
             document.getElementById('add-question-form').style.display = 'block';
+            
+            // Set exam name immediately
+            let examName = examId;
+            if (examId.includes('jee-advanced')) {
+                examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
+                examName = examName.replace(/-/g, ' ');
+            } else if (examId.includes('jee-main')) {
+                examName = examId.replace('jee-main---', 'JEE Main - ');
+                examName = examName.replace(/-/g, ' ');
+            }
+            document.getElementById('exam-name').textContent = examName;
         }
         
-        // Function to find first empty question
-        async function findAndLoadFirstEmptyQuestion(examId) {
-            try {
-                // Use stored total questions
-                const maxQuestions = window.totalQuestions || 75;
-                    
-                    for (let i = 1; i <= maxQuestions; i++) {
-                    const questionId = `question-${i}`;
-                    const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
-                    
-                    if (!doc.exists) {
-                        console.log('Found empty question at index:', i, 'setting currentQuestionIndex to:', i - 1);
-                        currentQuestionIndex = i - 1;
-                        console.log('About to load question:', i);
-                        loadExistingQuestion(examId, i);
-                        updateQuestionFields();
-                            return;
-                        }
-                    }
-                    
-                    // All questions exist, load question 1
-                    console.log('All questions exist, loading question 1');
-                    currentQuestionIndex = 0;
-                    loadExistingQuestion(examId, 1);
-                    updateQuestionFields();
-                }).catch(error => {
-                    // Fallback to question 1
-                    console.log('Error occurred, fallback to question 1');
-                    currentQuestionIndex = 0;
-                    loadExistingQuestion(examId, 1);
-                    updateQuestionFields();
-                });
-            } catch (error) {
-                console.error('Error in findAndLoadFirstEmptyQuestion:', error);
-            }
-        }
+
         
         // Chapter data by subject
         const chaptersBySubject = {
