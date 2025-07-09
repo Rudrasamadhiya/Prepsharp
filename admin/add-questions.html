@@ -416,7 +416,7 @@
                 <div class="card-body bg-light p-2 mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
-                            <span id="question-number" class="badge bg-primary me-3">Question 1 of 90</span>
+                            <span id="question-number" class="badge bg-primary me-3">Question 1 of 75</span>
                             <span id="section-name" class="badge bg-secondary">Physics - Section 1</span>
                         </div>
                     </div>
@@ -989,32 +989,32 @@
             // Set back link
             document.getElementById('back-to-exam').href = `edit-exam.html?id=${examId}`;
             
-            // Format exam ID into a proper name and set total questions
-            let examName = examId;
-            let totalQuestions = 75; // default
-            
-            if (examId.includes('jee-advanced')) {
-                examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
-                examName = examName.replace(/-/g, ' ');
-            } else if (examId.includes('jee-main')) {
-                examName = examId.replace('jee-main---', 'JEE Main - ');
-                examName = examName.replace(/-/g, ' ');
-                
-                // Check year for JEE Main
-                const yearMatch = examId.match(/(202[1-4])/);
-                if (yearMatch) {
-                    totalQuestions = 90;
+            // Get exam details from Firebase
+            db.collection('papers').doc(examId).get().then(doc => {
+                if (doc.exists) {
+                    const examData = doc.data();
+                    const totalQuestions = examData.totalQuestions || 75;
+                    
+                    // Store total questions globally
+                    window.totalQuestions = totalQuestions;
+                    
+                    // Update question counter
+                    document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
+                    
+                    // Format exam name
+                    let examName = examData.name || examId;
+                    document.getElementById('exam-name').textContent = examName;
+                    document.getElementById('exam-name').style.fontWeight = 'bold';
+                } else {
+                    // Fallback if exam not found
+                    window.totalQuestions = 75;
+                    document.getElementById('question-number').textContent = `Question 1 of 75`;
                 }
-            }
-            
-            document.getElementById('exam-name').textContent = examName;
-            document.getElementById('exam-name').style.fontWeight = 'bold';
-            
-            // Store total questions globally
-            window.totalQuestions = totalQuestions;
-            
-            // Update question counter
-            document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
+            }).catch(error => {
+                console.error('Error getting exam details:', error);
+                window.totalQuestions = 75;
+                document.getElementById('question-number').textContent = `Question 1 of 75`;
+            });
             
             // Initialize the question fields based on the first question
             currentQuestionIndex = 0;
@@ -1070,10 +1070,11 @@
         // Function to find first empty question
         async function findAndLoadFirstEmptyQuestion(examId) {
             try {
-                // Use stored total questions
-                const maxQuestions = window.totalQuestions || 75;
-                
-                for (let i = 1; i <= maxQuestions; i++) {
+                // Get total questions from Firebase
+                db.collection('papers').doc(examId).get().then(examDoc => {
+                    const maxQuestions = examDoc.exists ? (examDoc.data().totalQuestions || 75) : 75;
+                    
+                    for (let i = 1; i <= maxQuestions; i++) {
                     const questionId = `question-${i}`;
                     const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
                     
@@ -1083,21 +1084,24 @@
                         console.log('About to load question:', i);
                         loadExistingQuestion(examId, i);
                         updateQuestionFields();
-                        return;
+                            return;
+                        }
                     }
-                }
-                
-                // All questions exist, load question 1
-                console.log('All questions exist, loading question 1');
-                currentQuestionIndex = 0;
-                loadExistingQuestion(examId, 1);
-                updateQuestionFields();
+                    
+                    // All questions exist, load question 1
+                    console.log('All questions exist, loading question 1');
+                    currentQuestionIndex = 0;
+                    loadExistingQuestion(examId, 1);
+                    updateQuestionFields();
+                }).catch(error => {
+                    // Fallback to question 1
+                    console.log('Error occurred, fallback to question 1');
+                    currentQuestionIndex = 0;
+                    loadExistingQuestion(examId, 1);
+                    updateQuestionFields();
+                });
             } catch (error) {
-                // Fallback to question 1
-                console.log('Error occurred, fallback to question 1');
-                currentQuestionIndex = 0;
-                loadExistingQuestion(examId, 1);
-                updateQuestionFields();
+                console.error('Error in findAndLoadFirstEmptyQuestion:', error);
             }
         }
         
