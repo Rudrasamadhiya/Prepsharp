@@ -220,12 +220,19 @@
         let selectedExam = '';
         let selectedSubject = '';
         
-        // Firebase config (replace with your config)
+        // Firebase config
         const firebaseConfig = {
-            // Add your Firebase config here
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
         };
         
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
         
         function selectExam(exam) {
@@ -260,8 +267,13 @@
                 
                 for (const doc of snapshot.docs) {
                     const chapterName = doc.id;
-                    const chapterSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapterName).collection('questions').get();
-                    const questionCount = chapterSnapshot.size;
+                    const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapterName).collection('items').get();
+                    
+                    let questionCount = 0;
+                    for (const itemDoc of itemsSnapshot.docs) {
+                        const questionsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapterName).collection('items').doc(itemDoc.id).collection('questions').get();
+                        questionCount += questionsSnapshot.size;
+                    }
                     
                     const chapterCard = document.createElement('div');
                     chapterCard.className = 'chapter-card';
@@ -291,30 +303,30 @@
                 const examName = selectedExam === 'advanced' ? 'JEE Advanced' : 'JEE Main';
                 const subjectName = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
                 
-                const snapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('questions').get();
+                const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
                 
-                questionsList.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    questionsList.innerHTML = 'No questions found for this chapter.';
-                    return;
+                for (const itemDoc of itemsSnapshot.docs) {
+                    const questionsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').doc(itemDoc.id).collection('questions').get();
+                    
+                    questionsSnapshot.forEach(doc => {
+                        const question = doc.data();
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'question-item';
+                        questionDiv.innerHTML = `
+                            <h4>${question.question}</h4>
+                            <div>
+                                ${question.options.map((option, index) => 
+                                    `<p>${String.fromCharCode(65 + index)}. ${option}</p>`
+                                ).join('')}
+                            </div>
+                            <button onclick="showAnswer('${question.correctAnswer}')">Show Answer</button>
+                        `;
+                        questionsList.appendChild(questionDiv);
+                    });
                 }
                 
-                snapshot.forEach(doc => {
-                    const question = doc.data();
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = 'question-item';
-                    questionDiv.innerHTML = `
-                        <h4>${question.question}</h4>
-                        <div>
-                            ${question.options.map((option, index) => 
-                                `<p>${String.fromCharCode(65 + index)}. ${option}</p>`
-                            ).join('')}
-                        </div>
-                        <button onclick="showAnswer('${question.correctAnswer}')">Show Answer</button>
-                    `;
-                    questionsList.appendChild(questionDiv);
-                });
+                questionsList.innerHTML = '';
+
             } catch (error) {
                 questionsList.innerHTML = 'Error loading questions: ' + error.message;
             }
