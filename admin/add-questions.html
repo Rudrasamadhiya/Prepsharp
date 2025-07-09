@@ -995,25 +995,28 @@
                     const examData = doc.data();
                     const totalQuestions = examData.totalQuestions || 75;
                     
-                    // Store total questions globally
+                    // Store exam data globally
+                    window.examData = examData;
                     window.totalQuestions = totalQuestions;
                     
                     // Update question counter
                     document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
                     
-                    // Format exam name
-                    let examName = examData.name || examId;
-                    document.getElementById('exam-name').textContent = examName;
+                    // Use exam name from Firebase
+                    document.getElementById('exam-name').textContent = examData.name;
                     document.getElementById('exam-name').style.fontWeight = 'bold';
+                    
+                    // Update section navigation based on sections array
+                    if (examData.sections && examData.sections.length > 0) {
+                        updateSectionNavigation(examData.sections);
+                    }
                 } else {
-                    // Fallback if exam not found
+                    console.error('Exam not found in Firebase');
                     window.totalQuestions = 75;
-                    document.getElementById('question-number').textContent = `Question 1 of 75`;
                 }
             }).catch(error => {
                 console.error('Error getting exam details:', error);
                 window.totalQuestions = 75;
-                document.getElementById('question-number').textContent = `Question 1 of 75`;
             });
             
             // Initialize the question fields based on the first question
@@ -1070,9 +1073,8 @@
         // Function to find first empty question
         async function findAndLoadFirstEmptyQuestion(examId) {
             try {
-                // Get total questions from Firebase
-                db.collection('papers').doc(examId).get().then(examDoc => {
-                    const maxQuestions = examDoc.exists ? (examDoc.data().totalQuestions || 75) : 75;
+                // Use stored total questions
+                const maxQuestions = window.totalQuestions || 75;
                     
                     for (let i = 1; i <= maxQuestions; i++) {
                     const questionId = `question-${i}`;
@@ -1217,6 +1219,23 @@
                 document.getElementById('multiple-options').style.display = 'block';
             } else if (questionType === 'numerical') {
                 document.getElementById('numerical-answer').style.display = 'block';
+            }
+        }
+        
+        // Function to update section navigation based on Firebase sections data
+        function updateSectionNavigation(sections) {
+            const sectionNavigation = document.querySelector('.section-navigation .btn-group');
+            if (sectionNavigation) {
+                sectionNavigation.innerHTML = '';
+                
+                sections.forEach((section, index) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'btn btn-outline-primary section-btn btn-group-sm';
+                    button.onclick = () => jumpToSection(index);
+                    button.textContent = `${section.subject} - ${section.questionType === 'mcq-single' ? 'MCQ' : 'Numerical'}`;
+                    sectionNavigation.appendChild(button);
+                });
             }
         }
         

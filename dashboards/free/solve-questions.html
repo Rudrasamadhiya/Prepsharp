@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve Questions - PrepSharp Free</title>
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            position: relative;
+        }
+        
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        
+        .question-timer {
+            font-size: 18px;
+            font-weight: 600;
+            color: #dc2626;
+        }
+        
+        .question-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            object-position: top;
+            border-radius: 15px;
+            background: #f8fafc;
+            margin-bottom: 25px;
+        }
+        
+        .options-container {
+            margin: 25px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.05);
+        }
+        
+        .option.selected {
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.1);
+        }
+        
+        .option.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .option.incorrect {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .option-label {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+        
+        .option.selected .option-label {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            transition: width 0.3s ease;
+        }
+        
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .result-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                    <li class="active"><a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a></li>
+                    <li><a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a></li>
+                    <li><a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a></li>
+                    <li><a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="question-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="question-card" id="questionCard">
+                    <div class="question-header">
+                        <div class="question-number" id="questionNumber">Question 1 of 10</div>
+                        <div class="question-timer" id="timer">05:00</div>
+                    </div>
+                    
+                    <img id="questionImage" class="question-image" src="" alt="Question">
+                    
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Options will be loaded here -->
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">← Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2>Quiz Complete!</h2>
+            <p id="resultText"></p>
+            <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+            <button class="btn btn-secondary" onclick="goBack()">Back to Questions</button>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+        
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timer;
+        let timeLeft = 300; // 5 minutes
+        
+        async function loadQuestions() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const exam = urlParams.get('exam') || localStorage.getItem('selectedExam');
+            const subject = urlParams.get('subject') || localStorage.getItem('selectedSubject');
+            const chapter = urlParams.get('chapter') || localStorage.getItem('selectedChapter');
+            
+            if (!exam || !subject || !chapter) {
+                window.location.href = 'question-bank.html';
+                return;
+            }
+            
+            try {
+                const examName = exam === 'advanced' ? 'JEE Advanced' : 'JEE Main';
+                const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                
+                const snapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
+                
+                questions = [];
+                snapshot.forEach(doc => {
+                    questions.push({id: doc.id, ...doc.data()});
+                });
+                
+                questions = questions.slice(0, 10); // Limit to 10 questions
+                userAnswers = new Array(questions.length).fill(null);
+                
+                if (questions.length > 0) {
+                    displayQuestion();
+                    startTimer();
+                } else {
+                    alert('No questions found!');
+                    window.location.href = 'question-bank.html';
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert('Error loading questions!');
+                window.location.href = 'question-bank.html';
+            }
+        }
+        
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById('questionImage').src = question.questionImage || '';
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            if (question.options) {
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    optionDiv.onclick = () => selectOption(index);
+                    
+                    if (userAnswers[currentQuestionIndex] === index) {
+                        optionDiv.classList.add('selected');
+                    }
+                    
+                    optionDiv.innerHTML = `
+                        <div class="option-label">${String.fromCharCode(65 + index)}</div>
+                        <div>${option}</div>
+                    `;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            }
+            
+            updateProgress();
+        }
+        
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, i) => {
+                option.classList.toggle('selected', i === index);
+            });
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+        
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+        
+        function finishQuiz() {
+            clearInterval(timer);
+            
+            let correct = 0;
+            questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correctOption) {
+                    correct++;
+                }
+            });
+            
+            const percentage = Math.round((correct / questions.length) * 100);
+            document.getElementById('resultText').textContent = `You scored ${correct}/${questions.length} (${percentage}%)`;
+            document.getElementById('resultModal').style.display = 'block';
+        }
+        
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            timeLeft = 300;
+            document.getElementById('resultModal').style.display = 'none';
+            displayQuestion();
+            startTimer();
+        }
+        
+        function goBack() {
+            window.location.href = 'question-bank.html';
+        }
+        
+        window.addEventListener('load', loadQuestions);
+    </script>
+</body>
+</html>
