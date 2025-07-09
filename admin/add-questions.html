@@ -997,6 +997,9 @@
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
             
+            // Store total questions globally
+            window.totalQuestions = totalQuestions;
+            
             // Update question counter
             document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
             
@@ -1054,11 +1057,8 @@
         // Function to find first empty question
         async function findAndLoadFirstEmptyQuestion(examId) {
             try {
-                // Determine total questions based on exam
-                let maxQuestions = 75;
-                if (examId.includes('jee-main') && examId.match(/(202[1-4])/)) {
-                    maxQuestions = 90;
-                }
+                // Use stored total questions
+                const maxQuestions = window.totalQuestions || 75;
                 
                 for (let i = 1; i <= maxQuestions; i++) {
                     const questionId = `question-${i}`;
@@ -1451,10 +1451,7 @@
                                 updateQuestionFields();
                                 
                                 // Update question number display
-                                let totalQuestions = 75;
-                                if (examId.includes('jee-main') && examId.match(/(202[1-4])/)) {
-                                    totalQuestions = 90;
-                                }
+                                const totalQuestions = window.totalQuestions || 75;
                                 document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of ${totalQuestions}`;
                             }, 1000);
                         })
