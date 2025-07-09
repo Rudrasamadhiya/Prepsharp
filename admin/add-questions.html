@@ -818,19 +818,32 @@
             document.getElementById('loading-container').style.display = 'none';
             document.getElementById('add-question-form').style.display = 'block';
             
-            // Format exam ID into a proper name
+            // Format exam ID into a proper name and set total questions
             const urlParams = new URLSearchParams(window.location.search);
             const examId = urlParams.get('examId') || 'exam-default';
             let examName = examId;
+            let totalQuestions = 75;
+            
             if (examId.includes('jee-advanced')) {
                 examName = examId.replace('jee-advanced-', 'JEE Advanced ').replace('paper', 'Paper ');
                 examName = examName.replace(/-/g, ' ');
             } else if (examId.includes('jee-main')) {
                 examName = examId.replace('jee-main---', 'JEE Main - ');
                 examName = examName.replace(/-/g, ' ');
+                
+                // Check year for JEE Main
+                const yearMatch = examId.match(/(202[1-4])/);
+                if (yearMatch) {
+                    totalQuestions = 90;
+                }
             }
+            
             document.getElementById('exam-name').textContent = examName;
             document.getElementById('exam-name').style.fontWeight = 'bold';
+            
+            // Store and update total questions
+            window.totalQuestions = totalQuestions;
+            document.getElementById('question-number').textContent = `Question 1 of ${totalQuestions}`;
             
             // Initialize based on exam type
             if (examId && examId.includes('jee-advanced')) {

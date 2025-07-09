@@ -248,13 +248,14 @@
         
         .question-item {
             background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 0;
             margin-bottom: 25px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
             position: relative;
+            overflow: hidden;
         }
         
         .question-item::before {
@@ -263,26 +264,73 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            border-radius: 15px 15px 0 0;
+            height: 6px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
         }
         
         .question-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
+            border-color: #4f46e5;
+        }
+        
+        .question-header {
+            padding: 20px 25px 15px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .question-content {
+            padding: 20px 25px;
         }
         
         .question-item img {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            max-width: 100%;
-            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            width: 100%;
+            height: 50px;
+            object-fit: contain;
+            object-position: top;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            background: #f8fafc;
         }
         
-        .question-item p {
-            margin: 10px 0;
+        .question-item img:hover {
+            transform: scale(1.02);
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 500;
+            color: #64748b;
+        }
+        
+        .meta-icon {
+            font-size: 16px;
         }
         
         .back-btn {
@@ -383,7 +431,7 @@
                 
                 <div class="questions-section" id="questionsSection">
                     <button class="back-btn" onclick="showChapterSelection()">← Back</button>
-                    <h2>Questions</h2>
+                    <h2>📚 Questions</h2>
                     <div id="questionsList"></div>
                 </div>
             </div>
@@ -415,8 +463,38 @@
             console.error('Firebase initialization error:', error);
         }
         
+        // Restore state on page load
+        window.addEventListener('load', function() {
+            const savedExam = localStorage.getItem('selectedExam');
+            const savedSubject = localStorage.getItem('selectedSubject');
+            const savedChapter = localStorage.getItem('selectedChapter');
+            
+            if (savedChapter && savedSubject && savedExam) {
+                selectedExam = savedExam;
+                selectedSubject = savedSubject;
+                document.getElementById('examPanels').style.display = 'none';
+                document.getElementById('subjectSelection').style.display = 'none';
+                document.getElementById('chapterSelection').style.display = 'none';
+                document.getElementById('questionsSection').style.display = 'block';
+                loadQuestions(savedChapter);
+            } else if (savedSubject && savedExam) {
+                selectedExam = savedExam;
+                selectedSubject = savedSubject;
+                document.getElementById('examPanels').style.display = 'none';
+                document.getElementById('subjectSelection').style.display = 'none';
+                document.getElementById('chapterSelection').style.display = 'block';
+                loadChapters(savedSubject);
+            } else if (savedExam) {
+                selectedExam = savedExam;
+                document.getElementById('examPanels').style.display = 'none';
+                document.getElementById('subjectSelection').style.display = 'block';
+                loadSubjectTotals();
+            }
+        });
+        
         function selectExam(exam) {
             selectedExam = exam;
+            localStorage.setItem('selectedExam', exam);
             document.getElementById('examPanels').style.display = 'none';
             document.getElementById('subjectSelection').style.display = 'block';
             loadSubjectTotals();
@@ -424,6 +502,7 @@
         
         function selectSubject(subject) {
             selectedSubject = subject;
+            localStorage.setItem('selectedSubject', subject);
             document.getElementById('subjectSelection').style.display = 'none';
             document.getElementById('chapterSelection').style.display = 'block';
             loadChapters(subject);
@@ -542,6 +621,7 @@
         }
         
         function selectChapter(chapter) {
+            localStorage.setItem('selectedChapter', chapter);
             document.getElementById('chapterSelection').style.display = 'none';
             document.getElementById('questionsSection').style.display = 'block';
             loadQuestions(chapter);
@@ -564,25 +644,53 @@
                     return;
                 }
                 
-                itemsSnapshot.forEach(doc => {
-                    const question = doc.data();
+                const questions = [];
+                itemsSnapshot.forEach((doc) => {
+                    questions.push({id: doc.id, data: doc.data()});
+                });
+                
+                questions.sort((a, b) => {
+                    const timeA = a.data.createdAt || 0;
+                    const timeB = b.data.createdAt || 0;
+                    return timeB - timeA;
+                });
+                
+                let questionCounter = 1;
+                questions.forEach((item) => {
+                    const doc = item;
+                    const question = item.data;
+
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question-item';
                     
                     let imageHtml = '';
                     if (question.questionImage) {
-                        imageHtml = `<img src="${question.questionImage}" style="max-width: 100%; height: auto; margin-bottom: 10px;">`;
+                        imageHtml = `<img src="${question.questionImage}">`;
                     }
                     
                     const paperInfo = question.examId || 'Unknown Paper';
                     const year = paperInfo.match(/(202[0-9])/) ? paperInfo.match(/(202[0-9])/)[1] : 'Unknown Year';
                     
                     questionDiv.innerHTML = `
-                        ${imageHtml}
-                        <p><strong>Paper:</strong> ${paperInfo}</p>
-                        <p><strong>Year:</strong> ${year}</p>
+                        <div class="question-header">
+                            <div class="question-number">Question ${questionCounter}</div>
+                        </div>
+                        <div class="question-content">
+                            ${imageHtml}
+                            <div class="question-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">📄</span>
+                                    <span>${paperInfo}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">📅</span>
+                                    <span>${year}</span>
+                                </div>
+                            </div>
+                        </div>
                     `;
                     questionsList.appendChild(questionDiv);
+                    questionCounter++;
                 });
             } catch (error) {
                 questionsList.innerHTML = 'Error loading questions: ' + error.message;
@@ -592,16 +700,22 @@
 
         
         function showExamPanels() {
+            localStorage.removeItem('selectedExam');
+            localStorage.removeItem('selectedSubject');
+            localStorage.removeItem('selectedChapter');
             document.getElementById('subjectSelection').style.display = 'none';
             document.getElementById('examPanels').style.display = 'grid';
         }
         
         function showSubjectSelection() {
+            localStorage.removeItem('selectedSubject');
+            localStorage.removeItem('selectedChapter');
             document.getElementById('chapterSelection').style.display = 'none';
             document.getElementById('subjectSelection').style.display = 'block';
         }
         
         function showChapterSelection() {
+            localStorage.removeItem('selectedChapter');
             document.getElementById('questionsSection').style.display = 'none';
             document.getElementById('chapterSelection').style.display = 'block';
         }
