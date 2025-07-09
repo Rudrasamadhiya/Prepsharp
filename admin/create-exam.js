@@ -41,7 +41,7 @@ function createExam() {
               examType === 'neet' ? 'NEET' : 'Mock Test',
         year: examYear,
         status: 'Draft',
-        totalQuestions: parseInt(totalQuestions),
+        totalQuestions: (year >= 2021 && year <= 2024) ? 90 : 75,
         description: description,
         questions: [],
         createdBy: adminEmail,
@@ -61,16 +61,29 @@ function createExam() {
         if (shift) exam.shift = shift;
         if (difficulty) exam.difficulty = difficulty;
         
-        // Add section details for JEE Main
-        exam.totalSections = 6;
-        exam.sections = [
-            { sectionNumber: 1, questionType: 'mcq-single', totalQuestions: 20, subject: 'Physics' },
-            { sectionNumber: 2, questionType: 'numerical', totalQuestions: 5, subject: 'Physics' },
-            { sectionNumber: 3, questionType: 'mcq-single', totalQuestions: 20, subject: 'Chemistry' },
-            { sectionNumber: 4, questionType: 'numerical', totalQuestions: 5, subject: 'Chemistry' },
-            { sectionNumber: 5, questionType: 'mcq-single', totalQuestions: 20, subject: 'Mathematics' },
-            { sectionNumber: 6, questionType: 'numerical', totalQuestions: 5, subject: 'Mathematics' }
-        ];
+        // Add section details for JEE Main based on year
+        const year = parseInt(examYear);
+        if (year >= 2021 && year <= 2024) {
+            exam.totalSections = 6;
+            exam.sections = [
+                { sectionNumber: 1, questionType: 'mcq-single', totalQuestions: 20, subject: 'Physics' },
+                { sectionNumber: 2, questionType: 'numerical', totalQuestions: 10, subject: 'Physics' },
+                { sectionNumber: 3, questionType: 'mcq-single', totalQuestions: 20, subject: 'Chemistry' },
+                { sectionNumber: 4, questionType: 'numerical', totalQuestions: 10, subject: 'Chemistry' },
+                { sectionNumber: 5, questionType: 'mcq-single', totalQuestions: 20, subject: 'Mathematics' },
+                { sectionNumber: 6, questionType: 'numerical', totalQuestions: 10, subject: 'Mathematics' }
+            ];
+        } else {
+            exam.totalSections = 6;
+            exam.sections = [
+                { sectionNumber: 1, questionType: 'mcq-single', totalQuestions: 20, subject: 'Physics' },
+                { sectionNumber: 2, questionType: 'numerical', totalQuestions: 5, subject: 'Physics' },
+                { sectionNumber: 3, questionType: 'mcq-single', totalQuestions: 20, subject: 'Chemistry' },
+                { sectionNumber: 4, questionType: 'numerical', totalQuestions: 5, subject: 'Chemistry' },
+                { sectionNumber: 5, questionType: 'mcq-single', totalQuestions: 20, subject: 'Mathematics' },
+                { sectionNumber: 6, questionType: 'numerical', totalQuestions: 5, subject: 'Mathematics' }
+            ];
+        }
         exam.imageStorageFormat = 'base64'; // Store images in base64 format
     } else if (examType === 'jee-advanced') {
         const paper = document.getElementById('new-exam-paper').value;

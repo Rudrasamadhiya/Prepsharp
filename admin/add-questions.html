@@ -416,7 +416,7 @@
                 <div class="card-body bg-light p-2 mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
-                            <span id="question-number" class="badge bg-primary me-3">Question 1 of 75</span>
+                            <span id="question-number" class="badge bg-primary me-3">Question 1 of 90</span>
                             <span id="section-name" class="badge bg-secondary">Physics - Section 1</span>
                         </div>
                     </div>
@@ -1042,7 +1042,7 @@
         // Function to find first empty question
         async function findAndLoadFirstEmptyQuestion(examId) {
             try {
-                for (let i = 1; i <= 75; i++) {
+                for (let i = 1; i <= 90; i++) {
                     const questionId = `question-${i}`;
                     const doc = await db.collection('papers').doc(examId).collection('questions').doc(questionId).get();
                     
@@ -1433,7 +1433,7 @@
                                 updateQuestionFields();
                                 
                                 // Update question number display
-                                document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of 75`;
+                                document.getElementById('question-number').textContent = `Question ${nextQuestionNo} of 90`;
                             }, 1000);
                         })
                         .catch(error => {
