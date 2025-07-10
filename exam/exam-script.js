@@ -614,26 +614,21 @@ function showQuestion(index) {
     // Update question number display
     questionNumber.textContent = `Question No. ${sectionQuestionNumber}`;
     
-    // Hide question text and show image instead
-    if (question.imageUrl) {
-        // Show question image
-        questionImage.innerHTML = `<img src="${question.imageUrl}" alt="Question ${index + 1}">`;
-        questionImage.style.display = 'block';
-        
-        // Hide text or use it as fallback if needed
-        if (questionText) {
-            questionText.style.display = 'none';
-        }
-    } else if (question.text) {
-        // No image, show text as fallback
+    // Show question text and image if available
+    if (question.text) {
         questionText.innerHTML = question.text;
         questionText.style.display = 'block';
-        questionImage.innerHTML = '';
-        questionImage.style.display = 'none';
     } else {
-        // No image or text
         questionText.innerHTML = `Question ${index + 1}`;
         questionText.style.display = 'block';
+    }
+    
+    // Show question image if available
+    if (question.imageUrl || question.questionImage) {
+        const imgUrl = question.imageUrl || question.questionImage;
+        questionImage.innerHTML = `<img src="${imgUrl}" alt="Question ${index + 1}" class="img-fluid">`;
+        questionImage.style.display = 'block';
+    } else {
         questionImage.innerHTML = '';
         questionImage.style.display = 'none';
     }
@@ -655,24 +650,53 @@ function showQuestion(index) {
                 let optionImageUrl = null;
                 
                 if (typeof option === 'string') {
-                    optionText = option;
+                    // Check if it's a base64 image string
+                    if (option.startsWith('data:image')) {
+                        optionImageUrl = option;
+                    } else {
+                        optionText = option;
+                    }
                 } else if (typeof option === 'object') {
                     // Option could be {text: "...", imageUrl: "..."} or {text: "...", image: "..."}
                     optionText = option.text || '';
-                    optionImageUrl = option.imageUrl || option.image || null;
+                    
+                    // Check all possible image properties
+                    optionImageUrl = option.imageUrl || option.image || option.base64 || null;
                 }
                 
-                let optionHtml = `
-                    <input type="radio" name="q${index}" id="q${index}-${optionLabels[i]}" class="option-radio" ${isSelected ? 'checked' : ''}>
-                    <label for="q${index}-${optionLabels[i]}" class="option-label">
-                        <div class="option-letter">${optionLabels[i]})</div>
-                        <div class="option-text">${optionText}</div>
-                    </label>
+                // If no image URL but we have optionImages in the question
+                if (!optionImageUrl && question.optionImages && question.optionImages[i]) {
+                    optionImageUrl = question.optionImages[i];
+                }
+                
+                let optionHtml;
+                
+                // Get paper ID for image paths
+                const paperId = new URLSearchParams(window.location.search).get('paperId') || 
+                              new URLSearchParams(window.location.search).get('id') || 
+                              new URLSearchParams(window.location.search).get('examId') || 
+                              'jee-main---27-jan-shift-1-2024';
+                
+                // Create the option HTML
+                optionHtml = `
+                    <div class="option-wrapper ${isSelected ? 'selected' : ''}">
+                        <input type="radio" name="q${index}" id="q${index}-${optionLabels[i]}" class="option-radio" ${isSelected ? 'checked' : ''}>
+                        <label for="q${index}-${optionLabels[i]}" class="option-label">
+                            <div class="option-text">${optionText}</div>
+                        </label>
+                    </div>
                 `;
                 
                 // Add image if available
                 if (optionImageUrl) {
-                    optionHtml += `<div class="option-image"><img src="${optionImageUrl}" alt="Option ${optionLabels[i]} image"></div>`;
+                    optionHtml = `
+                    <div class="option-image-wrapper ${isSelected ? 'selected' : ''}">
+                        <input type="radio" name="q${index}" id="q${index}-${optionLabels[i]}" class="option-radio" ${isSelected ? 'checked' : ''}>
+                        <div class="option-image-container">
+                            <img src="${optionImageUrl}" alt="Option image" class="option-img" 
+                                 onerror="this.onerror=null; this.src='/papers/${paperId}/questions/question-${index+1}/option-${optionLabels[i]}.png';">
+                        </div>
+                    </div>`;
                 }
                 
                 optionItem.innerHTML = optionHtml;
@@ -758,6 +782,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (radio.checked) {
                 const questionId = radio.name.substring(1); // Remove 'q' prefix
                 const option = radio.id.split('-')[1]; // Get option letter
+                
+                // Remove selected class from all options
+                document.querySelectorAll('.option-wrapper.selected, .option-image-wrapper.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Add selected class to the parent wrapper
+                const wrapper = radio.closest('.option-wrapper') || radio.closest('.option-image-wrapper');
+                if (wrapper) {
+                    wrapper.classList.add('selected');
+                }
+                
                 selectOption(parseInt(questionId), option);
             }
         });
