@@ -820,8 +820,43 @@ function showQuestion(index) {
 // These functions are already defined in the original code
 // We'll use the existing event listeners instead
 
+// Function to request full screen mode
+function requestFullScreen() {
+    const element = document.documentElement;
+    
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) { // Firefox
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { // IE/Edge
+        element.msRequestFullscreen();
+    }
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // Try to go full screen immediately
+    requestFullScreen();
+    
+    // Also try with a keyboard event
+    const keyEvent = new KeyboardEvent('keydown', {
+        key: 'F11',
+        keyCode: 122,
+        which: 122,
+        code: 'F11',
+        bubbles: true,
+        cancelable: true
+    });
+    document.dispatchEvent(keyEvent);
+    
+    // Also try with a mouse event
+    document.addEventListener('mousemove', function fullScreenOnFirstMove() {
+        requestFullScreen();
+        document.removeEventListener('mousemove', fullScreenOnFirstMove);
+    }, { once: true });
+    
     // Load user info
     loadUserInfo();
     

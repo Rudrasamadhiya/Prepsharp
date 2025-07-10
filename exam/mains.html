@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>JEE Main 2024 27 Jan Shift 1 - PrepSharp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="exam-style.css">
 </head>
-<body>
+<body onload="goFullScreen()">
     <div class="exam-container">
         <!-- Top strip with NTA logo and user info -->
         <div class="top-strip">
@@ -235,6 +237,37 @@
             </div>
         </div>
     </div>
+    
+    <!-- Full Screen Function -->
+    <script>
+        function goFullScreen() {
+            const elem = document.documentElement;
+            
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            
+            // Also try F11 key simulation
+            try {
+                const event = new KeyboardEvent('keydown', {
+                    key: 'F11',
+                    keyCode: 122,
+                    which: 122,
+                    code: 'F11',
+                    bubbles: true
+                });
+                document.dispatchEvent(event);
+            } catch (e) {
+                console.log('F11 simulation failed:', e);
+            }
+        }
+    </script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>

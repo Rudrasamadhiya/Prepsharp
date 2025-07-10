@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>PrepSharp Exam</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -530,7 +532,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="goFullScreen()">
     <div class="exam-container">
         <!-- Top blue strip with paper name -->
         <div class="top-strip" id="examTitle">
@@ -677,6 +679,35 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
     <script>
+        // Function to go full screen
+        function goFullScreen() {
+            const elem = document.documentElement;
+            
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            
+            // Also try F11 key simulation
+            try {
+                const event = new KeyboardEvent('keydown', {
+                    key: 'F11',
+                    keyCode: 122,
+                    which: 122,
+                    code: 'F11',
+                    bubbles: true
+                });
+                document.dispatchEvent(event);
+            } catch (e) {
+                console.log('F11 simulation failed:', e);
+            }
+        }
+        
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
