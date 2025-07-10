@@ -55,27 +55,27 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="panel-header">${sectionName} Statistics</div>
             <div class="panel-content">
                 <div class="stat-item">
-                    <div class="stat-color answered"></div>
+                    <div class="stat-color answered">${stats.answered}</div>
                     <div class="stat-label">Answered:</div>
                     <div class="stat-value">${stats.answered}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-color not-answered"></div>
+                    <div class="stat-color not-answered">${stats.notAnswered}</div>
                     <div class="stat-label">Not Answered:</div>
                     <div class="stat-value">${stats.notAnswered}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-color not-visited"></div>
+                    <div class="stat-color not-visited">${stats.notVisited}</div>
                     <div class="stat-label">Not Visited:</div>
                     <div class="stat-value">${stats.notVisited}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-color marked"></div>
+                    <div class="stat-color marked">${stats.marked}</div>
                     <div class="stat-label">Marked for Review:</div>
                     <div class="stat-value">${stats.marked}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-color answered-marked"></div>
+                    <div class="stat-color answered-marked">${stats.answeredMarked}</div>
                     <div class="stat-label">Answered & Marked:</div>
                     <div class="stat-value">${stats.answeredMarked}</div>
                 </div>
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border: 1px solid #ddd;
             border-radius: 4px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 250px;
+            width: 320px;
             z-index: 1000;
         }
         
@@ -197,28 +197,43 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .panel-content {
             padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
         
         .stat-item {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            width: 48%;
+            background-color: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .stat-color {
-            width: 20px;
+            width: 30px;
             height: 20px;
             margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 3px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
         }
         
         .stat-color.answered {
-            background-color: #22c55e;
-            clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
+            background-color: #4CAF50;
+            clip-path: polygon(35% 0%, 65% 0%, 95% 40%, 95% 100%, 5% 100%, 5% 40%);
         }
         
         .stat-color.not-answered {
-            background-color: #ef4444;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 70%, 50% 100%, 0% 70%);
+            background-color: #f44336;
+            clip-path: polygon(35% 0%, 65% 0%, 95% 40%, 95% 100%, 5% 100%, 5% 40%);
         }
         
         .stat-color.not-visited {
@@ -249,6 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
             padding-top: 10px;
             border-top: 1px solid #ddd;
             font-weight: bold;
+            width: 100%;
+            background-color: #e3f2fd;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            justify-content: space-between;
         }
     `;
     document.head.appendChild(style);
