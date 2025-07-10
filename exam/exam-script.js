@@ -139,6 +139,7 @@ function updateTimerDisplay() {
 function selectOption(questionIndex, option) {
     userAnswers[questionIndex] = option;
     updateQuestionPalette();
+    saveExamState();
 }
 
 // Clear response
@@ -156,7 +157,17 @@ function clearResponse() {
 
 // Mark/unmark question
 function toggleMarkQuestion() {
+    // Save the current answer (if any) before marking
+    const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+    if (selectedOption) {
+        const option = selectedOption.id.split('-')[1];
+        userAnswers[currentQuestionIndex] = option;
+    }
+    
+    // Toggle the marked status
     markedQuestions[currentQuestionIndex] = !markedQuestions[currentQuestionIndex];
+    
+    // Update the question palette
     updateQuestionPalette();
     
     // Go to next question if available
@@ -277,7 +288,11 @@ function updateQuestionPalette() {
             // Add answered/marked/not-answered classes if applicable
             if (userAnswers[globalIndex]) {
                 btn.classList.remove('not-visited');
-                btn.classList.add(markedQuestions[globalIndex] ? 'answered-marked' : 'answered');
+                if (markedQuestions[globalIndex]) {
+                    btn.classList.add('answered-marked');
+                } else {
+                    btn.classList.add('answered');
+                }
             } else if (markedQuestions[globalIndex]) {
                 btn.classList.remove('not-visited');
                 btn.classList.add('marked');
@@ -388,6 +403,12 @@ function submitExam() {
     // The actual submission to server is handled by the timer-integration.js
     // This function is now just responsible for UI feedback and redirection
     
+    // Clear saved exam state
+    const urlParams = new URLSearchParams(window.location.search);
+    const paperId = urlParams.get('paperId') || urlParams.get('id') || urlParams.get('examId') || 'jee-main---27-jan-shift-1-2024';
+    const userId = getUserIdentifier();
+    localStorage.removeItem(`examState_${userId}_${paperId}`);
+    
     // Show submission message
     alert(`Exam submitted! Your score: ${score}/${getQuestionCount()}`);
     
@@ -397,6 +418,65 @@ function submitExam() {
 
 // Global variables for questions
 let questions = [];
+
+// Get unique user identifier
+function getUserIdentifier() {
+    // Try to get from localStorage first
+    let userId = localStorage.getItem('prepsharp_user_id');
+    
+    // If not found, create a new one
+    if (!userId) {
+        // Create a unique ID using timestamp and random number
+        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('prepsharp_user_id', userId);
+    }
+    
+    return userId;
+}
+
+// Save exam state to localStorage
+function saveExamState() {
+    const examState = {
+        currentQuestionIndex,
+        userAnswers,
+        markedQuestions,
+        visitedQuestions,
+        timeRemaining
+    };
+    
+    // Get the exam ID from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const paperId = urlParams.get('paperId') || urlParams.get('id') || urlParams.get('examId') || 'jee-main---27-jan-shift-1-2024';
+    
+    // Get user identifier
+    const userId = getUserIdentifier();
+    
+    // Save to localStorage with the exam ID and user ID as part of the key
+    localStorage.setItem(`examState_${userId}_${paperId}`, JSON.stringify(examState));
+}
+
+// Load exam state from localStorage
+function loadExamState() {
+    // Get the exam ID from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const paperId = urlParams.get('paperId') || urlParams.get('id') || urlParams.get('examId') || 'jee-main---27-jan-shift-1-2024';
+    
+    // Get user identifier
+    const userId = getUserIdentifier();
+    
+    // Try to get saved state
+    const savedState = localStorage.getItem(`examState_${userId}_${paperId}`);
+    if (savedState) {
+        const state = JSON.parse(savedState);
+        currentQuestionIndex = state.currentQuestionIndex || 0;
+        userAnswers = state.userAnswers || {};
+        markedQuestions = state.markedQuestions || {};
+        visitedQuestions = state.visitedQuestions || {};
+        timeRemaining = state.timeRemaining || examDuration;
+        return true;
+    }
+    return false;
+}
 
 // Load exam details and questions from Firebase
 function loadExamDetails() {
@@ -474,9 +554,18 @@ function loadQuestions(paperId) {
                 
                 console.log('Loaded', questions.length, 'questions from Firebase');
                 
-                // Display first question
+                // Try to load saved state
+                const hasState = loadExamState();
+                
+                // Display first question or restore previous state
                 if (questions.length > 0) {
-                    showQuestion(0);
+                    if (hasState) {
+                        // Restore to the saved question index
+                        showQuestion(currentQuestionIndex);
+                    } else {
+                        // Start from the beginning
+                        showQuestion(0);
+                    }
                 } else {
                     showNoQuestionsMessage();
                 }
@@ -723,6 +812,9 @@ function showQuestion(index) {
     if (markButton) {
         markButton.textContent = markedQuestions[index] ? 'Unmark & Next' : 'Mark for Review & Next';
     }
+    
+    // Save exam state
+    saveExamState();
 }
 
 // These functions are already defined in the original code
@@ -817,6 +909,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     nextButton.addEventListener('click', () => {
+        // Save the current answer (if any) and go to next question
+        const selectedOption = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+        if (selectedOption) {
+            const option = selectedOption.id.split('-')[1];
+            userAnswers[currentQuestionIndex] = option;
+            updateQuestionPalette();
+        }
+        
+        // Go to next question
         if (currentQuestionIndex < getQuestionCount() - 1) {
             showQuestion(currentQuestionIndex + 1);
         }
