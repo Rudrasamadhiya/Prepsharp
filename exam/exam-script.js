@@ -457,15 +457,20 @@ function loadQuestions(paperId) {
     window.db.collection('papers').doc(paperId).collection('questions').get()
         .then(snapshot => {
             if (!snapshot.empty) {
-                // Process questions
+                // Process questions and sort by ID to ensure sequence
+                const unsortedQuestions = [];
                 snapshot.forEach(doc => {
                     const questionData = doc.data();
                     questionData.id = doc.id;
-                    questions.push(questionData);
+                    unsortedQuestions.push(questionData);
                 });
                 
-                // Keep questions in the order they were loaded
-                // This ensures they display in sequence from 1 to n
+                // Sort questions by numeric ID to ensure proper sequence
+                questions = unsortedQuestions.sort((a, b) => {
+                    const numA = parseInt(a.id.replace(/\D/g, '')) || 0;
+                    const numB = parseInt(b.id.replace(/\D/g, '')) || 0;
+                    return numA - numB;
+                });
                 
                 console.log('Loaded', questions.length, 'questions from Firebase');
                 
@@ -492,16 +497,15 @@ function showLoadingState() {
         questionNumber.textContent = 'Loading...';
     }
     
-    // Update question text
+    // Hide question text
     if (questionText) {
-        questionText.innerHTML = '<div class="loading-spinner"></div><p>Loading questions...</p>';
-        questionText.style.display = 'block';
+        questionText.style.display = 'none';
     }
     
-    // Hide question image
+    // Show loading spinner in the image area
     if (questionImage) {
-        questionImage.innerHTML = '';
-        questionImage.style.display = 'none';
+        questionImage.innerHTML = '<div class="loading-spinner"></div>';
+        questionImage.style.display = 'block';
     }
     
     // Clear options
@@ -517,10 +521,9 @@ function showNoQuestionsMessage() {
         questionNumber.textContent = 'No Questions';
     }
     
-    // Update question text
+    // Hide question text
     if (questionText) {
-        questionText.innerHTML = '<p>No questions are available for this exam.</p>';
-        questionText.style.display = 'block';
+        questionText.style.display = 'none';
     }
     
     // Hide question image
@@ -542,10 +545,9 @@ function showErrorMessage(message) {
         questionNumber.textContent = 'Error';
     }
     
-    // Update question text
+    // Hide question text
     if (questionText) {
-        questionText.innerHTML = `<p class="error-message">${message}</p>`;
-        questionText.style.display = 'block';
+        questionText.style.display = 'none';
     }
     
     // Hide question image
@@ -558,6 +560,9 @@ function showErrorMessage(message) {
     if (optionsList) {
         optionsList.innerHTML = '';
     }
+    
+    // Show alert instead
+    alert(`Error: ${message}`);
 }
 
 // Override the showQuestion function to display Firebase questions
@@ -581,7 +586,7 @@ function showQuestion(index) {
     currentQuestionIndex = index;
     const question = questions[index];
     
-    // Log the question object to see what's available
+    // Log the question object
     console.log('Question object:', question);
     
     // Mark this specific question as visited
@@ -619,27 +624,31 @@ function showQuestion(index) {
     // Update question number display - always use sequential numbering
     questionNumber.textContent = `Question No. ${index + 1}`;
     
-    // Show question text and image if available
-    if (question.text) {
-        questionText.innerHTML = question.text;
-        questionText.style.display = 'block';
-    } else {
-        questionText.innerHTML = `Question ${index + 1}`;
-        questionText.style.display = 'block';
-    }
+    // Hide question text
+    questionText.style.display = 'none';
     
     // Paper ID is already defined at the top of the function
     
     // Always use the sequential question number for paths
     const questionNum = index + 1;
     
-    // Try to get question image from Firebase Storage
+    // Try to get question image
+    let imgPath = '';
+    
+    // First check if question has an image property
     if (question.questionImage) {
-        questionImage.innerHTML = `<img src="${question.questionImage}" alt="Question ${questionNum}" class="img-fluid">`;
-        questionImage.style.display = 'block';
+        imgPath = question.questionImage;
     } else {
-        questionImage.style.display = 'none';
+        // Otherwise use the ID-based path
+        imgPath = `https://firebasestorage.googleapis.com/v0/b/prepsharp-c91fd.appspot.com/o/papers%2F${paperId}%2Fquestions%2F${question.id}.png?alt=media`;
     }
+    
+    // Log image path
+    console.log('Using image path:', imgPath);
+    
+    // Set the image
+    questionImage.innerHTML = `<img src="${imgPath}" alt="Question ${questionNum}" class="img-fluid" onerror="this.style.display='none'">`;
+    questionImage.style.display = 'block';
     
     // Update options
     optionsList.innerHTML = '';
@@ -655,31 +664,24 @@ function showQuestion(index) {
                 
                 // Handle different option formats
                 let optionText = '';
-                let optionImageUrl = null;
                 
                 if (typeof option === 'string') {
-                    // Check if it's a base64 image string
-                    if (option.startsWith('data:image')) {
-                        optionImageUrl = option;
-                    } else {
-                        optionText = option;
-                    }
+                    optionText = option;
                 } else if (typeof option === 'object') {
                     // Option could be {text: "...", imageUrl: "..."} or {text: "...", image: "..."}
                     optionText = option.text || '';
-                    
-                    // Check all possible image properties
-                    optionImageUrl = option.imageUrl || option.image || option.base64 || null;
                 }
                 
-                // If no image URL but we have optionImages in the question
-                if (!optionImageUrl && question.optionImages && question.optionImages[i]) {
-                    optionImageUrl = question.optionImages[i];
-                }
+                // Get option image
+                const optionNum = i + 1;
+                let optionImageUrl = '';
                 
-                // Check if we have option images in the question object
+                // First check if question has optionImages
                 if (question.optionImages && question.optionImages[i]) {
                     optionImageUrl = question.optionImages[i];
+                } else {
+                    // Otherwise use the ID-based path
+                    optionImageUrl = `https://firebasestorage.googleapis.com/v0/b/prepsharp-c91fd.appspot.com/o/papers%2F${paperId}%2Fquestions%2F${question.id}-${optionNum}.png?alt=media`;
                 }
                 
                 let optionHtml;
@@ -697,12 +699,12 @@ function showQuestion(index) {
                 `;
                 
                 // Add image if available
-                if (optionImageUrl && question.optionImages && question.optionImages[i]) {
+                if (optionImageUrl) {
                     optionHtml = `
                     <div class="option-image-wrapper ${isSelected ? 'selected' : ''}">
                         <input type="radio" name="q${index}" id="q${index}-${optionLabels[i]}" class="option-radio" ${isSelected ? 'checked' : ''}>
                         <div class="option-image-container">
-                            <img src="${optionImageUrl}" alt="Option image" class="option-img">
+                            <img src="${optionImageUrl}" alt="Option image" class="option-img" onerror="this.style.display='none'">
                         </div>
                     </div>`;
                 }
