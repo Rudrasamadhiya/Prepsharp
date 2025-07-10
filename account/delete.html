@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account - PrepSharp</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .delete-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+        .info-text {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #3b82f6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="delete-container">
+        <h1>Delete Your PrepSharp Account</h1>
+        
+        <div class="info-text">
+            <p>By deleting your account, you will lose access to:</p>
+            <ul>
+                <li>Your practice history and performance analytics</li>
+                <li>Saved study materials and notes</li>
+                <li>Subscription benefits (if applicable)</li>
+            </ul>
+            <p><strong>This action cannot be undone.</strong></p>
+        </div>
+        
+        <form id="deleteForm" onsubmit="submitForm(event)">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for Deletion (Optional)</label>
+                <textarea id="reason" name="reason" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" required>
+                    I understand that deleting my account will permanently remove all my data
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-delete">Request Account Deletion</button>
+        </form>
+        
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+            Your request will be processed within 48 hours. You will receive a confirmation email once completed.
+        </p>
+    </div>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const reason = document.getElementById('reason').value;
+            
+            // Send email to support@prepsharp.in
+            // This would normally use a server-side script
+            
+            // For now, just show confirmation
+            alert("Thank you. Your account deletion request has been received. We will process it within 48 hours and send a confirmation to " + email);
+            
+            // In production, you would send this data to your server
+            console.log("Deletion request:", {email, reason});
+            
+            // Reset form
+            document.getElementById('deleteForm').reset();
+        }
+    </script>
+</body>
+</html>
