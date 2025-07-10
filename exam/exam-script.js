@@ -287,8 +287,8 @@ function updateQuestionPalette() {
                 btn.classList.add('not-answered');
             }
             
-            // Display section-specific number (starting from 1)
-            btn.textContent = sectionIndex + 1;
+            // Display sequential number (starting from 1)
+            btn.textContent = globalIndex + 1;
             
             // Store global index as data attribute
             btn.dataset.globalIndex = globalIndex;
@@ -464,12 +464,8 @@ function loadQuestions(paperId) {
                     questions.push(questionData);
                 });
                 
-                // Sort questions by number or ID if available
-                questions.sort((a, b) => {
-                    const numA = a.number || parseInt(a.id) || 0;
-                    const numB = b.number || parseInt(b.id) || 0;
-                    return numA - numB;
-                });
+                // Keep questions in the order they were loaded
+                // This ensures they display in sequence from 1 to n
                 
                 console.log('Loaded', questions.length, 'questions from Firebase');
                 
@@ -566,6 +562,12 @@ function showErrorMessage(message) {
 
 // Override the showQuestion function to display Firebase questions
 function showQuestion(index) {
+    // Get paper ID for image paths - moved to the top of the function
+    const paperId = new URLSearchParams(window.location.search).get('paperId') || 
+                  new URLSearchParams(window.location.search).get('id') || 
+                  new URLSearchParams(window.location.search).get('examId') || 
+                  'jee-main---27-jan-shift-1-2024';
+    
     // Check if questions array is empty
     if (questions.length === 0) {
         showNoQuestionsMessage();
@@ -578,6 +580,9 @@ function showQuestion(index) {
     // Update current question index
     currentQuestionIndex = index;
     const question = questions[index];
+    
+    // Log the question object to see what's available
+    console.log('Question object:', question);
     
     // Mark this specific question as visited
     visitedQuestions[index] = true;
@@ -611,8 +616,8 @@ function showQuestion(index) {
     // Calculate section-specific question number (starting from 1)
     const sectionQuestionNumber = index - sectionStart + 1;
     
-    // Update question number display
-    questionNumber.textContent = `Question No. ${sectionQuestionNumber}`;
+    // Update question number display - always use sequential numbering
+    questionNumber.textContent = `Question No. ${index + 1}`;
     
     // Show question text and image if available
     if (question.text) {
@@ -623,13 +628,16 @@ function showQuestion(index) {
         questionText.style.display = 'block';
     }
     
-    // Show question image if available
-    if (question.imageUrl || question.questionImage) {
-        const imgUrl = question.imageUrl || question.questionImage;
-        questionImage.innerHTML = `<img src="${imgUrl}" alt="Question ${index + 1}" class="img-fluid">`;
+    // Paper ID is already defined at the top of the function
+    
+    // Always use the sequential question number for paths
+    const questionNum = index + 1;
+    
+    // Try to get question image from Firebase Storage
+    if (question.questionImage) {
+        questionImage.innerHTML = `<img src="${question.questionImage}" alt="Question ${questionNum}" class="img-fluid">`;
         questionImage.style.display = 'block';
     } else {
-        questionImage.innerHTML = '';
         questionImage.style.display = 'none';
     }
     
@@ -669,13 +677,14 @@ function showQuestion(index) {
                     optionImageUrl = question.optionImages[i];
                 }
                 
+                // Check if we have option images in the question object
+                if (question.optionImages && question.optionImages[i]) {
+                    optionImageUrl = question.optionImages[i];
+                }
+                
                 let optionHtml;
                 
-                // Get paper ID for image paths
-                const paperId = new URLSearchParams(window.location.search).get('paperId') || 
-                              new URLSearchParams(window.location.search).get('id') || 
-                              new URLSearchParams(window.location.search).get('examId') || 
-                              'jee-main---27-jan-shift-1-2024';
+                // paperId is already defined at the top of the function
                 
                 // Create the option HTML
                 optionHtml = `
@@ -688,13 +697,12 @@ function showQuestion(index) {
                 `;
                 
                 // Add image if available
-                if (optionImageUrl) {
+                if (optionImageUrl && question.optionImages && question.optionImages[i]) {
                     optionHtml = `
                     <div class="option-image-wrapper ${isSelected ? 'selected' : ''}">
                         <input type="radio" name="q${index}" id="q${index}-${optionLabels[i]}" class="option-radio" ${isSelected ? 'checked' : ''}>
                         <div class="option-image-container">
-                            <img src="${optionImageUrl}" alt="Option image" class="option-img" 
-                                 onerror="this.onerror=null; this.src='/papers/${paperId}/questions/question-${index+1}/option-${optionLabels[i]}.png';">
+                            <img src="${optionImageUrl}" alt="Option image" class="option-img">
                         </div>
                     </div>`;
                 }
