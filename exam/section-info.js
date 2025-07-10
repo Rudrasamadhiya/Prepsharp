@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
             showSectionInfoPanel(sectionName, index, button);
         });
         
-        // For non-active sections, show on hover
+        // For non-active sections, show only when hovering over the info button
         if (!button.parentElement.classList.contains('active')) {
-            button.parentElement.addEventListener('mouseenter', (event) => {
+            button.addEventListener('mouseenter', (event) => {
                 const sectionName = button.parentElement.textContent.trim();
-                showSectionInfoPanel(sectionName, index, button.parentElement, true);
+                showSectionInfoPanel(sectionName, index, button, true);
             });
             
-            button.parentElement.addEventListener('mouseleave', () => {
+            button.addEventListener('mouseleave', () => {
                 hideInfoPanel();
             });
         }
