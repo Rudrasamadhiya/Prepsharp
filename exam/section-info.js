@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border: 1px solid #ddd;
             border-radius: 4px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 320px;
+            width: 400px;
             z-index: 1000;
         }
         
@@ -197,16 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .panel-content {
             padding: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
         }
         
         .stat-item {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
-            width: 48%;
             background-color: #f5f5f5;
             padding: 8px;
             border-radius: 4px;
@@ -264,12 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
             padding-top: 10px;
             border-top: 1px solid #ddd;
             font-weight: bold;
-            width: 100%;
             background-color: #e3f2fd;
             padding: 8px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             justify-content: space-between;
+            grid-column: 1 / -1; /* Make it span both columns */
         }
     `;
     document.head.appendChild(style);
