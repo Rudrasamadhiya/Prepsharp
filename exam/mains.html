@@ -3,20 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Mains Exam - PrepSharp</title>
+    <title>JEE Main 2024 27 Jan Shift 1 - PrepSharp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="exam-style.css">
 </head>
 <body>
     <div class="exam-container">
-        <!-- Top blue strip with paper name -->
-        <div class="top-strip" id="examTitle">
-            JEE Mains 2024
+        <!-- Top strip with NTA logo and user info -->
+        <div class="top-strip">
+            <img src="../images/nta logo.png" alt="NTA Logo" class="nta-logo">
+            <div class="top-right-user">
+                <div class="candidate-avatar square" id="userInitials">JS</div>
+                <div class="candidate-info-container">
+                    <div><span class="candidate-label">Candidate Name:</span> <span id="userName">John Smith</span></div>
+                    <div><span class="candidate-label">Candidate ID:</span> <span id="userId">JEE2024001234</span></div>
+                    <div><span class="candidate-label">Time Remaining:</span> <span class="time-remaining" id="timeRemaining">02:59:45</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Purple strip with system and lab info -->
+        <div class="purple-strip">
+            <div>System No.: <span id="systemNo">C32</span></div>
+            <div>Lab No.: <span id="labNo">LAB-A</span></div>
         </div>
         
         <!-- Black strip with paper indicator and buttons -->
         <div class="black-strip">
-            <div class="paper-indicator" id="examType">JEE Main 2024 Paper</div>
+            <div class="paper-indicator"><span id="examType">Loading...</span> <span id="paperYear"></span> <span id="paperName">Loading...</span></div>
             <div class="strip-buttons">
                 <div class="strip-btn" id="viewPaper">
                     <i class="fas fa-file-alt"></i> Question Paper
@@ -38,12 +52,12 @@
                 <div class="left-panel">
                     <!-- Section tabs strip -->
                     <div class="sections-strip" id="sectionsStrip">
-                        <div class="section-tab active">Physics Section 1</div>
-                        <div class="section-tab">Physics Section 2</div>
-                        <div class="section-tab">Chemistry Section 1</div>
-                        <div class="section-tab">Chemistry Section 2</div>
-                        <div class="section-tab">Mathematics Section 1</div>
-                        <div class="section-tab">Mathematics Section 2</div>
+                        <div class="section-tab active">Physics Section 1<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Physics Section 2<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry Section 1<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry Section 2<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics Section 1<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics Section 2<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
                     </div>
                     
                     <!-- Blue language strip -->
@@ -59,6 +73,25 @@
                     
                     <!-- Question area -->
                     <div class="question-area">
+                        <!-- Watermark with grid layout -->
+                        <div class="watermark">
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                            <div class="watermark-text">JEE2024001234</div>
+                        </div>
+                        
                         <div class="question-number" id="questionNumber">Question No. 3</div>
                         
                         <div class="question-content">
@@ -120,11 +153,7 @@
             <div class="right-container">
                 <!-- Right panel - Navigation -->
                 <div class="right-panel">
-                    <!-- Candidate info -->
-                    <div class="candidate-info">
-                        <div class="candidate-avatar" id="userInitials">JS</div>
-                        <div class="candidate-name" id="userName">John Smith</div>
-                    </div>
+                    <!-- Candidate info moved to top strip -->
                     
                     <!-- Legend -->
                     <div class="legend">
@@ -152,7 +181,7 @@
                     
                     <!-- Section blue strip -->
                     <div class="section-strip" id="currentSection">
-                        Chemistry Section 1
+                        Physics Section 1
                     </div>
                     
                     <!-- Question palette -->
@@ -207,6 +236,13 @@
         </div>
     </div>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="timer.js"></script>
     <script src="exam-script.js"></script>
+    <script src="timer-integration.js"></script>
+    <script src="section-info.js"></script>
 </body>
 </html>

@@ -15,18 +15,62 @@ body {
     overflow: hidden;
 }
 
-/* Top blue strip */
+/* Top strip with NTA logo */
 .top-strip {
-    background-color: #0066cc;
-    color: white;
+    background-color: white;
+    color: #333;
     padding: 10px 20px;
     font-size: 18px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative; /* For positioning the purple strip */
 }
 
-/* Black strip below */
+/* Purple strip with system and lab info */
+.purple-strip {
+    background-color: #5D1A9A; /* Darker purple color */
+    color: white;
+    padding: 5px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.nta-logo {
+    height: 60px; /* Increased from 40px to 60px */
+    margin-right: 15px;
+}
+
+.top-right-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.candidate-info-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate-label {
+    color: #FF0000; /* Red color for labels */
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.time-remaining {
+    background-color: #4d94ff; /* Lighter blue */
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px; /* More rounded edges */
+    font-weight: bold;
+}
+
+/* Orange strip below */
 .black-strip {
-    background-color: #000;
+    background-color: #FF7F00;
     color: white;
     padding: 8px 15px;
     display: flex;
@@ -35,8 +79,9 @@ body {
 }
 
 .paper-indicator {
-    color: #ffff00; /* Neon yellow */
+    color: white; /* Changed from neon yellow to white */
     font-weight: bold;
+    font-size: 18px; /* Increased font size */
 }
 
 .strip-buttons {
@@ -53,6 +98,32 @@ body {
 
 .strip-btn i {
     margin-right: 5px;
+}
+
+/* Enhanced timer styles */
+.strip-btn:has(#timer) {
+    position: relative;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#timer {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#timer.critical {
+    color: #ff3333;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
 /* Main content area */
@@ -101,6 +172,19 @@ body {
     color: #0066cc;
     border-right: 1px solid #ddd;
     white-space: nowrap;
+    position: relative;
+}
+
+.info-button {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 5px;
+    cursor: pointer;
+    color: inherit;
+}
+
+.info-button i {
+    margin-right: 3px;
 }
 
 .section-tab.active {
@@ -136,6 +220,59 @@ body {
     padding: 15px;
     overflow-y: auto;
     background-color: white;
+    position: relative;
+}
+
+/* Watermark */
+.watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    display: grid; /* Use grid for better coverage */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+}
+
+.watermark-text {
+    color: rgba(0, 102, 204, 0.07); /* Light blue with low opacity */
+    font-size: 16px; /* Even smaller font size */
+    font-weight: normal;
+    white-space: nowrap;
+    user-select: none;
+    transform: rotate(-45deg);
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0066cc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #d32f2f;
+    font-weight: bold;
 }
 
 .question-number {
@@ -199,14 +336,17 @@ body {
 
 .option-image {
     max-width: 100%;
-    margin-top: 5px;
+    margin-top: 10px;
+    margin-left: 25px; /* Align with option text */
+    display: block;
 }
 
 .option-image img {
     max-width: 100%;
     max-height: 150px;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Right panel - Navigation */
@@ -229,16 +369,22 @@ body {
 }
 
 .candidate-avatar {
-    width: 40px;
-    height: 40px;
+    width: 60px; /* Increased from 40px to 60px */
+    height: 60px; /* Increased from 40px to 60px */
     background-color: #ddd;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     color: #333;
+    font-size: 20px; /* Increased font size for initials */
+}
+
+.candidate-avatar.square {
+    border-radius: 0; /* Make it square instead of round */
+    border: 2px solid #000; /* Add black border */
 }
 
 .candidate-name {
@@ -265,13 +411,13 @@ body {
 }
 
 .legend-color.answered {
-    background-color: #22c55e;
-    clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
+    background-color: #4CAF50; /* Green */
+    clip-path: polygon(20% 0%, 80% 0%, 95% 15%, 95% 100%, 5% 100%, 5% 15%);
 }
 
 .legend-color.not-answered {
-    background-color: #ef4444;
-    clip-path: polygon(20% 0%, 80% 0%, 100% 70%, 50% 100%, 0% 70%);
+    background-color: #f44336; /* Red */
+    clip-path: polygon(20% 0%, 80% 0%, 95% 15%, 95% 100%, 5% 100%, 5% 15%);
 }
 
 .legend-color.not-visited {
@@ -325,6 +471,14 @@ body {
     flex: 1;
 }
 
+.palette-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
 .question-btn {
     width: 35px;
     height: 35px;
@@ -354,15 +508,15 @@ body {
 }
 
 .question-btn.answered {
-    background-color: #22c55e; /* Green */
+    background-color: #4CAF50; /* Green */
     color: white;
-    clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
+    clip-path: polygon(20% 0%, 80% 0%, 95% 15%, 95% 100%, 5% 100%, 5% 15%);
 }
 
 .question-btn.not-answered {
-    background-color: #ef4444; /* Red */
+    background-color: #f44336; /* Red */
     color: white;
-    clip-path: polygon(20% 0%, 80% 0%, 100% 70%, 50% 100%, 0% 70%);
+    clip-path: polygon(20% 0%, 80% 0%, 95% 15%, 95% 100%, 5% 100%, 5% 15%);
 }
 
 .question-btn.not-visited {
