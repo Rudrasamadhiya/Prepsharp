@@ -57,27 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="stat-item">
                     <div class="stat-color answered">${stats.answered}</div>
                     <div class="stat-label">Answered:</div>
-                    <div class="stat-value">${stats.answered}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-color not-answered">${stats.notAnswered}</div>
                     <div class="stat-label">Not Answered:</div>
-                    <div class="stat-value">${stats.notAnswered}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-color not-visited">${stats.notVisited}</div>
                     <div class="stat-label">Not Visited:</div>
-                    <div class="stat-value">${stats.notVisited}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-color marked">${stats.marked}</div>
                     <div class="stat-label">Marked for Review:</div>
-                    <div class="stat-value">${stats.marked}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-color answered-marked">${stats.answeredMarked}</div>
                     <div class="stat-label">Answered & Marked:</div>
-                    <div class="stat-value">${stats.answeredMarked}</div>
                 </div>
                 <div class="stat-total">
                     <div class="stat-label">Total Questions:</div>
