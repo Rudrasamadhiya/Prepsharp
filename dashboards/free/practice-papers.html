@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../../assets/css/mobile.css">
     <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
     <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <link rel="stylesheet" href="css/filter-styles.css">
     <style>
         .papers-grid {
             display: grid;
@@ -481,7 +482,7 @@
                     <h1 style="font-size: 32px; font-weight: 800; background: linear-gradient(to right, #4f46e5, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; position: relative;">Practice Papers</h1>
                     <p style="font-size: 16px; color: #4b5563; margin-bottom: 20px; max-width: 600px; position: relative;">Access free JEE practice papers to test your knowledge and prepare for your exams.</p>
                     <div style="margin-top: 20px; background-color: rgba(79, 70, 229, 0.08); border-left: 4px solid #4f46e5; padding: 15px 20px; border-radius: 10px; position: relative; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);">
-                        <p style="margin: 0; font-size: 1rem; line-height: 1.5;"><strong style="color: #4f46e5;">Free Plan:</strong> Basic practice papers are available. <a href="../../subscription.html" style="color: #4f46e5; text-decoration: none; font-weight: 600; position: relative; padding-bottom: 2px; transition: all 0.3s ease;">Upgrade to Premium</a> for access to all practice papers, detailed solutions, and personalized recommendations.</p>
+                        <p style="margin: 0; font-size: 1rem; line-height: 1.5;"><strong style="color: #4f46e5;">Free Plan:</strong> Basic practice papers are available. <a href="../../exam/index.html" style="color: #4f46e5; text-decoration: none; font-weight: 600; position: relative; padding-bottom: 2px; transition: all 0.3s ease;">Try a Demo Exam</a> or <a href="../../subscription.html" style="color: #4f46e5; text-decoration: none; font-weight: 600; position: relative; padding-bottom: 2px; transition: all 0.3s ease;">Upgrade to Premium</a> for access to all practice papers, detailed solutions, and personalized recommendations.</p>
                     </div>
                 </div>
                 
@@ -519,19 +520,19 @@
                     <div style="display: flex; align-items: center; margin-right: 20px;">
                         <div style="margin-right: 10px; font-weight: 600; color: #111827;">Exam Type:</div>
                         <div style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; background-color: #4f46e5; color: white; font-weight: 500;">All</div>
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">JEE Main</div>
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">JEE Advanced</div>
+                            <div class="filter-option active" data-type="exam" data-value="">All</div>
+                            <div class="filter-option" data-type="exam" data-value="jee-main">JEE Main</div>
+                            <div class="filter-option" data-type="exam" data-value="jee-advanced">JEE Advanced</div>
                         </div>
                     </div>
                     
                     <div style="display: flex; align-items: center; margin-right: 20px;">
                         <div style="margin-right: 10px; font-weight: 600; color: #111827;">Year:</div>
                         <div style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; background-color: #4f46e5; color: white; font-weight: 500;">All</div>
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">2023</div>
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">2022</div>
-                            <div style="padding: 8px 15px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">2021</div>
+                            <div class="filter-option active" data-type="year" data-value="">All</div>
+                            <div class="filter-option" data-type="year" data-value="2023">2023</div>
+                            <div class="filter-option" data-type="year" data-value="2022">2022</div>
+                            <div class="filter-option" data-type="year" data-value="2021">2021</div>
                         </div>
                     </div>
                     
@@ -590,32 +591,14 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="js/auth-check-disabled.js"></script>
+
     <script src="../../js/free-theme-manager.js"></script>
     <script src="../../js/mobile.js"></script>
     <script src="js/free-papers.js"></script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
-            projectId: "prepsharp-c91fd",
-            storageBucket: "prepsharp-c91fd.firebasestorage.app",
-            messagingSenderId: "688294848433",
-            appId: "1:688294848433:web:dd93fc6d61d62392473f90",
-            measurementId: "G-LLJSLMXMNY"
-        };
-        
-        // Initialize Firebase
-        let db;
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            db = firebase.firestore();
-            console.log("Firebase initialized successfully");
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-        }
+    <script src="js/admin-link.js"></script>
+    <script src="js/exam-redirect.js"></script>
+    <script>
+        // Firebase will be initialized by free-papers.js
         
         function getUserId() {
             const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
@@ -638,13 +621,16 @@
                 
                 try {
                     const userId = getUserId();
-                    const doc = await db.collection('users').doc(userId).get();
-                    if (doc.exists && doc.data().photo) {
-                        const avatar = document.getElementById('userInitials');
-                        avatar.style.backgroundImage = `url(${doc.data().photo})`;
-                        avatar.style.backgroundSize = 'cover';
-                        avatar.style.backgroundPosition = 'center';
-                        avatar.textContent = '';
+                    // Make sure db is initialized from free-papers.js
+                    if (window.db) {
+                        const doc = await window.db.collection('users').doc(userId).get();
+                        if (doc.exists && doc.data().photo) {
+                            const avatar = document.getElementById('userInitials');
+                            avatar.style.backgroundImage = `url(${doc.data().photo})`;
+                            avatar.style.backgroundSize = 'cover';
+                            avatar.style.backgroundPosition = 'center';
+                            avatar.textContent = '';
+                        }
                     }
                 } catch (error) {
                     console.log('No photo found');
@@ -680,224 +666,8 @@
                     userDropdown.style.transform = 'translateY(-10px)';
                 });
             }
-            
-            // Load papers from Firebase
-            loadPapers();
-            
-            // Filter functionality
-            const filterOptions = document.querySelectorAll('.filter-option');
-            filterOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove active class from siblings
-                    const siblings = Array.from(this.parentElement.children);
-                    siblings.forEach(sibling => sibling.classList.remove('active'));
-                    
-                    // Add active class to clicked option
-                    this.classList.add('active');
-                    
-                    // Filter papers based on selection
-                    const filterType = this.parentElement.previousElementSibling.textContent.trim().replace(':', '');
-                    const filterValue = this.textContent.trim();
-                    
-                    if (filterType === 'Exam Type') {
-                        window.examTypeFilter = filterValue === 'All' ? '' : filterValue;
-                    } else if (filterType === 'Year') {
-                        window.yearFilter = filterValue === 'All' ? '' : filterValue;
-                    }
-                    
-                    filterPapers();
-                });
-            });
-            
-            // Search functionality
-            document.querySelector('input[placeholder="Search papers..."]').addEventListener('input', function() {
-                window.searchFilter = this.value.toLowerCase();
-                filterPapers();
-            });
         });
-        
-        // Function to load papers from Firebase
-        function loadPapers() {
-            const papersGrid = document.querySelector('.papers-grid');
-            papersGrid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-3">Loading papers...</p>
-                </div>
-            `;
-            
-            db.collection("papers").get().then((snapshot) => {
-                window.allPapers = [];
-                snapshot.forEach((doc) => {
-                    const paper = doc.data();
-                    paper.id = doc.id;
-                    window.allPapers.push(paper);
-                });
-                
-                // Initialize filters
-                window.examTypeFilter = '';
-                window.yearFilter = '';
-                window.searchFilter = '';
-                
-                // Render papers
-                renderPapers(window.allPapers);
-            }).catch((error) => {
-                console.error("Error loading papers:", error);
-                papersGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
-                        <h4>Error Loading Papers</h4>
-                        <p>Please try refreshing the page</p>
-                    </div>
-                `;
-            });
-        }
-        
-        // Function to filter papers
-        function filterPapers() {
-            if (!window.allPapers) return;
-            
-            const filtered = window.allPapers.filter(paper => {
-                // Only show published papers
-                if (paper.status !== 'Published') return false;
-                
-                // Only show papers EXPLICITLY marked for free dashboard AND published
-                if (paper.status !== 'Published' || paper.dashboards?.free !== true) return false;
-                
-                const typeMatch = !window.examTypeFilter || 
-                                  (paper.type === 'jee-main' && window.examTypeFilter === 'JEE Main') ||
-                                  (paper.type === 'jee-advanced' && window.examTypeFilter === 'JEE Advanced');
-                                  
-                const yearMatch = !window.yearFilter || paper.year === window.yearFilter;
-                
-                const searchMatch = !window.searchFilter || 
-                                   paper.name.toLowerCase().includes(window.searchFilter);
-                                   
-                return typeMatch && yearMatch && searchMatch;
-            });
-            
-            renderPapers(filtered);
-        }
-        
-        // Function to render papers
-        function renderPapers(papers) {
-            const papersGrid = document.querySelector('.papers-grid');
-            papersGrid.innerHTML = '';
-            
-            if (papers.length === 0) {
-                papersGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                        <h4>No Papers Found</h4>
-                        <p>Try adjusting your filters</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Sort papers: free papers first, then premium papers
-            papers.sort((a, b) => {
-                const aIsFree = a.isFree === true || a.isFree === undefined;
-                const bIsFree = b.isFree === true || b.isFree === undefined;
-                
-                if (aIsFree && !bIsFree) return -1; // a is free, b is premium
-                if (!aIsFree && bIsFree) return 1;  // a is premium, b is free
-                
-                // If both are free or both are premium, sort by year (newest first)
-                const yearA = parseInt(a.year) || 0;
-                const yearB = parseInt(b.year) || 0;
-                return yearB - yearA;
-            });
-            
-            // Add a visual separator between free and premium papers
-            let lastWasFree = null;
-            
-            papers.forEach((paper, index) => {
-                const isFree = paper.isFree === true || paper.isFree === undefined;
-                
-                // Add separator when transitioning from free to premium
-                if (lastWasFree === true && !isFree) {
-                    const separator = document.createElement('div');
-                    separator.className = 'premium-separator';
-                    separator.style.gridColumn = '1/-1';
-                    separator.innerHTML = `
-                        <div class="premium-header">
-                            <i class="fas fa-crown"></i>
-                            <h3>Premium Papers</h3>
-                            <span>Upgrade to access</span>
-                        </div>
-                    `;
-                    papersGrid.appendChild(separator);
-                }
-                
-                lastWasFree = isFree;
-                const isPremium = !isFree;
-                
-                const paperCard = document.createElement('div');
-                paperCard.className = `paper-card animate-card-${(index % 6) + 1}`;
-                
-                // Determine if it's new or popular
-                let badgeClass = '';
-                let badgeText = '';
-                
-                if (isPremium) {
-                    badgeClass = 'locked';
-                    badgeText = 'PREMIUM';
-                } else if (paper.isNew) {
-                    badgeClass = 'new';
-                    badgeText = 'NEW';
-                } else if (paper.isPopular) {
-                    badgeClass = 'popular';
-                    badgeText = 'POPULAR';
-                }
-                
-                // Create badges for subjects
-                const subjectBadges = (paper.subjects || ['physics', 'chemistry', 'mathematics']).map(subject => {
-                    return `<span class="subject-badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
-                }).join('');
-                
-                // Get question count
-                const questionCount = paper.questions?.length || (paper.type === 'jee-advanced' ? 54 : 90);
-                
-                paperCard.innerHTML = `
-                    ${badgeClass ? `<div class="paper-badge ${badgeClass}">${badgeText}</div>` : ''}
-                    <div class="paper-header">
-                        <h3>${paper.name || 'Unnamed Exam'}</h3>
-                    </div>
-                    <div class="paper-body">
-                        <p>${paper.description || `${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination from ${paper.year || 'recent'} session.`}</p>
-                        <div>
-                            ${subjectBadges}
-                        </div>
-                        <div class="paper-meta">
-                            <span><i class="fas fa-clock"></i> 3 hours</span>
-                            <span><i class="fas fa-question-circle"></i> ${questionCount} questions</span>
-                        </div>
-                    </div>
-                    <div class="paper-footer">
-                        <a href="../../exam.html?id=${paper.id}" class="start-btn">Start Exam</a>
-                        <span><i class="fas fa-users"></i> ${Math.floor(Math.random() * 3000) + 1000}+ attempts</span>
-                    </div>
-                    ${isPremium ? `
-                    <div class="locked-overlay">
-                        <div class="locked-icon"><i class="fas fa-lock"></i></div>
-                        <div class="locked-text">Premium Paper</div>
-                        <a href="../../subscription.html" class="upgrade-btn">Upgrade Now</a>
-                    </div>` : ''}
-                `;
-                
-                papersGrid.appendChild(paperCard);
-            });
-            
-            // Add click handlers to locked overlays
-            document.querySelectorAll('.locked-overlay').forEach(overlay => {
-                overlay.addEventListener('click', function() {
-                    window.location.href = '../../subscription.html';
-                });
-            });
-        }
+    </script>
     </script>
 </body>
 </html>

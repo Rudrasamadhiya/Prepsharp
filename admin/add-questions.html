@@ -891,6 +891,40 @@
             console.error("Firebase initialization error:", error);
         }
         
+        // Function to find first empty question - fast version
+        async function findFirstEmptyQuestion(examId) {
+            if (!db) {
+                loadExistingQuestion(examId, 1);
+                return;
+            }
+            
+            try {
+                // Get all questions at once
+                const snapshot = await db.collection('papers').doc(examId).collection('questions').get();
+                const existingQuestions = new Set();
+                
+                snapshot.forEach(doc => {
+                    const questionNum = parseInt(doc.id.replace('question-', ''));
+                    existingQuestions.add(questionNum);
+                });
+                
+                // Find first missing question
+                for (let i = 1; i <= 75; i++) {
+                    if (!existingQuestions.has(i)) {
+                        currentQuestionIndex = i - 1;
+                        document.getElementById('question-number').textContent = `Question ${i} of 75`;
+                        loadExistingQuestion(examId, i);
+                        return;
+                    }
+                }
+                
+                // All questions exist
+                loadExistingQuestion(examId, 1);
+            } catch (error) {
+                loadExistingQuestion(examId, 1);
+            }
+        }
+        
         // Load existing question data
         async function loadExistingQuestion(examId, questionNo) {
             try {
@@ -1021,13 +1055,10 @@
             
 
             
-            // Initialize the question fields
+            // Initialize the question fields and find first empty question
             currentQuestionIndex = 0;
-            
-            // Set total questions to 75 for all papers
-            window.totalQuestions = 75;
-            document.getElementById('question-number').textContent = 'Question 1 of 75';
             document.getElementById('section-name').textContent = 'Physics - Section 1';
+            findFirstEmptyQuestion(examId);
             
             // Set up event listeners
             document.getElementById('sidebar-logout').addEventListener('click', function(e) {

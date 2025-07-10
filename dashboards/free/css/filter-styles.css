@@ -1,0 +1,15 @@
+.filter-option {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-option.active {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.filter-option:hover:not(.active) {
+    background-color: rgba(79, 70, 229, 0.1);
+}

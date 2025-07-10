@@ -10,16 +10,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let db;
+window.db = null;
 try {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-    db = firebase.firestore();
+    window.db = firebase.firestore();
     console.log("Firebase initialized successfully");
     
     // Load papers when the page is ready
-    document.addEventListener('DOMContentLoaded', loadPapers);
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPapers();
+        
+        // Setup filter functionality
+        setupFilters();
+    });
 } catch (error) {
     console.error("Firebase initialization error:", error);
 }
@@ -39,7 +44,7 @@ function loadPapers() {
     `;
     
     // Fetch papers from Firestore
-    db.collection("papers").get()
+    window.db.collection("papers").get()
         .then((snapshot) => {
             // Filter papers
             const papers = [];
@@ -49,7 +54,9 @@ function loadPapers() {
                 
                 // Only include published papers EXPLICITLY marked for free dashboard
                 if (paper.status === 'Published' && paper.dashboards?.free === true) {
-                    console.log('Found free paper:', paper.name);
+                    console.log('Found free paper:', paper.name, 'with', 
+                        paper.questions ? paper.questions.length + ' questions' : 
+                        paper.questionCount ? paper.questionCount + ' questions' : 'unknown question count');
                     papers.push(paper);
                 }
             });
@@ -92,6 +99,18 @@ function filterPapers() {
     });
     
     renderPapers(filtered);
+}
+
+// Function to get question count for a paper
+async function getQuestionCount(paperId) {
+    try {
+        // Try to get questions collection for this paper
+        const questionsSnapshot = await window.db.collection("papers").doc(paperId).collection("questions").get();
+        return questionsSnapshot.size;
+    } catch (error) {
+        console.error("Error getting question count:", error);
+        return 0;
+    }
 }
 
 // Function to render papers
@@ -176,8 +195,20 @@ function renderPapers(papers) {
             return `<span class="subject-badge ${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>`;
         }).join('');
         
-        // Get question count
-        const questionCount = paper.questions?.length || (paper.type === 'jee-advanced' ? 54 : 90);
+        // Get question count from Firebase data
+        let questionCount = 0;
+        if (paper.questions && Array.isArray(paper.questions)) {
+            questionCount = paper.questions.length;
+        } else if (paper.questionCount) {
+            questionCount = paper.questionCount;
+        } else {
+            // Default question counts based on exam type
+            questionCount = paper.type === 'jee-advanced' ? 54 : 90;
+        }
+        
+        // Create data attributes for paper info
+        paperCard.setAttribute('data-paper-id', paper.id);
+        paperCard.setAttribute('data-paper-type', paper.type || 'jee-main');
         
         paperCard.innerHTML = `
             ${badgeClass ? `<div class="paper-badge ${badgeClass}">${badgeText}</div>` : ''}
@@ -191,11 +222,11 @@ function renderPapers(papers) {
                 </div>
                 <div class="paper-meta">
                     <span><i class="fas fa-clock"></i> 3 hours</span>
-                    <span><i class="fas fa-question-circle"></i> ${questionCount} questions</span>
+                    <span class="question-count"><i class="fas fa-question-circle"></i> <span class="count-value">${questionCount}</span> questions</span>
                 </div>
             </div>
             <div class="paper-footer">
-                <a href="../../exam.html?id=${paper.id}" class="start-btn">Start Exam</a>
+                <a href="../../exam/${paper.type === 'jee-advanced' ? 'advanced' : 'mains'}.html?id=${paper.id}" class="start-btn">Start Exam</a>
                 <span><i class="fas fa-users"></i> ${Math.floor(Math.random() * 3000) + 1000}+ attempts</span>
             </div>
             ${isPremium ? `
@@ -206,6 +237,18 @@ function renderPapers(papers) {
             </div>` : ''}
         `;
         
+        // If question count is default, try to fetch the actual count
+        if (!paper.questions && !paper.questionCount) {
+            getQuestionCount(paper.id).then(count => {
+                if (count > 0) {
+                    const countElement = paperCard.querySelector('.count-value');
+                    if (countElement) {
+                        countElement.textContent = count;
+                    }
+                }
+            });
+        }
+        
         papersGrid.appendChild(paperCard);
     });
     
@@ -215,4 +258,43 @@ function renderPapers(papers) {
             window.location.href = '../../subscription.html';
         });
     });
+}
+
+// Function to setup filters
+function setupFilters() {
+    // Filter functionality
+    const filterOptions = document.querySelectorAll('.filter-option');
+    filterOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from siblings
+            const siblings = Array.from(this.parentElement.children);
+            siblings.forEach(sibling => {
+                sibling.classList.remove('active');
+            });
+            
+            // Add active class to clicked option
+            this.classList.add('active');
+            
+            // Get filter type and value from data attributes
+            const filterType = this.getAttribute('data-type');
+            const filterValue = this.getAttribute('data-value');
+            
+            if (filterType === 'exam') {
+                window.examTypeFilter = filterValue;
+            } else if (filterType === 'year') {
+                window.yearFilter = filterValue;
+            }
+            
+            filterPapers();
+        });
+    });
+    
+    // Search functionality
+    const searchInput = document.querySelector('input[placeholder="Search papers..."]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            window.searchFilter = this.value.toLowerCase();
+            filterPapers();
+        });
+    }
 }
