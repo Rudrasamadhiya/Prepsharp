@@ -460,27 +460,38 @@
                                     <select class="form-select" id="question-chapter" required>
                                         <option value="">Select Chapter</option>
                                         <!-- Physics chapters -->
-                                        <option value="Units & Measurements">Units & Measurements</option>
-                                        <option value="Kinematics">Kinematics</option>
+                                        <option value="Mathematics in Physics">Mathematics in Physics</option>
+                                        <option value="Units and Dimensions">Units and Dimensions</option>
+                                        <option value="Motion In One Dimension">Motion In One Dimension</option>
+                                        <option value="Motion In Two Dimensions">Motion In Two Dimensions</option>
                                         <option value="Laws of Motion">Laws of Motion</option>
-                                        <option value="Work, Energy and Power">Work, Energy and Power</option>
+                                        <option value="Work Power Energy">Work Power Energy</option>
+                                        <option value="Center of Mass Momentum and Collision">Center of Mass Momentum and Collision</option>
                                         <option value="Rotational Motion">Rotational Motion</option>
                                         <option value="Gravitation">Gravitation</option>
-                                        <option value="Properties of Solids and Liquids">Properties of Solids and Liquids</option>
+                                        <option value="Mechanical Properties of Solids">Mechanical Properties of Solids</option>
+                                        <option value="Mechanical Properties of Fluids">Mechanical Properties of Fluids</option>
+                                        <option value="Thermal Properties of Matter">Thermal Properties of Matter</option>
                                         <option value="Thermodynamics">Thermodynamics</option>
                                         <option value="Kinetic Theory of Gases">Kinetic Theory of Gases</option>
-                                        <option value="Oscillations and Waves">Oscillations and Waves</option>
+                                        <option value="Oscillations">Oscillations</option>
+                                        <option value="Waves and Sound">Waves and Sound</option>
                                         <option value="Electrostatics">Electrostatics</option>
+                                        <option value="Capacitance">Capacitance</option>
                                         <option value="Current Electricity">Current Electricity</option>
+                                        <option value="Magnetic Properties of Matter">Magnetic Properties of Matter</option>
                                         <option value="Magnetic Effects of Current">Magnetic Effects of Current</option>
-                                        <option value="Magnetism">Magnetism</option>
                                         <option value="Electromagnetic Induction">Electromagnetic Induction</option>
                                         <option value="Alternating Current">Alternating Current</option>
                                         <option value="Electromagnetic Waves">Electromagnetic Waves</option>
-                                        <option value="Optics">Optics</option>
-                                        <option value="Dual Nature of Matter and Radiation">Dual Nature of Matter and Radiation</option>
-                                        <option value="Atoms and Nuclei">Atoms and Nuclei</option>
-                                        <option value="Electronic Devices">Electronic Devices</option>
+                                        <option value="Ray Optics">Ray Optics</option>
+                                        <option value="Wave Optics">Wave Optics</option>
+                                        <option value="Dual Nature of Matter">Dual Nature of Matter</option>
+                                        <option value="Atomic Physics">Atomic Physics</option>
+                                        <option value="Nuclear Physics">Nuclear Physics</option>
+                                        <option value="Semiconductors">Semiconductors</option>
+                                        <option value="Communication System">Communication System</option>
+                                        <option value="Experimental Physics">Experimental Physics</option>
                                     </select>
                                 </div>
                             </div>
@@ -1117,28 +1128,26 @@
         // Chapter data by subject
         const chaptersBySubject = {
             "Physics": [
-                "Units & Measurements", "Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
-                "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
-                "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
-                "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
-                "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"
+                "Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"
             ],
             "Chemistry": [
-                "Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
-                "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
-                "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
-                "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
-                "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
-                "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
-                "Polymers", "Chemistry in Everyday Life"
+                "Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"
             ],
             "Mathematics": [
-                "Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
-                "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
-                "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
-                "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
-                "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
-                "Mathematical Reasoning", "Mathematical Induction"
+                "Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"
             ],
             "Biology": [
                 "Diversity in Living World", "Structural Organization in Plants and Animals", "Cell Structure and Function", 
@@ -1153,11 +1162,11 @@
             chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
             
             if (subject === 'Physics') {
-                const physicsChapters = ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
-                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
-                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
-                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
-                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"];
+                const physicsChapters = ["Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                    "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                    "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                    "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"];
                 
                 physicsChapters.forEach(chapter => {
                     const option = document.createElement('option');
@@ -1166,13 +1175,12 @@
                     chapterSelect.appendChild(option);
                 });
             } else if (subject === 'Chemistry') {
-                const chemistryChapters = ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
-                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
-                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
-                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
-                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
-                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
-                    "Polymers", "Chemistry in Everyday Life"];
+                const chemistryChapters = ["Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                    "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                    "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                    "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                    "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"];
                 
                 chemistryChapters.forEach(chapter => {
                     const option = document.createElement('option');
@@ -1181,12 +1189,11 @@
                     chapterSelect.appendChild(option);
                 });
             } else if (subject === 'Mathematics') {
-                const mathChapters = ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
-                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
-                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
-                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
-                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
-                    "Mathematical Reasoning", "Mathematical Induction"];
+                const mathChapters = ["Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                    "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                    "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                    "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                    "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"];
                 
                 mathChapters.forEach(chapter => {
                     const option = document.createElement('option');

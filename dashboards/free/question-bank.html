@@ -511,24 +511,22 @@
         async function loadSubjectTotals() {
             const subjects = ['physics', 'chemistry', 'mathematics'];
             const chapters = {
-                physics: ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
-                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
-                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
-                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
-                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"],
-                chemistry: ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
-                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
-                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
-                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
-                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
-                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
-                    "Polymers", "Chemistry in Everyday Life"],
-                mathematics: ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
-                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
-                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
-                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
-                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
-                    "Mathematical Reasoning", "Mathematical Induction"]
+                physics: ["Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                    "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                    "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                    "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"],
+                chemistry: ["Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                    "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                    "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                    "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                    "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"],
+                mathematics: ["Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                    "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                    "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                    "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                    "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"]
             };
             
             for (const subject of subjects) {
@@ -554,24 +552,22 @@
             chapterGrid.innerHTML = 'Loading chapters...';
             
             const chapters = {
-                physics: ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
-                    "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
-                    "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
-                    "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
-                    "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"],
-                chemistry: ["Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
-                    "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
-                    "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
-                    "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
-                    "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
-                    "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
-                    "Polymers", "Chemistry in Everyday Life"],
-                mathematics: ["Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
-                    "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
-                    "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
-                    "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
-                    "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
-                    "Mathematical Reasoning", "Mathematical Induction"]
+                physics: ["Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                    "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                    "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                    "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"],
+                chemistry: ["Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                    "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                    "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                    "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                    "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"],
+                mathematics: ["Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                    "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                    "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                    "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                    "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"]
             };
             
             chapterGrid.innerHTML = '';
