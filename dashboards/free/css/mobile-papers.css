@@ -1,0 +1,217 @@
+/* Enhanced Styles for Practice Papers */
+/* Hide paper descriptions by default on all screen sizes */
+.paper-meta {
+    display: none !important;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.paper-meta.show {
+    display: block !important;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.paper-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    margin: 5px 0;
+    color: #4f46e5;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    border-top: 1px dashed rgba(79, 70, 229, 0.2);
+    border-bottom: 1px dashed rgba(79, 70, 229, 0.2);
+    background-color: rgba(79, 70, 229, 0.05);
+    border-radius: 8px;
+}
+
+.paper-toggle i {
+    transition: transform 0.3s ease;
+    margin-left: 5px;
+}
+
+.paper-toggle.active i {
+    transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    
+    /* Toggle button styles moved to global scope */
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    /* Paper cards improvements */
+    .papers-grid {
+        grid-template-columns: 1fr !important;
+        padding: 0 5px;
+    }
+    
+    .paper-card {
+        margin-bottom: 20px !important;
+        transform: none !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    
+    .paper-card:active {
+        transform: scale(0.98) !important;
+    }
+    
+    .paper-header {
+        padding: 15px !important;
+    }
+    
+    .paper-header h3 {
+        font-size: 18px !important;
+    }
+    
+    .paper-body {
+        padding: 15px !important;
+    }
+    
+    .paper-footer {
+        padding: 12px 15px !important;
+    }
+    
+    .paper-title {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #111827;
+    }
+    
+    .paper-description-text {
+        margin-bottom: 10px;
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    /* Filter section improvements */
+    .filters {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        background: white;
+        border-radius: 16px;
+        padding: 15px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .filter-group {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .filter-options {
+        flex-wrap: wrap;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .filter-option {
+        flex: 1;
+        text-align: center;
+        padding: 10px 5px;
+        font-size: 13px;
+    }
+    
+    .search-box {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .search-box input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+    }
+    
+    /* Upgrade banner improvements */
+    .upgrade-banner,
+    .premium-header {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 20px 15px !important;
+    }
+    
+    .upgrade-content {
+        margin-bottom: 15px !important;
+    }
+    
+    /* Subject badges */
+    .subject-badge {
+        margin-bottom: 5px !important;
+    }
+    
+    /* Welcome section */
+    .welcome-section {
+        padding: 20px 15px !important;
+    }
+    
+    /* Locked overlay */
+    .locked-overlay .locked-text {
+        font-size: 16px !important;
+    }
+    
+    /* Buttons */
+    .start-btn, .upgrade-btn {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    /* Add attractive animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .paper-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+    
+    /* Staggered animations for cards */
+    .paper-card:nth-child(1) { animation-delay: 0.1s; }
+    .paper-card:nth-child(2) { animation-delay: 0.2s; }
+    .paper-card:nth-child(3) { animation-delay: 0.3s; }
+    .paper-card:nth-child(4) { animation-delay: 0.4s; }
+    .paper-card:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* Add pull-to-refresh visual */
+    .pull-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        margin-top: -50px;
+        color: #4f46e5;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .pull-indicator.active {
+        opacity: 1;
+    }
+    
+    /* Improve touch feedback */
+    .filter-option:active,
+    .start-btn:active,
+    .upgrade-btn:active {
+        background-color: rgba(79, 70, 229, 0.2) !important;
+    }
+}

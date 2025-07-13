@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Practice Papers - PrepSharp Free</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
     <link rel="stylesheet" href="../../assets/css/dark-mode.css">
@@ -13,6 +14,8 @@
     <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
     <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
     <link rel="stylesheet" href="css/filter-styles.css">
+    <link rel="stylesheet" href="css/papers-enhancements.css">
+    <meta name="theme-color" content="#4f46e5">
     <style>
         .papers-grid {
             display: grid;
@@ -514,21 +517,21 @@
                 <!-- Upgrade banner removed -->
                 
                 <!-- Filters -->
-                <div style="display: flex; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); animation: fadeIn 0.8s ease-out 0.1s both; position: relative; overflow: hidden;">
+                <div class="filters" style="display: flex; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); animation: fadeIn 0.8s ease-out 0.1s both; position: relative; overflow: hidden;">
                     <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
                     
-                    <div style="display: flex; align-items: center; margin-right: 20px;">
+                    <div class="filter-group" style="display: flex; align-items: center; margin-right: 20px;">
                         <div style="margin-right: 10px; font-weight: 600; color: #111827;">Exam Type:</div>
-                        <div style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="filter-options" style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                             <div class="filter-option active" data-type="exam" data-value="">All</div>
                             <div class="filter-option" data-type="exam" data-value="jee-main">JEE Main</div>
                             <div class="filter-option" data-type="exam" data-value="jee-advanced">JEE Advanced</div>
                         </div>
                     </div>
                     
-                    <div style="display: flex; align-items: center; margin-right: 20px;">
+                    <div class="filter-group" style="display: flex; align-items: center; margin-right: 20px;">
                         <div style="margin-right: 10px; font-weight: 600; color: #111827;">Year:</div>
-                        <div style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        <div class="filter-options" style="display: flex; background-color: rgba(79, 70, 229, 0.05); border-radius: 30px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                             <div class="filter-option active" data-type="year" data-value="">All</div>
                             <div class="filter-option" data-type="year" data-value="2023">2023</div>
                             <div class="filter-option" data-type="year" data-value="2022">2022</div>
@@ -536,10 +539,15 @@
                         </div>
                     </div>
                     
-                    <div style="flex: 1; position: relative; max-width: 300px;">
+                    <div class="search-box" style="flex: 1; position: relative; max-width: 300px;">
                         <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #6b7280;"></i>
                         <input type="text" placeholder="Search papers..." style="width: 100%; padding: 12px 15px 12px 40px; border: none; border-radius: 30px; background-color: rgba(79, 70, 229, 0.05); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); font-size: 14px; transition: all 0.3s ease;">
                     </div>
+                </div>
+                
+                <!-- Pull to refresh indicator for mobile -->
+                <div class="pull-indicator">
+                    <i class="fas fa-arrow-down" style="margin-right: 8px;"></i> Pull to refresh
                 </div>
                 
                 <!-- Papers Grid -->
@@ -554,19 +562,23 @@
                 </div>
                 
                 <!-- Upgrade Banner -->
-                <div style="background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); padding: 30px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); display: flex; justify-content: space-between; align-items: center; margin-top: 30px; animation: pulse 2s infinite alternate; transform-style: preserve-3d; backdrop-filter: blur(10px);">
+                <div class="upgrade-banner" style="background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); padding: 30px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); display: flex; justify-content: space-between; align-items: center; margin-top: 30px; animation: pulse 2s infinite alternate; transform-style: preserve-3d; backdrop-filter: blur(10px);">
                 <style>
                 @keyframes pulse {
                     0% { box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2); }
                     100% { box-shadow: 0 20px 50px rgba(79, 70, 229, 0.4); }
                 }
+                @keyframes float {
+                    0% { transform: translateY(0); }
+                    100% { transform: translateY(-10px); }
+                }
                 </style>
-                    <div style="display: flex; align-items: center; gap: 25px; position: relative; z-index: 1;">
+                    <div class="upgrade-content" style="display: flex; align-items: center; gap: 25px; position: relative; z-index: 1;">
                         <div style="width: 60px; height: 60px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: float 3s ease-in-out infinite alternate;">
                             <i class="fas fa-book"></i>
                         </div>
                         <div>
-                            <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                            <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                 <span style="color: #ffd700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">Unlock</span> Premium Papers
                                 <span style="background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">Premium</span>
                             </div>
@@ -579,7 +591,7 @@
                     </div>
                     <div style="text-align: right; position: relative; z-index: 1;">
                         <div style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin-bottom: 15px;">Starting at ₹199/month</div>
-                        <button onclick="window.location.href='../../subscription.html'" style="background: white; color: #4f46e5; border: none; padding: 12px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: pulse-button 2s infinite alternate;">
+                        <button class="upgrade-btn" onclick="window.location.href='../../subscription.html'" style="background: white; color: #4f46e5; border: none; padding: 12px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); animation: pulse-button 2s infinite alternate;">
                             <span>Upgrade Now</span>
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -597,6 +609,7 @@
     <script src="js/free-papers.js"></script>
     <script src="js/admin-link.js"></script>
     <script src="js/exam-redirect.js"></script>
+    <script src="js/papers-enhancements.js"></script>
     <script>
         // Firebase will be initialized by free-papers.js
         

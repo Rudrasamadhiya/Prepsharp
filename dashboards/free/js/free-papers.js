@@ -216,11 +216,13 @@ function renderPapers(papers) {
                 <h3>${paper.name || 'Unnamed Exam'}</h3>
             </div>
             <div class="paper-body">
-                <p>${paper.description || `${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination from ${paper.year || 'recent'} session.`}</p>
+                <p class="paper-title">${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination ${paper.year || ''}</p>
                 <div>
                     ${subjectBadges}
                 </div>
+                <div class="paper-toggle">Show Details <i class="fas fa-chevron-down"></i></div>
                 <div class="paper-meta">
+                    <p class="paper-description-text">${paper.description || `${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination from ${paper.year || 'recent'} session.`}</p>
                     <span><i class="fas fa-clock"></i> 3 hours</span>
                     <span class="question-count"><i class="fas fa-question-circle"></i> <span class="count-value">${questionCount}</span> questions</span>
                 </div>
