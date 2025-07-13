@@ -157,32 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const useQuestionBtn = document.getElementById('use-for-question-btn');
     const useOptionBtn = document.getElementById('use-for-option-btn');
     
-    // Clone buttons to remove all event listeners
-    const newUseQuestionBtn = useQuestionBtn.cloneNode(true);
+    // Only handle the Use Image button for options
     const newUseOptionBtn = useOptionBtn.cloneNode(true);
-    useQuestionBtn.parentNode.replaceChild(newUseQuestionBtn, useQuestionBtn);
     useOptionBtn.parentNode.replaceChild(newUseOptionBtn, useOptionBtn);
-    
-    newUseQuestionBtn.addEventListener('click', function() {
-        const imageData = document.getElementById('screenshot-preview').src;
-        const questionPreviewImg = document.getElementById('question-image-preview-img');
-        const questionPreviewContainer = document.getElementById('question-image-preview');
-        
-        questionPreviewImg.src = imageData;
-        questionPreviewContainer.style.display = 'block';
-        
-        resetScreenshotArea();
-        document.getElementById('pdf-container').style.display = 'none';
-        resetSelectionMode();
-    });
     
     newUseOptionBtn.addEventListener('click', function() {
         const imageData = document.getElementById('screenshot-preview').src;
         
-        if (currentOptionTarget) {
+        if (currentCaptureTarget === 'option' && currentOptionTarget) {
             const optionPreviewImg = document.getElementById(`option-${currentOptionTarget}-image-preview-img`);
             const optionPreview = document.getElementById(`option-${currentOptionTarget}-image-preview`);
-            
             optionPreviewImg.src = imageData;
             optionPreview.style.display = 'block';
         }

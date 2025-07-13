@@ -511,27 +511,11 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="examResultsTable">
                             <tr>
-                                <td>JEE Main 2023 Paper 1</td>
-                                <td>15 May 2023</td>
-                                <td><span class="score-badge medium">68%</span></td>
-                                <td>2h 45m</td>
-                                <td><a href="#" class="view-btn">View Result</a></td>
-                            </tr>
-                            <tr>
-                                <td>JEE Advanced 2023 Paper 1</td>
-                                <td>10 May 2023</td>
-                                <td><span class="score-badge low">52%</span></td>
-                                <td>2h 50m</td>
-                                <td><a href="#" class="view-btn">View Result</a></td>
-                            </tr>
-                            <tr>
-                                <td>JEE Main 2022 Paper 2</td>
-                                <td>5 May 2023</td>
-                                <td><span class="score-badge high">75%</span></td>
-                                <td>2h 30m</td>
-                                <td><a href="#" class="view-btn">View Result</a></td>
+                                <td colspan="5" style="text-align: center; padding: 20px; color: #6b7280;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading exam results...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -694,7 +678,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="js/auth-check-disabled.js"></script>
+    <!-- Auth check disabled for free version -->
     <script src="../../js/free-theme-manager.js"></script>
     <script src="../../js/mobile.js"></script>
     <script>
@@ -752,9 +736,129 @@
             sessionStorage.removeItem('loggedInUser');
             window.location.href = '../../login.html';
         }
+        // Load exam results from Firebase (optimized)
+        async function loadExamResults() {
+            try {
+                const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+                if (!loggedInUser) {
+                    document.getElementById('examResultsTable').innerHTML = `
+                        <tr><td colspan="5" style="text-align: center; padding: 20px; color: #6b7280;">
+                            Please login to view exam results
+                        </td></tr>
+                    `;
+                    return;
+                }
+                
+                const userData = JSON.parse(loggedInUser);
+                const email = userData.email;
+                
+                // Try to get the most common exam result first
+                const examDoc = await db.collection('users').doc(email).collection('exams').doc('JEE_MAIN_2025_JAN_SHIFT1').get();
+                
+                if (examDoc.exists) {
+                    const result = examDoc.data();
+                    displayExamResults([result]);
+                    updateChartsWithRealData([result]);
+                } else {
+                    document.getElementById('examResultsTable').innerHTML = `
+                        <tr><td colspan="5" style="text-align: center; padding: 20px; color: #6b7280;">
+                            No exam results found. <a href="../../exam/mains.html" style="color: #4f46e5;">Take your first exam</a>
+                        </td></tr>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading exam results:', error);
+                document.getElementById('examResultsTable').innerHTML = `
+                    <tr><td colspan="5" style="text-align: center; padding: 20px; color: #ef4444;">
+                        Error loading results. Please try again.
+                    </td></tr>
+                `;
+            }
+        }
+        
+        // Display exam results in table
+        function displayExamResults(results) {
+            const tableBody = document.getElementById('examResultsTable');
+            
+            if (results.length === 0) {
+                tableBody.innerHTML = `
+                    <tr><td colspan="5" style="text-align: center; padding: 20px; color: #6b7280;">
+                        No exam results found
+                    </td></tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = results.map(result => {
+                const date = new Date(result.submittedAt).toLocaleDateString();
+                const timeTaken = Math.floor((new Date(result.endTime) - new Date(result.startTime)) / 60000);
+                const scoreClass = result.accuracy >= 75 ? 'high' : result.accuracy >= 60 ? 'medium' : 'low';
+                
+                return `
+                    <tr>
+                        <td><strong>${result.examName}</strong></td>
+                        <td>${date}</td>
+                        <td><span class="score-badge ${scoreClass}">${result.accuracy}%</span></td>
+                        <td>${timeTaken}m</td>
+                        <td><a href="../../exam/result/result.html?exam=${result.examId}" class="view-btn">View Result</a></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Update charts with real data
+        function updateChartsWithRealData(results) {
+            if (results.length === 0) return;
+            
+            // Update performance trend chart
+            const last7Results = results.slice(0, 7).reverse();
+            const performanceData = last7Results.map(r => parseFloat(r.accuracy));
+            const performanceLabels = last7Results.map((r, i) => `Test ${i + 1}`);
+            
+            if (window.performanceChart && performanceData.length > 0) {
+                window.performanceChart.data.labels = performanceLabels;
+                window.performanceChart.data.datasets[0].data = performanceData;
+                window.performanceChart.update();
+            }
+            
+            // Update subject performance with latest result
+            const latestResult = results[0];
+            if (latestResult.subjects) {
+                const physicsAcc = latestResult.subjects.physics.attempted > 0 ? 
+                    (latestResult.subjects.physics.correct / latestResult.subjects.physics.attempted * 100).toFixed(0) : 0;
+                const chemistryAcc = latestResult.subjects.chemistry.attempted > 0 ? 
+                    (latestResult.subjects.chemistry.correct / latestResult.subjects.chemistry.attempted * 100).toFixed(0) : 0;
+                const mathAcc = latestResult.subjects.mathematics.attempted > 0 ? 
+                    (latestResult.subjects.mathematics.correct / latestResult.subjects.mathematics.attempted * 100).toFixed(0) : 0;
+                
+                // Update radar chart
+                if (window.subjectChart) {
+                    window.subjectChart.data.datasets[0].data = [physicsAcc, chemistryAcc, mathAcc];
+                    window.subjectChart.update();
+                }
+                
+                // Update subject score displays
+                const subjectScores = document.querySelectorAll('.subject-score');
+                if (subjectScores[0]) {
+                    subjectScores[0].querySelector('.progress').style.width = `${physicsAcc}%`;
+                    subjectScores[0].querySelector('.subject-score-value').textContent = `${physicsAcc}%`;
+                }
+                if (subjectScores[1]) {
+                    subjectScores[1].querySelector('.progress').style.width = `${chemistryAcc}%`;
+                    subjectScores[1].querySelector('.subject-score-value').textContent = `${chemistryAcc}%`;
+                }
+                if (subjectScores[2]) {
+                    subjectScores[2].querySelector('.progress').style.width = `${mathAcc}%`;
+                    subjectScores[2].querySelector('.subject-score-value').textContent = `${mathAcc}%`;
+                }
+            }
+        }
+        
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
             loadUserInfo();
+            loadExamResults();
             const userProfile = document.getElementById('userProfile');
             const userDropdown = document.querySelector('.user-dropdown');
             
@@ -792,16 +896,17 @@
                 });
             });
             
-            // Initialize Performance Chart
+            // Initialize Performance Chart (will be updated with real data)
+            window.performanceChart = null;
             const perfCtx = document.getElementById('performanceChart').getContext('2d');
-            const performanceChart = new Chart(perfCtx, {
+            window.performanceChart = new Chart(perfCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'],
                     datasets: [
                         {
                             label: 'Score %',
-                            data: [65, 68, 60, 72, 68, 75, 70],
+                            data: [0, 0, 0, 0, 0],
                             borderColor: '#4f46e5',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',
                             tension: 0.3,
@@ -821,16 +926,17 @@
                 }
             });
             
-            // Initialize Subject Chart
+            // Initialize Subject Chart (will be updated with real data)
+            window.subjectChart = null;
             const subjectCtx = document.getElementById('subjectChart').getContext('2d');
-            const subjectChart = new Chart(subjectCtx, {
+            window.subjectChart = new Chart(subjectCtx, {
                 type: 'radar',
                 data: {
                     labels: ['Physics', 'Chemistry', 'Mathematics'],
                     datasets: [
                         {
                             label: 'Your Score',
-                            data: [65, 72, 58],
+                            data: [0, 0, 0],
                             backgroundColor: 'rgba(79, 70, 229, 0.2)',
                             borderColor: '#4f46e5',
                             pointBackgroundColor: '#4f46e5',

@@ -1594,7 +1594,7 @@
                 const email = userData.email;
                 const examId = 'JEE_MAIN_2025_JAN_SHIFT1'; // Default exam ID
                 
-                const doc = await db.doc(`users/${email}/${examId}`).get();
+                const doc = await db.collection('users').doc(email).collection('exams').doc(examId).get();
                 if (doc.exists) {
                     displayResults(doc.data());
                 } else {

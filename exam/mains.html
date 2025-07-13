@@ -401,11 +401,10 @@
                     createdAt: examData.startTime
                 };
                 
-                // Save to Firebase: /users/{email}/{paperId}
+                // Save to Firebase: /users/{email}/exams/{paperId}
                 const db = firebase.firestore();
-                const docPath = `users/${examData.email}/${examData.examId}`;
                 
-                await db.doc(docPath).set(examResult);
+                await db.collection('users').doc(examData.email).collection('exams').doc(examData.examId).set(examResult);
                 
                 console.log('Exam results saved successfully');
                 return examResult;
