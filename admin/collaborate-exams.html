@@ -458,57 +458,7 @@
             padding: 10px 15px;
         }
         
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 25px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ef4444;
-            transition: .4s;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 19px;
-            width: 19px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-        }
-        
-        input:checked + .slider {
-            background-color: #10b981;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(25px);
-        }
-        
-        .slider.round {
-            border-radius: 25px;
-        }
-        
-        .slider.round:before {
-            border-radius: 50%;
-        }
+
         
         /* Responsive */
         @media (max-width: 992px) {
@@ -1077,15 +1027,12 @@
                 const tableHeader = document.createElement('div');
                 tableHeader.className = 'table-header';
                 tableHeader.innerHTML = `
-                    <div style="display: inline-block; width: 20%; font-weight: 600; color: #4f46e5;">NAME</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">STATUS</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">YEAR</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT ACCESS</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
-                    <div style="display: inline-block; width: 8%; text-align: center; font-weight: 600; color: #4f46e5;">ADMINS</div>
+                    <div style="display: inline-block; width: 30%; font-weight: 600; color: #4f46e5;">NAME</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">STATUS</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">YEAR</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
+                    <div style="display: inline-block; width: 17%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
+                    <div style="display: inline-block; width: 17%; text-align: center; font-weight: 600; color: #4f46e5;">ACTIONS</div>
                 `;
                 container.appendChild(tableHeader);
             }
@@ -1376,15 +1323,12 @@
                 const tableHeader = document.createElement('div');
                 tableHeader.className = 'table-header';
                 tableHeader.innerHTML = `
-                    <div style="display: inline-block; width: 20%; font-weight: 600; color: #4f46e5;">NAME</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">STATUS</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">YEAR</div>
-                    <div style="display: inline-block; width: 8%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
-                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT ACCESS</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">EDIT</div>
-                    <div style="display: inline-block; width: 12%; text-align: center; font-weight: 600; color: #4f46e5;">PREVIEW</div>
-                    <div style="display: inline-block; width: 8%; text-align: center; font-weight: 600; color: #4f46e5;">ADMINS</div>
+                    <div style="display: inline-block; width: 30%; font-weight: 600; color: #4f46e5;">NAME</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">STATUS</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">YEAR</div>
+                    <div style="display: inline-block; width: 12%; font-weight: 600; color: #4f46e5;">QUESTIONS</div>
+                    <div style="display: inline-block; width: 17%; font-weight: 600; color: #4f46e5;">CREATED BY</div>
+                    <div style="display: inline-block; width: 17%; text-align: center; font-weight: 600; color: #4f46e5;">ACTIONS</div>
                 `;
                 container.appendChild(tableHeader);
             }

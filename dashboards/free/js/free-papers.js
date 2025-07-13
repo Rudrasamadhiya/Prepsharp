@@ -221,7 +221,7 @@ function renderPapers(papers) {
                     ${subjectBadges}
                 </div>
                 <div class="paper-toggle">Show Details <i class="fas fa-chevron-down"></i></div>
-                <div class="paper-meta">
+                <div class="paper-meta" style="display: none;">
                     <p class="paper-description-text">${paper.description || `${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination from ${paper.year || 'recent'} session.`}</p>
                     <span><i class="fas fa-clock"></i> 3 hours</span>
                     <span class="question-count"><i class="fas fa-question-circle"></i> <span class="count-value">${questionCount}</span> questions</span>
@@ -259,6 +259,62 @@ function renderPapers(papers) {
         overlay.addEventListener('click', function() {
             window.location.href = '../../subscription.html';
         });
+    });
+    
+    // Add click handlers to show details toggles
+    document.querySelectorAll('.paper-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const paperCard = this.closest('.paper-card');
+            const paperId = paperCard.getAttribute('data-paper-id');
+            const paper = window.allPapers.find(p => p.id === paperId);
+            
+            if (paper) {
+                showPaperDetailsModal(paper);
+            }
+        });
+    });
+}
+
+// Function to show paper details modal
+function showPaperDetailsModal(paper) {
+    const modal = document.createElement('div');
+    modal.className = 'paper-details-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>${paper.name || 'Unnamed Exam'}</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="paper-info">
+                    <h4>Exam Information</h4>
+                    <p><strong>Type:</strong> ${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'}</p>
+                    <p><strong>Year:</strong> ${paper.year || 'Recent'}</p>
+                    <p><strong>Duration:</strong> 3 hours</p>
+                    <p><strong>Questions:</strong> ${paper.questions?.length || paper.questionCount || (paper.type === 'jee-advanced' ? 54 : 90)}</p>
+                    <p><strong>Subjects:</strong> ${(paper.subjects || ['Physics', 'Chemistry', 'Mathematics']).join(', ')}</p>
+                </div>
+                <div class="paper-description">
+                    <h4>Description</h4>
+                    <p>${paper.description || `${paper.type === 'jee-advanced' ? 'JEE Advanced' : 'JEE Main'} Examination from ${paper.year || 'recent'} session.`}</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="../../exam/${paper.type === 'jee-advanced' ? 'advanced' : 'mains'}.html?id=${paper.id}" class="start-btn">Start Exam</a>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal handlers
+    modal.querySelector('.close-btn').onclick = () => modal.remove();
+    modal.querySelector('.modal-overlay').onclick = () => modal.remove();
+    
+    // ESC key to close
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') modal.remove();
     });
 }
 

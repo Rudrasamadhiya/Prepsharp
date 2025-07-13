@@ -229,7 +229,7 @@
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to submit your exam?</p>
-                <p id="summaryText">You have answered 4 out of 75 questions.</p>
+                <p id="summaryText">You have answered <span id="answeredCount">0</span> out of <span id="totalCount">75</span> questions.</p>
             </div>
             <div class="modal-footer">
                 <button class="action-btn" id="cancelSubmit">Cancel</button>
@@ -277,5 +277,183 @@
     <script src="exam-script.js"></script>
     <script src="timer-integration.js"></script>
     <script src="section-info.js"></script>
+    
+    <script>
+        // Exam tracking variables
+        let examData = {
+            studentId: '',
+            studentName: '',
+            email: '',
+            examId: 'JEE_MAIN_2025_JAN_SHIFT1',
+            examName: 'JEE Main Jan 2025 - Shift 1',
+            examDate: new Date().toISOString().split('T')[0],
+            startTime: new Date().toISOString(),
+            endTime: null,
+            totalDuration: 180,
+            responses: {},
+            questionTimes: {},
+            subjectTimes: { physics: 0, chemistry: 0, mathematics: 0 },
+            currentQuestion: 1,
+            totalQuestions: 75
+        };
+        
+        // Sample questions data (in real app, load from database)
+        const questionsData = {
+            1: { subject: 'physics', chapter: 'kinematics', correctAnswer: 'B', difficulty: 'easy', type: 'mcq', marks: 4 },
+            2: { subject: 'physics', chapter: 'mechanics', correctAnswer: 'A', difficulty: 'moderate', type: 'mcq', marks: 4 },
+            3: { subject: 'physics', chapter: 'thermodynamics', correctAnswer: 'C', difficulty: 'hard', type: 'mcq', marks: 4 },
+            // Add more questions as needed
+        };
+        
+        // Initialize exam data
+        function initializeExam() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                examData.email = userData.email;
+                examData.studentName = userData.name || userData.email;
+                examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                
+                // Update UI
+                document.getElementById('userName').textContent = examData.studentName;
+                document.getElementById('userId').textContent = examData.studentId;
+                
+                // Update watermarks
+                document.querySelectorAll('.watermark-text').forEach(el => {
+                    el.textContent = examData.studentId;
+                });
+            }
+        }
+        
+        // Track question response
+        function saveResponse(questionId, answer, timeSpent) {
+            examData.responses[questionId] = {
+                questionId: questionId,
+                userAnswer: answer,
+                timeSpent: timeSpent,
+                timestamp: new Date().toISOString(),
+                isAttempted: answer !== null,
+                isMarkedForReview: false
+            };
+        }
+        
+        // Calculate results
+        function calculateResults() {
+            let correct = 0, incorrect = 0, attempted = 0, unattempted = 0;
+            let totalMarks = 0;
+            let subjectStats = {
+                physics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
+                chemistry: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
+                mathematics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 }
+            };
+            
+            for (let i = 1; i <= examData.totalQuestions; i++) {
+                const response = examData.responses[i];
+                const question = questionsData[i];
+                
+                if (!question) continue;
+                
+                if (response && response.isAttempted) {
+                    attempted++;
+                    subjectStats[question.subject].attempted++;
+                    
+                    if (response.userAnswer === question.correctAnswer) {
+                        correct++;
+                        subjectStats[question.subject].correct++;
+                        totalMarks += question.marks;
+                        subjectStats[question.subject].marks += question.marks;
+                    } else {
+                        incorrect++;
+                        subjectStats[question.subject].incorrect++;
+                        // Negative marking: -1 for wrong answer
+                        totalMarks -= 1;
+                        subjectStats[question.subject].marks -= 1;
+                    }
+                } else {
+                    unattempted++;
+                    subjectStats[question.subject].unattempted++;
+                }
+            }
+            
+            return {
+                totalQuestions: examData.totalQuestions,
+                attempted,
+                correct,
+                incorrect,
+                unattempted,
+                totalMarks: Math.max(0, totalMarks),
+                maxMarks: examData.totalQuestions * 4,
+                accuracy: attempted > 0 ? (correct / attempted * 100).toFixed(1) : 0,
+                subjects: subjectStats
+            };
+        }
+        
+        // Save to Firebase
+        async function saveExamResults() {
+            try {
+                const results = calculateResults();
+                examData.endTime = new Date().toISOString();
+                
+                const examResult = {
+                    ...examData,
+                    ...results,
+                    submittedAt: new Date().toISOString(),
+                    createdAt: examData.startTime
+                };
+                
+                // Save to Firebase: /users/{email}/{paperId}
+                const db = firebase.firestore();
+                const docPath = `users/${examData.email}/${examData.examId}`;
+                
+                await db.doc(docPath).set(examResult);
+                
+                console.log('Exam results saved successfully');
+                return examResult;
+            } catch (error) {
+                console.error('Error saving exam results:', error);
+                throw error;
+            }
+        }
+        
+        // Handle exam submission
+        async function handleExamSubmission() {
+            try {
+                // Show loading
+                document.getElementById('confirmSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                document.getElementById('confirmSubmit').disabled = true;
+                
+                // Save results to Firebase
+                const results = await saveExamResults();
+                
+                // Store results in sessionStorage for result page
+                sessionStorage.setItem('examResults', JSON.stringify(results));
+                
+                // Redirect to result page
+                window.location.href = 'result/result.html';
+                
+            } catch (error) {
+                alert('Error submitting exam. Please try again.');
+                document.getElementById('confirmSubmit').innerHTML = 'Submit';
+                document.getElementById('confirmSubmit').disabled = false;
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExam();
+            
+            // Handle submit button click
+            document.getElementById('confirmSubmit').addEventListener('click', handleExamSubmission);
+            
+            // Track question changes and responses
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('option-radio')) {
+                    const questionId = examData.currentQuestion;
+                    const answer = e.target.id.split('-')[1].toUpperCase();
+                    saveResponse(questionId, answer, 30); // Mock time spent
+                }
+            });
+        });
+    </script>
 </body>
 </html>
