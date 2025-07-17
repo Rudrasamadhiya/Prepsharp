@@ -434,6 +434,16 @@
                 
                 <div id="successMessage" class="success-message">Account created successfully! Redirecting to login...</div>
                 
+                <div style="text-align: center; margin: 20px 0; position: relative;">
+                    <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+                    <span style="position: absolute; top: -10px; background: white; padding: 0 15px; left: 50%; transform: translateX(-50%); color: #6b7280;">OR</span>
+                </div>
+                
+                <button type="button" id="google-login" class="register-btn" style="background: white; color: #4285F4; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style="width: 18px; height: 18px;">
+                    <span>Continue with Google</span>
+                </button>
+                
                 <div class="register-footer">
                     Already have an account? <a href="login.html">Login here</a>
                 </div>
@@ -857,6 +867,53 @@
             const success = await sendMobileOTP(this);
             if (success) {
                 document.getElementById('otpSuccess').textContent = 'OTP resent to your mobile! Please check your messages.';
+            }
+        });
+        
+        // Google Sign In
+        document.getElementById('google-login').addEventListener('click', function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            // Use redirect method instead of popup for better compatibility
+            auth.signInWithRedirect(provider);
+        });
+        
+        // Handle the redirect result when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Check if coming back from a redirect sign-in
+                const result = await auth.getRedirectResult();
+                
+                if (result.user) {
+                    // User successfully signed in
+                    const user = result.user;
+                    
+                    // Check if user already exists in Firestore
+                    const userDoc = await db.collection('users').doc(user.email).get();
+                    
+                    if (!userDoc.exists) {
+                        // Save new user data to Firestore
+                        await db.collection('users').doc(user.email).set({
+                            name: user.displayName,
+                            email: user.email,
+                            mobile: user.phoneNumber || '',
+                            subscriptionPlan: 'Free',
+                            createdAt: new Date(),
+                            class: '',
+                            schoolCollege: '',
+                            targetYear: '',
+                            phoneVerified: false,
+                            authProvider: 'google'
+                        });
+                    }
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                if (error.code !== 'auth/null-user') {
+                    console.error('Google sign-in error:', error);
+                    alert('Google sign-in failed: ' + error.message);
+                }
             }
         });
         
