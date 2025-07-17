@@ -876,11 +876,13 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             // Set custom parameters to ensure proper domain display
             provider.setCustomParameters({
-                'prompt': 'select_account',
-                'auth_domain': 'prepsharp.in'
+                'prompt': 'select_account'
             });
             // Use redirect method instead of popup for better compatibility
-            auth.signInWithRedirect(provider);
+            auth.signInWithRedirect(provider).catch(error => {
+                console.error('Google sign-in error:', error);
+                alert('Sign-in failed. Please try again.');
+            });
         });
         
         // Handle the redirect result when page loads
