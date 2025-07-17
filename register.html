@@ -460,11 +460,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-auth-helper.js"></script>
     <script>
         // Initialize Firebase directly
         const firebaseConfig = {
             apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
-            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            authDomain: "prepsharp.in",
             projectId: "prepsharp-c91fd",
             storageBucket: "prepsharp-c91fd.firebasestorage.app",
             messagingSenderId: "688294848433",
@@ -873,6 +874,11 @@
         // Google Sign In
         document.getElementById('google-login').addEventListener('click', function() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            // Set custom parameters to ensure proper domain display
+            provider.setCustomParameters({
+                'prompt': 'select_account',
+                'auth_domain': 'prepsharp.in'
+            });
             // Use redirect method instead of popup for better compatibility
             auth.signInWithRedirect(provider);
         });
