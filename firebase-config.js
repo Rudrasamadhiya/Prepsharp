@@ -32,13 +32,13 @@ async function loadFirebaseConfig() {
     const env = window.env || {};
     
     return {
-      apiKey: env.FIREBASE_API_KEY || 'AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ',
-      authDomain: env.FIREBASE_AUTH_DOMAIN || 'prepsharp.in',
-      projectId: env.FIREBASE_PROJECT_ID || 'prepsharp-c91fd',
-      storageBucket: env.FIREBASE_STORAGE_BUCKET || 'prepsharp-c91fd.firebasestorage.app',
-      messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID || '688294848433',
-      appId: env.FIREBASE_APP_ID || '1:688294848433:web:dd93fc6d61d62392473f90',
-      measurementId: env.FIREBASE_MEASUREMENT_ID || 'G-LLJSLMXMNY'
+      apiKey: env.FIREBASE_API_KEY || '',
+      authDomain: env.FIREBASE_AUTH_DOMAIN || '',
+      projectId: env.FIREBASE_PROJECT_ID || '',
+      storageBucket: env.FIREBASE_STORAGE_BUCKET || '',
+      messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID || '',
+      appId: env.FIREBASE_APP_ID || '',
+      measurementId: env.FIREBASE_MEASUREMENT_ID || ''
     };
   } catch (error) {
     console.error("Error loading Firebase config:", error);
