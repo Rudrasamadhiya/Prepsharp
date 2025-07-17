@@ -872,71 +872,68 @@
         
         // Google Sign In
         document.getElementById('google-login').addEventListener('click', function() {
+            // Force popup method only - don't use redirect which causes issues
             const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({
-                prompt: 'select_account',
-                redirect_uri: window.location.origin + '/dashboard.html'
-            });
-            // Try popup first, fallback to redirect
-            auth.signInWithPopup(provider).catch(error => {
-                console.log('Popup failed, trying redirect', error);
-                auth.signInWithRedirect(provider);
-            });
+            provider.addScope('profile');
+            provider.addScope('email');
+            
+            // Show loading indicator
+            const loadingMessage = document.createElement('div');
+            loadingMessage.id = 'auth-loading';
+            loadingMessage.style.position = 'fixed';
+            loadingMessage.style.top = '0';
+            loadingMessage.style.left = '0';
+            loadingMessage.style.width = '100%';
+            loadingMessage.style.padding = '10px';
+            loadingMessage.style.background = '#4f46e5';
+            loadingMessage.style.color = 'white';
+            loadingMessage.style.textAlign = 'center';
+            loadingMessage.style.zIndex = '9999';
+            loadingMessage.textContent = 'Opening Google Sign-in...';
+            document.body.appendChild(loadingMessage);
+            
+            // Use popup method only
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    console.log('Google sign-in successful');
+                    const user = result.user;
+                    saveUserAndRedirect(user);
+                })
+                .catch(error => {
+                    console.error('Google sign-in error:', error);
+                    loadingMessage.textContent = 'Error: ' + error.message;
+                    loadingMessage.style.background = '#ef4444';
+                    setTimeout(() => loadingMessage.remove(), 5000);
+                    alert('Google sign-in failed: ' + error.message);
+                });
         });
         
-        // Handle the redirect result when page loads
+        // Handle authentication when page loads
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Page loaded, checking auth status...');
             
-            // Show a loading message
-            const loadingMessage = document.createElement('div');
-            loadingMessage.id = 'auth-status';
-            loadingMessage.style.position = 'fixed';
-            loadingMessage.style.bottom = '20px';
-            loadingMessage.style.right = '20px';
-            loadingMessage.style.background = 'rgba(0,0,0,0.7)';
-            loadingMessage.style.color = 'white';
-            loadingMessage.style.padding = '10px 15px';
-            loadingMessage.style.borderRadius = '5px';
-            loadingMessage.style.zIndex = '9999';
-            loadingMessage.textContent = 'Checking authentication status...';
-            document.body.appendChild(loadingMessage);
-            
-            try {
-                // Check if coming back from a redirect sign-in
-                console.log('Checking redirect result...');
-                loadingMessage.textContent = 'Processing sign-in...';
-                const result = await auth.getRedirectResult();
-                console.log('Redirect result:', result);
-                
-                if (result && result.user) {
-                    console.log('User signed in via redirect:', result.user.email);
-                    loadingMessage.textContent = 'Sign-in successful! Redirecting...';
-                    await saveUserAndRedirect(result.user);
-                } else {
-                    console.log('No redirect result user found');
-                    loadingMessage.textContent = 'Checking if already signed in...';
-                }
-            } catch (error) {
-                console.error('Google sign-in error:', error);
-                loadingMessage.textContent = 'Error: ' + error.message;
-                if (error.code !== 'auth/null-user') {
-                    alert('Google sign-in failed: ' + error.message);
-                }
-            }
-            
-            // Also check if user is already signed in
+            // Check if user is already signed in
             auth.onAuthStateChanged(function(user) {
                 if (user) {
                     console.log('User is already signed in:', user.email);
-                    loadingMessage.textContent = 'Already signed in! Redirecting...';
-                    saveUserAndRedirect(user);
-                } else {
-                    console.log('No user is signed in');
-                    loadingMessage.textContent = 'Not signed in';
+                    // Show status message
+                    const statusMessage = document.createElement('div');
+                    statusMessage.id = 'auth-status';
+                    statusMessage.style.position = 'fixed';
+                    statusMessage.style.bottom = '20px';
+                    statusMessage.style.right = '20px';
+                    statusMessage.style.background = '#10b981';
+                    statusMessage.style.color = 'white';
+                    statusMessage.style.padding = '10px 15px';
+                    statusMessage.style.borderRadius = '5px';
+                    statusMessage.style.zIndex = '9999';
+                    statusMessage.textContent = 'Already signed in as ' + user.email + '. Redirecting...';
+                    document.body.appendChild(statusMessage);
+                    
+                    // Redirect to dashboard
                     setTimeout(() => {
-                        loadingMessage.style.display = 'none';
-                    }, 3000);
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 }
             });
         });
