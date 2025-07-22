@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Questions - PrepSharp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+            --physics-color: #FFA500;
+            --chemistry-color: #28A745;
+            --mathematics-color: #007BFF;
+            --gradient-primary: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .chapter-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chapter-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .physics-icon {
+            background: linear-gradient(135deg, #FFA500, #FF6347);
+        }
+        
+        .chemistry-icon {
+            background: linear-gradient(135deg, #28A745, #20c997);
+        }
+        
+        .mathematics-icon {
+            background: linear-gradient(135deg, #007BFF, #6610f2);
+        }
+        
+        .chapter-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .chapter-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        
+        .back-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .filter-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .search-bar {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 25px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            border-left: 4px solid transparent;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .physics-card {
+            border-left-color: var(--physics-color);
+        }
+        
+        .chemistry-card {
+            border-left-color: var(--chemistry-color);
+        }
+        
+        .mathematics-card {
+            border-left-color: var(--mathematics-color);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .question-id {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .question-action {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+        
+        .question-action:hover {
+            color: var(--primary-color);
+        }
+        
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        
+        .question-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .question-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                max-width: 100%;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .filter-group {
+                overflow-x: auto;
+                width: 100%;
+                padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .chapter-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .chapter-icon {
+                margin-bottom: 10px;
+            }
+            
+            .question-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        
+        .question-option {
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f5f7fa;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 20px;
+        }
+        
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .question-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .question-difficulty {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .difficulty-easy {
+            background-color: #e6f7e6;
+            color: #28A745;
+        }
+        
+        .difficulty-medium {
+            background-color: #fff3cd;
+            color: #ffc107;
+        }
+        
+        .difficulty-hard {
+            background-color: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                    <li class="active"><a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a></li>
+                    <li><a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a></li>
+                    <li><a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a></li>
+                    <li><a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="dashboard-content">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; position: relative; padding-bottom: 15px;">
+                    <div class="chapter-header" style="position: relative; z-index: 1;">
+                        <div class="chapter-icon" id="subjectIcon" style="position: relative; overflow: hidden;">
+                            <i class="fas fa-atom" style="position: relative; z-index: 2;"></i>
+                            <div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: rgba(255,255,255,0.2); border-radius: 50%;"></div>
+                            <div style="position: absolute; bottom: -4px; left: -4px; width: 15px; height: 15px; background: rgba(255,255,255,0.15); border-radius: 50%;"></div>
+                        </div>
+                        <div>
+                            <h1 class="chapter-title" id="chapterTitle" style="margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Loading...</h1>
+                            <p class="chapter-subtitle" id="chapterSubtitle" style="margin-top: 8px; display: inline-block; background: rgba(79, 70, 229, 0.1); padding: 4px 10px; border-radius: 12px; font-weight: 500;">Loading...</p>
+                        </div>
+                    </div>
+                    <button class="back-btn" onclick="goBack()" style="background: var(--gradient-primary); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); border-radius: 12px; position: relative; z-index: 1;">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; z-index: 0;"></div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Easy</button>
+                        <button class="filter-btn">Medium</button>
+                        <button class="filter-btn">Hard</button>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search questions...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="filter-btn">
+                            <i class="fas fa-sort"></i> Sort
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="question-list" id="questionList">
+                    <!-- Questions will be loaded dynamically -->
+                </div>
+                
+                <div class="pagination">
+                    <button class="page-btn disabled">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../../js/free-theme-manager.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+        
+        // Get selected chapter, subject and exam from localStorage
+        const selectedChapter = localStorage.getItem('selectedChapter');
+        const selectedSubject = localStorage.getItem('selectedSubject');
+        const selectedExam = localStorage.getItem('selectedExam');
+        
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadUserPreferences();
+            setupChapterInfo();
+            loadQuestions();
+        });
+        
+        // Load user preferences from Firebase
+        async function loadUserPreferences() {
+            try {
+                const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+                if (loggedInUser) {
+                    const userData = JSON.parse(loggedInUser);
+                    const userId = userData.email || 'default-user';
+                    
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().preferences) {
+                        const preferences = doc.data().preferences;
+                        
+                        // Apply dark mode if enabled
+                        if (preferences.darkMode) {
+                            document.body.classList.add('dark-mode');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user preferences:', error);
+            }
+        }
+        
+        // Setup chapter information
+        function setupChapterInfo() {
+            const chapterTitle = document.getElementById('chapterTitle');
+            const chapterSubtitle = document.getElementById('chapterSubtitle');
+            const subjectIcon = document.getElementById('subjectIcon');
+            
+            if (selectedChapter) {
+                chapterTitle.textContent = selectedChapter;
+            }
+            
+            if (selectedSubject) {
+                const subjectName = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
+                const examName = selectedExam === 'mains' ? 'JEE Main' : 'JEE Advanced';
+                chapterSubtitle.textContent = `${subjectName} | ${examName}`;
+                
+                // Set subject-specific icon and color
+                if (selectedSubject === 'physics') {
+                    subjectIcon.className = 'chapter-icon physics-icon';
+                    subjectIcon.innerHTML = '<i class="fas fa-atom"></i>';
+                } else if (selectedSubject === 'chemistry') {
+                    subjectIcon.className = 'chapter-icon chemistry-icon';
+                    subjectIcon.innerHTML = '<i class="fas fa-flask"></i>';
+                } else if (selectedSubject === 'mathematics') {
+                    subjectIcon.className = 'chapter-icon mathematics-icon';
+                    subjectIcon.innerHTML = '<i class="fas fa-calculator"></i>';
+                }
+            }
+        }
+        
+        // Load questions from Firebase
+        async function loadQuestions() {
+            if (!selectedChapter || !selectedSubject || !selectedExam) {
+                console.error('Missing required selection');
+                return;
+            }
+            
+            const questionList = document.getElementById('questionList');
+            questionList.innerHTML = ''; // Clear existing questions
+            
+            try {
+                const examName = selectedExam === 'mains' ? 'JEE Main' : 'JEE Advanced';
+                const subjectName = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
+                
+                // Get questions for the selected chapter
+                const questionsSnapshot = await db.collection('questions')
+                    .doc(examName)
+                    .collection(subjectName)
+                    .doc(selectedChapter)
+                    .collection('items')
+                    .limit(10) // Limit to 10 questions for demo
+                    .get();
+                
+                if (questionsSnapshot.empty) {
+                    questionList.innerHTML = '<p style="text-align: center; padding: 20px;">No questions found for this chapter.</p>';
+                    return;
+                }
+                
+                // Sample questions if Firebase doesn't return any
+                const sampleQuestions = [
+                    {
+                        id: 'Q1',
+                        text: 'A particle moves along a straight line with retardation proportional to its displacement. Its loss of kinetic energy for any displacement x is proportional to:',
+                        options: [
+                            'x',
+                            'x²',
+                            'x³',
+                            'x⁴'
+                        ],
+                        correctAnswer: 1,
+                        difficulty: 'medium',
+                        year: '2022',
+                        paper: 'Paper 1'
+                    },
+                    {
+                        id: 'Q2',
+                        text: 'A block of mass 10 kg is placed on a rough inclined plane of inclination 30°. The coefficient of static friction is 0.6. The frictional force acting on the block is:',
+                        options: [
+                            '49 N',
+                            '51.96 N',
+                            '60 N',
+                            '98 N'
+                        ],
+                        correctAnswer: 1,
+                        difficulty: 'easy',
+                        year: '2021',
+                        paper: 'Paper 2'
+                    },
+                    {
+                        id: 'Q3',
+                        text: 'A uniform magnetic field exists in a region. A charged particle enters the region with velocity perpendicular to the field. The path of the particle will be:',
+                        options: [
+                            'Straight line',
+                            'Parabola',
+                            'Circle',
+                            'Helix'
+                        ],
+                        correctAnswer: 2,
+                        difficulty: 'hard',
+                        year: '2023',
+                        paper: 'Paper 1'
+                    }
+                ];
+                
+                // Use Firebase data if available, otherwise use sample data
+                const questions = questionsSnapshot.empty ? sampleQuestions : questionsSnapshot.docs.map(doc => doc.data());
+                
+                // Create question cards
+                questions.forEach((question, index) => {
+                    // Add animation delay based on index
+                    const delay = index * 0.1;
+                    
+                    // Create question card
+                    const questionCard = document.createElement('div');
+                    questionCard.className = `question-card ${selectedSubject}-card`;
+                    questionCard.style.animationDelay = `${delay}s`;
+                    
+                    // Question ID and actions
+                    const questionHeader = document.createElement('div');
+                    questionHeader.className = 'question-header';
+                    
+                    const questionId = document.createElement('div');
+                    questionId.className = 'question-id';
+                    questionId.textContent = question.id || `Question ${index + 1}`;
+                    
+                    const questionActions = document.createElement('div');
+                    questionActions.className = 'question-actions';
+                    questionActions.innerHTML = `
+                        <button class="question-action" title="Bookmark"><i class="far fa-bookmark"></i></button>
+                        <button class="question-action" title="Share"><i class="far fa-share-square"></i></button>
+                    `;
+                    
+                    questionHeader.appendChild(questionId);
+                    questionHeader.appendChild(questionActions);
+                    
+                    // Question text
+                    const questionText = document.createElement('div');
+                    questionText.className = 'question-text';
+                    questionText.textContent = question.text;
+                    
+                    // Question options
+                    const questionOptions = document.createElement('div');
+                    questionOptions.className = 'question-options';
+                    
+                    const options = question.options || ['Option A', 'Option B', 'Option C', 'Option D'];
+                    const optionLabels = ['A', 'B', 'C', 'D'];
+                    
+                    options.forEach((option, i) => {
+                        const questionOption = document.createElement('div');
+                        questionOption.className = 'question-option';
+                        
+                        const optionLabel = document.createElement('div');
+                        optionLabel.className = 'option-label';
+                        optionLabel.textContent = optionLabels[i];
+                        
+                        const optionText = document.createElement('div');
+                        optionText.textContent = option;
+                        
+                        questionOption.appendChild(optionLabel);
+                        questionOption.appendChild(optionText);
+                        questionOptions.appendChild(questionOption);
+                    });
+                    
+                    // Question footer with metadata
+                    const questionFooter = document.createElement('div');
+                    questionFooter.className = 'question-footer';
+                    
+                    const questionMeta = document.createElement('div');
+                    questionMeta.className = 'question-meta';
+                    
+                    // Year and paper info
+                    const yearInfo = document.createElement('div');
+                    yearInfo.className = 'question-meta-item';
+                    yearInfo.innerHTML = `<i class="far fa-calendar-alt"></i> ${question.year || '2023'}`;
+                    
+                    const paperInfo = document.createElement('div');
+                    paperInfo.className = 'question-meta-item';
+                    paperInfo.innerHTML = `<i class="far fa-file-alt"></i> ${question.paper || 'Paper 1'}`;
+                    
+                    questionMeta.appendChild(yearInfo);
+                    questionMeta.appendChild(paperInfo);
+                    
+                    // Difficulty badge
+                    const difficulty = question.difficulty || ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)];
+                    const difficultyBadge = document.createElement('div');
+                    difficultyBadge.className = `question-difficulty difficulty-${difficulty}`;
+                    difficultyBadge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+                    
+                    questionFooter.appendChild(questionMeta);
+                    questionFooter.appendChild(difficultyBadge);
+                    
+                    // Assemble question card
+                    questionCard.appendChild(questionHeader);
+                    questionCard.appendChild(questionText);
+                    questionCard.appendChild(questionOptions);
+                    questionCard.appendChild(questionFooter);
+                    
+                    questionList.appendChild(questionCard);
+                });
+                
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                questionList.innerHTML = '<p style="text-align: center; padding: 20px;">Error loading questions. Please try again.</p>';
+            }
+        }
+        
+        // Go back to previous page
+        function goBack() {
+            if (selectedSubject === 'physics') {
+                window.location.href = 'jee-mains-physics.html';
+            } else if (selectedSubject === 'chemistry') {
+                window.location.href = 'jee-mains-chemistry.html';
+            } else if (selectedSubject === 'mathematics') {
+                window.location.href = 'jee-mains-mathematics.html';
+            } else {
+                window.location.href = 'question-bank.html';
+            }
+        }
+        
+        // Add event listeners for filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons in the same group
+                this.parentElement.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Filter questions based on selection (not implemented in this demo)
+            });
+        });
+        
+        // Add event listeners for pagination
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            if (!btn.classList.contains('disabled')) {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all page buttons
+                    document.querySelectorAll('.page-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button if it's a number
+                    if (!this.querySelector('i')) {
+                        this.classList.add('active');
+                    }
+                    
+                    // Load questions for selected page (not implemented in this demo)
+                });
+            }
+        });
+    </script>
+</body>
+</html>

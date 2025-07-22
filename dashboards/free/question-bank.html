@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question Bank - PrepSharp Free</title>
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/font-size.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
     <style>
+        :root {
+            --primary-color-transparent: rgba(79, 70, 229, 0.1);
+        }
+        
+        .dark-mode {
+            --primary-color-transparent: rgba(79, 70, 229, 0.2);
+        }
+        
         .panels-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -22,6 +36,7 @@
             text-align: center;
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            color: var(--text-color);
         }
         
         .exam-panel:hover {
@@ -37,7 +52,7 @@
         }
         
         .exam-description {
-            opacity: 0.9;
+            color: var(--text-light);
             margin-bottom: 20px;
         }
         
@@ -70,33 +85,54 @@
         
         .subject-card {
             background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px 25px;
-            text-align: center;
+            border-radius: 12px;
+            padding: 25px;
             cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 2px solid transparent;
+            height: 180px;
         }
         
-        .subject-card::before {
+        .subject-card:nth-child(1) {
+            border-color: #FFA500; /* Orange for Physics */
+        }
+        
+        .subject-card:nth-child(2) {
+            border-color: #28A745; /* Green for Chemistry */
+        }
+        
+        .subject-card:nth-child(3) {
+            border-color: #007BFF; /* Blue for Mathematics */
+        }
+        
+        .subject-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            bottom: 0;
             right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 1;
         }
         
-        .subject-card:nth-child(2)::before {
-            background: linear-gradient(90deg, #059669, #0d9488);
+        .subject-card:nth-child(1)::after {
+            background-color: #FFA500;
         }
         
-        .subject-card:nth-child(3)::before {
-            background: linear-gradient(90deg, #dc2626, #ef4444);
+        .subject-card:nth-child(2)::after {
+            background-color: #28A745;
+        }
+        
+        .subject-card:nth-child(3)::after {
+            background-color: #007BFF;
         }
         
         .subject-card::after {
@@ -106,44 +142,84 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.1), transparent);
+            background: radial-gradient(circle, var(--primary-color-transparent), transparent);
             transform: translate(-50%, -50%);
             transition: all 0.4s ease;
             border-radius: 50%;
         }
         
         .subject-card:hover {
-            transform: translateY(-12px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border-color: #4f46e5;
-        }
-        
-        .subject-card:hover::after {
-            width: 200px;
-            height: 200px;
-        }
-        
-        .subject-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            display: block;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
         
         .subject-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.4rem;
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-color);
             position: relative;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .subject-card h3 .arrow {
+            font-size: 1rem;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+        
+        .subject-card:hover h3 .arrow {
+            transform: translateX(5px);
         }
         
         .subject-total {
-            font-size: 0.9rem;
-            color: #6b7280;
+            font-size: 0.95rem;
+            color: var(--text-light);
             font-weight: 500;
             position: relative;
             z-index: 2;
+            margin-bottom: 5px;
+        }
+        
+        .subject-chapters {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 15px;
+        }
+        
+        .subject-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            z-index: 3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .subject-card:nth-child(1) .subject-icon {
+            background-color: #FFA500; /* Orange for Physics */
+        }
+        
+        .subject-card:nth-child(2) .subject-icon {
+            background-color: #28A745; /* Green for Chemistry */
+        }
+        
+        .subject-card:nth-child(3) .subject-icon {
+            background-color: #007BFF; /* Blue for Mathematics */
         }
         
         .chapter-grid {
@@ -186,7 +262,7 @@
             right: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.05), transparent);
+            background: linear-gradient(90deg, transparent, var(--primary-color-transparent), transparent);
             transition: right 0.4s ease;
         }
         
@@ -228,7 +304,7 @@
         
         .chapter-subtitle {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: var(--text-light);
             margin: 0;
         }
         
@@ -276,7 +352,7 @@
         
         .question-header {
             padding: 20px 25px 15px;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -304,7 +380,7 @@
             object-position: top;
             margin-bottom: 20px;
             transition: transform 0.3s ease;
-            background: #f8fafc;
+            background: var(--bg-light);
         }
         
         .question-item img:hover {
@@ -322,11 +398,11 @@
             align-items: center;
             gap: 8px;
             padding: 8px 12px;
-            background: #f8fafc;
+            background: var(--bg-light);
             border-radius: 12px;
             font-size: 14px;
             font-weight: 500;
-            color: #64748b;
+            color: var(--text-light);
         }
         
         .meta-icon {
@@ -354,6 +430,9 @@
     </style>
 </head>
 <body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -391,7 +470,7 @@
                         <button class="exam-btn">Start Practice</button>
                     </div>
                     
-                    <div class="exam-panel" onclick="selectExam('mains')">
+                    <div class="exam-panel" onclick="window.location.href='jee-mains-subjects.html'">
                         <div class="exam-icon">
                             <img src="../../images/jee mains.png" alt="JEE Mains" style="width: 80px; height: 80px;">
                         </div>
@@ -406,19 +485,22 @@
                     <h2>Choose Subject</h2>
                     <div class="subject-grid">
                         <div class="subject-card" onclick="selectSubject('physics')">
-                            <div class="subject-icon">⚛️</div>
-                            <h3>Physics</h3>
+                            <h3>Physics <span class="arrow"><i class="fas fa-chevron-right"></i></span></h3>
+                            <div class="subject-chapters" id="physics-chapters">42 Chapters</div>
                             <div class="subject-total" id="physics-total">Loading...</div>
+                            <div class="subject-icon"><i class="fas fa-atom"></i></div>
                         </div>
                         <div class="subject-card" onclick="selectSubject('chemistry')">
-                            <div class="subject-icon">🧪</div>
-                            <h3>Chemistry</h3>
+                            <h3>Chemistry <span class="arrow"><i class="fas fa-chevron-right"></i></span></h3>
+                            <div class="subject-chapters" id="chemistry-chapters">33 Chapters</div>
                             <div class="subject-total" id="chemistry-total">Loading...</div>
+                            <div class="subject-icon"><i class="fas fa-flask"></i></div>
                         </div>
                         <div class="subject-card" onclick="selectSubject('mathematics')">
-                            <div class="subject-icon">📐</div>
-                            <h3>Mathematics</h3>
+                            <h3>Mathematics <span class="arrow"><i class="fas fa-chevron-right"></i></span></h3>
+                            <div class="subject-chapters" id="mathematics-chapters">36 Chapters</div>
                             <div class="subject-total" id="mathematics-total">Loading...</div>
+                            <div class="subject-icon"><i class="fas fa-calculator"></i></div>
                         </div>
                     </div>
                 </div>
@@ -440,6 +522,8 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../../js/free-theme-manager.js"></script>
+    <script src="../../js/mobile.js"></script>
     <script>
         let selectedExam = '';
         let selectedSubject = '';
@@ -465,6 +549,9 @@
         
         // Restore state on page load
         window.addEventListener('load', function() {
+            // Load user preferences
+            loadUserPreferences();
+            
             const savedExam = localStorage.getItem('selectedExam');
             const savedSubject = localStorage.getItem('selectedSubject');
             const savedChapter = localStorage.getItem('selectedChapter');
@@ -491,6 +578,34 @@
                 loadSubjectTotals();
             }
         });
+        
+        // Load user preferences from Firebase
+        async function loadUserPreferences() {
+            try {
+                const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+                if (loggedInUser) {
+                    const userData = JSON.parse(loggedInUser);
+                    const userId = userData.email || 'default-user';
+                    
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().preferences) {
+                        const preferences = doc.data().preferences;
+                        
+                        // Apply dark mode if enabled
+                        if (preferences.darkMode) {
+                            document.body.classList.add('dark-mode');
+                        }
+                        
+                        // Apply font size
+                        if (preferences.fontSize) {
+                            document.documentElement.setAttribute('data-font-size', preferences.fontSize);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user preferences:', error);
+            }
+        }
         
         function selectExam(exam) {
             selectedExam = exam;
@@ -535,14 +650,19 @@
                     const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
                     let totalQuestions = 0;
                     
+                    // Update chapter count
+                    const chapterCount = chapters[subject].length;
+                    document.getElementById(`${subject}-chapters`).textContent = `${chapterCount} Chapters`;
+                    
                     for (const chapter of chapters[subject]) {
                         const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
                         totalQuestions += itemsSnapshot.size;
                     }
                     
-                    document.getElementById(`${subject}-total`).textContent = `${totalQuestions} questions`;
+                    document.getElementById(`${subject}-total`).textContent = `${totalQuestions} Questions`;
                 } catch (error) {
-                    document.getElementById(`${subject}-total`).textContent = '0 questions';
+                    document.getElementById(`${subject}-total`).textContent = '0 Questions';
+                    document.getElementById(`${subject}-chapters`).textContent = '0 Chapters';
                 }
             }
         }

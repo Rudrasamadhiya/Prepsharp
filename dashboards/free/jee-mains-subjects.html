@@ -311,11 +311,11 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Total Papers</div>
-                    <div class="stat-value">-</div>
+                    <div class="stat-value">Loading...</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Total Questions</div>
-                    <div class="stat-value">-</div>
+                    <div class="stat-value">Loading...</div>
                 </div>
             </div>
         </div>
@@ -326,33 +326,33 @@
         
         <h2>Subject-wise Question Distribution</h2>
         <div class="subject-grid">
-            <div class="subject-card" onclick="selectSubject('physics')">
+            <div class="subject-card" onclick="window.location.href='jee-mains-physics.html'">
                 <h3>
                     <div class="subject-name">Physics</div>
                     <span class="arrow"><i class="fas fa-chevron-right"></i></span>
                 </h3>
-                <div class="subject-chapters">42 Chapters</div>
-                <div class="subject-total">- Questions</div>
+                <div class="subject-chapters">32 Chapters</div>
+                <div class="subject-total">Loading...</div>
                 <div class="subject-icon"><i class="fas fa-atom"></i></div>
             </div>
             
-            <div class="subject-card" onclick="selectSubject('chemistry')">
+            <div class="subject-card" onclick="window.location.href='jee-mains-chemistry.html'">
                 <h3>
                     <div class="subject-name">Chemistry</div>
                     <span class="arrow"><i class="fas fa-chevron-right"></i></span>
                 </h3>
                 <div class="subject-chapters">33 Chapters</div>
-                <div class="subject-total">- Questions</div>
+                <div class="subject-total">Loading...</div>
                 <div class="subject-icon"><i class="fas fa-flask"></i></div>
             </div>
             
-            <div class="subject-card" onclick="selectSubject('mathematics')">
+            <div class="subject-card" onclick="window.location.href='jee-mains-mathematics.html'">
                 <h3>
                     <div class="subject-name">Mathematics</div>
                     <span class="arrow"><i class="fas fa-chevron-right"></i></span>
                 </h3>
                 <div class="subject-chapters">36 Chapters</div>
-                <div class="subject-total">- Questions</div>
+                <div class="subject-total">Loading...</div>
                 <div class="subject-icon"><i class="fas fa-calculator"></i></div>
             </div>
         </div>
@@ -448,13 +448,14 @@
                 if (statsSnapshot.exists) {
                     const stats = statsSnapshot.data();
                     document.querySelector('.stat-item:nth-child(2) .stat-value').textContent = stats.totalPapers || '-';
-                    document.querySelector('.stat-item:nth-child(3) .stat-value').textContent = stats.totalQuestions || '-';
                 }
             } catch (error) {
                 console.error('Error loading stats:', error);
             }
             
-            // Update subject data
+            // Update subject data and count total questions
+            let grandTotalQuestions = 0;
+            
             for (const subject of subjects) {
                 try {
                     const examName = 'JEE Main';
@@ -470,20 +471,29 @@
                         }
                     }
                     
+                    // Add to grand total
+                    grandTotalQuestions += totalQuestions;
+                    
                     // Update the subject card with real data
                     const subjectCard = document.querySelector(`.subject-card:nth-child(${subjects.indexOf(subject) + 1})`);
                     if (subjectCard) {
                         const totalElement = subjectCard.querySelector('.subject-total');
                         if (totalElement) {
-                            totalElement.textContent = totalQuestions > 0 ? `${totalQuestions} Questions` : '- Questions';
+                            totalElement.textContent = totalQuestions > 0 ? `${totalQuestions} Questions` : 'Loading...';
                         }
                     }
                 } catch (error) {
                     console.error(`Error loading ${subject} data:`, error);
                 }
             }
+            
+            // Update the total questions in stats
+            document.querySelector('.stat-item:nth-child(3) .stat-value').textContent = 
+                grandTotalQuestions > 0 ? grandTotalQuestions.toString() : 'Loading...';
         }
         
+        // This function is no longer used as we now directly link to subject pages
+        // Kept for reference
         function selectSubject(subject) {
             localStorage.setItem('selectedSubject', subject);
             localStorage.setItem('selectedExam', 'mains');
