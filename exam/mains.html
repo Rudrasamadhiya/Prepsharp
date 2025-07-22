@@ -8,6 +8,56 @@
     <title>JEE Main 2024 27 Jan Shift 1 - PrepSharp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="exam-style.css">
+    <style>
+        /* Styles for numerical input */
+        .numerical-input {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+        
+        .numerical-field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        
+        .numerical-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4f46e5;
+        }
+        
+        .numerical-textbox {
+            padding: 12px 15px;
+            border: 2px solid rgba(79, 70, 229, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .numerical-textbox:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            outline: none;
+        }
+        
+        .numerical-instructions {
+            font-size: 14px;
+            color: #6b7280;
+            background: rgba(79, 70, 229, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #4f46e5;
+        }
+        
+        .numerical-instructions p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body onload="goFullScreen()">
     <div class="exam-container">
@@ -106,36 +156,79 @@
                             </div>
                             
                             <div class="options" id="optionsList">
-                                <div class="option">
-                                    <input type="radio" name="q3" id="q3-a" class="option-radio">
-                                    <label for="q3-a" class="option-label">
-                                        <div class="option-letter">a)</div>
-                                        <div class="option-text">L²/2mr² - kr²/2</div>
-                                    </label>
+                                <!-- For MCQ questions -->
+                                <div class="mcq-options" id="mcqOptions">
+                                    <div class="option">
+                                        <input type="radio" name="q3" id="q3-a" class="option-radio">
+                                        <label for="q3-a" class="option-label">
+                                            <div class="option-letter">a)</div>
+                                            <div class="option-text">L²/2mr² - kr²/2</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q3" id="q3-b" class="option-radio">
+                                        <label for="q3-b" class="option-label">
+                                            <div class="option-letter">b)</div>
+                                            <div class="option-text">L²/2mr² + kr²/2</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q3" id="q3-c" class="option-radio">
+                                        <label for="q3-c" class="option-label">
+                                            <div class="option-letter">c)</div>
+                                            <div class="option-text">L²/2mr² - kr²</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
+                                        <label for="q3-d" class="option-label">
+                                            <div class="option-letter">d)</div>
+                                            <div class="option-text">L²/mr² - kr²/2</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Numerical Answer Section (for Section 2) -->
+                            <div id="numericalSection" style="display: none; margin-top: 20px; background: #fffde7; border-radius: 12px; padding: 20px; border: 2px solid #f9a825; box-shadow: 0 4px 8px rgba(249, 168, 37, 0.15);">
+                                <h3 style="margin-top: 0; color: #f9a825; font-size: 18px; text-align: center;">Numerical Answer</h3>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <label for="numerical-answer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #f57f17;">Your Answer:</label>
+                                    <input type="text" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);" readonly>
                                 </div>
                                 
-                                <div class="option">
-                                    <input type="radio" name="q3" id="q3-b" class="option-radio">
-                                    <label for="q3-b" class="option-label">
-                                        <div class="option-letter">b)</div>
-                                        <div class="option-text">L²/2mr² + kr²/2</div>
-                                    </label>
+                                <!-- On-screen keyboard -->
+                                <div class="virtual-keyboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; max-width: 300px; margin: 0 auto 15px;">
+                                    <button class="num-key" data-value="1" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">1</button>
+                                    <button class="num-key" data-value="2" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">2</button>
+                                    <button class="num-key" data-value="3" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">3</button>
+                                    <button class="num-key" data-value="+" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">+</button>
+                                    <button class="num-key" data-value="4" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">4</button>
+                                    <button class="num-key" data-value="5" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">5</button>
+                                    <button class="num-key" data-value="6" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">6</button>
+                                    <button class="num-key" data-value="-" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">-</button>
+                                    <button class="num-key" data-value="7" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">7</button>
+                                    <button class="num-key" data-value="8" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">8</button>
+                                    <button class="num-key" data-value="9" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">9</button>
+                                    <button class="num-key" data-value="." style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">.</button>
+                                    <button class="num-key" data-value="0" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;">0</button>
+                                    <button id="backspace" style="padding: 8px; font-size: 16px; background: #fff59d; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;"><i class="fas fa-backspace"></i></button>
+                                    <button id="clear-all" style="padding: 8px; font-size: 16px; background: #ffee58; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 4; margin-top: 6px;">Clear</button>
                                 </div>
                                 
-                                <div class="option">
-                                    <input type="radio" name="q3" id="q3-c" class="option-radio">
-                                    <label for="q3-c" class="option-label">
-                                        <div class="option-letter">c)</div>
-                                        <div class="option-text">L²/2mr² - kr²</div>
-                                    </label>
-                                </div>
-                                
-                                <div class="option">
-                                    <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
-                                    <label for="q3-d" class="option-label">
-                                        <div class="option-letter">d)</div>
-                                        <div class="option-text">L²/mr² - kr²/2</div>
-                                    </label>
+                                <div style="background: #fff8e1; padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ffca28;">
+                                    <p style="margin: 0; font-size: 14px; color: #f57f17;"><strong>Instructions:</strong></p>
+                                    <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 14px; color: #795548;">
+                                        <li>Enter your numerical answer using the keypad above</li>
+                                        <li>Use decimal point (.) for decimal values if needed</li>
+                                        <li>Use minus (-) for negative values if needed</li>
+                                        <li>Use plus (+) for positive values if needed</li>
+                                        <li>Do not include units in your answer</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -314,6 +407,16 @@
                 examData.studentName = userData.name || userData.email;
                 examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
                 
+                // Get exam ID from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const examId = urlParams.get('examId');
+                if (examId) {
+                    examData.examId = examId;
+                    // Update exam name based on exam ID if needed
+                    // This is a placeholder - you may want to fetch the actual name from your database
+                    examData.examName = examId.replace(/_/g, ' ');
+                }
+                
                 // Update UI
                 document.getElementById('userName').textContent = examData.studentName;
                 document.getElementById('userId').textContent = examData.studentId;
@@ -326,15 +429,54 @@
         }
         
         // Track question response
-        function saveResponse(questionId, answer, timeSpent) {
-            examData.responses[questionId] = {
+        function saveResponse(questionId, answer, timeSpent, isNumerical = false) {
+            const response = {
                 questionId: questionId,
                 userAnswer: answer,
                 timeSpent: timeSpent,
                 timestamp: new Date().toISOString(),
                 isAttempted: answer !== null,
-                isMarkedForReview: false
+                isMarkedForReview: false,
+                isNumerical: isNumerical
             };
+            
+            examData.responses[questionId] = response;
+            return response;
+        }
+        
+        // Update question display based on section type
+        function updateQuestionDisplay() {
+            const questionId = examData.currentQuestion;
+            
+            if (isCurrentSectionNumerical()) {
+                setQuestionType('numerical');
+                
+                // Clear any selected MCQ options if switching to numerical
+                document.querySelectorAll('.option-radio').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Load saved numerical answer if it exists
+                const savedResponse = examData.responses[questionId];
+                if (savedResponse && savedResponse.isNumerical) {
+                    document.getElementById('numerical-answer').value = savedResponse.userAnswer || '';
+                } else {
+                    document.getElementById('numerical-answer').value = '';
+                }
+            } else {
+                setQuestionType('mcq');
+                
+                // Clear numerical input
+                document.getElementById('numerical-answer').value = '';
+                
+                // Load saved MCQ answer if it exists
+                const savedResponse = examData.responses[questionId];
+                if (savedResponse && !savedResponse.isNumerical && savedResponse.userAnswer) {
+                    const radioId = `q${questionId}-${savedResponse.userAnswer.toLowerCase()}`;
+                    const radioElement = document.getElementById(radioId);
+                    if (radioElement) radioElement.checked = true;
+                }
+            }
         }
         
         // Calculate results
@@ -437,6 +579,26 @@
             }
         }
         
+        // Function to toggle question type (MCQ or Numerical)
+        function setQuestionType(type) {
+            const mcqOptions = document.getElementById('mcqOptions');
+            const numericalSection = document.getElementById('numericalSection');
+            
+            if (type === 'numerical') {
+                mcqOptions.style.display = 'none';
+                numericalSection.style.display = 'block';
+            } else { // 'mcq'
+                mcqOptions.style.display = 'block';
+                numericalSection.style.display = 'none';
+            }
+        }
+        
+        // Function to check if current section is a Section 2 (numerical)
+        function isCurrentSectionNumerical() {
+            const currentSection = document.querySelector('.section-tab.active').textContent;
+            return currentSection.includes('Section 2');
+        }
+        
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeExam();
@@ -444,12 +606,159 @@
             // Handle submit button click
             document.getElementById('confirmSubmit').addEventListener('click', handleExamSubmission);
             
+            // Set up on-screen keyboard functionality
+            setupVirtualKeyboard();
+            
+            // Force show numerical input for testing
+            setQuestionType('numerical');
+            
+            // Uncomment this when done testing
+            /*
+            // Set initial question type based on current section
+            if (isCurrentSectionNumerical()) {
+                setQuestionType('numerical');
+            } else {
+                setQuestionType('mcq');
+            }
+            */
+            
+            // Function to set up the virtual keyboard
+            function setupVirtualKeyboard() {
+                const numericInput = document.getElementById('numerical-answer');
+                const numKeys = document.querySelectorAll('.num-key');
+                const backspace = document.getElementById('backspace');
+                const clearAll = document.getElementById('clear-all');
+                
+                // Add click handlers for number keys
+                numKeys.forEach(key => {
+                    key.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        numericInput.value += value;
+                        saveNumericalResponse();
+                    });
+                });
+                
+                // Add click handler for backspace
+                backspace.addEventListener('click', function() {
+                    numericInput.value = numericInput.value.slice(0, -1);
+                    saveNumericalResponse();
+                });
+                
+                // Add click handler for clear all
+                clearAll.addEventListener('click', function() {
+                    numericInput.value = '';
+                    saveNumericalResponse();
+                });
+                
+                // Function to save the numerical response
+                function saveNumericalResponse() {
+                    const questionId = examData.currentQuestion;
+                    const answer = numericInput.value;
+                    if (answer.trim() !== '') {
+                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                    } else {
+                        // If answer is cleared, save null
+                        saveResponse(questionId, null, 30, true);
+                    }
+                }
+            }
+            
+            // Add click handlers for section tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // First handle the active tab UI (this should be in your existing code)
+                    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update question display based on section
+                    updateQuestionDisplay();
+                });
+            });
+            
+            // Add handlers for navigation buttons
+            document.getElementById('prevQuestion').addEventListener('click', function() {
+                // Your existing prev question logic would be here
+                // After changing the question, update display:
+                updateQuestionDisplay();
+            });
+            
+            document.getElementById('nextQuestion').addEventListener('click', function() {
+                // Save the current answer before moving to next question
+                const questionId = examData.currentQuestion;
+                
+                // Check if we're in a numerical section
+                if (isCurrentSectionNumerical()) {
+                    const numericalAnswer = document.getElementById('numerical-answer').value;
+                    if (numericalAnswer.trim() !== '') {
+                        saveResponse(questionId, numericalAnswer, 30, true);
+                        
+                        // Update the question palette to show this question as answered
+                        const questionBtn = document.querySelector(`.question-btn:nth-child(${questionId})`);
+                        if (questionBtn) {
+                            questionBtn.classList.remove('not-visited', 'not-answered');
+                            questionBtn.classList.add('answered');
+                        }
+                    }
+                }
+                
+                // Your existing next question logic would be here
+                // After changing the question, update display:
+                updateQuestionDisplay();
+            });
+            
+            document.getElementById('markQuestion').addEventListener('click', function() {
+                // Save the current answer and mark for review
+                const questionId = examData.currentQuestion;
+                
+                // Check if we're in a numerical section
+                if (isCurrentSectionNumerical()) {
+                    const numericalAnswer = document.getElementById('numerical-answer').value;
+                    if (numericalAnswer.trim() !== '') {
+                        // Save response and mark for review
+                        const response = saveResponse(questionId, numericalAnswer, 30, true);
+                        if (response) response.isMarkedForReview = true;
+                        
+                        // Update the question palette to show this question as marked
+                        const questionBtn = document.querySelector(`.question-btn:nth-child(${questionId})`);
+                        if (questionBtn) {
+                            questionBtn.classList.remove('not-visited', 'not-answered');
+                            questionBtn.classList.add('answered-marked');
+                        }
+                    }
+                }
+                
+                // Your existing mark for review logic would be here
+                // After changing the question, update display:
+                updateQuestionDisplay();
+            });
+            
             // Track question changes and responses
             document.addEventListener('change', function(e) {
+                const questionId = examData.currentQuestion;
+                
+                // For MCQ options
                 if (e.target.classList.contains('option-radio')) {
-                    const questionId = examData.currentQuestion;
                     const answer = e.target.id.split('-')[1].toUpperCase();
                     saveResponse(questionId, answer, 30); // Mock time spent
+                }
+                
+                // For numerical input
+                if (e.target.id === 'numerical-answer') {
+                    const answer = e.target.value;
+                    if (answer.trim() !== '') {
+                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                    }
+                }
+            });
+            
+            // Also track input for numerical questions
+            document.addEventListener('input', function(e) {
+                if (e.target.id === 'numerical-answer') {
+                    const questionId = examData.currentQuestion;
+                    const answer = e.target.value;
+                    if (answer.trim() !== '') {
+                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                    }
                 }
             });
         });

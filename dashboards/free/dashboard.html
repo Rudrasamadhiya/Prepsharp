@@ -288,9 +288,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(3px);
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(1px);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 10;
@@ -299,13 +300,14 @@
         }
         
         .locked-overlay:hover {
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.5);
         }
         
         .locked-icon {
             font-size: 28px;
-            color: #9ca3af;
+            color: #4f46e5;
             opacity: 0.8;
+            margin-bottom: 10px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
@@ -313,6 +315,15 @@
             transform: scale(1.2) rotate(10deg);
             color: #4f46e5;
             opacity: 1;
+        }
+        
+        .locked-text {
+            font-weight: 600;
+            color: #4f46e5;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
         }
     </style>
     <!-- Google Analytics -->
@@ -378,11 +389,6 @@
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div class="user-actions">
-                    <div class="notification-bell">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-count">7</span>
-                    </div>
-                    
                     <div class="user-profile" id="userProfile">
                         <div class="avatar-initials" id="userInitials">L</div>
                         <span class="user-name" id="loggedInUserName">Loading...</span>
@@ -433,25 +439,25 @@
                 <div class="stats-grid" style="animation: fadeIn 0.8s ease-out 0.1s both;">
                     <div class="stat-card" style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #4f46e5; animation: slideIn 0.6s ease-out both; position: relative; overflow: hidden;">
                         <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
-                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">85%</div>
+                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">-</div>
                         <div class="stat-label" style="font-size: 15px; color: #6b7280; font-weight: 500;">Overall Progress</div>
                     </div>
                     
                     <div class="stat-card" style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #4f46e5; animation: slideIn 0.6s ease-out 0.1s both; position: relative; overflow: hidden;">
                         <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
-                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">Top 8%</div>
+                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">-</div>
                         <div class="stat-label" style="font-size: 15px; color: #6b7280; font-weight: 500;">Performance Rank</div>
                     </div>
                     
                     <div class="stat-card" style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #4f46e5; animation: slideIn 0.6s ease-out 0.2s both; position: relative; overflow: hidden;">
                         <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
-                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">42</div>
+                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">-</div>
                         <div class="stat-label" style="font-size: 15px; color: #6b7280; font-weight: 500;">Papers Completed</div>
                     </div>
                     
                     <div class="stat-card" style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #4f46e5; animation: slideIn 0.6s ease-out 0.3s both; position: relative; overflow: hidden;">
                         <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
-                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">128</div>
+                        <div class="stat-value" style="font-size: 36px; font-weight: 800;">-</div>
                         <div class="stat-label" style="font-size: 15px; color: #6b7280; font-weight: 500;">Study Hours</div>
                     </div>
                 </div>
@@ -515,21 +521,27 @@
                         <div style="height: 250px; margin-bottom: 15px;">
                             <canvas id="performanceChart"></canvas>
                         </div>
+                        <div id="chartLoading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(255,255,255,0.7);">
+                            <div style="text-align: center;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #4f46e5; margin-bottom: 10px;"></i>
+                                <div>Loading data...</div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- Today's Tasks (Basic) -->
-                    <div style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #10b981; position: relative; overflow: hidden; animation: slideIn 0.6s ease-out 0.1s both;">
-                        <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0) 70%); border-radius: 50%;"></div>
+                    <!-- Today's Tasks (Premium) -->
+                    <div style="background-color: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 25px; border-top: 4px solid #4f46e5; position: relative; overflow: hidden; animation: slideIn 0.6s ease-out 0.1s both;">
+                        <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, rgba(139, 92, 246, 0) 70%); border-radius: 50%;"></div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                             <div style="font-size: 20px; font-weight: 700; color: var(--text-color); position: relative; padding-left: 15px;">
                                 Today's Tasks
-                                <span style="font-size: 12px; background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); color: #10b981; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1);">Basic</span>
+                                <span style="font-size: 12px; background: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.2)); color: #4f46e5; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);">Premium</span>
                             </div>
                             <div>
-                                <a href="study-plan.html" style="color: #10b981; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s ease;">View All</a>
+                                <a href="study-plan.html" style="color: #4f46e5; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s ease;">View All</a>
                             </div>
                         </div>
-                        <div style="position: absolute; margin-left: -15px; margin-top: -42px; width: 5px; height: 25px; background: linear-gradient(to bottom, #10b981, #059669); border-radius: 5px;"></div>
+                        <div style="position: absolute; margin-left: -15px; margin-top: -42px; width: 5px; height: 25px; background: linear-gradient(to bottom, #4f46e5, #8b5cf6); border-radius: 5px;"></div>
                         
                         <ul style="list-style: none; padding: 0; margin: 0;">
                             <li style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); transition: all 0.3s ease;">
@@ -569,6 +581,12 @@
                                 </div>
                             </li>
                         </ul>
+                        <div class="locked-overlay" onclick="window.location.href='../../subscription.html'">
+                            <div class="locked-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="locked-text">Upgrade to Premium</div>
+                        </div>
                     </div>
                 </div>
                 
@@ -597,6 +615,7 @@
                             <div class="locked-icon">
                                 <i class="fas fa-lock"></i>
                             </div>
+                            <div class="locked-text">Upgrade to Premium</div>
                         </div>
                     </div>
                     
@@ -618,6 +637,7 @@
                             <div class="locked-icon">
                                 <i class="fas fa-lock"></i>
                             </div>
+                            <div class="locked-text">Upgrade to Premium</div>
                         </div>
                     </div>
                     
@@ -639,6 +659,7 @@
                             <div class="locked-icon">
                                 <i class="fas fa-lock"></i>
                             </div>
+                            <div class="locked-text">Upgrade to Premium</div>
                         </div>
                     </div>
                 </div>
@@ -751,6 +772,157 @@
             }
         }
         
+        // Load dashboard statistics from Firebase
+        async function loadDashboardStats() {
+            try {
+                const userId = getUserId();
+                
+                // Get user's exam results
+                const examResults = await db.collection('users').doc(userId).collection('exams').get();
+                
+                if (!examResults.empty) {
+                    let totalScore = 0;
+                    let completedPapers = 0;
+                    let totalStudyHours = 0;
+                    let physicsScores = [];
+                    let chemistryScores = [];
+                    let mathScores = [];
+                    let examDates = [];
+                    
+                    // Process exam results
+                    const examArray = [];
+                    examResults.forEach(doc => {
+                        const exam = doc.data();
+                        exam.id = doc.id;
+                        examArray.push(exam);
+                    });
+                    
+                    // Sort exams by date
+                    examArray.sort((a, b) => {
+                        const dateA = a.submittedAt ? new Date(a.submittedAt) : new Date(0);
+                        const dateB = b.submittedAt ? new Date(b.submittedAt) : new Date(0);
+                        return dateA - dateB;
+                    });
+                    
+                    // Process sorted exams
+                    examArray.forEach(exam => {
+                        totalScore += exam.accuracy || 0;
+                        completedPapers++;
+                        
+                        // Add exam date to array
+                        if (exam.submittedAt) {
+                            const examDate = new Date(exam.submittedAt);
+                            examDates.push(examDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                        }
+                        
+                        // Calculate study hours (assuming average 2 hours per exam)
+                        const examDuration = exam.endTime && exam.startTime ? 
+                            (new Date(exam.endTime) - new Date(exam.startTime)) / (1000 * 60 * 60) : 2;
+                        totalStudyHours += examDuration;
+                        
+                        // Collect subject scores if available
+                        if (exam.subjects) {
+                            if (exam.subjects.physics) {
+                                const physicsScore = exam.subjects.physics.attempted > 0 ? 
+                                    (exam.subjects.physics.correct / exam.subjects.physics.attempted * 100) : 0;
+                                physicsScores.push(physicsScore);
+                            }
+                            if (exam.subjects.chemistry) {
+                                const chemistryScore = exam.subjects.chemistry.attempted > 0 ? 
+                                    (exam.subjects.chemistry.correct / exam.subjects.chemistry.attempted * 100) : 0;
+                                chemistryScores.push(chemistryScore);
+                            }
+                            if (exam.subjects.mathematics) {
+                                const mathScore = exam.subjects.mathematics.attempted > 0 ? 
+                                    (exam.subjects.mathematics.correct / exam.subjects.mathematics.attempted * 100) : 0;
+                                mathScores.push(mathScore);
+                            }
+                        }
+                    });
+                    
+                    // Calculate overall progress (average score)
+                    const overallProgress = completedPapers > 0 ? Math.round(totalScore / completedPapers) : 0;
+                    
+                    // Update stats in the UI
+                    document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = `${overallProgress}%`;
+                    document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = completedPapers;
+                    document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = Math.round(totalStudyHours);
+                    
+                    // Calculate performance rank (placeholder - would need actual ranking data)
+                    // For now, we'll use a formula based on overall progress
+                    const performanceRank = overallProgress > 90 ? 'Top 5%' : 
+                                          overallProgress > 80 ? 'Top 10%' : 
+                                          overallProgress > 70 ? 'Top 20%' : 
+                                          overallProgress > 60 ? 'Top 30%' : 'Top 50%';
+                    document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = performanceRank;
+                    
+                    // Update performance chart with real data and actual dates
+                    updatePerformanceChart(physicsScores, chemistryScores, mathScores, examDates);
+                } else {
+                    // No exam results found, set default values
+                    document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = '0%';
+                    document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = '-';
+                    document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = '0';
+                    document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = '0';
+                    
+                    // Hide loading indicator even when no data
+                    const loadingElement = document.getElementById('chartLoading');
+                    if (loadingElement) {
+                        loadingElement.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                // Set default values in case of error
+                document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = '-';
+                document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = '-';
+                document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = '-';
+                document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = '-';
+                
+                // Hide loading indicator on error
+                const loadingElement = document.getElementById('chartLoading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+            }
+        }
+        
+        // Update performance chart with real data
+        function updatePerformanceChart(physicsScores, chemistryScores, mathScores, examDates = []) {
+            // Take the last 7 scores or fewer if not enough data
+            const maxPoints = 7;
+            const physics = physicsScores.slice(-maxPoints);
+            const chemistry = chemistryScores.slice(-maxPoints);
+            const math = mathScores.slice(-maxPoints);
+            
+            // Generate labels based on exam dates or default to Test numbers
+            let labels = [];
+            const maxLength = Math.max(physics.length, chemistry.length, math.length);
+            
+            if (examDates.length > 0) {
+                // Use actual exam dates as labels
+                labels = examDates.slice(-maxPoints);
+            } else {
+                // Fallback to generic test numbers
+                for (let i = 0; i < maxLength; i++) {
+                    labels.push(`Test ${i+1}`);
+                }
+            }
+            
+            // Update chart data
+            performanceChart.data.labels = labels;
+            performanceChart.data.datasets[0].data = physics;
+            performanceChart.data.datasets[1].data = chemistry;
+            performanceChart.data.datasets[2].data = math;
+            performanceChart.update();
+            
+            // Hide loading indicator
+            const loadingElement = document.getElementById('chartLoading');
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+        }
+        
         // Logout function
         function logout() {
             localStorage.removeItem('loggedInUser');
@@ -761,7 +933,7 @@
         // User profile dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
             loadUserInfo();
-            // Mobile functionality is now in mobile.js
+            loadDashboardStats(); // Load real data for dashboard stats
             
             const userProfile = document.getElementById('userProfile');
             const userDropdown = document.querySelector('.user-dropdown');
@@ -796,8 +968,6 @@
                     }
                 });
             });
-            
-            // Window resize handler is now in mobile.js
         });
         
         // Add click handlers to locked overlays
@@ -812,11 +982,11 @@
         const performanceChart = new Chart(perfCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                labels: ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'],
                 datasets: [
                     {
                         label: 'Physics',
-                        data: [65, 68, 72, 75, 82, 85, 88],
+                        data: [0, 0, 0, 0, 0],
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.1)',
                         tension: 0.3,
@@ -824,7 +994,7 @@
                     },
                     {
                         label: 'Chemistry',
-                        data: [70, 72, 75, 78, 80, 85, 88],
+                        data: [0, 0, 0, 0, 0],
                         borderColor: '#f97316',
                         backgroundColor: 'rgba(249, 115, 22, 0.1)',
                         tension: 0.3,
@@ -832,7 +1002,7 @@
                     },
                     {
                         label: 'Mathematics',
-                        data: [60, 65, 68, 72, 75, 80, 85],
+                        data: [0, 0, 0, 0, 0],
                         borderColor: '#9333ea',
                         backgroundColor: 'rgba(147, 51, 234, 0.1)',
                         tension: 0.3,

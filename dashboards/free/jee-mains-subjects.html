@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Main - PrepSharp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dropdown-override.css">
+    <link rel="stylesheet" href="../../assets/css/dark-mode.css">
+    <link rel="stylesheet" href="../../assets/css/font-size.css">
+    <link rel="stylesheet" href="../../assets/css/mobile.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mobile-fix.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e6f7e6;
+            color: #28A745;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            gap: 5px;
+        }
+        
+        .stats-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stats-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 2px solid transparent;
+            height: 180px;
+        }
+        
+        .subject-card:nth-child(1) {
+            border-color: #FFA500; /* Orange for Physics */
+        }
+        
+        .subject-card:nth-child(2) {
+            border-color: #28A745; /* Green for Chemistry */
+        }
+        
+        .subject-card:nth-child(3) {
+            border-color: #007BFF; /* Blue for Mathematics */
+        }
+        
+        .subject-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .subject-card:nth-child(1)::after {
+            background-color: #FFA500;
+        }
+        
+        .subject-card:nth-child(2)::after {
+            background-color: #28A745;
+        }
+        
+        .subject-card:nth-child(3)::after {
+            background-color: #007BFF;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .subject-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .subject-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+
+        
+        .subject-chapters {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .subject-total {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .subject-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+        
+        .subject-card:nth-child(1) .subject-icon {
+            background-color: #FFA500; /* Orange for Physics */
+        }
+        
+        .subject-card:nth-child(2) .subject-icon {
+            background-color: #28A745; /* Green for Chemistry */
+        }
+        
+        .subject-card:nth-child(3) .subject-icon {
+            background-color: #007BFF; /* Blue for Mathematics */
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../logo for index (1).png" alt="PrepSharp Logo" class="logo">
+                <h2>PrepSharp</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="practice-papers.html"><i class="fas fa-book"></i> <span>Practice Papers</span></a></li>
+                    <li><a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                    <li class="active"><a href="question-bank.html"><i class="fas fa-question-circle"></i> <span>Question Bank</span></a></li>
+                    <li><a href="study-plan.html"><i class="fas fa-calendar-alt"></i> <span>Study Plan</span></a></li>
+                    <li><a href="ai-coach.html"><i class="fas fa-robot"></i> <span>AI Coach</span></a></li>
+                    <li><a href="peer-comparison.html"><i class="fas fa-users"></i> <span>Peer Comparison</span></a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="dashboard-content">
+        <div class="header">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center;">
+                    <img src="../../images/nta 1.png" alt="NTA Logo" style="height: 30px; margin-right: 10px;">
+                    <h1 style="margin: 0;">JEE Main <span class="tag"><i class="fas fa-check-circle"></i> Updated as per latest syllabus</span></h1>
+                </div>
+                <button class="back-btn" onclick="goBack()" style="margin-bottom: 0;">← Back</button>
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stats-title">Stats</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Year Range</div>
+                    <div class="stat-value">2022 – 2025</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Papers</div>
+                    <div class="stat-value">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-value">-</div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+
+        
+        <h2>Subject-wise Question Distribution</h2>
+        <div class="subject-grid">
+            <div class="subject-card" onclick="selectSubject('physics')">
+                <h3>
+                    <div class="subject-name">Physics</div>
+                    <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+                </h3>
+                <div class="subject-chapters">42 Chapters</div>
+                <div class="subject-total">- Questions</div>
+                <div class="subject-icon"><i class="fas fa-atom"></i></div>
+            </div>
+            
+            <div class="subject-card" onclick="selectSubject('chemistry')">
+                <h3>
+                    <div class="subject-name">Chemistry</div>
+                    <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+                </h3>
+                <div class="subject-chapters">33 Chapters</div>
+                <div class="subject-total">- Questions</div>
+                <div class="subject-icon"><i class="fas fa-flask"></i></div>
+            </div>
+            
+            <div class="subject-card" onclick="selectSubject('mathematics')">
+                <h3>
+                    <div class="subject-name">Mathematics</div>
+                    <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+                </h3>
+                <div class="subject-chapters">36 Chapters</div>
+                <div class="subject-total">- Questions</div>
+                <div class="subject-icon"><i class="fas fa-calculator"></i></div>
+            </div>
+        </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../../js/free-theme-manager.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+            authDomain: "prepsharp-c91fd.firebaseapp.com",
+            projectId: "prepsharp-c91fd",
+            storageBucket: "prepsharp-c91fd.firebasestorage.app",
+            messagingSenderId: "688294848433",
+            appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+        
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadUserPreferences();
+            loadSubjectTotals();
+        });
+        
+        // Load user preferences from Firebase
+        async function loadUserPreferences() {
+            try {
+                const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+                if (loggedInUser) {
+                    const userData = JSON.parse(loggedInUser);
+                    const userId = userData.email || 'default-user';
+                    
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().preferences) {
+                        const preferences = doc.data().preferences;
+                        
+                        // Apply dark mode if enabled
+                        if (preferences.darkMode) {
+                            document.body.classList.add('dark-mode');
+                        }
+                        
+                        // Apply font size
+                        if (preferences.fontSize) {
+                            document.documentElement.setAttribute('data-font-size', preferences.fontSize);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user preferences:', error);
+            }
+        }
+        
+        // Load subject totals from Firebase
+        async function loadSubjectTotals() {
+            const subjects = ['physics', 'chemistry', 'mathematics'];
+            const chapters = {
+                physics: ["Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                    "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                    "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                    "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                    "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"],
+                chemistry: ["Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                    "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                    "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                    "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                    "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                    "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"],
+                mathematics: ["Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                    "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                    "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                    "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                    "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"]
+            };
+            
+            // Update stats
+            try {
+                const statsSnapshot = await db.collection('stats').doc('JEE Main').get();
+                if (statsSnapshot.exists) {
+                    const stats = statsSnapshot.data();
+                    document.querySelector('.stat-item:nth-child(2) .stat-value').textContent = stats.totalPapers || '-';
+                    document.querySelector('.stat-item:nth-child(3) .stat-value').textContent = stats.totalQuestions || '-';
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+            
+            // Update subject data
+            for (const subject of subjects) {
+                try {
+                    const examName = 'JEE Main';
+                    const subjectName = subject.charAt(0).toUpperCase() + subject.slice(1);
+                    let totalQuestions = 0;
+                    
+                    for (const chapter of chapters[subject]) {
+                        try {
+                            const itemsSnapshot = await db.collection('questions').doc(examName).collection(subjectName).doc(chapter).collection('items').get();
+                            totalQuestions += itemsSnapshot.size;
+                        } catch (e) {
+                            console.error(`Error loading chapter ${chapter}:`, e);
+                        }
+                    }
+                    
+                    // Update the subject card with real data
+                    const subjectCard = document.querySelector(`.subject-card:nth-child(${subjects.indexOf(subject) + 1})`);
+                    if (subjectCard) {
+                        const totalElement = subjectCard.querySelector('.subject-total');
+                        if (totalElement) {
+                            totalElement.textContent = totalQuestions > 0 ? `${totalQuestions} Questions` : '- Questions';
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${subject} data:`, error);
+                }
+            }
+        }
+        
+        function selectSubject(subject) {
+            localStorage.setItem('selectedSubject', subject);
+            localStorage.setItem('selectedExam', 'mains');
+            window.location.href = 'question-bank.html';
+        }
+        
+        function goBack() {
+            window.location.href = 'question-bank.html';
+        }
+    </script>
+</body>
+</html>

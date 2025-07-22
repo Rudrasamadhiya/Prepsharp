@@ -473,14 +473,9 @@
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div class="user-actions">
-                    <div class="notification-bell">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-count">7</span>
-                    </div>
-                    
                     <div class="user-profile" id="userProfile">
-                        <div class="avatar-initials" id="userInitials">JS</div>
-                        <span class="user-name" id="loggedInUserName">John Smith</span>
+                        <div class="avatar-initials" id="userInitials"></div>
+                        <span class="user-name" id="loggedInUserName">Loading...</span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
                             <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
@@ -540,7 +535,7 @@
                             
                             <div class="avatar-section">
                                 <div class="avatar-preview" onclick="openCropModal()" style="cursor: pointer;">
-                                    <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px; background-size: cover; background-position: center;">JS</div>
+                                    <div class="avatar-initials" id="profileInitials" style="width: 100%; height: 100%; font-size: 36px; background-size: cover; background-position: center;"></div>
                                 </div>
                                 <div class="avatar-upload">
                                     <button class="btn-secondary" onclick="changePhoto()">Change Photo</button>
@@ -567,22 +562,22 @@
                             <form>
                                 <div class="form-group">
                                     <label class="form-label" for="fullName">Full Name</label>
-                                    <input type="text" id="fullName" class="form-input" value="John Smith">
+                                    <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="form-label" for="email">Email Address</label>
-                                    <input type="email" id="email" class="form-input" value="john.smith@example.com">
+                                    <input type="email" id="email" class="form-input" placeholder="Enter your email address">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="form-label" for="phone">Phone Number</label>
-                                    <input type="tel" id="phone" class="form-input" value="+91 9876543210">
+                                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label class="form-label" for="school">School/College</label>
-                                    <input type="text" id="school" class="form-input" value="Delhi Public School">
+                                    <input type="text" id="school" class="form-input" placeholder="Enter your school or college name">
                                 </div>
                                 
                                 <div class="form-group">
@@ -992,46 +987,112 @@
                 });
             });
             
-            // Save form data to localStorage
+            // Save form data to Firebase
             const saveBtns = document.querySelectorAll('.btn-primary');
             saveBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
+                btn.addEventListener('click', async function(e) {
                     e.preventDefault();
                     
-                    // Get the form
-                    const form = this.closest('form');
-                    if (form) {
-                        // Save form inputs
-                        const inputs = form.querySelectorAll('input, select');
-                        inputs.forEach(input => {
-                            if (input.type === 'checkbox') {
-                                localStorage.setItem(input.id, input.checked);
-                            } else if (input.type !== 'password') {
-                                localStorage.setItem(input.id, input.value);
+                    try {
+                        const userId = getUserId();
+                        const db = firebase.firestore();
+                        const section = this.closest('.settings-section');
+                        const sectionId = section ? section.id : '';
+                        
+                        // Profile section
+                        if (sectionId === 'profile') {
+                            const userData = {
+                                name: document.getElementById('fullName').value,
+                                email: document.getElementById('email').value,
+                                phone: document.getElementById('phone').value,
+                                school: document.getElementById('school').value,
+                                examYear: document.getElementById('examYear').value
+                            };
+                            
+                            await db.collection('users').doc(userId).set(userData, { merge: true });
+                            
+                            // Update user name in top navigation
+                            const userName = userData.name || userData.email || 'User';
+                            document.getElementById('loggedInUserName').textContent = userName;
+                            
+                            // Update initials if no photo
+                            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                            const profileDiv = document.getElementById('profileInitials');
+                            if (!profileDiv.style.backgroundImage) {
+                                document.getElementById('userInitials').textContent = initials;
+                                profileDiv.textContent = initials;
                             }
-                        });
+                        }
+                        // Preferences section
+                        else if (sectionId === 'preferences') {
+                            const preferences = {
+                                darkMode: document.getElementById('themeToggle').checked,
+                                fontSize: document.getElementById('fontSize').value,
+                                studyDuration: document.getElementById('studyDuration').value,
+                                breakDuration: document.getElementById('breakDuration').value,
+                                studyDays: []
+                            };
+                            
+                            // Get selected study days
+                            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                            days.forEach(day => {
+                                const checkbox = document.getElementById(day);
+                                if (checkbox && checkbox.checked) {
+                                    preferences.studyDays.push(day);
+                                }
+                            });
+                            
+                            await db.collection('users').doc(userId).set({
+                                preferences: preferences
+                            }, { merge: true });
+                        }
+                        // Notifications section
+                        else if (sectionId === 'notifications') {
+                            const notifications = {};
+                            
+                            // Get notification preferences
+                            const toggles = section.querySelectorAll('.toggle-switch input');
+                            toggles.forEach(toggle => {
+                                const title = toggle.closest('.notification-option').querySelector('.notification-title').textContent;
+                                const notifType = title.toLowerCase().replace(/\s+/g, '_');
+                                notifications[notifType] = toggle.checked;
+                            });
+                            
+                            await db.collection('users').doc(userId).set({
+                                preferences: { notifications: notifications }
+                            }, { merge: true });
+                        }
+                        // Security section
+                        else if (sectionId === 'security') {
+                            // Handle password change if needed
+                            const currentPassword = document.getElementById('currentPassword').value;
+                            const newPassword = document.getElementById('newPassword').value;
+                            const confirmPassword = document.getElementById('confirmPassword').value;
+                            
+                            if (currentPassword && newPassword && confirmPassword) {
+                                if (newPassword !== confirmPassword) {
+                                    alert('New passwords do not match!');
+                                    return;
+                                }
+                                
+                                // Password change would typically be handled by Firebase Auth
+                                // This is just a placeholder
+                                alert('Password change functionality would be implemented here');
+                            }
+                        }
+                        
+                        // Show success message
+                        showSuccessMessage(this);
+                        
+                    } catch (error) {
+                        console.error('Error saving settings:', error);
+                        alert('Error saving settings: ' + error.message);
                     }
-                    
-                    // Save toggle switches
-                    const section = this.closest('.settings-section');
-                    if (section) {
-                        const toggles = section.querySelectorAll('.toggle-switch input');
-                        toggles.forEach(toggle => {
-                            const title = toggle.closest('.notification-option').querySelector('.notification-title').textContent;
-                            localStorage.setItem(title, toggle.checked);
-                        });
-                    }
-                    
-                    // Show success message
-                    showSuccessMessage(this);
                 });
             });
             
-            // Load saved data
-            loadSavedData();
-            
-            // Initialize profile initials
-            updateProfileInitials();
+            // Load user data from Firebase
+            loadUserDataFromFirebase();
             
             // Load photo for settings page
             loadSettingsPhoto();
@@ -1091,31 +1152,90 @@
             }
         }
         
-        function loadSavedData() {
-            // Load form inputs
-            document.querySelectorAll('input, select').forEach(input => {
-                if (input.type === 'checkbox') {
-                    const saved = localStorage.getItem(input.id);
-                    if (saved !== null) {
-                        input.checked = saved === 'true';
+        async function loadUserDataFromFirebase() {
+            try {
+                const userId = getUserId();
+                const db = firebase.firestore();
+                const doc = await db.collection('users').doc(userId).get();
+                
+                if (doc.exists) {
+                    const userData = doc.data();
+                    
+                    // Populate form fields with user data
+                    if (userData.name) document.getElementById('fullName').value = userData.name;
+                    if (userData.email) document.getElementById('email').value = userData.email;
+                    if (userData.phone) document.getElementById('phone').value = userData.phone;
+                    if (userData.school) document.getElementById('school').value = userData.school;
+                    if (userData.examYear) document.getElementById('examYear').value = userData.examYear;
+                    
+                    // Update user name in top navigation
+                    const userName = userData.name || userData.email || 'User';
+                    document.getElementById('loggedInUserName').textContent = userName;
+                    
+                    // Update initials
+                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    if (!userData.photo) {
+                        document.getElementById('userInitials').textContent = initials;
+                        document.getElementById('profileInitials').textContent = initials;
                     }
-                } else if (input.type !== 'password') {
-                    const saved = localStorage.getItem(input.id);
-                    if (saved !== null) {
-                        input.value = saved;
+                    
+                    // Load preferences if available
+                    if (userData.preferences) {
+                        // Theme preference
+                        if (userData.preferences.darkMode !== undefined) {
+                            document.getElementById('themeToggle').checked = userData.preferences.darkMode;
+                            
+                            // Apply dark mode if enabled
+                            if (userData.preferences.darkMode) {
+                                document.body.classList.add('dark-mode');
+                            } else {
+                                document.body.classList.remove('dark-mode');
+                            }
+                        }
+                        
+                        // Font size
+                        if (userData.preferences.fontSize) {
+                            document.getElementById('fontSize').value = userData.preferences.fontSize;
+                            document.documentElement.setAttribute('data-font-size', userData.preferences.fontSize);
+                        }
+                        
+                        // Study preferences
+                        if (userData.preferences.studyDuration) {
+                            document.getElementById('studyDuration').value = userData.preferences.studyDuration;
+                        }
+                        
+                        if (userData.preferences.breakDuration) {
+                            document.getElementById('breakDuration').value = userData.preferences.breakDuration;
+                        }
+                        
+                        // Study days
+                        if (userData.preferences.studyDays) {
+                            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                            days.forEach(day => {
+                                const checkbox = document.getElementById(day);
+                                if (checkbox) {
+                                    checkbox.checked = userData.preferences.studyDays.includes(day);
+                                }
+                            });
+                        }
+                        
+                        // Notification preferences
+                        if (userData.preferences.notifications) {
+                            document.querySelectorAll('.notification-option').forEach(option => {
+                                const title = option.querySelector('.notification-title').textContent;
+                                const toggle = option.querySelector('.toggle-switch input');
+                                const notifType = title.toLowerCase().replace(/\s+/g, '_');
+                                
+                                if (userData.preferences.notifications[notifType] !== undefined) {
+                                    toggle.checked = userData.preferences.notifications[notifType];
+                                }
+                            });
+                        }
                     }
                 }
-            });
-            
-            // Load toggle switches
-            document.querySelectorAll('.notification-option').forEach(option => {
-                const title = option.querySelector('.notification-title').textContent;
-                const toggle = option.querySelector('.toggle-switch input');
-                const saved = localStorage.getItem(title);
-                if (saved !== null) {
-                    toggle.checked = saved === 'true';
-                }
-            });
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
         }
         
         function updateProfileInitials() {
