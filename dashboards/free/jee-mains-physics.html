@@ -163,6 +163,8 @@
             margin-right: 12px;
             width: 36px;
             height: 36px;
+            min-width: 36px;
+            min-height: 36px;
             text-align: center;
             color: white;
             background: var(--gradient-secondary);
@@ -170,8 +172,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             box-shadow: 0 4px 8px rgba(255, 165, 0, 0.2);
+        }
+        
+        .chapter-icon i {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            text-align: center;
         }
         
         .tag {
@@ -331,6 +344,8 @@
                     <div class="filter-tab" data-filter="all">All</div>
                 </div>
                 
+                <div id="filterIndicator" style="display: none; margin-top: 10px; padding: 8px 15px; background-color: #f8f9fa; border-radius: 8px; font-size: 14px; color: #666; border-left: 3px solid #FFA500;"></div>
+                
                 <div style="margin-bottom: 25px; position: relative;">
                     <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
                     <input type="text" id="searchInput" placeholder="Search chapters..." style="width: 100%; padding: 12px 20px 12px 45px; border-radius: var(--border-radius); border: 1px solid #e0e0e0; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 6px 15px rgba(0,0,0,0.08)'; this.style.borderColor='#4f46e5';" onblur="this.style.boxShadow='0 4px 10px rgba(0,0,0,0.03)'; this.style.borderColor='#e0e0e0';">
@@ -443,38 +458,38 @@
         
         // Physics chapters with icons, question counts and status
         const physicsChapters = [
-            { name: "Mathematical Physics", icon: "fas fa-calculator", questions: "-", status: "current" },
-            { name: "Units and Dimensions", icon: "fas fa-ruler", questions: "-", status: "current" },
-            { name: "Motion In One Dimension", icon: "fas fa-arrow-right", questions: "-", status: "current" },
+            { name: "Mathematics in Physics", icon: "fas fa-square-root-alt", questions: "-", status: "current" },
+            { name: "Units and Dimensions", icon: "fas fa-ruler-combined", questions: "-", status: "current" },
+            { name: "Motion In One Dimension", icon: "fas fa-long-arrow-alt-right", questions: "-", status: "current" },
             { name: "Motion In Two Dimensions", icon: "fas fa-chart-line", questions: "-", status: "current" },
-            { name: "Laws of Motion", icon: "fas fa-sync", questions: "-", status: "current" },
-            { name: "Work Power Energy", icon: "fas fa-lightbulb", questions: "-", status: "current" },
-            { name: "Center of Mass Momentum and Collision", icon: "fas fa-box", questions: "-", status: "current" },
-            { name: "Rotational Motion", icon: "fas fa-redo", questions: "-", status: "current" },
-            { name: "Gravitation", icon: "fas fa-clock", questions: "-", status: "current" },
-            { name: "Mechanical Properties of Solids", icon: "fas fa-cube", questions: "101", status: "current" },
-            { name: "Mechanical Properties of Fluids", icon: "fas fa-water", questions: "171", status: "current" },
-            { name: "Thermal Properties of Matter", icon: "fas fa-fire", questions: "129", status: "reduced" },
-            { name: "Thermodynamics", icon: "fas fa-fire", questions: "211", status: "reduced" },
+            { name: "Laws of Motion", icon: "fas fa-balance-scale", questions: "-", status: "current" },
+            { name: "Work Power Energy", icon: "fas fa-bolt", questions: "-", status: "current" },
+            { name: "Center of Mass Momentum and Collision", icon: "fas fa-bullseye", questions: "-", status: "current" },
+            { name: "Rotational Motion", icon: "fas fa-sync-alt", questions: "-", status: "current" },
+            { name: "Gravitation", icon: "fas fa-globe", questions: "-", status: "current" },
+            { name: "Mechanical Properties of Solids", icon: "fas fa-cubes", questions: "101", status: "current" },
+            { name: "Mechanical Properties of Fluids", icon: "fas fa-tint", questions: "171", status: "current" },
+            { name: "Thermal Properties of Matter", icon: "fas fa-temperature-high", questions: "129", status: "reduced" },
+            { name: "Thermodynamics", icon: "fas fa-fire-alt", questions: "211", status: "reduced" },
             { name: "Kinetic Theory of Gases", icon: "fas fa-wind", questions: "155", status: "current" },
-            { name: "Oscillations", icon: "fas fa-bell", questions: "176", status: "current" },
-            { name: "Waves and Sound", icon: "fas fa-music", questions: "169", status: "reduced" },
-            { name: "Electrostatics", icon: "fas fa-bolt", questions: "279", status: "current" },
-            { name: "Capacitance", icon: "fas fa-battery-empty", questions: "163", status: "current" },
+            { name: "Oscillations", icon: "fas fa-wave-square", questions: "176", status: "current" },
+            { name: "Waves and Sound", icon: "fas fa-volume-up", questions: "169", status: "reduced" },
+            { name: "Electrostatics", icon: "fas fa-charging-station", questions: "279", status: "current" },
+            { name: "Capacitance", icon: "fas fa-battery-three-quarters", questions: "163", status: "current" },
             { name: "Current Electricity", icon: "fas fa-plug", questions: "374", status: "reduced" },
             { name: "Magnetic Properties of Matter", icon: "fas fa-magnet", questions: "77", status: "reduced" },
-            { name: "Magnetic Effects of Current", icon: "fas fa-fire", questions: "258", status: "current" },
-            { name: "Electromagnetic Induction", icon: "fas fa-sync-alt", questions: "132", status: "current" },
-            { name: "Alternating Current", icon: "fas fa-exchange-alt", questions: "183", status: "reduced" },
+            { name: "Magnetic Effects of Current", icon: "fas fa-compass", questions: "258", status: "current" },
+            { name: "Electromagnetic Induction", icon: "fas fa-cogs", questions: "132", status: "current" },
+            { name: "Alternating Current", icon: "fas fa-stream", questions: "183", status: "reduced" },
             { name: "Electromagnetic Waves", icon: "fas fa-broadcast-tower", questions: "145", status: "current" },
-            { name: "Ray Optics", icon: "fas fa-telescope", questions: "266", status: "reduced" },
+            { name: "Ray Optics", icon: "fas fa-glasses", questions: "266", status: "reduced" },
             { name: "Wave Optics", icon: "fas fa-rainbow", questions: "165", status: "current" },
-            { name: "Dual Nature of Matter", icon: "fas fa-box", questions: "190", status: "reduced" },
+            { name: "Dual Nature of Matter", icon: "fas fa-adjust", questions: "190", status: "reduced" },
             { name: "Atomic Physics", icon: "fas fa-atom", questions: "145", status: "current" },
-            { name: "Nuclear Physics", icon: "fas fa-radiation", questions: "151", status: "reduced" },
+            { name: "Nuclear Physics", icon: "fas fa-radiation-alt", questions: "151", status: "reduced" },
             { name: "Semiconductors", icon: "fas fa-microchip", questions: "228", status: "reduced" },
             { name: "Communication System", icon: "fas fa-satellite-dish", questions: "85", status: "removed" },
-            { name: "Experimental Physics", icon: "fas fa-stopwatch", questions: "63", status: "current" }
+            { name: "Experimental Physics", icon: "fas fa-flask", questions: "63", status: "current" }
         ];
         
         // Load chapters when page loads
@@ -548,9 +563,32 @@
                 const importanceFilters = Array.from(document.querySelectorAll('input[name="importance"]:checked'))
                     .map(checkbox => checkbox.value);
                 
-                // Apply filters to chapters (you can extend the loadChapters function to use these)
+                // Apply filters to chapters
                 console.log('Class filters:', classFilters);
                 console.log('Importance filters:', importanceFilters);
+                
+                // Show filter indicator if filters are applied
+                const filterIndicator = document.getElementById('filterIndicator');
+                if ((classFilters && classFilters.length > 0) || (importanceFilters && importanceFilters.length > 0)) {
+                    let filterText = 'Filtered by: ';
+                    if (classFilters && classFilters.length > 0) {
+                        filterText += 'Class ' + classFilters.join(', Class ');
+                        if (importanceFilters && importanceFilters.length > 0) filterText += ' | ';
+                    }
+                    if (importanceFilters && importanceFilters.length > 0) {
+                        const importanceLabels = {
+                            'high-high': 'High Output High Input',
+                            'high-low': 'High Output Low Input',
+                            'low-high': 'Low Output High Input',
+                            'low-low': 'Low Output Low Input'
+                        };
+                        filterText += importanceFilters.map(f => importanceLabels[f]).join(', ');
+                    }
+                    filterIndicator.textContent = filterText;
+                    filterIndicator.style.display = 'block';
+                } else {
+                    filterIndicator.style.display = 'none';
+                }
                 
                 // Get current active filter
                 const activeFilter = document.querySelector('.filter-tab.active').getAttribute('data-filter');
@@ -617,6 +655,7 @@
             if (classFilters && classFilters.length > 0) {
                 const classMapping = {
                     // Class 11 chapters
+                    "Mathematics in Physics": "11",
                     "Units and Dimensions": "11",
                     "Motion In One Dimension": "11",
                     "Motion In Two Dimensions": "11",
@@ -632,7 +671,6 @@
                     "Kinetic Theory of Gases": "11",
                     "Oscillations": "11",
                     "Waves and Sound": "11",
-                    "Experimental Physics": "11",
                     
                     // Class 12 chapters
                     "Electrostatics": "12",
@@ -661,42 +699,43 @@
             if (importanceFilters && importanceFilters.length > 0) {
                 const importanceMapping = {
                     // High Output High Input
-                    "Motion In One Dimension": "high-high",
-                    "Motion In Two Dimensions": "high-high",
                     "Laws of Motion": "high-high",
                     "Rotational Motion": "high-high",
-                    "Thermodynamics": "high-high",
-                    "Oscillations": "high-high",
                     "Electrostatics": "high-high",
+                    "Current Electricity": "high-high",
                     "Magnetic Effects of Current": "high-high",
-                    "Electromagnetic Induction": "high-high",
+                    "Ray Optics": "high-high",
                     
                     // High Output Low Input
-                    "Work Power Energy": "high-low",
-                    "Capacitance": "high-low",
-                    "Current Electricity": "high-low",
-                    "Ray Optics": "high-low",
+                    "Units and Dimensions": "high-low",
+                    "Motion In One Dimension": "high-low",
+                    "Gravitation": "high-low",
+                    "Thermodynamics": "high-low",
+                    "Kinetic Theory of Gases": "high-low",
+                    "Oscillations": "high-low",
+                    "Waves and Sound": "high-low",
+                    "Alternating Current": "high-low",
+                    "Electromagnetic Waves": "high-low",
+                    "Dual Nature of Matter": "high-low",
+                    "Nuclear Physics": "high-low",
+                    "Semiconductors": "high-low",
+                    "Communication System": "high-low",
                     
                     // Low Output High Input
-                    "Units and Dimensions": "low-high",
+                    "Motion In Two Dimensions": "low-high",
+                    "Work Power Energy": "low-high",
                     "Center of Mass Momentum and Collision": "low-high",
-                    "Gravitation": "low-high",
+                    "Mechanical Properties of Solids": "low-high",
                     "Mechanical Properties of Fluids": "low-high",
-                    "Alternating Current": "low-high",
+                    "Thermal Properties of Matter": "low-high",
+                    "Capacitance": "low-high",
+                    "Electromagnetic Induction": "low-high",
                     "Wave Optics": "low-high",
-                    "Nuclear Physics": "low-high",
                     
                     // Low Output Low Input
-                    "Mechanical Properties of Solids": "low-low",
-                    "Thermal Properties of Matter": "low-low",
-                    "Kinetic Theory of Gases": "low-low",
-                    "Waves and Sound": "low-low",
+                    "Mathematics in Physics": "low-low",
                     "Magnetic Properties of Matter": "low-low",
-                    "Electromagnetic Waves": "low-low",
-                    "Dual Nature of Matter": "low-low",
                     "Atomic Physics": "low-low",
-                    "Semiconductors": "low-low",
-                    "Communication System": "low-low",
                     "Experimental Physics": "low-low"
                 };
                 

@@ -163,6 +163,8 @@
             margin-right: 12px;
             width: 36px;
             height: 36px;
+            min-width: 36px;
+            min-height: 36px;
             text-align: center;
             color: white;
             background: var(--gradient-secondary);
@@ -170,8 +172,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+        
+        .chapter-icon i {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            text-align: center;
         }
         
         .tag {
@@ -306,7 +319,7 @@
                             <p style="margin-top: 8px; color: var(--text-light); display: flex; align-items: center; gap: 8px;">
                                 <span style="background: rgba(40, 167, 69, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;">33 Chapters</span>
                                 <span style="width: 4px; height: 4px; background: #ccc; border-radius: 50%;"></span>
-                                <span style="background: rgba(40, 167, 69, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;">4,215 Questions</span>
+                                <span id="totalQuestionsCount" style="background: rgba(40, 167, 69, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
                             </p>
                         </div>
                     </div>
@@ -331,6 +344,8 @@
                     <div class="filter-tab" data-filter="all">All</div>
                 </div>
                 
+                <div id="filterIndicator" style="display: none; margin-top: 10px; padding: 8px 15px; background-color: #f8f9fa; border-radius: 8px; font-size: 14px; color: #666; border-left: 3px solid #28A745;"></div>
+                
                 <div style="margin-bottom: 25px; position: relative;">
                     <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
                     <input type="text" id="searchInput" placeholder="Search chapters..." style="width: 100%; padding: 12px 20px 12px 45px; border-radius: var(--border-radius); border: 1px solid #e0e0e0; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 6px 15px rgba(0,0,0,0.08)'; this.style.borderColor='#4f46e5';" onblur="this.style.boxShadow='0 4px 10px rgba(0,0,0,0.03)'; this.style.borderColor='#e0e0e0';">
@@ -341,12 +356,75 @@
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-                    <button style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <button id="filterBtn" style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                         <i class="fas fa-filter" style="color: #28A745; margin-right: 5px;"></i> Filter
                     </button>
-                    <button style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <button id="sortBtn" style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                         <i class="fas fa-sort" style="color: #4f46e5; margin-right: 5px;"></i> Sort
                     </button>
+                </div>
+                
+                <!-- Filter Modal -->
+                <div id="filterModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+                    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                        <!-- Modal Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                            <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Filter Questions</h3>
+                            <button id="closeFilterModal" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">&times;</button>
+                        </div>
+                        
+                        <!-- Filter Content -->
+                        <div style="padding: 20px;">
+                            <!-- Class Filter -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">Class (Grade)</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="class" value="11" style="width: 18px; height: 18px;">
+                                        <span>Class 11</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="class" value="12" style="width: 18px; height: 18px;">
+                                        <span>Class 12</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Importance Filter -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">Importance</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="high-high" style="width: 18px; height: 18px;" checked>
+                                        <span>High Output High Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="high-low" style="width: 18px; height: 18px;" checked>
+                                        <span>High Output Low Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="low-high" style="width: 18px; height: 18px;" checked>
+                                        <span>Low Output High Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="low-low" style="width: 18px; height: 18px;" checked>
+                                        <span>Low Output Low Input</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Filters Label -->
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="margin: 0; font-size: 16px; font-weight: 500;">Filters</h4>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                <button id="clearFilters" style="padding: 10px 15px; border: none; background: none; color: #dc3545; font-weight: 500; cursor: pointer;">Clear All</button>
+                                <button id="applyFilters" style="padding: 10px 20px; border: none; background: #28A745; color: white; border-radius: 8px; font-weight: 500; cursor: pointer;">Apply</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -380,44 +458,45 @@
         
         // Chemistry chapters with icons, question counts and status
         const chemistryChapters = [
-            { name: "Some Basic Concepts of Chemistry", icon: "fas fa-atom", questions: "145", status: "current" },
-            { name: "Structure of Atom", icon: "fas fa-atom", questions: "168", status: "current" },
+            { name: "Some Basic Concepts of Chemistry", icon: "fas fa-book-open", questions: "145", status: "current" },
+            { name: "Structure of Atom", icon: "fas fa-circle", questions: "168", status: "current" },
             { name: "Classification of Elements and Periodicity in Properties", icon: "fas fa-table", questions: "132", status: "current" },
             { name: "Chemical Bonding and Molecular Structure", icon: "fas fa-link", questions: "187", status: "current" },
-            { name: "States of Matter", icon: "fas fa-thermometer-half", questions: "124", status: "current" },
+            { name: "States of Matter", icon: "fas fa-thermometer-half", questions: "124", status: "removed" },
             { name: "Thermodynamics (C)", icon: "fas fa-fire", questions: "156", status: "reduced" },
             { name: "Chemical Equilibrium", icon: "fas fa-balance-scale", questions: "143", status: "current" },
             { name: "Ionic Equilibrium", icon: "fas fa-tint", questions: "165", status: "current" },
             { name: "Redox Reactions", icon: "fas fa-exchange-alt", questions: "128", status: "current" },
-            { name: "Hydrogen", icon: "fas fa-atom", questions: "89", status: "current" },
-            { name: "s Block Elements", icon: "fas fa-cube", questions: "112", status: "current" },
-            { name: "p Block Elements (Group 13 & 14)", icon: "fas fa-cubes", questions: "143", status: "current" },
+            { name: "Hydrogen", icon: "fas fa-h-square", questions: "89", status: "removed" },
+            { name: "s Block Elements", icon: "fas fa-square", questions: "112", status: "removed" },
+            { name: "p Block Elements (Group 13 & 14)", icon: "fas fa-cubes", questions: "143", status: "reduced" },
             { name: "General Organic Chemistry", icon: "fas fa-flask", questions: "176", status: "current" },
             { name: "Hydrocarbons", icon: "fas fa-oil-can", questions: "154", status: "current" },
-            { name: "Environmental Chemistry", icon: "fas fa-leaf", questions: "87", status: "reduced" },
-            { name: "Solid State", icon: "fas fa-cube", questions: "132", status: "current" },
+            { name: "Environmental Chemistry", icon: "fas fa-leaf", questions: "87", status: "removed" },
+            { name: "Solid State", icon: "fas fa-dice", questions: "132", status: "removed" },
             { name: "Solutions", icon: "fas fa-vial", questions: "145", status: "current" },
-            { name: "Electrochemistry", icon: "fas fa-battery-full", questions: "167", status: "current" },
+            { name: "Electrochemistry", icon: "fas fa-bolt", questions: "167", status: "current" },
             { name: "Chemical Kinetics", icon: "fas fa-tachometer-alt", questions: "143", status: "current" },
-            { name: "Surface Chemistry", icon: "fas fa-layer-group", questions: "98", status: "reduced" },
-            { name: "General Principles and Processes of Isolation of Metals", icon: "fas fa-industry", questions: "112", status: "reduced" },
-            { name: "p Block Elements (Group 15, 16, 17 & 18)", icon: "fas fa-cubes", questions: "156", status: "current" },
-            { name: "d and f Block Elements", icon: "fas fa-dice-d20", questions: "143", status: "current" },
-            { name: "Coordination Compounds", icon: "fas fa-link", questions: "165", status: "current" },
-            { name: "Haloalkanes and Haloarenes", icon: "fas fa-vial", questions: "132", status: "current" },
-            { name: "Alcohols, Phenols and Ethers", icon: "fas fa-wine-bottle", questions: "154", status: "current" },
-            { name: "Aldehydes and Ketones", icon: "fas fa-flask", questions: "143", status: "current" },
-            { name: "Carboxylic Acid Derivatives", icon: "fas fa-vial", questions: "132", status: "current" },
-            { name: "Amines", icon: "fas fa-flask", questions: "121", status: "current" },
+            { name: "Surface Chemistry", icon: "fas fa-layer-group", questions: "98", status: "removed" },
+            { name: "General Principles and Processes of Isolation of Metals", icon: "fas fa-industry", questions: "112", status: "removed" },
+            { name: "p Block Elements (Group 15, 16, 17 & 18)", icon: "fas fa-th-large", questions: "156", status: "reduced" },
+            { name: "d and f Block Elements", icon: "fas fa-dice-d6", questions: "143", status: "current" },
+            { name: "Coordination Compounds", icon: "fas fa-object-group", questions: "165", status: "current" },
+            { name: "Haloalkanes and Haloarenes", icon: "fas fa-ring", questions: "132", status: "current" },
+            { name: "Alcohols, Phenols and Ethers", icon: "fas fa-wine-glass", questions: "154", status: "current" },
+            { name: "Aldehydes and Ketones", icon: "fas fa-vials", questions: "143", status: "current" },
+            { name: "Carboxylic Acid Derivatives", icon: "fas fa-prescription-bottle", questions: "132", status: "current" },
+            { name: "Amines", icon: "fas fa-capsules", questions: "121", status: "current" },
             { name: "Biomolecules", icon: "fas fa-dna", questions: "143", status: "reduced" },
-            { name: "Polymers", icon: "fas fa-link", questions: "98", status: "reduced" },
-            { name: "Chemistry in Everyday Life", icon: "fas fa-home", questions: "87", status: "reduced" },
-            { name: "Practical Chemistry", icon: "fas fa-flask", questions: "95", status: "current" }
+            { name: "Polymers", icon: "fas fa-bezier-curve", questions: "98", status: "removed" },
+            { name: "Chemistry in Everyday Life", icon: "fas fa-home", questions: "87", status: "removed" },
+            { name: "Practical Chemistry", icon: "fas fa-microscope", questions: "95", status: "current" }
         ];
         
         // Load chapters when page loads
         window.addEventListener('load', function() {
             loadUserPreferences();
+            countTotalQuestions();
             loadChapters('current'); // Default to "As per syllabus"
             
             // Add event listeners for filter tabs
@@ -442,6 +521,82 @@
                 // Get current active filter
                 const activeFilter = document.querySelector('.filter-tab.active').getAttribute('data-filter');
                 loadChapters(activeFilter);
+            });
+            
+            // Filter modal functionality
+            const filterModal = document.getElementById('filterModal');
+            const filterBtn = document.getElementById('filterBtn');
+            const closeFilterModal = document.getElementById('closeFilterModal');
+            const clearFilters = document.getElementById('clearFilters');
+            const applyFilters = document.getElementById('applyFilters');
+            
+            // Open filter modal
+            filterBtn.addEventListener('click', function() {
+                filterModal.style.display = 'flex';
+            });
+            
+            // Close filter modal
+            closeFilterModal.addEventListener('click', function() {
+                filterModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === filterModal) {
+                    filterModal.style.display = 'none';
+                }
+            });
+            
+            // Clear all filters
+            clearFilters.addEventListener('click', function() {
+                document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+            
+            // Apply filters
+            applyFilters.addEventListener('click', function() {
+                // Get selected class filters
+                const classFilters = Array.from(document.querySelectorAll('input[name="class"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                // Get selected importance filters
+                const importanceFilters = Array.from(document.querySelectorAll('input[name="importance"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                // Apply filters to chapters
+                console.log('Class filters:', classFilters);
+                console.log('Importance filters:', importanceFilters);
+                
+                // Show filter indicator if filters are applied
+                const filterIndicator = document.getElementById('filterIndicator');
+                if ((classFilters && classFilters.length > 0) || (importanceFilters && importanceFilters.length > 0)) {
+                    let filterText = 'Filtered by: ';
+                    if (classFilters && classFilters.length > 0) {
+                        filterText += 'Class ' + classFilters.join(', Class ');
+                        if (importanceFilters && importanceFilters.length > 0) filterText += ' | ';
+                    }
+                    if (importanceFilters && importanceFilters.length > 0) {
+                        const importanceLabels = {
+                            'high-high': 'High Output High Input',
+                            'high-low': 'High Output Low Input',
+                            'low-high': 'Low Output High Input',
+                            'low-low': 'Low Output Low Input'
+                        };
+                        filterText += importanceFilters.map(f => importanceLabels[f]).join(', ');
+                    }
+                    filterIndicator.textContent = filterText;
+                    filterIndicator.style.display = 'block';
+                } else {
+                    filterIndicator.style.display = 'none';
+                }
+                
+                // Get current active filter
+                const activeFilter = document.querySelector('.filter-tab.active').getAttribute('data-filter');
+                loadChapters(activeFilter, classFilters, importanceFilters);
+                
+                // Close modal
+                filterModal.style.display = 'none';
             });
         });
         
@@ -469,9 +624,12 @@
         }
         
         // Load chapters and question counts
-        async function loadChapters(filter = 'current') {
+        async function loadChapters(filter = 'current', classFilters = [], importanceFilters = []) {
             const chapterGrid = document.getElementById('chapterGrid');
             chapterGrid.innerHTML = ''; // Clear existing chapters
+            
+            // Get chapter question counts from Firebase
+            await updateChapterQuestionCounts();
             
             // Filter chapters based on selected filter
             let filteredChapters;
@@ -492,6 +650,106 @@
                 filteredChapters = filteredChapters.filter(chapter => 
                     chapter.name.toLowerCase().includes(searchTerm)
                 );
+            }
+            
+            // Apply class filters if any are selected
+            if (classFilters && classFilters.length > 0) {
+                const classMapping = {
+                    // Class 11 chapters
+                    "Some Basic Concepts of Chemistry": "11",
+                    "Structure of Atom": "11",
+                    "Classification of Elements and Periodicity in Properties": "11",
+                    "Chemical Bonding and Molecular Structure": "11",
+                    "States of Matter": "11",
+                    "Thermodynamics (C)": "11",
+                    "Chemical Equilibrium": "11",
+                    "Ionic Equilibrium": "11",
+                    "Redox Reactions": "11",
+                    "Hydrogen": "11",
+                    "s Block Elements": "11",
+                    "p Block Elements (Group 13 & 14)": "11",
+                    "General Organic Chemistry": "11",
+                    "Hydrocarbons": "11",
+                    "Environmental Chemistry": "11",
+                    
+                    // Class 12 chapters
+                    "Solid State": "12",
+                    "Solutions": "12",
+                    "Electrochemistry": "12",
+                    "Chemical Kinetics": "12",
+                    "Surface Chemistry": "12",
+                    "General Principles and Processes of Isolation of Metals": "12",
+                    "p Block Elements (Group 15, 16, 17 & 18)": "12",
+                    "d and f Block Elements": "12",
+                    "Coordination Compounds": "12",
+                    "Haloalkanes and Haloarenes": "12",
+                    "Alcohols, Phenols and Ethers": "12",
+                    "Aldehydes and Ketones": "12",
+                    "Carboxylic Acid Derivatives": "12",
+                    "Amines": "12",
+                    "Biomolecules": "12",
+                    "Polymers": "12",
+                    "Chemistry in Everyday Life": "12",
+                    "Practical Chemistry": "12"
+                };
+                
+                filteredChapters = filteredChapters.filter(chapter => 
+                    classFilters.includes(classMapping[chapter.name])
+                );
+            }
+            
+            // Apply importance filters if any are selected
+            if (importanceFilters && importanceFilters.length > 0) {
+                const importanceMapping = {
+                    // High Output High Input
+                    "Some Basic Concepts of Chemistry": "high-high",
+                    "Structure of Atom": "high-high",
+                    "Chemical Bonding and Molecular Structure": "high-high",
+                    "General Organic Chemistry": "high-high",
+                    "Hydrocarbons": "high-high",
+                    "p Block Elements (Group 15, 16, 17 & 18)": "high-high",
+                    "d and f Block Elements": "high-high",
+                    "Alcohols, Phenols and Ethers": "high-high",
+                    
+                    // High Output Low Input
+                    "Thermodynamics (C)": "high-low",
+                    "Hydrogen": "high-low",
+                    "s Block Elements": "high-low",
+                    "Environmental Chemistry": "high-low",
+                    "Solutions": "high-low",
+                    "Electrochemistry": "high-low",
+                    "Chemical Kinetics": "high-low",
+                    "Surface Chemistry": "high-low",
+                    "General Principles and Processes of Isolation of Metals": "high-low",
+                    "Coordination Compounds": "high-low",
+                    "Amines": "high-low",
+                    "Biomolecules": "high-low",
+                    
+                    // Low Output High Input
+                    "Classification of Elements and Periodicity in Properties": "low-high",
+                    "Ionic Equilibrium": "low-high",
+                    "Haloalkanes and Haloarenes": "low-high",
+                    "Aldehydes and Ketones": "low-high",
+                    "Carboxylic Acid Derivatives": "low-high",
+                    
+                    // Low Output Low Input
+                    "States of Matter": "low-low",
+                    "Chemical Equilibrium": "low-low",
+                    "Redox Reactions": "low-low",
+                    "p Block Elements (Group 13 & 14)": "low-low",
+                    "Solid State": "low-low",
+                    "Polymers": "low-low",
+                    "Chemistry in Everyday Life": "low-low",
+                    "Practical Chemistry": "low-low"
+                };
+                
+                // Only filter if not all options are selected
+                if (importanceFilters.length < 4) {
+                    filteredChapters = filteredChapters.filter(chapter => {
+                        const importance = importanceMapping[chapter.name];
+                        return importance && importanceFilters.includes(importance);
+                    });
+                }
             }
             
             for (const chapter of filteredChapters) {
@@ -525,9 +783,14 @@
                     iconSpan.className = 'chapter-icon';
                     
                     // Add icon
-                    const icon = document.createElement('i');
-                    icon.className = chapter.icon || 'fas fa-flask'; // Default to flask icon if not specified
-                    iconSpan.appendChild(icon);
+                    // Special handling for any custom icons
+                    if (chapter.name === "Hydrogen") {
+                        iconSpan.innerHTML = "<span style='color: white; font-size: 16px;'>H</span>";
+                    } else {
+                        const icon = document.createElement('i');
+                        icon.className = chapter.icon || 'fas fa-flask'; // Default to flask icon if not specified
+                        iconSpan.appendChild(icon);
+                    }
                     
                     // Add title text and right arrow
                     const titleText = document.createTextNode(chapter.name);
@@ -541,7 +804,12 @@
                     // Add questions count
                     const questionsDiv = document.createElement('div');
                     questionsDiv.className = 'chapter-questions';
-                    questionsDiv.textContent = `${chapter.questions} Qs`; // Using provided question count
+                    questionsDiv.id = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                    if (chapter.questions === '-' || chapter.questions === 'loading') {
+                        questionsDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                    } else {
+                        questionsDiv.textContent = `${chapter.questions} Qs`; // Using provided question count
+                    }
                     
                     chapterCard.appendChild(titleDiv);
                     chapterCard.appendChild(questionsDiv);
@@ -554,6 +822,110 @@
                 } catch (error) {
                     console.error(`Error creating card for ${chapter.name}:`, error);
                 }
+            }
+        }
+        
+        // Function to count total questions from Firebase
+        async function countTotalQuestions() {
+            try {
+                if (!db) return;
+                
+                // Get questions collection reference
+                const questionsRef = db.collection('questions');
+                
+                let totalCount = 0;
+                
+                // Get all chapters from chemistryChapters array
+                const chapterNames = chemistryChapters.map(chapter => chapter.name);
+                
+                // Create an array of promises for each chapter
+                const promises = chapterNames.map(chapterName => {
+                    // Reference to the items collection for this chapter with the correct path structure
+                    // /questions/JEE Main/Chemistry/[chapter name]/items/[question-id]
+                    return questionsRef.doc('JEE Main')
+                                      .collection('Chemistry')
+                                      .doc(chapterName)
+                                      .collection('items')
+                                      .get()
+                                      .then(itemsSnapshot => {
+                                          return itemsSnapshot.size;
+                                      }).catch(error => {
+                                          console.error(`Error counting items for ${chapterName}:`, error);
+                                          return 0; // Return 0 if there's an error
+                                      });
+                });
+                
+                // Wait for all promises to resolve
+                const counts = await Promise.all(promises);
+                
+                // Sum up all counts
+                totalCount = counts.reduce((sum, count) => sum + count, 0);
+                
+                // Update the display
+                const countElement = document.getElementById('totalQuestionsCount');
+                if (countElement) {
+                    countElement.innerHTML = totalCount.toLocaleString() + ' Questions';
+                }
+                
+                console.log('Total Chemistry Questions:', totalCount);
+                return totalCount;
+            } catch (error) {
+                console.error('Error counting questions:', error);
+                const countElement = document.getElementById('totalQuestionsCount');
+                if (countElement) {
+                    countElement.innerHTML = 'Error loading count';
+                }
+                return 0;
+            }
+        }
+        
+        // Function to update question counts for each chapter from Firebase
+        async function updateChapterQuestionCounts() {
+            try {
+                if (!db) return;
+                
+                // Get questions collection reference for JEE Main/Chemistry path
+                const questionsRef = db.collection('questions');
+                
+                // Update each chapter's question count
+                for (const chapter of chemistryChapters) {
+                    // Set to loading state
+                    chapter.questions = 'loading';
+                    
+                    // Get this chapter's items collection with the correct path structure
+                    // /questions/JEE Main/Chemistry/[chapter name]/items/[question-id]
+                    const chapterPath = `JEE Main/Chemistry/${chapter.name}/items`;
+                    
+                    // Query to count documents in this path
+                    questionsRef.doc('JEE Main')
+                               .collection('Chemistry')
+                               .doc(chapter.name)
+                               .collection('items')
+                               .get()
+                               .then(snapshot => {
+                                   const count = snapshot.size;
+                                   chapter.questions = count;
+                        
+                        // Update UI if element exists
+                        const elementId = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = `${count} Qs`;
+                        }
+                    }).catch(error => {
+                        console.error(`Error counting questions for ${chapter.name}:`, error);
+                        chapter.questions = 'Error';
+                        
+                        // Update UI to show error
+                        const elementId = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = 'Error';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating chapter question counts:', error);
             }
         }
         
