@@ -69,7 +69,7 @@
         
         .header-icons {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
         
         .header-icon {
@@ -613,7 +613,22 @@
             
             .header-icons {
                 width: 100%;
-                justify-content: space-around;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .btn-text {
+                display: none;
+            }
+            
+            .back-btn {
+                width: 40px !important;
+                height: 40px !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             
             .filter-bar {
@@ -632,6 +647,58 @@
             
             .question-number {
                 min-width: auto;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1000;
+                background: linear-gradient(135deg, #4f46e5, #6366f1);
+                border: none;
+                color: white;
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                font-size: 18px;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+                transition: all 0.3s ease;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .mobile-menu-toggle:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                z-index: 999;
+                height: 100%;
+                width: 250px;
+                left: 0;
+                top: 0;
+                box-shadow: var(--shadow-md);
+                background-color: white;
+            }
+            
+            .sidebar.expanded {
+                transform: translateX(0) !important;
+                display: block !important;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .dashboard-container {
+                display: block;
             }
         }
         
@@ -765,22 +832,32 @@
                 <!-- Header Section -->
                 <div class="header-section">
                     <div class="header-title-section">
-                        <h1 class="header-title" id="chapterTitle">Mathematics in Physics</h1>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="subject-icon" style="width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #FFA500, #FF6347); display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; box-shadow: 0 8px 16px rgba(255, 165, 0, 0.25); position: relative; overflow: hidden;">
+                                <i class="fas fa-calculator" style="position: relative; z-index: 2;"></i>
+                                <div style="position: absolute; top: -10px; right: -10px; width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 50%;"></div>
+                                <div style="position: absolute; bottom: -5px; left: -5px; width: 20px; height: 20px; background: rgba(255,255,255,0.15); border-radius: 50%;"></div>
+                            </div>
+                            <h1 class="header-title" id="chapterTitle">Mathematics in Physics</h1>
+                        </div>
                         <div class="header-subtitle">
                             <span class="question-count">120 Questions</span>
                             <span class="chapter-description">Application of mathematical concepts in physics problems</span>
                         </div>
                     </div>
                     <div class="header-icons">
-                        <div class="header-icon">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                        <div class="header-icon">
-                            <i class="fas fa-bookmark"></i>
-                        </div>
-                        <div class="header-icon">
-                            <i class="fas fa-chart-bar"></i>
-                        </div>
+                        <button class="back-btn" onclick="goBack()" style="background: var(--gradient-primary); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); border-radius: 12px; color: white; border: none; padding: 10px 20px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">
+                            <i class="fas fa-arrow-left"></i> <span class="btn-text">Back</span>
+                        </button>
+                        <button class="back-btn quiz-btn" style="background: white; color: var(--text-color); border: 1px solid #e0e0e0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 12px; padding: 10px 20px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">
+                            <i class="fas fa-graduation-cap" style="color: #4f46e5;"></i> <span class="btn-text">Quiz</span>
+                        </button>
+                        <button class="back-btn bookmark-btn" style="background: white; color: var(--text-color); border: 1px solid #e0e0e0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 12px; padding: 10px 20px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">
+                            <i class="fas fa-bookmark" style="color: #4f46e5;"></i> <span class="btn-text">Bookmarks</span>
+                        </button>
+                        <button class="back-btn analytics-btn" style="background: white; color: var(--text-color); border: 1px solid #e0e0e0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); width: 40px; padding: 0; border-radius: 12px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
+                            <i class="fas fa-chart-bar" style="color: #4f46e5;"></i>
+                        </button>
                     </div>
                 </div>
                 
@@ -906,7 +983,21 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
-    <script src="../../js/mobile.js"></script>
+    <!-- <script src="../../js/mobile.js"></script> -->
+    <script>
+        // Mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (mobileMenuToggle && sidebar) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                    console.log('Toggle clicked, sidebar classes:', sidebar.className);
+                });
+            }
+        });
+    </script>
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -967,6 +1058,7 @@
         // Setup chapter information
         function setupChapterInfo() {
             const chapterTitle = document.getElementById('chapterTitle');
+            const chapterIcon = document.querySelector('.subject-icon i');
             
             if (selectedChapter) {
                 chapterTitle.textContent = selectedChapter;
@@ -976,15 +1068,105 @@
             
             // Set description based on subject
             let description = "Application of mathematical concepts in physics problems";
-            if (selectedSubject === 'physics') {
-                description = "Core concepts and problem solving in mechanics and electromagnetism";
-            } else if (selectedSubject === 'chemistry') {
-                description = "Fundamental principles and reactions in organic and inorganic chemistry";
-            } else if (selectedSubject === 'mathematics') {
-                description = "Advanced calculus and algebra techniques for competitive exams";
+            let iconClass = "fas fa-calculator";
+            let iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+            
+            // Set icon based on chapter name
+            if (selectedChapter) {
+                const chapterName = selectedChapter.toLowerCase();
+                
+                // Physics chapters
+                if (chapterName.includes('mathematics in physics')) {
+                    iconClass = "fas fa-square-root-alt";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('units and dimensions')) {
+                    iconClass = "fas fa-ruler-combined";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('motion in one dimension')) {
+                    iconClass = "fas fa-long-arrow-alt-right";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('motion in two dimensions')) {
+                    iconClass = "fas fa-chart-line";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('laws of motion')) {
+                    iconClass = "fas fa-balance-scale";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('work power energy')) {
+                    iconClass = "fas fa-bolt";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('center of mass')) {
+                    iconClass = "fas fa-bullseye";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('rotational motion')) {
+                    iconClass = "fas fa-sync-alt";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('gravitation')) {
+                    iconClass = "fas fa-globe";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('mechanical properties of solids')) {
+                    iconClass = "fas fa-cubes";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } 
+                
+                // Chemistry chapters
+                else if (chapterName.includes('basic concepts of chemistry')) {
+                    iconClass = "fas fa-book-open";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('structure of atom')) {
+                    iconClass = "fas fa-circle";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('classification of elements')) {
+                    iconClass = "fas fa-table";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('chemical bonding')) {
+                    iconClass = "fas fa-link";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('states of matter')) {
+                    iconClass = "fas fa-thermometer-half";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } 
+                
+                // Mathematics chapters
+                else if (chapterName.includes('basic of mathematics')) {
+                    iconClass = "fas fa-book";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('quadratic equation')) {
+                    iconClass = "fas fa-square-root-alt";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('complex number')) {
+                    iconClass = "fas fa-infinity";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('permutation combination')) {
+                    iconClass = "fas fa-random";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('sequences and series')) {
+                    iconClass = "fas fa-sort-numeric-up";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                }
+                
+                // Default icons based on subject if no specific chapter match
+                else if (selectedSubject === 'physics') {
+                    iconClass = "fas fa-atom";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                    description = "Core concepts and problem solving in mechanics and electromagnetism";
+                } else if (selectedSubject === 'chemistry') {
+                    iconClass = "fas fa-flask";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                    description = "Fundamental principles and reactions in organic and inorganic chemistry";
+                } else if (selectedSubject === 'mathematics') {
+                    iconClass = "fas fa-square-root-alt";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                    description = "Advanced calculus and algebra techniques for competitive exams";
+                }
             }
             
             document.querySelector('.chapter-description').textContent = description;
+            
+            // Update icon and background
+            if (chapterIcon) {
+                chapterIcon.className = iconClass;
+                document.querySelector('.subject-icon').style.background = iconBackground;
+            }
         }
         
         // Global variables for filtering
@@ -1267,6 +1449,30 @@
             }
         }
         
+        // Initialize button hover effects
+        function initializeButtonEffects() {
+            const buttons = document.querySelectorAll('.back-btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    if (this.classList.contains('bookmark-btn') || this.classList.contains('analytics-btn')) {
+                        this.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+                    } else {
+                        this.style.boxShadow = '0 6px 15px rgba(79, 70, 229, 0.4)';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    if (this.classList.contains('bookmark-btn') || this.classList.contains('analytics-btn')) {
+                        this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.05)';
+                    } else {
+                        this.style.boxShadow = '0 4px 10px rgba(79, 70, 229, 0.3)';
+                    }
+                });
+            });
+        }
+        
         // Initialize event listeners when page loads
         function initializeEventListeners() {
             // Nav tabs event listeners
@@ -1412,12 +1618,17 @@
                 }
             });
             
-            // Header icons
-            document.querySelectorAll('.header-icon').forEach((icon, index) => {
-                icon.addEventListener('click', function() {
-                    const actions = ['Quiz mode activated', 'Bookmarks view', 'Analytics dashboard'];
-                    alert(actions[index]);
-                });
+            // Button actions
+            document.querySelector('.quiz-btn').addEventListener('click', function() {
+                alert('Quiz mode activated');
+            });
+            
+            document.querySelector('.bookmark-btn').addEventListener('click', function() {
+                alert('Bookmarks view');
+            });
+            
+            document.querySelector('.analytics-btn').addEventListener('click', function() {
+                alert('Analytics dashboard');
             });
             
             // Pagination buttons
@@ -1474,6 +1685,7 @@
             setupChapterInfo();
             loadQuestions();
             initializeEventListeners();
+            initializeButtonEffects();
         });
     </script>
 </body>

@@ -1,0 +1,104 @@
+/* Mobile layout fixes for subject pages */
+@media (max-width: 768px) {
+    /* Fix for filter tabs scrolling */
+    .filter-tabs {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .filter-tabs::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    
+    .filter-tab {
+        flex: 0 0 auto;
+    }
+    
+    /* Fix for header container */
+    .header-container {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding-top: 50px !important; /* Space for the mobile menu button */
+    }
+    
+    .action-buttons {
+        margin-top: 15px !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    /* Fix for bookmark button text */
+    .bookmark-btn .btn-text {
+        display: none !important;
+    }
+    
+    .bookmark-btn {
+        width: 40px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Fix for search input */
+    #searchInput {
+        font-size: 14px !important;
+        padding: 10px 15px 10px 40px !important;
+    }
+    
+    /* Fix for chapter cards */
+    .chapter-card {
+        padding: 15px !important;
+    }
+    
+    .chapter-title {
+        font-size: 15px !important;
+    }
+    
+    .chapter-questions {
+        font-size: 12px !important;
+    }
+    
+    .chapter-icon {
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        min-height: 30px !important;
+        margin-right: 10px !important;
+    }
+    
+    /* Fix for filter modal */
+    #filterModal > div {
+        width: 95% !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Fix for subject header */
+    .subject-header h1 {
+        font-size: 24px !important;
+    }
+    
+    .subject-icon {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 20px !important;
+        margin-right: 15px !important;
+    }
+    
+    /* Fix for main content padding */
+    .main-content {
+        padding: 10px !important;
+    }
+    
+    /* Fix for dashboard content */
+    .dashboard-content {
+        padding: 5px !important;
+    }
+}

@@ -9,8 +9,71 @@
     <link rel="stylesheet" href="../../assets/css/dark-mode.css">
     <link rel="stylesheet" href="../../assets/css/mobile.css">
     <link rel="stylesheet" href="../../assets/css/mobile-dashboard.css">
+    
     <style>
+        /* Mobile menu toggle button */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                z-index: 999;
+                height: 100%;
+                width: 250px;
+                left: 0;
+                top: 0;
+                box-shadow: var(--shadow-md);
+                background-color: white;
+            }
+            
+            .sidebar.expanded {
+                transform: translateX(0) !important;
+                display: block !important;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .dashboard-container {
+                display: block;
+            }
+        }
+        
         :root {
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --primary-color: #4f46e5;
             --card-bg: #ffffff;
             --text-color: #333333;
@@ -33,58 +96,34 @@
             margin-top: 30px;
         }
         
-        /* Mobile styles */
-        @media (max-width: 768px) {
-            .chapter-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .filter-tabs {
-                padding-bottom: 10px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .subject-header h1 {
-                font-size: 24px;
-            }
-            
-            .subject-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-            
-            .back-btn {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .action-buttons {
-                margin-top: 15px;
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .bookmark-btn .btn-text {
-                display: none;
-            }
-            
-            .bookmark-btn {
-                width: 40px;
-                padding: 0;
-            }
-        }
+
+        
+
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Additional responsive styles for content */
+        @media (max-width: 768px) {
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons {
+                margin-top: 15px;
+            }
+            
+            .filter-tabs {
+                overflow-x: auto;
+                padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+            }
         }
         
         .chapter-card {
@@ -282,9 +321,17 @@
     </style>
 </head>
 <body>
-    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
+    
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('expanded');
+            console.log('Toggle clicked, sidebar classes:', sidebar.className);
+        }
+    </script>
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -433,7 +480,27 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="../../js/free-theme-manager.js"></script>
-    <script src="../../js/mobile.js"></script>
+    <script>
+        // Add sidebar toggle functionality for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarHeader = document.querySelector('.sidebar-header');
+            const sidebar = document.querySelector('.sidebar');
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            
+            if (sidebarHeader && sidebar) {
+                sidebarHeader.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            if (mobileMenuToggle && sidebar) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+        });
+    </script>
+
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -943,6 +1010,12 @@
         function viewPreviousYearQuestions() {
             window.location.href = 'jee-mains-chemistry-questions.html';
         }
+    </script>
+    <script>
+        // Direct mobile menu toggle script
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('expanded');
+        });
     </script>
 </body>
 </html>
