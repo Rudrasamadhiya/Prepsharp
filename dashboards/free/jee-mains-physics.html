@@ -304,9 +304,9 @@
                         <div>
                             <h1 style="margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Physics</h1>
                             <p style="margin-top: 8px; color: var(--text-light); display: flex; align-items: center; gap: 8px;">
-                                <span style="background: rgba(255, 165, 0, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;">31 Chapters</span>
+                                <span style="background: rgba(255, 165, 0, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;">32 Chapters</span>
                                 <span style="width: 4px; height: 4px; background: #ccc; border-radius: 50%;"></span>
-                                <span style="background: rgba(255, 165, 0, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;">3,433 Questions</span>
+                                <span id="totalQuestionsCount" style="background: rgba(255, 165, 0, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: 500;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
                             </p>
                         </div>
                     </div>
@@ -341,12 +341,75 @@
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-                    <button style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <button id="filterBtn" style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                         <i class="fas fa-filter" style="color: #FF6347; margin-right: 5px;"></i> Filter
                     </button>
-                    <button style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <button id="sortBtn" style="padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 14px; font-weight: 500; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                         <i class="fas fa-sort" style="color: #4f46e5; margin-right: 5px;"></i> Sort
                     </button>
+                </div>
+                
+                <!-- Filter Modal -->
+                <div id="filterModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+                    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                        <!-- Modal Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                            <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Filter Questions</h3>
+                            <button id="closeFilterModal" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">&times;</button>
+                        </div>
+                        
+                        <!-- Filter Content -->
+                        <div style="padding: 20px;">
+                            <!-- Class Filter -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">Class (Grade)</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="class" value="11" style="width: 18px; height: 18px;">
+                                        <span>Class 11</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="class" value="12" style="width: 18px; height: 18px;">
+                                        <span>Class 12</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Importance Filter -->
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">Importance</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="high-high" style="width: 18px; height: 18px;" checked>
+                                        <span>High Output High Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="high-low" style="width: 18px; height: 18px;" checked>
+                                        <span>High Output Low Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="low-high" style="width: 18px; height: 18px;" checked>
+                                        <span>Low Output High Input</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" name="importance" value="low-low" style="width: 18px; height: 18px;" checked>
+                                        <span>Low Output Low Input</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Filters Label -->
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="margin: 0; font-size: 16px; font-weight: 500;">Filters</h4>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                <button id="clearFilters" style="padding: 10px 15px; border: none; background: none; color: #dc3545; font-weight: 500; cursor: pointer;">Clear All</button>
+                                <button id="applyFilters" style="padding: 10px 20px; border: none; background: #4f46e5; color: white; border-radius: 8px; font-weight: 500; cursor: pointer;">Apply</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -380,7 +443,7 @@
         
         // Physics chapters with icons, question counts and status
         const physicsChapters = [
-            { name: "Mathematics in Physics", icon: "fas fa-function", questions: "-", status: "current" },
+            { name: "Mathematical Physics", icon: "fas fa-calculator", questions: "-", status: "current" },
             { name: "Units and Dimensions", icon: "fas fa-ruler", questions: "-", status: "current" },
             { name: "Motion In One Dimension", icon: "fas fa-arrow-right", questions: "-", status: "current" },
             { name: "Motion In Two Dimensions", icon: "fas fa-chart-line", questions: "-", status: "current" },
@@ -410,12 +473,14 @@
             { name: "Atomic Physics", icon: "fas fa-atom", questions: "145", status: "current" },
             { name: "Nuclear Physics", icon: "fas fa-radiation", questions: "151", status: "reduced" },
             { name: "Semiconductors", icon: "fas fa-microchip", questions: "228", status: "reduced" },
+            { name: "Communication System", icon: "fas fa-satellite-dish", questions: "85", status: "removed" },
             { name: "Experimental Physics", icon: "fas fa-stopwatch", questions: "63", status: "current" }
         ];
         
         // Load chapters when page loads
         window.addEventListener('load', function() {
             loadUserPreferences();
+            countTotalQuestions();
             loadChapters('current'); // Default to "As per syllabus"
             
             // Add event listeners for filter tabs
@@ -440,6 +505,59 @@
                 // Get current active filter
                 const activeFilter = document.querySelector('.filter-tab.active').getAttribute('data-filter');
                 loadChapters(activeFilter);
+            });
+            
+            // Filter modal functionality
+            const filterModal = document.getElementById('filterModal');
+            const filterBtn = document.getElementById('filterBtn');
+            const closeFilterModal = document.getElementById('closeFilterModal');
+            const clearFilters = document.getElementById('clearFilters');
+            const applyFilters = document.getElementById('applyFilters');
+            
+            // Open filter modal
+            filterBtn.addEventListener('click', function() {
+                filterModal.style.display = 'flex';
+            });
+            
+            // Close filter modal
+            closeFilterModal.addEventListener('click', function() {
+                filterModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === filterModal) {
+                    filterModal.style.display = 'none';
+                }
+            });
+            
+            // Clear all filters
+            clearFilters.addEventListener('click', function() {
+                document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+            
+            // Apply filters
+            applyFilters.addEventListener('click', function() {
+                // Get selected class filters
+                const classFilters = Array.from(document.querySelectorAll('input[name="class"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                // Get selected importance filters
+                const importanceFilters = Array.from(document.querySelectorAll('input[name="importance"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                // Apply filters to chapters (you can extend the loadChapters function to use these)
+                console.log('Class filters:', classFilters);
+                console.log('Importance filters:', importanceFilters);
+                
+                // Get current active filter
+                const activeFilter = document.querySelector('.filter-tab.active').getAttribute('data-filter');
+                loadChapters(activeFilter, classFilters, importanceFilters);
+                
+                // Close modal
+                filterModal.style.display = 'none';
             });
         });
         
@@ -467,9 +585,12 @@
         }
         
         // Load chapters and question counts
-        async function loadChapters(filter = 'current') {
+        async function loadChapters(filter = 'current', classFilters = [], importanceFilters = []) {
             const chapterGrid = document.getElementById('chapterGrid');
             chapterGrid.innerHTML = ''; // Clear existing chapters
+            
+            // Get chapter question counts from Firebase
+            await updateChapterQuestionCounts();
             
             // Filter chapters based on selected filter
             let filteredChapters;
@@ -490,6 +611,102 @@
                 filteredChapters = filteredChapters.filter(chapter => 
                     chapter.name.toLowerCase().includes(searchTerm)
                 );
+            }
+            
+            // Apply class filters if any are selected
+            if (classFilters && classFilters.length > 0) {
+                const classMapping = {
+                    // Class 11 chapters
+                    "Units and Dimensions": "11",
+                    "Motion In One Dimension": "11",
+                    "Motion In Two Dimensions": "11",
+                    "Laws of Motion": "11",
+                    "Work Power Energy": "11",
+                    "Center of Mass Momentum and Collision": "11",
+                    "Rotational Motion": "11",
+                    "Gravitation": "11",
+                    "Mechanical Properties of Solids": "11",
+                    "Mechanical Properties of Fluids": "11",
+                    "Thermal Properties of Matter": "11",
+                    "Thermodynamics": "11",
+                    "Kinetic Theory of Gases": "11",
+                    "Oscillations": "11",
+                    "Waves and Sound": "11",
+                    "Experimental Physics": "11",
+                    
+                    // Class 12 chapters
+                    "Electrostatics": "12",
+                    "Capacitance": "12",
+                    "Current Electricity": "12",
+                    "Magnetic Properties of Matter": "12",
+                    "Magnetic Effects of Current": "12",
+                    "Electromagnetic Induction": "12",
+                    "Alternating Current": "12",
+                    "Electromagnetic Waves": "12",
+                    "Ray Optics": "12",
+                    "Wave Optics": "12",
+                    "Dual Nature of Matter": "12",
+                    "Atomic Physics": "12",
+                    "Nuclear Physics": "12",
+                    "Semiconductors": "12",
+                    "Communication System": "12"
+                };
+                
+                filteredChapters = filteredChapters.filter(chapter => 
+                    classFilters.includes(classMapping[chapter.name])
+                );
+            }
+            
+            // Apply importance filters if any are selected
+            if (importanceFilters && importanceFilters.length > 0) {
+                const importanceMapping = {
+                    // High Output High Input
+                    "Motion In One Dimension": "high-high",
+                    "Motion In Two Dimensions": "high-high",
+                    "Laws of Motion": "high-high",
+                    "Rotational Motion": "high-high",
+                    "Thermodynamics": "high-high",
+                    "Oscillations": "high-high",
+                    "Electrostatics": "high-high",
+                    "Magnetic Effects of Current": "high-high",
+                    "Electromagnetic Induction": "high-high",
+                    
+                    // High Output Low Input
+                    "Work Power Energy": "high-low",
+                    "Capacitance": "high-low",
+                    "Current Electricity": "high-low",
+                    "Ray Optics": "high-low",
+                    
+                    // Low Output High Input
+                    "Units and Dimensions": "low-high",
+                    "Center of Mass Momentum and Collision": "low-high",
+                    "Gravitation": "low-high",
+                    "Mechanical Properties of Fluids": "low-high",
+                    "Alternating Current": "low-high",
+                    "Wave Optics": "low-high",
+                    "Nuclear Physics": "low-high",
+                    
+                    // Low Output Low Input
+                    "Mechanical Properties of Solids": "low-low",
+                    "Thermal Properties of Matter": "low-low",
+                    "Kinetic Theory of Gases": "low-low",
+                    "Waves and Sound": "low-low",
+                    "Magnetic Properties of Matter": "low-low",
+                    "Electromagnetic Waves": "low-low",
+                    "Dual Nature of Matter": "low-low",
+                    "Atomic Physics": "low-low",
+                    "Semiconductors": "low-low",
+                    "Communication System": "low-low",
+                    "Experimental Physics": "low-low"
+                };
+                
+                // Only filter if not all options are selected
+                if (importanceFilters.length < 4) {
+                    filteredChapters = filteredChapters.filter(chapter => {
+                        const importance = importanceMapping[chapter.name];
+                        return importance && importanceFilters.includes(importance);
+                    });
+                }
             }
             
             for (const chapter of filteredChapters) {
@@ -544,7 +761,12 @@
                     // Add questions count
                     const questionsDiv = document.createElement('div');
                     questionsDiv.className = 'chapter-questions';
-                    questionsDiv.textContent = `${chapter.questions} Qs`; // Using provided question count
+                    questionsDiv.id = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                    if (chapter.questions === '-' || chapter.questions === 'loading') {
+                        questionsDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                    } else {
+                        questionsDiv.textContent = `${chapter.questions} Qs`; // Using provided question count
+                    }
                     
                     chapterCard.appendChild(titleDiv);
                     chapterCard.appendChild(questionsDiv);
@@ -569,6 +791,110 @@
         
         function goBack() {
             window.location.href = 'jee-mains-subjects.html';
+        }
+        
+        // Function to count total questions from Firebase
+        async function countTotalQuestions() {
+            try {
+                if (!db) return;
+                
+                // Get questions collection reference
+                const questionsRef = db.collection('questions');
+                
+                let totalCount = 0;
+                
+                // Get all chapters from physicsChapters array
+                const chapterNames = physicsChapters.map(chapter => chapter.name);
+                
+                // Create an array of promises for each chapter
+                const promises = chapterNames.map(chapterName => {
+                    // Reference to the items collection for this chapter with the correct path structure
+                    // /questions/JEE Main/Physics/[chapter name]/items/[question-id]
+                    return questionsRef.doc('JEE Main')
+                                      .collection('Physics')
+                                      .doc(chapterName)
+                                      .collection('items')
+                                      .get()
+                                      .then(itemsSnapshot => {
+                                          return itemsSnapshot.size;
+                                      }).catch(error => {
+                                          console.error(`Error counting items for ${chapterName}:`, error);
+                                          return 0; // Return 0 if there's an error
+                                      });
+                });
+                
+                // Wait for all promises to resolve
+                const counts = await Promise.all(promises);
+                
+                // Sum up all counts
+                totalCount = counts.reduce((sum, count) => sum + count, 0);
+                
+                // Update the display
+                const countElement = document.getElementById('totalQuestionsCount');
+                if (countElement) {
+                    countElement.innerHTML = totalCount.toLocaleString() + ' Questions';
+                }
+                
+                console.log('Total Physics Questions:', totalCount);
+                return totalCount;
+            } catch (error) {
+                console.error('Error counting questions:', error);
+                const countElement = document.getElementById('totalQuestionsCount');
+                if (countElement) {
+                    countElement.innerHTML = 'Error loading count';
+                }
+                return 0;
+            }
+        }
+        
+        // Function to update question counts for each chapter from Firebase
+        async function updateChapterQuestionCounts() {
+            try {
+                if (!db) return;
+                
+                // Get questions collection reference for JEE Main/Physics path
+                const questionsRef = db.collection('questions');
+                
+                // Update each chapter's question count
+                for (const chapter of physicsChapters) {
+                    // Set to loading state
+                    chapter.questions = 'loading';
+                    
+                    // Get this chapter's items collection with the correct path structure
+                    // /questions/JEE Main/Physics/[chapter name]/items/[question-id]
+                    const chapterPath = `JEE Main/Physics/${chapter.name}/items`;
+                    
+                    // Query to count documents in this path
+                    questionsRef.doc('JEE Main')
+                               .collection('Physics')
+                               .doc(chapter.name)
+                               .collection('items')
+                               .get()
+                               .then(snapshot => {
+                                   const count = snapshot.size;
+                                   chapter.questions = count;
+                        
+                        // Update UI if element exists
+                        const elementId = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = `${count} Qs`;
+                        }
+                    }).catch(error => {
+                        console.error(`Error counting questions for ${chapter.name}:`, error);
+                        chapter.questions = 'Error';
+                        
+                        // Update UI to show error
+                        const elementId = `questions-${chapter.name.replace(/\s+/g, '-').toLowerCase()}`;
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = 'Error';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating chapter question counts:', error);
+            }
         }
         
         function viewPreviousYearQuestions() {
@@ -608,6 +934,7 @@
                 "Atomic Physics": "⚛️",
                 "Nuclear Physics": "☢️",
                 "Semiconductors": "🔌",
+                "Communication System": "📡",
                 "Experimental Physics": "⏱️"
             };
             
