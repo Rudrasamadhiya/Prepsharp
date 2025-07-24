@@ -944,6 +944,7 @@
                         const doc = questionsSnapshot.docs[0];
                         currentQuestion = doc.data();
                         console.log('Loaded from Firestore:', currentQuestion);
+
                         displayQuestion();
                     } else {
                         loadSampleQuestion();
@@ -1138,11 +1139,33 @@
         }
         
         function previousQuestion() {
-            alert('Previous question functionality');
+            const currentIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+            if (currentIndex > 0) {
+                localStorage.setItem('currentQuestionIndex', (currentIndex - 1).toString());
+                loadQuestionByIndex(currentIndex - 1);
+            }
         }
         
         function nextQuestion() {
-            alert('Next question functionality');
+            const currentIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+            const allQuestions = JSON.parse(localStorage.getItem('allChapterQuestions') || '[]');
+            if (currentIndex < allQuestions.length - 1) {
+                localStorage.setItem('currentQuestionIndex', (currentIndex + 1).toString());
+                loadQuestionByIndex(currentIndex + 1);
+            } else {
+                showCompletionMessage();
+            }
+        }
+        
+        function loadQuestionByIndex(index) {
+            const allQuestions = JSON.parse(localStorage.getItem('allChapterQuestions') || '[]');
+            if (allQuestions[index]) {
+                currentQuestion = allQuestions[index];
+                selectedOption = null;
+                document.getElementById('checkBtn').disabled = true;
+                document.getElementById('solutionSection').style.display = 'none';
+                displayQuestion();
+            }
         }
         
         function addSolution() {
@@ -1155,6 +1178,21 @@
         }
         
 
+        
+        function showCompletionMessage() {
+            const questionPanel = document.querySelector('.question-panel');
+            questionPanel.innerHTML = `
+                <div style="text-align: center; padding: 50px 30px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border-radius: 20px;">
+                    <div style="font-size: 60px; margin-bottom: 25px;">🎉</div>
+                    <h2 style="font-size: 28px; margin-bottom: 20px; font-weight: 700;">Chapter Completed</h2>
+                    <p style="font-size: 16px; margin-bottom: 25px; opacity: 0.9;">You have successfully completed all questions in this chapter.</p>
+                    <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 12px; margin: 25px 0;">
+                        <p style="font-size: 15px; margin: 0; line-height: 1.5;">Your performance has been recorded. You may now proceed to the next chapter or review your answers.</p>
+                    </div>
+                    <button onclick="window.history.back()" style="background: white; color: #4f46e5; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 15px;">Return to Chapter</button>
+                </div>
+            `;
+        }
         
         function goBack() {
             window.history.back();

@@ -1101,6 +1101,24 @@
                 } else if (chapterName.includes('mechanical properties of solids')) {
                     iconClass = "fas fa-cubes";
                     iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('atomic physics')) {
+                    iconClass = "fas fa-atom";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('nuclear physics')) {
+                    iconClass = "fas fa-radiation";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('electromagnetic')) {
+                    iconClass = "fas fa-magnet";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('optics')) {
+                    iconClass = "fas fa-eye";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('waves')) {
+                    iconClass = "fas fa-wave-square";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
+                } else if (chapterName.includes('thermodynamics')) {
+                    iconClass = "fas fa-fire";
+                    iconBackground = "linear-gradient(135deg, #FFA500, #FF6347)";
                 } 
                 
                 // Chemistry chapters
@@ -1108,7 +1126,7 @@
                     iconClass = "fas fa-book-open";
                     iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
                 } else if (chapterName.includes('structure of atom')) {
-                    iconClass = "fas fa-circle";
+                    iconClass = "fas fa-atom";
                     iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
                 } else if (chapterName.includes('classification of elements')) {
                     iconClass = "fas fa-table";
@@ -1118,6 +1136,15 @@
                     iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
                 } else if (chapterName.includes('states of matter')) {
                     iconClass = "fas fa-thermometer-half";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('organic chemistry')) {
+                    iconClass = "fas fa-leaf";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('inorganic chemistry')) {
+                    iconClass = "fas fa-flask";
+                    iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
+                } else if (chapterName.includes('physical chemistry')) {
+                    iconClass = "fas fa-vial";
                     iconBackground = "linear-gradient(135deg, #28A745, #20c997)";
                 } 
                 
@@ -1136,6 +1163,18 @@
                     iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
                 } else if (chapterName.includes('sequences and series')) {
                     iconClass = "fas fa-sort-numeric-up";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('calculus')) {
+                    iconClass = "fas fa-chart-line";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('algebra')) {
+                    iconClass = "fas fa-calculator";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('geometry')) {
+                    iconClass = "fas fa-shapes";
+                    iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
+                } else if (chapterName.includes('trigonometry')) {
+                    iconClass = "fas fa-triangle";
                     iconBackground = "linear-gradient(135deg, #007BFF, #6610f2)";
                 }
                 
@@ -1398,6 +1437,20 @@
                     return;
                 }
                 
+                // Store questions globally for navigation
+                window.allLoadedQuestions = questions.map(item => ({
+                    id: item.id,
+                    questionImage: item.data.questionImage || item.data.imageUrl || item.data.image,
+                    text: item.data.text || item.data.question,
+                    optionImages: item.data.optionImages || {},
+                    options: item.data.options || [],
+                    correctAnswer: item.data.correctAnswer || 0,
+                    difficulty: item.data.difficulty || 'Medium',
+                    subject: selectedSubject || 'Physics',
+                    year: item.data.year || '2023',
+                    questionNo: item.data.questionNo || '1'
+                }));
+                
                 // Create question items
                 questions.forEach((item, index) => {
                     const doc = { id: item.id };
@@ -1604,6 +1657,13 @@
             };
             
             localStorage.setItem('currentQuestion', JSON.stringify(questionData));
+            
+            // Store all questions and current index for navigation
+            if (window.allLoadedQuestions) {
+                localStorage.setItem('allChapterQuestions', JSON.stringify(window.allLoadedQuestions));
+                const currentIndex = window.allLoadedQuestions.findIndex(q => q.id === questionId);
+                localStorage.setItem('currentQuestionIndex', currentIndex.toString());
+            }
             
             // Navigate to attempt page
             window.location.href = 'attempt-question.html';
