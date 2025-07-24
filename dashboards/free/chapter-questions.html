@@ -841,7 +841,7 @@
                             <h1 class="header-title" id="chapterTitle">Mathematics in Physics</h1>
                         </div>
                         <div class="header-subtitle">
-                            <span class="question-count">120 Questions</span>
+                            <span class="question-count">Loading...</span>
                             <span class="chapter-description">Application of mathematical concepts in physics problems</span>
                         </div>
                     </div>
@@ -1025,12 +1025,7 @@
         const selectedSubject = localStorage.getItem('selectedSubject');
         const selectedExam = localStorage.getItem('selectedExam');
         
-        // Load data when page loads
-        window.addEventListener('load', function() {
-            loadUserPreferences();
-            setupChapterInfo();
-            loadQuestions();
-        });
+
         
         // Load user preferences from Firebase
         async function loadUserPreferences() {
@@ -1174,6 +1169,7 @@
         let currentTab = 'all';
         let showVideoOnly = false;
         let currentProgress = 'all';
+        let currentSort = 'default';
         let advancedFilters = {
             hideOutOfSyllabus: false,
             questionTypes: {
@@ -1196,110 +1192,88 @@
         
         // Load questions from Firebase
         async function loadQuestions() {
+            console.log('Loading questions with:', { 
+                chapter: selectedChapter, 
+                subject: selectedSubject, 
+                exam: selectedExam 
+            });
+            
             if (!selectedChapter || !selectedSubject || !selectedExam) {
                 console.error('Missing required selection');
+                questionList.innerHTML = '<div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 12px; margin: 20px 0;"><i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ffc107; margin-bottom: 15px;"></i><h3 style="font-size: 20px; color: #666; margin-bottom: 10px;">Chapter Not Found</h3><p style="color: #888;">This chapter is not available in our database yet.</p></div>';
+                document.querySelector('.question-count').textContent = '0 Questions';
                 return;
             }
             
             const questionList = document.getElementById('questionList');
-            questionList.innerHTML = ''; // Clear existing questions
+            if (!questionList) {
+                console.error('Question list element not found');
+                return;
+            }
+            
+            questionList.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #4f46e5;"></i><p style="margin-top: 10px;">Loading questions...</p></div>'; // Show loading indicator
             
             try {
                 const examName = selectedExam === 'mains' ? 'JEE Main' : 'JEE Advanced';
                 const subjectName = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
                 
+                console.log(`Loading questions from: questions/${examName}/${subjectName}/${selectedChapter}/items`);
+                
                 // Get questions for the selected chapter
-                const questionsSnapshot = await db.collection('questions')
+                const questionsRef = db.collection('questions')
                     .doc(examName)
                     .collection(subjectName)
                     .doc(selectedChapter)
-                    .collection('items')
-                    .limit(20) // Limit to 20 questions for demo
-                    .get();
+                    .collection('items');
                 
-                // Sample questions if Firebase doesn't return any
-                const sampleQuestions = [
-                    {
-                        id: 'Q1',
-                        text: 'A particle moves along a straight line with retardation proportional to its displacement. Its loss of kinetic energy for any displacement x is proportional to:',
-                        options: ['x', 'x²', 'x³', 'x⁴'],
-                        correctAnswer: 1,
-                        difficulty: 'medium',
-                        year: '2022',
-                        paper: 'Paper 1',
-                        hasVideo: true,
-                        attempted: false,
-                        mode: 'target-mains'
-                    },
-                    {
-                        id: 'Q2',
-                        text: 'A block of mass 10 kg is placed on a rough inclined plane of inclination 30°. The coefficient of static friction is 0.6. The frictional force acting on the block is:',
-                        options: ['49 N', '51.96 N', '60 N', '98 N'],
-                        correctAnswer: 1,
-                        difficulty: 'easy',
-                        year: '2021',
-                        paper: 'Paper 2',
-                        hasVideo: false,
-                        attempted: true,
-                        mode: 'beginner'
-                    },
-                    {
-                        id: 'Q3',
-                        text: 'A uniform magnetic field exists in a region. A charged particle enters the region with velocity perpendicular to the field. The path of the particle will be:',
-                        options: ['Straight line', 'Parabola', 'Circle', 'Helix'],
-                        correctAnswer: 2,
-                        difficulty: 'hard',
-                        year: '2023',
-                        paper: 'Paper 1',
-                        hasVideo: true,
-                        attempted: true,
-                        mode: 'advance-climb'
-                    },
-                    {
-                        id: 'Q4',
-                        text: 'The differential equation representing simple harmonic motion is:',
-                        options: ['d²x/dt² = -ω²x', 'd²x/dt² = ω²x', 'dx/dt = -ωx', 'dx/dt = ωx'],
-                        correctAnswer: 0,
-                        difficulty: 'medium',
-                        year: '2023',
-                        paper: 'Paper 2',
-                        hasVideo: true,
-                        attempted: false,
-                        mode: 'target-mains'
-                    },
-                    {
-                        id: 'Q5',
-                        text: 'If the position vector of a particle is given by r = (3t²i + 4tj + 5t²k), the magnitude of velocity at t = 1 is:',
-                        options: ['√61', '√41', '√51', '√71'],
-                        correctAnswer: 0,
-                        difficulty: 'hard',
-                        year: '2022',
-                        paper: 'Paper 1',
-                        hasVideo: false,
-                        attempted: false,
-                        mode: 'easy-bhi-tricky-bhi'
-                    }
-                ];
+                const questionsSnapshot = await questionsRef.limit(20).get();
                 
-                // Use Firebase data if available, otherwise use sample data
-                let questions = questionsSnapshot.empty ? sampleQuestions : questionsSnapshot.docs.map(doc => {
-                    const data = doc.data();
-                    // Add default properties if they don't exist in Firebase data
-                    return {
-                        ...data,
-                        hasVideo: data.hasVideo || Math.random() > 0.5,
-                        attempted: data.attempted || Math.random() > 0.7,
-                        mode: data.mode || ['beginner', 'target-mains', 'advance-climb', 'easy-bhi-tricky-bhi'][Math.floor(Math.random() * 4)],
-                        lastPracticed: data.lastPracticed || new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString()
-                    };
+                questionList.innerHTML = ''; // Clear loading indicator
+                
+                if (questionsSnapshot.empty) {
+                    console.log('No questions found in Firebase');
+                    questionList.innerHTML = '<div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 12px; margin: 20px 0;"><i class="fas fa-book" style="font-size: 48px; color: #d1d1d1; margin-bottom: 15px;"></i><h3 style="font-size: 20px; color: #666; margin-bottom: 10px;">No Questions Available</h3><p style="color: #888;">This chapter doesn\'t have any questions yet.</p></div>';
+                    document.querySelector('.question-count').textContent = '0 Questions';
+                    return;
+                }
+                
+                console.log(`Found ${questionsSnapshot.size} questions in Firebase`);
+                
+                // Question count is updated after processing
+                
+                // Sort questions by most recent papers first and last question first within each paper
+                let questions = [];
+                questionsSnapshot.forEach(doc => {
+                    questions.push({
+                        id: doc.id,
+                        data: doc.data()
+                    });
                 });
                 
+                console.log(`Processed ${questions.length} questions`);
+                
+                // Update question count
+                document.querySelector('.question-count').textContent = `${questions.length} Questions`;
+                
+                // Check if questions array exists and has items
+                if (!questions || questions.length === 0) {
+                    console.log('No questions to filter');
+                    questionList.innerHTML = '<div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 12px; margin: 20px 0;"><i class="fas fa-exclamation-circle" style="font-size: 48px; color: #d1d1d1; margin-bottom: 15px;"></i><h3 style="font-size: 20px; color: #666; margin-bottom: 10px;">No Questions Available</h3><p style="color: #888;">Try changing your filters or check back later.</p></div>';
+                    document.querySelector('.question-count').textContent = '0 Questions';
+                    return;
+                }
+                
                 // Apply filters
-                questions = questions.filter(question => {
-                    // Filter by difficulty
-                    if (currentDifficulty !== 'all' && question.difficulty !== currentDifficulty) return false;
+                questions = questions.filter(item => {
+                    const question = item.data;
                     
-                    // Mode filtering removed
+                    // Filter by difficulty (Firebase uses capitalized difficulty like "Easy", "Medium", "Hard")
+                    if (currentDifficulty !== 'all') {
+                        const questionDifficulty = question.difficulty ? question.difficulty.toLowerCase() : '';
+                        if (questionDifficulty !== currentDifficulty) {
+                            return false;
+                        }
+                    }
                     
                     // Filter by tab
                     if (currentTab === 'bookmarked' && !question.bookmarked) return false;
@@ -1313,12 +1287,12 @@
                     if (currentProgress === 'not-attempted' && question.attempted) return false;
                     if (currentProgress === 'revise-mistakes' && (!question.attempted || !question.incorrect)) return false;
                     
-                    // Apply advanced filters from filter panel
+                    // Apply advanced filters
                     
                     // Hide out of syllabus questions
                     if (advancedFilters.hideOutOfSyllabus && question.outOfSyllabus) return false;
                     
-                    // Question type filters - if any type is selected, filter by it
+                    // Question type filters
                     const hasTypeFilters = advancedFilters.questionTypes.singleCorrect || 
                                           advancedFilters.questionTypes.multipleCorrect || 
                                           advancedFilters.questionTypes.numerical;
@@ -1330,7 +1304,7 @@
                         if (questionType === 'numerical' && !advancedFilters.questionTypes.numerical) return false;
                     }
                     
-                    // Evaluation status filters - if any status is selected, filter by it
+                    // Evaluation status filters
                     const hasStatusFilters = advancedFilters.evaluationStatus.correct || 
                                             advancedFilters.evaluationStatus.incorrect || 
                                             advancedFilters.evaluationStatus.partiallyCorrect;
@@ -1342,68 +1316,244 @@
                         if (status === 'partiallyCorrect' && !advancedFilters.evaluationStatus.partiallyCorrect) return false;
                     }
                     
-                    // Year filters - if any year is selected, filter by it
+                    // Year filters
                     const hasYearFilters = advancedFilters.years[2025] || 
                                           advancedFilters.years[2024] || 
                                           advancedFilters.years[2023] || 
                                           advancedFilters.years[2022];
                     
                     if (hasYearFilters) {
-                        const year = question.year || '2023';
-                        if (!advancedFilters.years[year]) return false;
+                        // Extract year from paperId or questionId
+                        let year = null;
+                        if (question.paperId) {
+                            const match = question.paperId.match(/-([0-9]{4})(?:$|-)/);
+                            if (match && match[1]) year = match[1];
+                        } else if (question.questionId) {
+                            const match = question.questionId.match(/-([0-9]{4})(?:$|-)/);
+                            if (match && match[1]) year = match[1];
+                        } else if (question.year) {
+                            year = question.year;
+                        }
+                        
+                        if (year && !advancedFilters.years[year]) return false;
                     }
                     
                     return true;
                 });
                 
-                // Apply sorting
+                // Helper functions for sorting
+                const getYear = (q) => {
+                    if (q.data.paperId) {
+                        const match = q.data.paperId.match(/-([0-9]{4})(?:$|-)/);
+                        return match && match[1] ? parseInt(match[1]) : 0;
+                    } else if (q.data.questionId) {
+                        const match = q.data.questionId.match(/-([0-9]{4})(?:$|-)/);
+                        return match && match[1] ? parseInt(match[1]) : 0;
+                    } else if (q.data.year) {
+                        return parseInt(q.data.year);
+                    }
+                    return 0;
+                };
+                
+                const getQuestionNo = (q) => {
+                    return q.data.questionNo ? parseInt(q.data.questionNo) : 0;
+                };
+                
+                const getLastPracticed = (q) => {
+                    return q.data.lastPracticed ? new Date(q.data.lastPracticed) : new Date(0);
+                };
+                
+                // Apply sorting based on selected sort option
                 if (currentSort === 'year-asc') {
-                    questions.sort((a, b) => parseInt(a.year) - parseInt(b.year));
+                    // Year ascending (oldest to newest)
+                    questions.sort((a, b) => getYear(a) - getYear(b));
                 } else if (currentSort === 'year-desc') {
-                    questions.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+                    // Year descending (newest to oldest)
+                    questions.sort((a, b) => getYear(b) - getYear(a));
                 } else if (currentSort === 'practiced-desc') {
-                    questions.sort((a, b) => new Date(b.lastPracticed) - new Date(a.lastPracticed));
+                    // Last practiced descending (newest to oldest)
+                    questions.sort((a, b) => getLastPracticed(b) - getLastPracticed(a));
                 } else if (currentSort === 'practiced-asc') {
-                    questions.sort((a, b) => new Date(a.lastPracticed) - new Date(b.lastPracticed));
+                    // Last practiced ascending (oldest to newest)
+                    questions.sort((a, b) => getLastPracticed(a) - getLastPracticed(b));
+                } else {
+                    // Default sort: by year (most recent first) and then by question number (highest first)
+                    questions.sort((a, b) => {
+                        // Compare years first (descending)
+                        const yearA = getYear(a);
+                        const yearB = getYear(b);
+                        if (yearB !== yearA) return yearB - yearA;
+                        
+                        // If same year, compare question numbers (descending)
+                        return getQuestionNo(b) - getQuestionNo(a);
+                    });
                 }
                 
+                console.log('Creating question items from:', questions);
+                
+                // Check if filtered questions array is empty
                 if (questions.length === 0) {
-                    questionList.innerHTML = '<p style="text-align: center; padding: 20px;">No questions match your filters.</p>';
+                    questionList.innerHTML = '<div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 12px; margin: 20px 0;"><i class="fas fa-filter" style="font-size: 48px; color: #d1d1d1; margin-bottom: 15px;"></i><h3 style="font-size: 20px; color: #666; margin-bottom: 10px;">No Questions Match Your Filters</h3><p style="color: #888;">Try adjusting your filter settings to see more questions.</p></div>';
+                    document.querySelector('.question-count').textContent = '0 Questions';
                     return;
                 }
                 
-                // Update question count
-                document.querySelector('.question-count').textContent = `${questions.length} Questions`;
-                
                 // Create question items
-                questions.forEach((question, index) => {
-                    // Add animation delay based on index
+                questions.forEach((item, index) => {
+                    const doc = { id: item.id };
+                    const question = item.data;
                     const delay = index * 0.1;
+                    console.log('Processing question:', index, doc.id, question); // Log the question for debugging
                     
                     // Create question item
                     const questionItem = document.createElement('div');
                     questionItem.className = 'question-item';
                     questionItem.style.animationDelay = `${delay}s`;
-                    questionItem.setAttribute('data-id', question.id);
+                    questionItem.setAttribute('data-id', doc.id);
                     
-                    // Question number
+                    // Question number/name
                     const questionNumber = document.createElement('div');
                     questionNumber.className = 'question-number';
-                    questionNumber.textContent = (index + 1).toString().padStart(2, '0');
+                    
+                    // Always use Q followed by index number
+                    questionNumber.textContent = `Q${(index + 1)}`;
                     
                     // Question content
                     const questionContent = document.createElement('div');
                     questionContent.className = 'question-content';
                     
-                    // Question text
+                    // Question text or image
                     const questionText = document.createElement('div');
                     questionText.className = 'question-text';
-                    questionText.textContent = question.text;
                     
-                    // Question tag
+                    // Check for image in different formats
+                    if (question.questionImage || question.imageUrl || question.image) {
+                        // Create image element
+                        const questionImage = document.createElement('img');
+                        
+                        // Handle different image formats
+                        if (question.questionImage) {
+                            // Direct image data (base64)
+                            questionImage.src = question.questionImage;
+                        } else if (question.imageUrl) {
+                            // URL to image
+                            questionImage.src = question.imageUrl;
+                        } else if (question.image) {
+                            // Another possible field name
+                            questionImage.src = question.image;
+                        }
+                        
+                        questionImage.alt = 'Question Image';
+                        questionImage.style.maxWidth = '100%';
+                        questionImage.style.height = 'auto';
+                        questionImage.style.borderRadius = '8px';
+                        questionImage.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                        questionImage.style.objectFit = 'contain';
+                        questionText.appendChild(questionImage);
+                        
+                        // Don't show text, only image
+                    } else {
+                        // Show placeholder if no image
+                        const noImageDiv = document.createElement('div');
+                        noImageDiv.style.padding = '20px';
+                        noImageDiv.style.backgroundColor = '#f8f9fa';
+                        noImageDiv.style.borderRadius = '8px';
+                        noImageDiv.style.textAlign = 'center';
+                        noImageDiv.innerHTML = '<i class="fas fa-image" style="font-size: 32px; color: #ccc;"></i><p style="margin-top: 10px; color: #666;">No image available</p>';
+                        questionText.appendChild(noImageDiv);
+                    }
+                    
+                    // Question tag with metadata
                     const questionTag = document.createElement('div');
                     questionTag.className = 'question-tag';
-                    questionTag.textContent = `JEE Main ${question.year || '2025'} ${question.paper || 'Paper 1'}`;
+                    
+                    // Extract metadata from paperId or questionId
+                    let year = '2023';
+                    let paper = 'Paper 1';
+                    let shift = '1';
+                    let date = '10 April';
+                    let day = '';
+                    let month = '';
+                    
+                    // First check if question has paperId
+                    if (question.paperId) {
+                        // Format: jee-main---22-jan-shift-1-2025
+                        const paperId = question.paperId;
+                        // Extract day (22)
+                        const dayMatch = paperId.match(/---([0-9]+)-/);
+                        if (dayMatch && dayMatch[1]) day = dayMatch[1];
+                        
+                        // Extract month (jan)
+                        const monthMatch = paperId.match(/-([a-z]+)-shift/);
+                        if (monthMatch && monthMatch[1]) month = monthMatch[1];
+                        
+                        // Extract shift (1)
+                        const shiftMatch = paperId.match(/shift-([0-9]+)-/);
+                        if (shiftMatch && shiftMatch[1]) shift = shiftMatch[1];
+                        
+                        // Extract year (2025)
+                        const yearMatch = paperId.match(/-([0-9]{4})(?:$|-)/);
+                        if (yearMatch && yearMatch[1]) year = yearMatch[1];
+                        
+                        date = day && month ? `${day} ${month}` : '10 April';
+                    } 
+                    // If no paperId, try to extract from questionId
+                    else if (question.questionId) {
+                        // Format: jee-main---22-jan-shift-1-2025-1752413281879
+                        const questionId = question.questionId;
+                        // Extract day (22)
+                        const dayMatch = questionId.match(/---([0-9]+)-/);
+                        if (dayMatch && dayMatch[1]) day = dayMatch[1];
+                        
+                        // Extract month (jan)
+                        const monthMatch = questionId.match(/-([a-z]+)-shift/);
+                        if (monthMatch && monthMatch[1]) month = monthMatch[1];
+                        
+                        // Extract shift (1)
+                        const shiftMatch = questionId.match(/shift-([0-9]+)-/);
+                        if (shiftMatch && shiftMatch[1]) shift = shiftMatch[1];
+                        
+                        // Extract year (2025)
+                        const yearMatch = questionId.match(/-([0-9]{4})(?:$|-)/);
+                        if (yearMatch && yearMatch[1]) year = yearMatch[1];
+                        
+                        date = day && month ? `${day} ${month}` : '10 April';
+                    } 
+                    // Fallback to question data
+                    else {
+                        year = question.year || question.examYear || year;
+                        paper = question.paper || question.examPaper || paper;
+                        shift = question.shift || question.examShift || shift;
+                        date = question.date || question.examDate || date;
+                    }
+                    
+                    questionTag.textContent = `JEE ${year} ${paper} | ${day} ${month} | Shift ${shift}`;
+                    
+                    // Add difficulty indicator if available
+                    if (question.difficulty) {
+                        const difficultySpan = document.createElement('span');
+                        difficultySpan.style.marginLeft = '8px';
+                        difficultySpan.style.padding = '2px 6px';
+                        difficultySpan.style.borderRadius = '4px';
+                        difficultySpan.style.fontSize = '11px';
+                        difficultySpan.style.fontWeight = '600';
+                        
+                        if (question.difficulty === 'easy') {
+                            difficultySpan.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+                            difficultySpan.style.color = '#28a745';
+                            difficultySpan.textContent = 'Easy';
+                        } else if (question.difficulty === 'medium') {
+                            difficultySpan.style.backgroundColor = 'rgba(255, 193, 7, 0.1)';
+                            difficultySpan.style.color = '#ffc107';
+                            difficultySpan.textContent = 'Medium';
+                        } else if (question.difficulty === 'hard') {
+                            difficultySpan.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                            difficultySpan.style.color = '#dc3545';
+                            difficultySpan.textContent = 'Hard';
+                        }
+                        
+                        questionTag.appendChild(difficultySpan);
+                    }
                     
                     // Add video icon if available
                     if (question.hasVideo) {
@@ -1422,9 +1572,9 @@
                     questionItem.appendChild(questionNumber);
                     questionItem.appendChild(questionContent);
                     
-                    // Add click event to view question details
+                    // Add click event to attempt question
                     questionItem.addEventListener('click', () => {
-                        alert(`Question details for ${question.id} would open here`);
+                        attemptQuestion(question, doc.id);
                     });
                     
                     questionList.appendChild(questionItem);
@@ -1432,8 +1582,265 @@
                 
             } catch (error) {
                 console.error('Error loading questions:', error);
-                questionList.innerHTML = '<p style="text-align: center; padding: 20px;">Error loading questions. Please try again.</p>';
+                // Fallback to sample questions on error
+                loadSampleQuestions();
             }
+        }
+        
+        // Attempt question
+        function attemptQuestion(question, questionId) {
+            // Store question data in localStorage
+            const questionData = {
+                id: questionId,
+                questionImage: question.questionImage || question.imageUrl || question.image,
+                text: question.text || question.question,
+                options: question.options || question.optionImages || [],
+                correctAnswer: question.correctAnswer || 0,
+                difficulty: question.difficulty || 'Medium',
+                subject: selectedSubject || 'Physics',
+                year: question.year || '2023',
+                questionNo: question.questionNo || '1'
+            };
+            
+            localStorage.setItem('currentQuestion', JSON.stringify(questionData));
+            
+            // Navigate to attempt page
+            window.location.href = 'attempt-question.html';
+        }
+        
+        // Load sample questions if Firebase doesn't have any
+        function loadSampleQuestions() {
+            console.log('Loading sample questions');
+            const questionList = document.getElementById('questionList');
+            if (!questionList) {
+                console.error('Question list element not found');
+                return;
+            }
+            questionList.innerHTML = ''; // Clear existing questions
+            
+            const sampleQuestions = [
+                {
+                    id: 'Q1',
+                    text: 'A particle moves along a straight line with retardation proportional to its displacement. Its loss of kinetic energy for any displacement x is proportional to:',
+                    options: ['x', 'x²', 'x³', 'x⁴'],
+                    correctAnswer: 1,
+                    difficulty: 'medium',
+                    year: '2023',
+                    paper: 'Paper 1',
+                    hasVideo: true,
+                    questionImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                },
+                {
+                    id: 'Q2',
+                    text: 'A block of mass 10 kg is placed on a rough inclined plane of inclination 30°. The coefficient of static friction is 0.6. The frictional force acting on the block is:',
+                    options: ['49 N', '51.96 N', '60 N', '98 N'],
+                    correctAnswer: 1,
+                    difficulty: 'easy',
+                    year: '2023',
+                    paper: 'Paper 2',
+                    hasVideo: false,
+                    questionImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                },
+                {
+                    id: 'Q3',
+                    text: 'A uniform magnetic field exists in a region. A charged particle enters the region with velocity perpendicular to the field. The path of the particle will be:',
+                    options: ['Straight line', 'Parabola', 'Circle', 'Helix'],
+                    correctAnswer: 2,
+                    difficulty: 'hard',
+                    year: '2022',
+                    paper: 'Paper 1',
+                    hasVideo: true,
+                    questionImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                },
+                {
+                    id: 'Q4',
+                    text: 'The differential equation representing simple harmonic motion is:',
+                    options: ['d²x/dt² = -ω²x', 'd²x/dt² = ω²x', 'dx/dt = -ωx', 'dx/dt = ωx'],
+                    correctAnswer: 0,
+                    difficulty: 'medium',
+                    year: '2022',
+                    paper: 'Paper 2',
+                    hasVideo: true,
+                    questionImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                },
+                {
+                    id: 'Q5',
+                    text: 'If the position vector of a particle is given by r = (3t²i + 4tj + 5t²k), the magnitude of velocity at t = 1 is:',
+                    options: ['√61', '√41', '√51', '√71'],
+                    correctAnswer: 0,
+                    difficulty: 'hard',
+                    year: '2021',
+                    paper: 'Paper 1',
+                    hasVideo: false
+                }
+            ];
+            
+            // Check if sample questions array exists
+            if (!sampleQuestions || sampleQuestions.length === 0) {
+                console.error('No sample questions available');
+                questionList.innerHTML = '<div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 12px; margin: 20px 0;"><i class="fas fa-book" style="font-size: 48px; color: #d1d1d1; margin-bottom: 15px;"></i><h3 style="font-size: 20px; color: #666; margin-bottom: 10px;">No Questions Available</h3><p style="color: #888;">This chapter doesn\'t have any questions yet.</p></div>';
+                document.querySelector('.question-count').textContent = '0 Questions';
+                return;
+            }
+            
+            // Apply filters to sample questions
+            let filteredSampleQuestions = sampleQuestions.filter(question => {
+                // Filter by difficulty
+                if (currentDifficulty !== 'all' && question.difficulty !== currentDifficulty) {
+                    return false;
+                }
+                
+                // Filter by video
+                if (showVideoOnly && !question.hasVideo) return false;
+                
+                return true;
+            });
+            
+            // Apply sorting based on selected sort option
+            if (currentSort === 'year-asc') {
+                // Year ascending (oldest to newest)
+                filteredSampleQuestions.sort((a, b) => parseInt(a.year || '0') - parseInt(b.year || '0'));
+            } else if (currentSort === 'year-desc') {
+                // Year descending (newest to oldest)
+                filteredSampleQuestions.sort((a, b) => parseInt(b.year || '0') - parseInt(a.year || '0'));
+            } else {
+                // Default sort: by year (most recent first) and question number (highest first)
+                filteredSampleQuestions.sort((a, b) => {
+                    // Compare years first (descending)
+                    const yearA = parseInt(a.year || '0');
+                    const yearB = parseInt(b.year || '0');
+                    if (yearB !== yearA) return yearB - yearA;
+                    
+                    // If same year, compare question numbers (descending)
+                    const qNoA = parseInt(a.id.replace('Q', '') || '0');
+                    const qNoB = parseInt(b.id.replace('Q', '') || '0');
+                    return qNoB - qNoA;
+                });
+            }
+            
+            // Create question items
+            filteredSampleQuestions.forEach((question, index) => {
+                // Add animation delay based on index
+                const delay = index * 0.1;
+                
+                // Create question item
+                const questionItem = document.createElement('div');
+                questionItem.className = 'question-item';
+                questionItem.style.animationDelay = `${delay}s`;
+                questionItem.setAttribute('data-id', question.id);
+                
+                // Question number/name
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                
+                // Always use Q followed by index number
+                questionNumber.textContent = `Q${(index + 1)}`;
+                
+                // Question content
+                const questionContent = document.createElement('div');
+                questionContent.className = 'question-content';
+                
+                // Question text or image
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                
+                // Check for image in different formats
+                if (question.questionImage || question.imageUrl || question.image) {
+                    // Create image element
+                    const questionImage = document.createElement('img');
+                    
+                    // Handle different image formats
+                    if (question.questionImage) {
+                        // Direct image data (base64)
+                        questionImage.src = question.questionImage;
+                    } else if (question.imageUrl) {
+                        // URL to image
+                        questionImage.src = question.imageUrl;
+                    } else if (question.image) {
+                        // Another possible field name
+                        questionImage.src = question.image;
+                    }
+                    
+                    questionImage.alt = 'Question Image';
+                    questionImage.style.maxWidth = '100%';
+                    questionImage.style.height = 'auto';
+                    questionImage.style.borderRadius = '8px';
+                    questionImage.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                    questionImage.style.objectFit = 'contain';
+                    questionText.appendChild(questionImage);
+                    
+                    // Don't show text, only image
+                } else {
+                    // Show placeholder if no image
+                    const noImageDiv = document.createElement('div');
+                    noImageDiv.style.padding = '20px';
+                    noImageDiv.style.backgroundColor = '#f8f9fa';
+                    noImageDiv.style.borderRadius = '8px';
+                    noImageDiv.style.textAlign = 'center';
+                    noImageDiv.innerHTML = '<i class="fas fa-image" style="font-size: 32px; color: #ccc;"></i><p style="margin-top: 10px; color: #666;">No image available</p>';
+                    questionText.appendChild(noImageDiv);
+                }
+                
+                // Question tag with metadata
+                const questionTag = document.createElement('div');
+                questionTag.className = 'question-tag';
+                
+                // Extract metadata
+                const year = question.year || '2023';
+                const paper = question.paper || 'Paper 1';
+                const shift = question.shift || 'Shift 1';
+                const date = question.date || '10 April';
+                
+                questionTag.textContent = `JEE ${year} ${paper} | ${date} | ${shift}`;
+                
+                // Add difficulty indicator
+                const difficultySpan = document.createElement('span');
+                difficultySpan.style.marginLeft = '8px';
+                difficultySpan.style.padding = '2px 6px';
+                difficultySpan.style.borderRadius = '4px';
+                difficultySpan.style.fontSize = '11px';
+                difficultySpan.style.fontWeight = '600';
+                
+                if (question.difficulty === 'easy') {
+                    difficultySpan.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+                    difficultySpan.style.color = '#28a745';
+                    difficultySpan.textContent = 'Easy';
+                } else if (question.difficulty === 'medium') {
+                    difficultySpan.style.backgroundColor = 'rgba(255, 193, 7, 0.1)';
+                    difficultySpan.style.color = '#ffc107';
+                    difficultySpan.textContent = 'Medium';
+                } else if (question.difficulty === 'hard') {
+                    difficultySpan.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                    difficultySpan.style.color = '#dc3545';
+                    difficultySpan.textContent = 'Hard';
+                }
+                
+                questionTag.appendChild(difficultySpan);
+                
+                // Add video icon if available
+                if (question.hasVideo) {
+                    const videoIcon = document.createElement('i');
+                    videoIcon.className = 'fas fa-play-circle';
+                    videoIcon.style.marginLeft = '5px';
+                    videoIcon.style.color = '#4f46e5';
+                    questionTag.appendChild(videoIcon);
+                }
+                
+                // Assemble question content
+                questionContent.appendChild(questionText);
+                questionContent.appendChild(questionTag);
+                
+                // Assemble question item
+                questionItem.appendChild(questionNumber);
+                questionItem.appendChild(questionContent);
+                
+                // Add click event to view question details
+                questionItem.addEventListener('click', () => {
+                    showQuestionDetails(question, question.id);
+                });
+                
+                questionList.appendChild(questionItem);
+            });
         }
         
         // Go back to previous page
@@ -1502,9 +1909,10 @@
                     this.classList.add('active');
                     
                     // Set current difficulty
-                    currentDifficulty = this.textContent.trim().toLowerCase();
-                    if (currentDifficulty === 'all') currentDifficulty = 'all';
+                    const btnText = this.textContent.trim().toLowerCase();
+                    currentDifficulty = btnText === 'all' ? 'all' : btnText;
                     
+                    console.log('Difficulty filter changed to:', currentDifficulty);
                     loadQuestions();
                 });
             });
@@ -1649,7 +2057,7 @@
             const sortBtn = document.getElementById('sortBtn');
             const sortMenu = document.getElementById('sortMenu');
             const sortMenuClose = document.getElementById('sortMenuClose');
-            let currentSort = 'default';
+            var currentSort = 'default';
             
             // Toggle sort menu
             sortBtn.addEventListener('click', function(e) {
@@ -1681,11 +2089,14 @@
         
         // Load data when page loads
         window.addEventListener('load', function() {
+            console.log('Page loaded, initializing...');
             loadUserPreferences();
             setupChapterInfo();
-            loadQuestions();
             initializeEventListeners();
             initializeButtonEffects();
+            setTimeout(() => {
+                loadQuestions();
+            }, 500); // Add a small delay to ensure DOM is ready
         });
     </script>
 </body>
