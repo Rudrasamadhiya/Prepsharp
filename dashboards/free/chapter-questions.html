@@ -1501,7 +1501,7 @@
                         questionImage.style.height = 'auto';
                         questionImage.style.borderRadius = '8px';
                         questionImage.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                        questionImage.style.objectFit = 'contain';
+                        questionImage.style.objectFit = 'cover';
                         questionText.appendChild(questionImage);
                         
                         // Don't show text, only image
@@ -1522,7 +1522,7 @@
                     
                     // Extract metadata from paperId or questionId
                     let year = '2023';
-                    let paper = 'Paper 1';
+                    let paper = selectedExam === 'advanced' ? 'Paper 1' : '';
                     let shift = '1';
                     let date = '10 April';
                     let day = '';
@@ -1580,7 +1580,11 @@
                         date = question.date || question.examDate || date;
                     }
                     
-                    questionTag.textContent = `JEE ${year} ${paper} | ${day} ${month} | Shift ${shift}`;
+                    if (selectedExam === 'advanced') {
+                        questionTag.textContent = `JEE Advanced ${year} ${paper} | ${day} ${month}`;
+                    } else {
+                        questionTag.textContent = `JEE Main ${year} | ${day} ${month} | Shift ${shift}`;
+                    }
                     
                     // Add difficulty indicator if available
                     if (question.difficulty) {
@@ -1653,7 +1657,9 @@
                 difficulty: question.difficulty || 'Medium',
                 subject: selectedSubject || 'Physics',
                 year: question.year || '2023',
-                questionNo: question.questionNo || '1'
+                questionNo: question.questionNo || '1',
+                paperId: question.paperId,
+                questionId: question.questionId
             };
             
             localStorage.setItem('currentQuestion', JSON.stringify(questionData));
@@ -1848,11 +1854,15 @@
                 
                 // Extract metadata
                 const year = question.year || '2023';
-                const paper = question.paper || 'Paper 1';
+                const paper = selectedExam === 'advanced' ? (question.paper || 'Paper 1') : '';
                 const shift = question.shift || 'Shift 1';
                 const date = question.date || '10 April';
                 
-                questionTag.textContent = `JEE ${year} ${paper} | ${date} | ${shift}`;
+                if (selectedExam === 'advanced') {
+                    questionTag.textContent = `JEE Advanced ${year} ${paper} | ${date}`;
+                } else {
+                    questionTag.textContent = `JEE Main ${year} | ${date} | ${shift}`;
+                }
                 
                 // Add difficulty indicator
                 const difficultySpan = document.createElement('span');

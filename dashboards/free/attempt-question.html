@@ -239,7 +239,7 @@
         }
         
         .option {
-            padding: 25px;
+            padding: 20px;
             border: 2px solid rgba(79, 70, 229, 0.2);
             border-radius: 16px;
             cursor: pointer;
@@ -249,6 +249,10 @@
             background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,250,255,0.9));
             position: relative;
             overflow: hidden;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .option::before {
             content: '';
@@ -573,7 +577,7 @@
         @media (max-width: 768px) {
             body {
                 margin-top: 55px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #f0f8ff 0%, #fff8e1 50%, #ffe0b3 100%);
             }
             
             .header {
@@ -664,11 +668,33 @@
             }
             
             .option {
-                padding: 15px;
-                border-radius: 15px;
-                background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,255,0.95));
-                border: 2px solid rgba(255, 107, 107, 0.2);
-                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                padding: 0;
+                border: none;
+                background: none;
+                box-shadow: none;
+                min-height: auto;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            
+            .option img {
+                max-width: 100%;
+                max-height: 80px;
+                object-fit: contain;
+                border-radius: 8px;
+                border: 2px solid rgba(255, 107, 107, 0.3);
+                transition: all 0.3s ease;
+            }
+            
+            .option:hover img {
+                border-color: #ff6b6b;
+                transform: scale(1.02);
+            }
+            
+            .option.selected img {
+                border-color: #4f46e5;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
             }
             
             .option:hover {
@@ -782,12 +808,7 @@
             </div>
         </div>
         
-        <!-- Hint Button -->
-        <div style="text-align: center; padding: 20px;">
-            <button class="hint-btn" onclick="showHint()">
-                <i class="fas fa-lightbulb"></i> View Hint
-            </button>
-        </div>
+
         
         <!-- Interaction Buttons -->
         <div class="interaction-buttons">
@@ -976,8 +997,31 @@
         }
         
         function displayQuestion() {
-            document.getElementById('questionNumber').textContent = `Q${currentQuestion.questionNo || '1'}`;
-            document.getElementById('paperInfo').textContent = `JEE Main ${currentQuestion.year || '2025'} (8 Apr Shift 2)`;
+            const currentIndex = parseInt(localStorage.getItem('currentQuestionIndex') || '0');
+            document.getElementById('questionNumber').textContent = `Q${currentIndex + 1}`;
+            let paperInfo = 'JEE Main 2025 | 8/Apr Shift-2';
+            
+            if (currentQuestion.paperId) {
+                const paperId = currentQuestion.paperId;
+                const dayMatch = paperId.match(/---([0-9]+)-/);
+                const monthMatch = paperId.match(/-([a-z]+)-shift/);
+                const shiftMatch = paperId.match(/shift-([0-9]+)-/);
+                const yearMatch = paperId.match(/-([0-9]{4})(?:$|-)/);
+                
+                if (dayMatch && monthMatch && shiftMatch && yearMatch) {
+                    const day = dayMatch[1];
+                    const month = monthMatch[1].charAt(0).toUpperCase() + monthMatch[1].slice(1);
+                    const shift = shiftMatch[1];
+                    const year = yearMatch[1];
+                    const examType = paperId.includes('advanced') ? 'Advanced' : 'Main';
+                    
+                    paperInfo = examType === 'Main' 
+                        ? `JEE Main ${year} | ${day}/${month} Shift-${shift}` 
+                        : `JEE Advanced ${year} | Paper-1`;
+                }
+            }
+            
+            document.getElementById('paperInfo').textContent = paperInfo;
             
             if (currentQuestion.questionImage) {
                 const img = document.getElementById('questionImage');
@@ -1023,8 +1067,8 @@
                         console.log(`Option ${index} image src length:`, imageSrc.length);
                         
                         optionDiv.innerHTML = `
-                            <img src="${imageSrc}" alt="Option ${String.fromCharCode(65 + index)}" style="width: 100%; height: 150px; object-fit: contain; border-radius: 8px; display: block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; color: #666;">Option ${String.fromCharCode(65 + index)}</div>
+                            <img src="${imageSrc}" alt="Option ${String.fromCharCode(65 + index)}" style="max-width: 100%; max-height: 80px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; color: #666; align-items: center; justify-content: center;">Image not available</div>
                         `;
                         optionsContainer.appendChild(optionDiv);
                     });
@@ -1044,14 +1088,13 @@
                         // Check if option is image data or text
                         if (typeof option === 'string' && (option.startsWith('data:image/') || option.length > 50)) {
                             optionDiv.innerHTML = `
-                                <div class="option-label">${String.fromCharCode(65 + index)}</div>
-                                <img src="${imageSrc}" alt="Option ${String.fromCharCode(65 + index)}" style="max-width: 100%; max-height: 80px; object-fit: contain; border-radius: 8px; min-height: 60px; background: #f0f0f0;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; color: #666;">Option ${String.fromCharCode(65 + index)}</div>
+                                <img src="${imageSrc}" alt="Option ${String.fromCharCode(65 + index)}" style="max-width: 100%; max-height: 80px; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; color: #666; align-items: center; justify-content: center;">Image not available</div>
                             `;
                         } else {
                             // Show text option
                             optionDiv.innerHTML = `
-                                <div style="padding: 15px; color: #333; font-size: 16px; min-height: 120px; display: flex; align-items: center; justify-content: center;">${option}</div>
+                                <div style="display: flex; align-items: center; justify-content: center; padding: 15px; color: #333; font-size: 16px;">${option}</div>
                             `;
                         }
                         optionsContainer.appendChild(optionDiv);

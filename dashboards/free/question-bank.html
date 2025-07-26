@@ -54,47 +54,84 @@
         }
         
         .exam-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 25px;
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255,255,255,0.9) 100%);
+            border-radius: 20px;
+            padding: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 8px rgba(0,0,0,0.06);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            border: 2px solid transparent;
-            height: 180px;
+            border: 3px solid transparent;
+            height: 200px;
+        }
+        
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(124, 58, 237, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .exam-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 10px 20px rgba(79, 70, 229, 0.1);
+        }
+        
+        .exam-card:hover::before {
+            opacity: 1;
         }
         
         .status-badge {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            font-weight: 500;
-            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #10b981;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: inline-block;
+            position: relative;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge::before {
+            content: '✨';
+            margin-right: 5px;
         }
         
         .exam-logo {
             position: absolute;
-            bottom: -25px;
-            right: -25px;
-            width: 100px;
-            height: 100px;
+            bottom: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 2;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 3;
             overflow: hidden;
-            background: white;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            border: 4px solid rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .exam-card:hover .exam-logo {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
         }
         
         .exam-logo img {
@@ -111,13 +148,29 @@
         
         .exam-card h3 {
             margin: 0 0 15px 0;
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--text-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .exam-card h3 .arrow {
+            font-size: 1.2rem;
+            color: #4f46e5;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .exam-card:hover h3 .arrow {
+            transform: translateX(8px);
+            opacity: 1;
+            color: #7c3aed;
         }
         
         .dpp-promo {
