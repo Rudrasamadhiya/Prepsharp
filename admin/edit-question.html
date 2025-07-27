@@ -135,10 +135,10 @@
                                     <textarea class="form-control" id="question-text" rows="3" required></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="question-image" class="form-label">Question Image</label>
-                                    <div class="d-flex">
-                                        <input type="file" class="form-control me-2" id="question-image" accept="image/*">
-                                        <button type="button" class="btn btn-success" id="capture-question-btn">Capture</button>
+                                    <label class="form-label">Question Image</label>
+                                    <div class="d-flex mb-2">
+                                        <button type="button" class="btn btn-success me-2" id="pdf-btn">Upload PDF</button>
+                                        <button type="button" class="btn btn-info" id="capture-question-btn">Capture</button>
                                     </div>
                                     <div id="question-image-preview" class="mt-2" style="max-width: 500px; display: none;">
                                         <img id="question-image-preview-img" class="img-fluid rounded" src="" style="display: block; max-width: 100%; height: auto; border: 1px solid #ddd;">
@@ -161,7 +161,6 @@
                                         <div class="mt-2">
                                             <label for="option-a-image" class="form-label">Option Image</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control me-2" id="option-a-image" accept="image/*">
                                                 <button type="button" class="btn btn-success option-capture-btn" data-option="a">Capture</button>
                                             </div>
                                             <div id="option-a-image-preview" class="mt-2" style="max-width: 200px; display: none;">
@@ -183,7 +182,6 @@
                                         <div class="mt-2">
                                             <label for="option-b-image" class="form-label">Option Image</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control me-2" id="option-b-image" accept="image/*">
                                                 <button type="button" class="btn btn-success option-capture-btn" data-option="b">Capture</button>
                                             </div>
                                             <div id="option-b-image-preview" class="mt-2" style="max-width: 200px; display: none;">
@@ -204,7 +202,6 @@
                                         <div class="mt-2">
                                             <label for="option-c-image" class="form-label">Option Image</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control me-2" id="option-c-image" accept="image/*">
                                                 <button type="button" class="btn btn-success option-capture-btn" data-option="c">Capture</button>
                                             </div>
                                             <div id="option-c-image-preview" class="mt-2" style="max-width: 200px; display: none;">
@@ -225,7 +222,6 @@
                                         <div class="mt-2">
                                             <label for="option-d-image" class="form-label">Option Image</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control me-2" id="option-d-image" accept="image/*">
                                                 <button type="button" class="btn btn-success option-capture-btn" data-option="d">Capture</button>
                                             </div>
                                             <div id="option-d-image-preview" class="mt-2" style="max-width: 200px; display: none;">
@@ -233,6 +229,18 @@
                                                 <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeOptionImage('d')">Remove</button>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Explanation Section -->
+                                <div class="mb-3">
+                                    <label class="form-label">Explanation</label>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn btn-info" id="capture-explanation-btn">Capture Explanation</button>
+                                    </div>
+                                    <div id="explanation-image-preview" class="mt-2" style="max-width: 500px; display: none;">
+                                        <img id="explanation-image-preview-img" class="img-fluid rounded" src="" style="display: block; max-width: 100%; height: auto; border: 1px solid #ddd;">
+                                        <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeExplanationImage()">Remove Image</button>
                                     </div>
                                 </div>
                                 
@@ -261,10 +269,28 @@
         </div>
     </div>
 
+    <!-- PDF Viewer Container -->
+    <div id="pdf-container" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column;">
+        <div class="pdf-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1001;">
+            <button id="close-pdf-btn" class="btn btn-danger">Close PDF</button>
+        </div>
+        <div id="pdf-viewer" style="height: 80%; width: 100%; overflow: auto;"></div>
+        <div id="screenshot-area" style="height: 20%; background-color: #f5f5f5; border-top: 2px solid #4f46e5; padding: 10px; display: none; flex-direction: column; align-items: center; justify-content: center;">
+            <p id="paste-instructions">Click and drag to select an area</p>
+            <img id="screenshot-preview" style="display: none; max-height: 80%; max-width: 90%; margin-bottom: 10px;">
+            <div id="screenshot-buttons" style="display: none;">
+                <button id="use-for-option-btn" class="btn btn-secondary">Use Image</button>
+                <button id="cancel-screenshot-btn" class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="pdf-capture.js"></script>
+    <script src="capture-utils.js"></script>
     
     <script>
         // Initialize Firebase
@@ -292,28 +318,26 @@
         // Chapter data by subject
         const chaptersBySubject = {
             "Physics": [
-                "Mechanics", "Kinematics", "Laws of Motion", "Work, Energy and Power", "Rotational Motion", 
-                "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases", 
-                "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current", 
-                "Magnetism", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
-                "Optics", "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices"
+                "Mathematics in Physics", "Units and Dimensions", "Motion In One Dimension", "Motion In Two Dimensions", "Laws of Motion", "Work Power Energy", 
+                "Center of Mass Momentum and Collision", "Rotational Motion", "Gravitation", "Mechanical Properties of Solids", "Mechanical Properties of Fluids", "Thermal Properties of Matter", 
+                "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Electrostatics", "Capacitance", "Current Electricity", 
+                "Magnetic Properties of Matter", "Magnetic Effects of Current", "Electromagnetic Induction", "Alternating Current", "Electromagnetic Waves", 
+                "Ray Optics", "Wave Optics", "Dual Nature of Matter", "Atomic Physics", "Nuclear Physics", "Semiconductors", "Communication System", "Experimental Physics"
             ],
             "Chemistry": [
-                "Basic Concepts", "States of Matter", "Atomic Structure", "Chemical Bonding", "Chemical Thermodynamics", 
-                "Solutions", "Equilibrium", "Redox Reactions", "Electrochemistry", "Chemical Kinetics", 
-                "Surface Chemistry", "Classification of Elements", "p-Block Elements", "d and f Block Elements", 
-                "Coordination Compounds", "Environmental Chemistry", "Purification of Organic Compounds", 
-                "Organic Compounds", "Hydrocarbons", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", 
-                "Aldehydes, Ketones and Carboxylic Acids", "Organic Compounds with Nitrogen", "Biomolecules", 
-                "Polymers", "Chemistry in Everyday Life"
+                "Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", "Chemical Bonding and Molecular Structure", "States of Matter", "Thermodynamics (C)", 
+                "Chemical Equilibrium", "Ionic Equilibrium", "Redox Reactions", "Hydrogen", "s Block Elements", "p Block Elements (Group 13 & 14)", 
+                "General Organic Chemistry", "Hydrocarbons", "Environmental Chemistry", "Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+                "Surface Chemistry", "General Principles and Processes of Isolation of Metals", "p Block Elements (Group 15, 16, 17 & 18)", "d and f Block Elements", 
+                "Coordination Compounds", "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes and Ketones", "Carboxylic Acid Derivatives", 
+                "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life", "Practical Chemistry"
             ],
             "Mathematics": [
-                "Sets, Relations and Functions", "Complex Numbers", "Matrices and Determinants", "Quadratic Equations", 
-                "Permutations and Combinations", "Binomial Theorem", "Sequences and Series", "Limits and Continuity", 
-                "Differentiation", "Applications of Derivatives", "Indefinite Integrals", "Definite Integrals", 
-                "Applications of Integrals", "Differential Equations", "Straight Lines", "Circles", "Conic Sections", 
-                "Three Dimensional Geometry", "Vector Algebra", "Statistics", "Probability", "Trigonometry", 
-                "Mathematical Reasoning", "Mathematical Induction"
+                "Basic of Mathematics", "Quadratic Equation", "Complex Number", "Permutation Combination", "Sequences and Series", "Mathematical Induction", 
+                "Binomial Theorem", "Trigonometric Ratios & Identities", "Trigonometric Equations", "Straight Lines", "Pair of Lines", "Circle", "Parabola", "Ellipse", "Hyperbola", 
+                "Limits", "Mathematical Reasoning", "Statistics", "Heights and Distances", "Properties of Triangles", "Sets and Relations", "Matrices", "Determinants", 
+                "Inverse Trigonometric Functions", "Functions", "Continuity and Differentiability", "Differentiation", "Application of Derivatives", "Indefinite Integration", 
+                "Definite Integration", "Area Under Curves", "Differential Equations", "Vector Algebra", "Three Dimensional Geometry", "Linear Programming", "Probability"
             ],
             "Biology": [
                 "Diversity in Living World", "Structural Organization in Plants and Animals", "Cell Structure and Function", 
@@ -489,6 +513,12 @@
                 });
             }
             
+            // Load explanation image if exists
+            if (question.explanationImage) {
+                document.getElementById('explanation-image-preview-img').src = question.explanationImage;
+                document.getElementById('explanation-image-preview').style.display = 'block';
+            }
+            
             // Set up subject change handler
             document.getElementById('question-subject').addEventListener('change', function() {
                 updateChapters(this.value);
@@ -552,6 +582,12 @@
                 correctOption: parseInt(correctOption.value),
                 updatedAt: new Date().getTime()
             };
+            
+            // Add explanation image if exists
+            const explanationImg = document.getElementById('explanation-image-preview-img');
+            if (explanationImg && explanationImg.src && explanationImg.src.startsWith('data:')) {
+                updatedQuestion.explanationImage = explanationImg.src;
+            }
             
             // Update in Firebase
             db.collection('papers').doc(examId).collection('questions').doc(questionId)
@@ -678,6 +714,31 @@
             document.getElementById(`option-${option}-image-upload`).style.display = 'block';
         }
         
+        function removeExplanationImage() {
+            document.getElementById('explanation-image-preview').style.display = 'none';
+            document.getElementById('explanation-image-preview-img').src = '';
+        }
+        
+        async function captureExplanationImage() {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                for (const clipboardItem of clipboardItems) {
+                    for (const type of clipboardItem.types) {
+                        if (type.startsWith('image/')) {
+                            const blob = await clipboardItem.getType(type);
+                            const base64 = await blobToBase64(blob);
+                            
+                            document.getElementById('explanation-image-preview-img').src = base64;
+                            document.getElementById('explanation-image-preview').style.display = 'block';
+                            break;
+                        }
+                    }
+                }
+            } catch (error) {
+                alert('Please copy an image first (Ctrl+C)');
+            }
+        }
+        
         function blobToBase64(blob) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -697,6 +758,49 @@
                 showError("No exam ID provided");
                 return;
             }
+            
+            let pdfUploaded = false;
+            
+            // Set up PDF upload button
+            document.getElementById('pdf-btn').addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.pdf';
+                input.onchange = function() {
+                    if (this.files[0]) {
+                        pdfUploaded = true;
+                        alert('PDF uploaded! You can now use capture buttons.');
+                    }
+                };
+                input.click();
+            });
+            
+            // Set up capture button event listeners
+            document.getElementById('capture-question-btn').addEventListener('click', function() {
+                if (!pdfUploaded) {
+                    alert('Please upload a PDF first by clicking the "Upload PDF" button.');
+                    return;
+                }
+                captureQuestionImage();
+            });
+            document.getElementById('capture-explanation-btn').addEventListener('click', function() {
+                if (!pdfUploaded) {
+                    alert('Please upload a PDF first by clicking the "Upload PDF" button.');
+                    return;
+                }
+                captureExplanationImage();
+            });
+            
+            document.querySelectorAll('.option-capture-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!pdfUploaded) {
+                        alert('Please upload a PDF first by clicking the "Upload PDF" button.');
+                        return;
+                    }
+                    const option = this.getAttribute('data-option');
+                    captureOptionImage(option);
+                });
+            });
             
             // Load the question
             loadQuestion(examId, questionNo);

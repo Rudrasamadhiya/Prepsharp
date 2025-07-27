@@ -1656,10 +1656,12 @@
                 correctAnswer: question.correctAnswer || 0,
                 difficulty: question.difficulty || 'Medium',
                 subject: selectedSubject || 'Physics',
+                chapter: selectedChapter || 'Mathematics in Physics',
                 year: question.year || '2023',
                 questionNo: question.questionNo || '1',
                 paperId: question.paperId,
-                questionId: question.questionId
+                questionId: question.questionId,
+                globalQuestionId: question.globalQuestionId || question.questionId || questionId
             };
             
             localStorage.setItem('currentQuestion', JSON.stringify(questionData));

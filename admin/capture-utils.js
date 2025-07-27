@@ -89,6 +89,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Explanation capture button
+    const explanationCaptureBtn = document.getElementById('capture-explanation-btn');
+    if (explanationCaptureBtn) {
+        explanationCaptureBtn.addEventListener('click', function() {
+            currentCaptureTarget = 'explanation';
+            currentOptionTarget = null;
+            console.log('Explanation capture clicked, target set to:', currentCaptureTarget);
+            
+            if (typeof showPdfViewer === 'function') {
+                showPdfViewer();
+                addSelectAreaButton();
+            } else {
+                alert('Please upload a PDF first by clicking the "Upload PDF" button.');
+            }
+        });
+    }
+    
     // Function to add select area button
     function addSelectAreaButton() {
         // Remove existing button if any
@@ -169,6 +186,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const optionPreview = document.getElementById(`option-${currentOptionTarget}-image-preview`);
             optionPreviewImg.src = imageData;
             optionPreview.style.display = 'block';
+        } else if (currentCaptureTarget === 'question') {
+            const questionPreviewImg = document.getElementById('question-image-preview-img');
+            const questionPreview = document.getElementById('question-image-preview');
+            questionPreviewImg.src = imageData;
+            questionPreview.style.display = 'block';
+        } else if (currentCaptureTarget === 'explanation') {
+            const explanationPreviewImg = document.getElementById('explanation-image-preview-img');
+            const explanationPreview = document.getElementById('explanation-image-preview');
+            explanationPreviewImg.src = imageData;
+            explanationPreview.style.display = 'block';
         }
         
         resetScreenshotArea();

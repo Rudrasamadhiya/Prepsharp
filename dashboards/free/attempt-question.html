@@ -816,8 +816,8 @@
                 <button class="btn btn-secondary" onclick="previousQuestion()">
                     <i class="fas fa-chevron-left"></i> Previous
                 </button>
-                <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn" disabled>
-                    <i class="fas fa-check-circle"></i> Check Answer
+                <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn" disabled style="background: grey; color: white;">
+                    Check Answer
                 </button>
                 <button class="btn btn-secondary" onclick="nextQuestion()">
                     Next <i class="fas fa-chevron-right"></i>
@@ -829,15 +829,12 @@
     <!-- Solution Section -->
     <div class="solution-section" id="solutionSection">
         <div class="solution-tabs">
-            <div class="tab active" onclick="showTab('marks')">📘 PrepSharp Solution</div>
+            <div class="tab active" onclick="showTab('marks')"><img src="../../logo for index (1).png" alt="PrepSharp" style="height: 16px; margin-right: 8px;"> PrepSharp Solution</div>
             <div class="tab" onclick="showTab('community')">👥 Community Sol</div>
         </div>
         <div id="solutionContent">
             <p>Step-by-step solution will appear here...</p>
         </div>
-        <button class="btn btn-primary" onclick="addSolution()" style="margin-top: 20px;">
-            ➕ Add Your Solution
-        </button>
     </div>
     
     <!-- Hint Popup -->
@@ -882,6 +879,30 @@
         </div>
     </div>
     
+    <!-- Solution Upload Popup -->
+    <div class="hint-popup" id="solutionUploadPopup" style="display: none;">
+        <div class="hint-header">
+            <h3>Add Your Solution</h3>
+            <button class="close-btn" onclick="closeSolutionUpload()">&times;</button>
+        </div>
+        <div style="text-align: center;">
+            <p style="margin-bottom: 20px; color: #666;">Upload your solution in image format. It will be verified by PrepSharp team before publishing.</p>
+            
+            <button class="btn btn-primary" onclick="selectSolutionImage()" style="margin-bottom: 20px;">
+                📷 Select Image
+            </button>
+            
+            <img id="solutionImagePreview" style="display: none; max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; border: 2px solid #4f46e5;">
+            
+            <button id="submitSolutionBtn" class="btn btn-primary" onclick="submitSolution()" disabled style="width: 100%; margin-top: 15px; opacity: 0.5;">
+                ✅ Submit Solution
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <script>
         let currentQuestion = null;
         let selectedOption = null;
@@ -908,7 +929,9 @@
             const input = document.getElementById('answerInput');
             const checkBtn = document.getElementById('checkBtn');
             if (input && checkBtn) {
-                checkBtn.disabled = input.value.trim() === '';
+                const isEmpty = input.value.trim() === '';
+                checkBtn.disabled = isEmpty;
+                checkBtn.style.background = isEmpty ? 'grey' : 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%)';
             }
         }
         
@@ -1111,39 +1134,79 @@
             document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
             document.querySelectorAll('.option')[index].classList.add('selected');
             selectedOption = index;
-            document.getElementById('checkBtn').disabled = false;
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = false;
+            checkBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%)';
         }
         
         function checkAnswer() {
             const answerInput = document.getElementById('answerInput');
+            const checkBtn = document.getElementById('checkBtn');
             
-            if (answerInput && answerInput.style.display !== 'none') {
+            // Pause timer
+            clearInterval(timerInterval);
+            
+            if (answerInput && answerInput.value) {
                 // Numerical question
                 const userAnswer = parseFloat(answerInput.value);
-                const correctAnswer = currentQuestion.correctAnswer || 0;
-                
-                if (Math.abs(userAnswer - correctAnswer) < 0.001) {
-                    alert('✅ Correct! Well done.');
-                } else {
-                    alert(`❌ Incorrect. The correct answer is ${correctAnswer}`);
-                }
-            } else {
-                // MCQ question
-                if (selectedOption === null) return;
+                const correctAnswer = parseFloat(currentQuestion.correctAnswer) || 0;
                 
                 const options = document.querySelectorAll('.option');
-                const isCorrect = selectedOption === currentQuestion.correctAnswer;
+                if (Math.abs(userAnswer - correctAnswer) < 0.001) {
+                    options.forEach(opt => opt.classList.add('correct'));
+                } else {
+                    options.forEach(opt => opt.classList.add('incorrect'));
+                }
+            } else if (selectedOption !== null) {
+                // MCQ question
+                const options = document.querySelectorAll('.option');
+                const correctIndex = parseInt(currentQuestion.correctAnswer) || 0;
                 
-                // Show correct/incorrect styling
-                options[currentQuestion.correctAnswer].classList.add('correct');
-                if (!isCorrect) {
+                options[correctIndex].classList.add('correct');
+                if (selectedOption !== correctIndex) {
                     options[selectedOption].classList.add('incorrect');
                 }
             }
             
-            // Show solution
+            // Show solution and change button
             document.getElementById('solutionSection').style.display = 'block';
-            document.getElementById('checkBtn').disabled = true;
+            
+            // Display explanation if available
+            const solutionContent = document.getElementById('solutionContent');
+            const explanationImage = currentQuestion.explanationImage || currentQuestion.questionImage;
+            console.log('Using explanation image:', explanationImage ? 'Found' : 'Not found');
+            if (explanationImage) {
+                solutionContent.innerHTML = `
+                    <div id="prepsharp-solution" style="display: block;">
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="${explanationImage}" alt="Solution Explanation" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);" onerror="console.log('Explanation image failed to load')">
+                        </div>
+                    </div>
+                    <div id="community-solution" style="display: none;">
+                        <p>Community solutions will appear here...</p>
+                        <button class="btn btn-primary" onclick="addSolution()" style="margin-top: 20px;">
+                            ➕ Add Your Solution
+                        </button>
+                    </div>
+                `;
+            } else {
+                solutionContent.innerHTML = `
+                    <div id="prepsharp-solution" style="display: block;">
+                        <p>Step-by-step solution will appear here...</p>
+                    </div>
+                    <div id="community-solution" style="display: none;">
+                        <p>Community solutions will appear here...</p>
+                        <button class="btn btn-primary" onclick="addSolution()" style="margin-top: 20px;">
+                            ➕ Add Your Solution
+                        </button>
+                    </div>
+                `;
+            }
+            
+            checkBtn.innerHTML = 'Show Solution';
+            checkBtn.style.background = 'black';
+            checkBtn.style.color = 'white';
+            checkBtn.onclick = () => document.getElementById('solutionSection').scrollIntoView({behavior: 'smooth'});
         }
         
         function showHint() {
@@ -1179,6 +1242,14 @@
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
+            
+            if (tab === 'marks') {
+                document.getElementById('prepsharp-solution').style.display = 'block';
+                document.getElementById('community-solution').style.display = 'none';
+            } else {
+                document.getElementById('prepsharp-solution').style.display = 'none';
+                document.getElementById('community-solution').style.display = 'block';
+            }
         }
         
         function previousQuestion() {
@@ -1212,7 +1283,146 @@
         }
         
         function addSolution() {
-            alert('Add solution functionality');
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('solutionUploadPopup').style.display = 'block';
+        }
+        
+        function closeSolutionUpload() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('solutionUploadPopup').style.display = 'none';
+            document.getElementById('solutionImagePreview').style.display = 'none';
+            document.getElementById('solutionImagePreview').src = '';
+        }
+        
+        function selectSolutionImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('solutionImagePreview').src = e.target.result;
+                        document.getElementById('solutionImagePreview').style.display = 'block';
+                        document.getElementById('submitSolutionBtn').disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+        
+        function submitSolution() {
+            const imageData = document.getElementById('solutionImagePreview').src;
+            if (imageData) {
+                saveCommunityImage(imageData);
+                closeSolutionUpload();
+                
+                // Show thank you message
+                setTimeout(() => {
+                    alert('Thank you for contributing with PrepSharp team! Your solution will be verified and published soon.');
+                }, 500);
+            }
+        }
+        
+        async function saveCommunityImage(base64Image) {
+            const userEmail = 'user@example.com'; // Replace with actual user email
+            const timestamp = Date.now();
+            
+            const solutionData = {
+                image: base64Image,
+                createdAt: timestamp,
+                userEmail: userEmail
+            };
+            
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+                    authDomain: "prepsharp-c91fd.firebaseapp.com",
+                    projectId: "prepsharp-c91fd",
+                    storageBucket: "prepsharp-c91fd.firebasestorage.app",
+                    messagingSenderId: "688294848433",
+                    appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+                };
+                
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                const db = firebase.firestore();
+                
+                // Save to both locations
+                const promises = [];
+                
+                console.log('Current question data:', currentQuestion);
+                console.log('Available fields:', Object.keys(currentQuestion));
+                console.log('Chapter field value:', currentQuestion.chapter);
+                
+                // Get chapter from localStorage if not in question
+                const selectedChapter = localStorage.getItem('selectedChapter') || currentQuestion.chapter || 'Mathematics in Physics';
+                const selectedSubject = localStorage.getItem('selectedSubject') || currentQuestion.subject || 'Physics';
+                
+                // Location 1: papers/{examId}/questions/{questionId}/community/{userEmail}/
+                const examId = currentQuestion.paperId || 'jee-main---27-jan-shift-1-2024';
+                const questionId = currentQuestion.id || 'question-1';
+                console.log('Papers path:', `papers/${examId}/questions/${questionId}/community/${userEmail}`);
+                console.log('Current question data for path:', { paperId: currentQuestion.paperId, id: currentQuestion.id });
+                
+                promises.push(
+                    db.collection('papers')
+                      .doc(examId)
+                      .collection('questions')
+                      .doc(questionId)
+                      .collection('community')
+                      .doc(userEmail.replace(/[.#$\[\]]/g, '_'))
+                      .set(solutionData)
+                );
+                
+                // Location 2: questions/{examType}/{subject}/{chapter}/items/{globalQuestionId}/community/{userEmail}/
+                const examType = examId?.includes('advanced') ? 'JEE Advanced' : 'JEE Main';
+                const subject = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
+                const chapter = selectedChapter;
+                const globalQuestionId = currentQuestion.globalQuestionId || currentQuestion.questionId || examId + '-' + questionId;
+                console.log('Questions path:', `questions/${examType}/${subject}/${chapter}/items/${globalQuestionId}/community/${userEmail}`);
+                console.log('Using chapter:', chapter, 'from localStorage or question data');
+                console.log('Using email:', userEmail);
+                
+                promises.push(
+                    db.collection('questions')
+                      .doc(examType)
+                      .collection(subject)
+                      .doc(chapter)
+                      .collection('items')
+                      .doc(globalQuestionId)
+                      .collection('community')
+                      .doc(userEmail.replace(/[.#$\[\]]/g, '_'))
+                      .set(solutionData)
+                );
+                
+                console.log('Saving', promises.length, 'documents');
+                if (promises.length === 0) {
+                    console.error('No valid paths to save to');
+                    throw new Error('No valid document paths found');
+                }
+                await Promise.all(promises);
+                console.log('All documents saved successfully');
+                
+                // Display the solution
+                const communityDiv = document.getElementById('community-solution');
+                const solutionHtml = `
+                    <div class="user-solution" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5;">
+                        <div style="font-weight: bold; color: #4f46e5; margin-bottom: 8px;">Your Solution</div>
+                        <img src="${base64Image}" alt="Community Solution" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    </div>
+                `;
+                
+                communityDiv.insertAdjacentHTML('beforeend', solutionHtml);
+                alert('Solution uploaded successfully!');
+                
+            } catch (error) {
+                console.error('Error saving solution:', error);
+                alert('Error uploading solution: ' + error.message);
+            }
         }
         
         function saveToNotebook() {

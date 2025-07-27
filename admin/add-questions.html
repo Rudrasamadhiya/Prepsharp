@@ -659,6 +659,18 @@
                             <!-- Will be populated dynamically -->
                         </div>
                         
+                        <!-- Explanation Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Explanation</label>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-info btn-sm" id="capture-explanation-btn">Capture Explanation</button>
+                                <div id="explanation-image-preview" class="mt-2" style="max-width: 200px; display: none;">
+                                    <img id="explanation-image-preview-img" class="img-fluid rounded" src="">
+                                    <button type="button" class="btn btn-sm btn-danger mt-1" onclick="removeExplanationImage()">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -831,6 +843,14 @@
                     currentImageTarget = 'option';
                 });
             });
+            
+            // Set target to explanation when explanation capture button is clicked
+            const captureExplanationBtn = document.getElementById('capture-explanation-btn');
+            if (captureExplanationBtn) {
+                captureExplanationBtn.addEventListener('click', function() {
+                    currentImageTarget = 'explanation';
+                });
+            }
         });
         
         // Function to toggle question fields based on type
@@ -973,6 +993,7 @@
                 // Clear previous data first
                 document.getElementById('question-form').reset();
                 document.getElementById('question-image-preview').style.display = 'none';
+                document.getElementById('explanation-image-preview').style.display = 'none';
                 ['a', 'b', 'c', 'd'].forEach(opt => {
                     document.getElementById(`option-${opt}-image-preview`).style.display = 'none';
                 });
@@ -994,6 +1015,12 @@
                     if (data.questionImage) {
                         document.getElementById('question-image-preview-img').src = data.questionImage;
                         document.getElementById('question-image-preview').style.display = 'block';
+                    }
+                    
+                    // Load explanation image
+                    if (data.explanationImage) {
+                        document.getElementById('explanation-image-preview-img').src = data.explanationImage;
+                        document.getElementById('explanation-image-preview').style.display = 'block';
                     }
                     
                     // Load option images
@@ -1284,6 +1311,12 @@
             }
         }
         
+        // Function to remove explanation image
+        function removeExplanationImage() {
+            document.getElementById('explanation-image-preview').style.display = 'none';
+            document.getElementById('explanation-image-preview-img').src = '';
+        }
+        
         // Function to save question
         window.saveQuestion = function(examId) {
             console.log('Save question called with examId:', examId);
@@ -1311,14 +1344,11 @@
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
             
-            // Get the next question number
-            let questionNo = 1;
+            // Get current question number from the display
+            const currentQuestionNo = currentQuestionIndex + 1;
             
-            // Create question ID based on paper name and question number only
-            // Format: papername-questionno
-            
-            // Create the question ID with just question number
-            const questionId = `question-${questionNo}`;
+            // Create the question ID with current question number
+            const questionId = `question-${currentQuestionNo}`;
             
             // Create timestamp
             const timestamp = new Date().getTime();
@@ -1348,6 +1378,12 @@
             const questionImg = document.getElementById('question-image-preview-img');
             if (questionImg && questionImg.src && questionImg.src.startsWith('data:')) {
                 question.questionImage = questionImg.src;
+            }
+            
+            // Add explanation image
+            const explanationImg = document.getElementById('explanation-image-preview-img');
+            if (explanationImg && explanationImg.src && explanationImg.src.startsWith('data:')) {
+                question.explanationImage = explanationImg.src;
             }
             
             // Add option images
@@ -1446,57 +1482,79 @@
             // Save to Firebase Firestore directly (no Storage)
             try {
                 if (db) {
-                    // Get question count
-                    db.collection('papers').doc(examId).collection('questions').get()
-                        .then(snapshot => {
-                            const questionNo = snapshot.size + 1;
-                            const finalQuestionId = `question-${questionNo}`;
+                    // Use current question number for update
+                    const finalQuestionId = questionId;
+                    question.id = finalQuestionId;
+                    question.questionNo = currentQuestionNo;
+                    let moveMessage = '';
+                    
+                    // Check if question exists in papers collection
+                    db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).get()
+                        .then(existingDoc => {
+                            const isUpdate = existingDoc.exists;
+                            const globalQuestionId = isUpdate ? 
+                                (existingDoc.data().globalQuestionId || `${examId}-${finalQuestionId}`) : 
+                                `${examId}-${Date.now()}`;
                             
-                            question.id = finalQuestionId;
-                            question.questionNo = questionNo;
+                            question.globalQuestionId = globalQuestionId;
+                            
+                            // If updating and chapter changed, delete from old location
+                            let deletePromise = Promise.resolve();
+                            if (isUpdate && existingDoc.data().chapter && existingDoc.data().chapter !== chapter) {
+                                const oldChapter = existingDoc.data().chapter;
+                                const oldSubject = existingDoc.data().subject || subject;
+                                moveMessage = `\n\nMoved from: ${oldSubject} - ${oldChapter}\nTo: ${subject} - ${chapter}`;
+                                console.log('Deleting from old location:', oldSubject, oldChapter, globalQuestionId);
+                                deletePromise = db.collection('papers').doc(examId).get()
+                                    .then(examDoc => {
+                                        const examType = examDoc.exists ? examDoc.data().type : 'Unknown';
+                                        console.log('Delete path:', `questions/${examType}/${oldSubject}/${oldChapter}/items/${globalQuestionId}`);
+                                        return db.collection('questions')
+                                            .doc(examType)
+                                            .collection(oldSubject)
+                                            .doc(oldChapter)
+                                            .collection('items')
+                                            .doc(globalQuestionId)
+                                            .delete()
+                                            .then(() => console.log('Successfully deleted from old location'))
+                                            .catch(err => console.error('Delete error:', err));
+                                    });
+                            }
+                            
+                            return deletePromise.then(() => {
                             
                             console.log('Saving question to Firestore:', question);
                             
-                            // Check if question exists in papers collection
-                            return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).get()
-                                .then(existingDoc => {
-                                    const isUpdate = existingDoc.exists;
-                                    const globalQuestionId = isUpdate ? 
-                                        (existingDoc.data().globalQuestionId || `${examId}-${finalQuestionId}`) : 
-                                        `${examId}-${Date.now()}`;
+                            // Update papers collection
+                            return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question)
+                                .then(() => {
+                                    // Get exam type
+                                    return db.collection('papers').doc(examId).get();
+                                })
+                                .then(examDoc => {
+                                    const examType = examDoc.exists ? examDoc.data().type : 'Unknown';
                                     
-                                    question.globalQuestionId = globalQuestionId;
-                                    
-                                    // Update papers collection
-                                    return db.collection('papers').doc(examId).collection('questions').doc(finalQuestionId).set(question)
-                                        .then(() => {
-                                            // Get exam type
-                                            return db.collection('papers').doc(examId).get();
-                                        })
-                                        .then(examDoc => {
-                                            const examType = examDoc.exists ? examDoc.data().type : 'Unknown';
-                                            
-                                            // Update questions collection
-                                            return db.collection('questions')
-                                                .doc(examType)
-                                                .collection(subject)
-                                                .doc(chapter)
-                                                .collection('items')
-                                                .doc(globalQuestionId)
-                                                .set({
-                                                    ...question,
-                                                    paperId: examId,
-                                                    questionId: globalQuestionId,
-                                                    examType: examType
-                                                });
+                                    // Update questions collection
+                                    return db.collection('questions')
+                                        .doc(examType)
+                                        .collection(subject)
+                                        .doc(chapter)
+                                        .collection('items')
+                                        .doc(globalQuestionId)
+                                        .set({
+                                            ...question,
+                                            paperId: examId,
+                                            questionId: globalQuestionId,
+                                            examType: examType
                                         });
                                 });
+                            });
                         })
                         .then(() => {
                             console.log('Question saved successfully');
                             
                             // Show success with images
-                            let successMsg = `Question saved successfully!\n\nQuestion ID: ${question.id}\n\n`;
+                            let successMsg = `Question saved successfully!\n\nQuestion ID: ${question.id}${moveMessage}\n\n`;
                             
                             if (question.questionImage) {
                                 successMsg += 'Question image: [IMAGE SAVED]\n';
@@ -1515,6 +1573,8 @@
                             document.getElementById('question-form').reset();
                             document.getElementById('question-image-preview').style.display = 'none';
                             document.getElementById('question-image-preview-img').src = '';
+                            document.getElementById('explanation-image-preview').style.display = 'none';
+                            document.getElementById('explanation-image-preview-img').src = '';
                             ['a', 'b', 'c', 'd'].forEach(opt => {
                                 document.getElementById(`option-${opt}-image-preview`).style.display = 'none';
                                 document.getElementById(`option-${opt}-image-preview-img`).src = '';
