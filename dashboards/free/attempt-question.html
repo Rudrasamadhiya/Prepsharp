@@ -1249,6 +1249,58 @@
             } else {
                 document.getElementById('prepsharp-solution').style.display = 'none';
                 document.getElementById('community-solution').style.display = 'block';
+                loadCommunitySolutions();
+            }
+        }
+        
+        async function loadCommunitySolutions() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+                    authDomain: "prepsharp-c91fd.firebaseapp.com",
+                    projectId: "prepsharp-c91fd",
+                    storageBucket: "prepsharp-c91fd.firebasestorage.app",
+                    messagingSenderId: "688294848433",
+                    appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+                };
+                
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                const db = firebase.firestore();
+                
+                const examId = currentQuestion.paperId || 'jee-main---27-jan-shift-1-2024';
+                const questionId = currentQuestion.id || 'question-1';
+                
+                const solutionsRef = db.collection('papers')
+                    .doc(examId)
+                    .collection('questions')
+                    .doc(questionId)
+                    .collection('community');
+                
+                const snapshot = await solutionsRef.get();
+                const communityDiv = document.getElementById('community-solution');
+                const existingSolutions = communityDiv.querySelectorAll('.user-solution');
+                existingSolutions.forEach(sol => sol.remove());
+                
+                if (!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const solution = doc.data();
+                        const solutionHtml = `
+                            <div class="user-solution" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <img src="${solution.userAvatar}" alt="User Avatar" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">
+                                    <div style="font-weight: bold; color: #4f46e5;">${solution.userName}</div>
+                                </div>
+                                <img src="${solution.image}" alt="Community Solution" style="max-width: 100%; height: auto; border-radius: 8px;">
+                            </div>
+                        `;
+                        const addButton = communityDiv.querySelector('button');
+                        addButton.insertAdjacentHTML('beforebegin', solutionHtml);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading community solutions:', error);
             }
         }
         
