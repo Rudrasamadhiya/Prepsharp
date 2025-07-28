@@ -539,69 +539,54 @@
                     }
                 }
                 
-                // 4. Check for regular users by document ID (email as doc ID)
-                try {
-                    const userDoc = await db.collection('users').doc(email).get();
+                // 4. Check for regular users in users collection
+                const userSnapshot = await db.collection('users').where('email', '==', email).get();
+                
+                if (!userSnapshot.empty) {
+                    const userDoc = userSnapshot.docs[0];
+                    const userData = userDoc.data();
                     
-                    if (userDoc.exists) {
-                        const userData = userDoc.data();
+                    if (userData.password === password) {
+                        const userInfo = {
+                            id: userDoc.id,
+                            email: userData.email,
+                            name: userData.name || '',
+                            subscription: userData.subscriptionPlan || 'Free'
+                        };
                         
-                        if (userData.password === password) {
-                            const subscription = userData.subscriptionPlan || 'Free';
-                            console.log('User subscription from Firebase:', subscription);
-                            
-                            const userInfo = {
-                                id: userDoc.id,
-                                email: userData.email,
-                                name: userData.name || '',
-                                subscription: subscription
-                            };
-                            
-                            if (remember) {
-                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            } else {
-                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            }
-                            
-                            redirectToDashboard(subscription);
-                            return;
+                        if (remember) {
+                            localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                        } else {
+                            sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                         }
+                        
+                        redirectToDashboard(userInfo.subscription);
+                        return;
                     }
-                } catch (error) {
-                    console.log('Error checking user by doc ID:', error);
                 }
                 
-                // 5. Check for regular users by email field query
+                // 5. If all else fails, try Firebase Auth
                 try {
-                    const userSnapshot = await db.collection('users').where('email', '==', email).get();
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
                     
-                    if (!userSnapshot.empty) {
-                        const userDoc = userSnapshot.docs[0];
-                        const userData = userDoc.data();
-                        
-                        if (userData.password === password) {
-                            const subscription = userData.subscriptionPlan || 'Free';
-                            console.log('User subscription from Firebase:', subscription);
-                            
-                            const userInfo = {
-                                id: userDoc.id,
-                                email: userData.email,
-                                name: userData.name || '',
-                                subscription: subscription
-                            };
-                            
-                            if (remember) {
-                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            } else {
-                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                            }
-                            
-                            redirectToDashboard(subscription);
-                            return;
-                        }
+                    const userInfo = {
+                        id: user.uid,
+                        email: user.email,
+                        name: user.displayName || '',
+                        subscription: 'free'
+                    };
+                    
+                    if (remember) {
+                        localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                    } else {
+                        sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                     }
-                } catch (error) {
-                    console.log('Error checking user by email query:', error);
+                    
+                    redirectToDashboard(userInfo.subscription);
+                    return;
+                } catch (authError) {
+                    console.log('Firebase Auth error:', authError.message);
                 }
                 
                 // If we get here, login failed
@@ -621,7 +606,6 @@
         
         // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
-            console.log('Redirecting to dashboard for subscription:', subscription);
             
             switch(subscription) {
                 case 'premium':
@@ -646,19 +630,6 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', async function() {
-            // Check for specific user document
-            await checkSpecificUser();
-            // Debug password field
-            const passwordField = document.getElementById('password');
-            passwordField.addEventListener('input', function() {
-                console.log('Password input detected:', this.value.length > 0 ? 'Text entered' : 'Empty');
-            });
-            passwordField.addEventListener('focus', function() {
-                console.log('Password field focused');
-            });
-            passwordField.addEventListener('blur', function() {
-                console.log('Password field blurred');
-            });
             // Create particles
             createParticles();
             
