@@ -539,54 +539,69 @@
                     }
                 }
                 
-                // 4. Check for regular users in /users collection
-                const userSnapshot = await db.collection('/users').where('email', '==', email).get();
-                
-                if (!userSnapshot.empty) {
-                    const userDoc = userSnapshot.docs[0];
-                    const userData = userDoc.data();
+                // 4. Check for regular users by document ID (email as doc ID)
+                try {
+                    const userDoc = await db.collection('users').doc(email).get();
                     
-                    if (userData.password === password) {
-                        const userInfo = {
-                            id: userDoc.id,
-                            email: userData.email,
-                            name: userData.name || '',
-                            subscription: userData.subscription || 'free'
-                        };
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
                         
-                        if (remember) {
-                            localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                        } else {
-                            sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                        if (userData.password === password) {
+                            const subscription = userData.subscriptionPlan || 'Free';
+                            console.log('User subscription from Firebase:', subscription);
+                            
+                            const userInfo = {
+                                id: userDoc.id,
+                                email: userData.email,
+                                name: userData.name || '',
+                                subscription: subscription
+                            };
+                            
+                            if (remember) {
+                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            } else {
+                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            }
+                            
+                            redirectToDashboard(subscription);
+                            return;
                         }
-                        
-                        redirectToDashboard(userInfo.subscription);
-                        return;
                     }
+                } catch (error) {
+                    console.log('Error checking user by doc ID:', error);
                 }
                 
-                // 5. If all else fails, try Firebase Auth
+                // 5. Check for regular users by email field query
                 try {
-                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
+                    const userSnapshot = await db.collection('users').where('email', '==', email).get();
                     
-                    const userInfo = {
-                        id: user.uid,
-                        email: user.email,
-                        name: user.displayName || '',
-                        subscription: 'free'
-                    };
-                    
-                    if (remember) {
-                        localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                    } else {
-                        sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                    if (!userSnapshot.empty) {
+                        const userDoc = userSnapshot.docs[0];
+                        const userData = userDoc.data();
+                        
+                        if (userData.password === password) {
+                            const subscription = userData.subscriptionPlan || 'Free';
+                            console.log('User subscription from Firebase:', subscription);
+                            
+                            const userInfo = {
+                                id: userDoc.id,
+                                email: userData.email,
+                                name: userData.name || '',
+                                subscription: subscription
+                            };
+                            
+                            if (remember) {
+                                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            } else {
+                                sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                            }
+                            
+                            redirectToDashboard(subscription);
+                            return;
+                        }
                     }
-                    
-                    redirectToDashboard(userInfo.subscription);
-                    return;
-                } catch (authError) {
-                    console.log('Firebase Auth error:', authError.message);
+                } catch (error) {
+                    console.log('Error checking user by email query:', error);
                 }
                 
                 // If we get here, login failed
@@ -602,33 +617,7 @@
             }
         }
         
-        // Check for specific user document
-        async function checkSpecificUser() {
-            try {
-                // Check for specific user IDs
-                const userIds = ['4qUklgZcWRHZdxPdL4uw', 'BT95naEPMsaTStQgJPS9', 'hkeGnrIiiXqlsXUoGtN5'];
-                
-                for (const userId of userIds) {
-                    const specificDoc = await db.collection('/users').doc(userId).get();
-                    if (specificDoc.exists) {
-                        const userData = specificDoc.data();
-                        console.log(`Found user document ${userId}:`, userData);
-                        
-                        // Test if we can log in with this user
-                        if (userData.email && userData.password) {
-                            console.log(`User ${userId} has email and password, can be used for login`);
-                        }
-                    } else {
-                        console.log(`User document ${userId} not found`);
-                    }
-                }
-                
-                return true;
-            } catch (e) {
-                console.error('Error checking specific user documents:', e);
-                return false;
-            }
-        }
+
         
         // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
@@ -636,12 +625,15 @@
             
             switch(subscription) {
                 case 'premium':
+                case 'Premium':
                     window.location.href = 'dashboards/premium/dashboard.html';
                     break;
                 case 'standard':
+                case 'Standard':
                     window.location.href = 'dashboards/standard/dashboard.html';
                     break;
                 case 'basic':
+                case 'Basic':
                     window.location.href = 'dashboards/basic/dashboard.html';
                     break;
                 case 'Free':
