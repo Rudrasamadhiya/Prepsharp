@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>JEE Advanced 2024 - Paper 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="exam-style.css">
+    <style>
+        .sections-strip { display: flex; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .sections-strip::-webkit-scrollbar { display: none; }
+        .section-tab { flex: 0 0 auto; white-space: nowrap; font-size: 11px; min-width: 150px; text-align: center; padding: 8px 12px; margin: 0 2px; border-radius: 4px; cursor: pointer; }
+        .right-container { min-height: 500px; }
+        .question-palette { max-height: 300px; overflow-y: auto; }
+        
+        /* Styles for numerical input */
+        .numerical-input {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+        
+        .numerical-field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        
+        .numerical-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4f46e5;
+        }
+        
+        .numerical-textbox {
+            padding: 12px 15px;
+            border: 2px solid rgba(79, 70, 229, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .numerical-textbox:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            outline: none;
+        }
+        
+        .numerical-instructions {
+            font-size: 14px;
+            color: #6b7280;
+            background: rgba(79, 70, 229, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #4f46e5;
+        }
+        
+        .numerical-instructions p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body onload="goFullScreen()">
+    <div class="exam-container">
+        <div class="top-strip">
+            <div class="logo-container">
+                <img src="../images/jee advanced 2024.png" alt="JEE Advanced 2024 Logo" class="nta-logo">
+                <img src="../images/iitm.png" alt="IITM Logo" class="nta-logo">
+            </div>
+            <div class="top-right-user">
+                <div class="candidate-avatar square" id="userInitials">JS</div>
+                <div class="candidate-info-container">
+                    <div><span class="candidate-label">Candidate Name:</span> <span id="userName">John Smith</span></div>
+                    <div><span class="candidate-label">Candidate ID:</span> <span id="userId">JEE2024P1001</span></div>
+                    <div><span class="candidate-label">Time Remaining:</span> <span class="time-remaining" id="timeRemaining">03:00:00</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="purple-strip">
+            <div>System No.: <span id="systemNo">C45</span></div>
+            <div>Lab No.: <span id="labNo">LAB-B</span></div>
+        </div>
+        
+        <div class="black-strip">
+            <div class="paper-indicator"><span id="examType">JEE Advanced</span> <span id="paperYear">2024</span> <span id="paperName">Paper 1</span></div>
+            <div class="strip-buttons">
+                <div class="strip-btn" id="viewPaper">
+                    <i class="fas fa-file-alt"></i> Question Paper
+                </div>
+                <div class="strip-btn" id="viewInstructions">
+                    <i class="fas fa-info-circle"></i> View Instructions
+                </div>
+                <div class="strip-btn">
+                    <i class="fas fa-clock"></i> <span id="timer">03:00:00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-container">
+                <div class="left-panel">
+                    <div class="sections-strip" id="sectionsStrip">
+                        <div class="section-tab active">Physics - Single Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Physics - Multiple Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Physics - Integer Type<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Physics - Match List<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry - Single Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry - Multiple Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry - Integer Type<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Chemistry - Match List<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics - Single Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics - Multiple Correct<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics - Integer Type<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                        <div class="section-tab">Mathematics - Match List<span class="info-button" title="Section information"><i class="fas fa-info-circle"></i></span></div>
+                    </div>
+                    
+                    <div class="language-strip">
+                        <div class="language-selector">
+                            View in: 
+                            <select id="languageSelector">
+                                <option>English</option>
+                                <option>Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="question-area">
+                        <div class="watermark">
+                            <div class="watermark-text">JEE2024P1001</div>
+                            <div class="watermark-text">JEE2024P1001</div>
+                            <div class="watermark-text">JEE2024P1001</div>
+                            <div class="watermark-text">JEE2024P1001</div>
+                            <div class="watermark-text">JEE2024P1001</div>
+                            <div class="watermark-text">JEE2024P1001</div>
+                        </div>
+                        
+                        <div class="question-number" id="questionNumber">Question No. 1</div>
+                        
+                        <div class="question-content">
+                            <div class="question-text" id="questionText">
+                                <p>Loading question...</p>
+                            </div>
+                            
+                            <div class="question-image" id="questionImage">
+                                <img src="C:/Users/suppo/OneDrive/Desktop/Prepsharp/papers/2024-1/Physics/Question-1.png" alt="Question 1">
+                            </div>
+                            
+                            <div class="options" id="optionsList">
+                                <!-- For MCQ questions -->
+                                <div class="mcq-options" id="mcqOptions">
+                                    <div class="option">
+                                        <input type="radio" name="q1" id="q1-a" class="option-radio">
+                                        <label for="q1-a" class="option-label">
+                                            <img src="C:/Users/suppo/OneDrive/Desktop/Prepsharp/papers/2024-1/Physics/Question-1 Option-1.png" alt="Option A" style="max-width: 100%; height: auto;">
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q1" id="q1-b" class="option-radio">
+                                        <label for="q1-b" class="option-label">
+                                            <img src="C:/Users/suppo/OneDrive/Desktop/Prepsharp/papers/2024-1/Physics/Question-1 Option-2.png" alt="Option B" style="max-width: 100%; height: auto;">
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q1" id="q1-c" class="option-radio">
+                                        <label for="q1-c" class="option-label">
+                                            <img src="C:/Users/suppo/OneDrive/Desktop/Prepsharp/papers/2024-1/Physics/Question-1 Option-3.png" alt="Option C" style="max-width: 100%; height: auto;">
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="option">
+                                        <input type="radio" name="q1" id="q1-d" class="option-radio">
+                                        <label for="q1-d" class="option-label">
+                                            <img src="C:/Users/suppo/OneDrive/Desktop/Prepsharp/papers/2024-1/Physics/Question-1 Option-4.png" alt="Option D" style="max-width: 100%; height: auto;">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Numerical Answer Section (for Integer Type) -->
+                            <div id="numericalSection" style="display: none; margin-top: 20px; background: #fffde7; border-radius: 12px; padding: 20px; border: 2px solid #f9a825; box-shadow: 0 4px 8px rgba(249, 168, 37, 0.15);">
+                                <h3 style="margin-top: 0; color: #f9a825; font-size: 18px; text-align: center;">Numerical Answer</h3>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <label for="numerical-answer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #f57f17;">Your Answer:</label>
+                                    <input type="text" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);" readonly>
+                                </div>
+                                
+                                <!-- On-screen keyboard -->
+                                <div class="virtual-keyboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; max-width: 300px; margin: 0 auto 15px;">
+                                    <button class="num-key" data-value="1" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">1</button>
+                                    <button class="num-key" data-value="2" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">2</button>
+                                    <button class="num-key" data-value="3" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">3</button>
+                                    <button class="num-key" data-value="+" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">+</button>
+                                    <button class="num-key" data-value="4" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">4</button>
+                                    <button class="num-key" data-value="5" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">5</button>
+                                    <button class="num-key" data-value="6" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">6</button>
+                                    <button class="num-key" data-value="-" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">-</button>
+                                    <button class="num-key" data-value="7" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">7</button>
+                                    <button class="num-key" data-value="8" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">8</button>
+                                    <button class="num-key" data-value="9" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">9</button>
+                                    <button class="num-key" data-value="." style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">.</button>
+                                    <button class="num-key" data-value="0" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;">0</button>
+                                    <button id="backspace" style="padding: 8px; font-size: 16px; background: #fff59d; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;"><i class="fas fa-backspace"></i></button>
+                                    <button id="clear-all" style="padding: 8px; font-size: 16px; background: #ffee58; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 4; margin-top: 6px;">Clear</button>
+                                </div>
+                                
+                                <div style="background: #fff8e1; padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ffca28;">
+                                    <p style="margin: 0; font-size: 14px; color: #f57f17;"><strong>Instructions:</strong></p>
+                                    <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 14px; color: #795548;">
+                                        <li>Enter your numerical answer using the keypad above</li>
+                                        <li>Use decimal point (.) for decimal values if needed</li>
+                                        <li>Use minus (-) for negative values if needed</li>
+                                        <li>Use plus (+) for positive values if needed</li>
+                                        <li>Do not include units in your answer</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="left-footer">
+                    <button class="action-btn mark-btn" id="markQuestion">Mark for Review & Next</button>
+                    <button class="action-btn clear-btn" id="clearResponse">Clear Response</button>
+                    <button class="action-btn prev-btn" id="prevQuestion">Previous</button>
+                    <button class="action-btn save-btn" id="nextQuestion">Save & Next</button>
+                </div>
+            </div>
+            
+            <div class="right-container">
+                <div class="right-panel">
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color answered"></div>
+                            <span>Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-answered"></div>
+                            <span>Not Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color not-visited"></div>
+                            <span>Not Visited</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color marked"></div>
+                            <span>Marked for Review</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color answered-marked"></div>
+                            <span>Answered & Marked for Review</span>
+                        </div>
+                    </div>
+                    
+                    <div class="section-strip" id="currentSection">
+                        Physics - Single Correct
+                    </div>
+                    
+                    <div class="question-palette" id="questionPalette">
+                        <div class="question-btn not-visited active" onclick="changeQuestion(1)">1</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(2)">2</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(3)">3</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(4)">4</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(5)">5</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(6)">6</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(7)">7</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(8)">8</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(9)">9</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(10)">10</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(11)">11</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(12)">12</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(13)">13</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(14)">14</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(15)">15</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(16)">16</div>
+                        <div class="question-btn not-visited" onclick="changeQuestion(17)">17</div>
+                    </div>
+                </div>
+                
+                <div class="right-footer">
+                    <button class="action-btn submit-btn" id="submitExam">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Submit Confirmation Modal -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Submit Exam</h3>
+                <button class="modal-close" id="closeSubmitModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to submit your exam?</p>
+                <p id="summaryText">You have answered <span id="answeredCount">0</span> out of <span id="totalCount">54</span> questions.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn" id="cancelSubmit">Cancel</button>
+                <button class="action-btn submit-btn" id="confirmSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Full Screen Function -->
+    <script>
+        function goFullScreen() {
+            const elem = document.documentElement;
+            
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            
+            // Also try F11 key simulation
+            try {
+                const event = new KeyboardEvent('keydown', {
+                    key: 'F11',
+                    keyCode: 122,
+                    which: 122,
+                    code: 'F11',
+                    bubbles: true
+                });
+                document.dispatchEvent(event);
+            } catch (e) {
+                console.log('F11 simulation failed:', e);
+            }
+        }
+    </script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="timer.js"></script>
+    <script src="exam-script.js"></script>
+    <script src="timer-integration.js"></script>
+    <script src="section-info.js"></script>
+    
+    <script>
+        // Exam tracking variables
+        let examData = {
+            studentId: '',
+            studentName: '',
+            email: '',
+            examId: 'JEE_ADVANCED_2024_PAPER1',
+            examName: 'JEE Advanced 2024 - Paper 1',
+            examDate: new Date().toISOString().split('T')[0],
+            startTime: new Date().toISOString(),
+            endTime: null,
+            totalDuration: 180,
+            responses: {},
+            questionTimes: {},
+            subjectTimes: { physics: 0, chemistry: 0, mathematics: 0 },
+            currentQuestion: 1,
+            totalQuestions: 54
+        };
+        
+        // Sample questions data (in real app, load from database)
+        const questionsData = {
+            1: { subject: 'physics', chapter: 'mechanics', correctAnswer: 'B', difficulty: 'easy', type: 'mcq', marks: 3 },
+            2: { subject: 'physics', chapter: 'thermodynamics', correctAnswer: 'A', difficulty: 'moderate', type: 'mcq', marks: 3 },
+            3: { subject: 'physics', chapter: 'electromagnetism', correctAnswer: 'C', difficulty: 'hard', type: 'integer', marks: 3 },
+            // Add more questions as needed
+        };
+        
+        // Initialize exam data
+        function initializeExam() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                examData.email = userData.email;
+                examData.studentName = userData.name || userData.email;
+                examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                
+                // Get exam ID from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const examId = urlParams.get('examId');
+                if (examId) {
+                    examData.examId = examId;
+                    examData.examName = examId.replace(/_/g, ' ');
+                }
+                
+                // Update UI
+                document.getElementById('userName').textContent = examData.studentName;
+                document.getElementById('userId').textContent = examData.studentId;
+                
+                // Update watermarks
+                document.querySelectorAll('.watermark-text').forEach(el => {
+                    el.textContent = examData.studentId;
+                });
+            }
+        }
+        
+        // Track question response
+        function saveResponse(questionId, answer, timeSpent, isNumerical = false) {
+            const response = {
+                questionId: questionId,
+                userAnswer: answer,
+                timeSpent: timeSpent,
+                timestamp: new Date().toISOString(),
+                isAttempted: answer !== null,
+                isMarkedForReview: false,
+                isNumerical: isNumerical
+            };
+            
+            examData.responses[questionId] = response;
+            return response;
+        }
+        
+        // Update question display based on section type
+        function updateQuestionDisplay() {
+            const questionId = examData.currentQuestion;
+            
+            if (isCurrentSectionNumerical()) {
+                setQuestionType('numerical');
+                
+                // Clear any selected MCQ options if switching to numerical
+                document.querySelectorAll('.option-radio').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Load saved numerical answer if it exists
+                const savedResponse = examData.responses[questionId];
+                if (savedResponse && savedResponse.isNumerical) {
+                    document.getElementById('numerical-answer').value = savedResponse.userAnswer || '';
+                } else {
+                    document.getElementById('numerical-answer').value = '';
+                }
+            } else {
+                setQuestionType('mcq');
+                
+                // Clear numerical input
+                document.getElementById('numerical-answer').value = '';
+                
+                // Load saved MCQ answer if it exists
+                const savedResponse = examData.responses[questionId];
+                if (savedResponse && !savedResponse.isNumerical && savedResponse.userAnswer) {
+                    const radioId = `q${questionId}-${savedResponse.userAnswer.toLowerCase()}`;
+                    const radioElement = document.getElementById(radioId);
+                    if (radioElement) radioElement.checked = true;
+                }
+            }
+        }
+        
+        // Calculate results
+        function calculateResults() {
+            let correct = 0, incorrect = 0, attempted = 0, unattempted = 0;
+            let totalMarks = 0;
+            let subjectStats = {
+                physics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
+                chemistry: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
+                mathematics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 }
+            };
+            
+            for (let i = 1; i <= examData.totalQuestions; i++) {
+                const response = examData.responses[i];
+                const question = questionsData[i];
+                
+                if (!question) continue;
+                
+                if (response && response.isAttempted) {
+                    attempted++;
+                    subjectStats[question.subject].attempted++;
+                    
+                    if (response.userAnswer === question.correctAnswer) {
+                        correct++;
+                        subjectStats[question.subject].correct++;
+                        totalMarks += question.marks;
+                        subjectStats[question.subject].marks += question.marks;
+                    } else {
+                        incorrect++;
+                        subjectStats[question.subject].incorrect++;
+                        // Negative marking: -1 for wrong answer
+                        totalMarks -= 1;
+                        subjectStats[question.subject].marks -= 1;
+                    }
+                } else {
+                    unattempted++;
+                    subjectStats[question.subject].unattempted++;
+                }
+            }
+            
+            return {
+                totalQuestions: examData.totalQuestions,
+                attempted,
+                correct,
+                incorrect,
+                unattempted,
+                totalMarks: Math.max(0, totalMarks),
+                maxMarks: examData.totalQuestions * 3,
+                accuracy: attempted > 0 ? (correct / attempted * 100).toFixed(1) : 0,
+                subjects: subjectStats
+            };
+        }
+        
+        // Save to Firebase
+        async function saveExamResults() {
+            try {
+                const results = calculateResults();
+                examData.endTime = new Date().toISOString();
+                
+                const examResult = {
+                    ...examData,
+                    ...results,
+                    submittedAt: new Date().toISOString(),
+                    createdAt: examData.startTime
+                };
+                
+                // Save to Firebase: /users/{email}/exams/{paperId}
+                if (window.db) {
+                    await window.db.collection('users').doc(examData.email).collection('exams').doc(examData.examId).set(examResult);
+                }
+                
+                console.log('Exam results saved successfully');
+                return examResult;
+            } catch (error) {
+                console.error('Error saving exam results:', error);
+                throw error;
+            }
+        }
+        
+        // Handle exam submission
+        async function handleExamSubmission() {
+            try {
+                // Show loading
+                document.getElementById('confirmSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                document.getElementById('confirmSubmit').disabled = true;
+                
+                // Save results to Firebase
+                const results = await saveExamResults();
+                
+                // Store results in sessionStorage for result page
+                sessionStorage.setItem('examResults', JSON.stringify(results));
+                
+                // Redirect to result page
+                window.location.href = 'result/result.html';
+                
+            } catch (error) {
+                alert('Error submitting exam. Please try again.');
+                document.getElementById('confirmSubmit').innerHTML = 'Submit';
+                document.getElementById('confirmSubmit').disabled = false;
+            }
+        }
+        
+        // Function to toggle question type (MCQ or Numerical)
+        function setQuestionType(type) {
+            const mcqOptions = document.getElementById('mcqOptions');
+            const numericalSection = document.getElementById('numericalSection');
+            
+            if (type === 'numerical') {
+                mcqOptions.style.display = 'none';
+                numericalSection.style.display = 'block';
+            } else { // 'mcq'
+                mcqOptions.style.display = 'block';
+                numericalSection.style.display = 'none';
+            }
+        }
+        
+        // Function to check if current section is Integer Type (numerical)
+        function isCurrentSectionNumerical() {
+            const currentSection = document.querySelector('.section-tab.active').textContent;
+            return currentSection.includes('Integer Type');
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExam();
+            
+            // Handle submit button click
+            document.getElementById('confirmSubmit').addEventListener('click', handleExamSubmission);
+            
+            // Set up on-screen keyboard functionality
+            setupVirtualKeyboard();
+            
+            // Set initial question type based on current section
+            if (isCurrentSectionNumerical()) {
+                setQuestionType('numerical');
+            } else {
+                setQuestionType('mcq');
+            }
+            
+            // Function to set up the virtual keyboard
+            function setupVirtualKeyboard() {
+                const numericInput = document.getElementById('numerical-answer');
+                const numKeys = document.querySelectorAll('.num-key');
+                const backspace = document.getElementById('backspace');
+                const clearAll = document.getElementById('clear-all');
+                
+                // Add click handlers for number keys
+                numKeys.forEach(key => {
+                    key.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        numericInput.value += value;
+                        saveNumericalResponse();
+                    });
+                });
+                
+                // Add click handler for backspace
+                backspace.addEventListener('click', function() {
+                    numericInput.value = numericInput.value.slice(0, -1);
+                    saveNumericalResponse();
+                });
+                
+                // Add click handler for clear all
+                clearAll.addEventListener('click', function() {
+                    numericInput.value = '';
+                    saveNumericalResponse();
+                });
+                
+                // Function to save the numerical response
+                function saveNumericalResponse() {
+                    const questionId = examData.currentQuestion;
+                    const answer = numericInput.value;
+                    if (answer.trim() !== '') {
+                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                    } else {
+                        // If answer is cleared, save null
+                        saveResponse(questionId, null, 30, true);
+                    }
+                }
+            }
+            
+            // Add click handlers for section tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // First handle the active tab UI
+                    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update current section display
+                    document.getElementById('currentSection').textContent = this.textContent;
+                    
+                    // Update question display based on section
+                    updateQuestionDisplay();
+                });
+            });
+            
+            // Modal close buttons
+            document.getElementById('closeSubmitModal').addEventListener('click', () => {
+                document.getElementById('submitModal').classList.remove('active');
+            });
+            
+            document.getElementById('cancelSubmit').addEventListener('click', () => {
+                document.getElementById('submitModal').classList.remove('active');
+            });
+            
+            // Submit button
+            document.getElementById('submitExam').addEventListener('click', function() {
+                const answeredCount = Object.keys(examData.responses).length;
+                const totalQuestions = examData.totalQuestions;
+                
+                document.getElementById('answeredCount').textContent = answeredCount;
+                document.getElementById('totalCount').textContent = totalQuestions;
+                document.getElementById('submitModal').classList.add('active');
+            });
+            
+            // View instructions button
+            document.getElementById('viewInstructions').addEventListener('click', () => {
+                alert('JEE Advanced Exam Instructions:\n\n1. The exam consists of multiple-choice and numerical questions.\n2. Each question has specific marking scheme.\n3. There is negative marking for wrong answers.\n4. You can mark questions for review and return to them later.\n5. Click "Submit" when you are done with the exam.');
+            });
+            
+            // Question Paper button
+            document.getElementById('viewPaper').addEventListener('click', () => {
+                alert('Question Paper View:\n\nThis would show a full view of all questions in the exam paper.');
+            });
+        });
+        
+        // Question navigation function
+        function changeQuestion(qNum) {
+            const activeSection = document.querySelector('.section-tab.active').textContent;
+            let subject = 'Physics';
+            
+            if (activeSection.includes('Chemistry')) subject = 'Chemistry';
+            else if (activeSection.includes('Mathematics')) subject = 'Maths';
+            
+            // Update question image
+            document.getElementById('questionImg').src = `../papers/2024-1/${subject}/Question-${qNum}.png`;
+            document.getElementById('questionNumber').textContent = `Question No. ${qNum}`;
+            
+            // Check if this is a numerical question (8-13)
+            if (qNum >= 8 && qNum <= 13) {
+                // Hide MCQ options, show numerical input
+                document.getElementById('mcqOptions').style.display = 'none';
+                document.getElementById('numericalSection').style.display = 'block';
+            } else {
+                // Show MCQ options, hide numerical input
+                document.getElementById('mcqOptions').style.display = 'block';
+                document.getElementById('numericalSection').style.display = 'none';
+                
+                // Update option images
+                document.getElementById('optionA').src = `../papers/2024-1/${subject}/Question-${qNum} Option-1.png`;
+                document.getElementById('optionB').src = `../papers/2024-1/${subject}/Question-${qNum} Option-2.png`;
+                document.getElementById('optionC').src = `../papers/2024-1/${subject}/Question-${qNum} Option-3.png`;
+                document.getElementById('optionD').src = `../papers/2024-1/${subject}/Question-${qNum} Option-4.png`;
+                
+                // Update radio button names
+                document.getElementById('q1-a').name = `q${qNum}`;
+                document.getElementById('q1-b').name = `q${qNum}`;
+                document.getElementById('q1-c').name = `q${qNum}`;
+                document.getElementById('q1-d').name = `q${qNum}`;
+            }
+            
+            // Update active question button
+            document.querySelectorAll('.question-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index + 1 === qNum);
+            });
+            
+            // Clear previous selections
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            document.getElementById('numerical-answer').value = '';
+        }
+    </script>
+</body>
+</html>

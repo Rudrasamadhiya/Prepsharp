@@ -539,11 +539,21 @@
                     }
                 }
                 
-                // 4. Check for regular users in users collection
-                const userSnapshot = await db.collection('users').where('email', '==', email).get();
+                // 4. Check for regular users by document ID (email as doc ID)
+                let userDoc = await db.collection('users').doc(email).get();
                 
-                if (!userSnapshot.empty) {
-                    const userDoc = userSnapshot.docs[0];
+                // Try lowercase if original doesn't exist
+                if (!userDoc.exists) {
+                    userDoc = await db.collection('users').doc(email.toLowerCase()).get();
+                }
+                
+                // Try with first letter uppercase
+                if (!userDoc.exists) {
+                    const capitalizedEmail = email.charAt(0).toUpperCase() + email.slice(1).toLowerCase();
+                    userDoc = await db.collection('users').doc(capitalizedEmail).get();
+                }
+                
+                if (userDoc.exists) {
                     const userData = userDoc.data();
                     
                     if (userData.password === password) {
@@ -606,6 +616,7 @@
         
         // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
+            console.log('Redirecting with subscription:', subscription);
             
             switch(subscription) {
                 case 'premium':
@@ -632,6 +643,38 @@
         document.addEventListener('DOMContentLoaded', async function() {
             // Create particles
             createParticles();
+            
+            // Add email check on input
+            const emailField = document.getElementById('email');
+            emailField.addEventListener('blur', async function() {
+                const email = this.value.trim();
+                if (email) {
+                    console.log('Checking email:', email);
+                    
+                    // Try original case
+                    let userDoc = await db.collection('users').doc(email).get();
+                    console.log('Original case exists:', userDoc.exists);
+                    
+                    // Try lowercase
+                    if (!userDoc.exists) {
+                        userDoc = await db.collection('users').doc(email.toLowerCase()).get();
+                        console.log('Lowercase exists:', userDoc.exists);
+                    }
+                    
+                    // Try with first letter uppercase
+                    if (!userDoc.exists) {
+                        const capitalizedEmail = email.charAt(0).toUpperCase() + email.slice(1).toLowerCase();
+                        userDoc = await db.collection('users').doc(capitalizedEmail).get();
+                        console.log('Capitalized exists:', userDoc.exists);
+                    }
+                    
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        console.log('User data:', userData);
+                        console.log('subscriptionPlan:', userData.subscriptionPlan);
+                    }
+                }
+            });
             
             // Set up login form
             const loginForm = document.getElementById('loginForm');
