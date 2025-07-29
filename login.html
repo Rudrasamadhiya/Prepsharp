@@ -561,7 +561,8 @@
                             id: userDoc.id,
                             email: userData.email,
                             name: userData.name || '',
-                            subscription: userData.subscriptionPlan || 'Free'
+                            subscription: userData.subscriptionPlan || 'Free',
+                            subscriptionPlan: userData.subscriptionPlan || 'Free'
                         };
                         
                         if (remember) {
@@ -686,7 +687,9 @@
             const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const userData = JSON.parse(loggedInUser);
-                redirectToDashboard(userData.subscription);
+                // Use subscriptionPlan if subscription is not available
+                const userSubscription = userData.subscription || userData.subscriptionPlan || 'Free';
+                redirectToDashboard(userSubscription);
             }
             
             // Check if admin is logged in

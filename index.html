@@ -2155,10 +2155,24 @@
         
         // Check if user is already logged in
         document.addEventListener('DOMContentLoaded', function() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const userData = JSON.parse(loggedInUser);
-                redirectToDashboard(userData.subscription);
+                // Use subscriptionPlan if subscription is not available
+                const userSubscription = userData.subscription || userData.subscriptionPlan || 'Free';
+                redirectToDashboard(userSubscription);
+            }
+            
+            // Check if admin is logged in
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                // If it's the superadmin, go to admin dashboard
+                if (sessionStorage.getItem('adminEmail') === 'admin@prepsharp.in') {
+                    window.location.replace('admin-dashboard.html');
+                } else {
+                    // Regular admins go to collaborate exams
+                    window.location.replace('admin/collaborate-exams.html');
+                }
+                return;
             }
             
             // Add animation to feature cards
@@ -2217,16 +2231,25 @@
         
         // Redirect to appropriate dashboard based on subscription
         function redirectToDashboard(subscription) {
+            console.log('Redirecting with subscription:', subscription);
+            
             switch(subscription) {
                 case 'premium':
-                    window.location.href = 'dashboards/premium/dashboard.html';
+                case 'Premium':
+                    window.location.replace('dashboards/premium/dashboard.html');
                     break;
                 case 'standard':
-                    window.location.href = 'dashboards/standard/dashboard.html';
+                case 'Standard':
+                    window.location.replace('dashboards/standard/dashboard.html');
                     break;
                 case 'basic':
+                case 'Basic':
+                    window.location.replace('dashboards/basic/dashboard.html');
+                    break;
+                case 'Free':
+                case 'free':
                 default:
-                    window.location.href = 'dashboards/basic/dashboard.html';
+                    window.location.replace('dashboards/free/dashboard.html');
                     break;
             }
         }

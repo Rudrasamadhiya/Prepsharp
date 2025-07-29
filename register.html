@@ -707,7 +707,10 @@
         // Update register button state
         function updateRegisterButton() {
             const registerBtn = document.getElementById('register-btn');
-            if (emailVerified && mobileVerified) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (emailVerified && mobileVerified && password.length >= 6 && password === confirmPassword) {
                 registerBtn.disabled = false;
                 registerBtn.style.background = '#4f46e5';
                 registerBtn.textContent = 'Create Account';
@@ -720,6 +723,10 @@
                     registerBtn.textContent = 'Verify Email First';
                 } else if (!mobileVerified) {
                     registerBtn.textContent = 'Verify Mobile First';
+                } else if (password.length < 6) {
+                    registerBtn.textContent = 'Password too short';
+                } else if (password !== confirmPassword) {
+                    registerBtn.textContent = 'Passwords do not match';
                 }
             }
         }
@@ -737,6 +744,10 @@
         
         document.getElementById('mobile').addEventListener('input', validateMobile);
         document.getElementById('country-code').addEventListener('change', validateMobile);
+        
+        // Add password validation listeners
+        document.getElementById('password').addEventListener('input', updateRegisterButton);
+        document.getElementById('confirmPassword').addEventListener('input', updateRegisterButton);
         
         // Verify OTP via Firebase
         document.getElementById('verify-mobile-otp').addEventListener('click', async function() {
@@ -932,7 +943,7 @@
                     
                     // Redirect to dashboard
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.replace('dashboard.html');
                     }, 2000);
                 }
             });
@@ -984,7 +995,7 @@
                 // Add a small delay to ensure the user sees the success message
                 setTimeout(() => {
                     // Redirect to dashboard
-                    window.location.href = 'dashboard.html';
+                    window.location.replace('dashboard.html');
                 }, 1000);
                 
             } catch (error) {
@@ -1064,7 +1075,7 @@
                 
                 // Redirect to login after 2 seconds
                 setTimeout(() => {
-                    window.location.href = 'login.html';
+                    window.location.replace('login.html');
                 }, 2000);
                 
             } catch (error) {
