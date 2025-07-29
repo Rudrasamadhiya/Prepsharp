@@ -994,9 +994,8 @@
                 
                 // Add a small delay to ensure the user sees the success message
                 setTimeout(() => {
-                    // Redirect to appropriate dashboard based on subscription
-                    const userSubscription = userData.subscriptionPlan || 'Free';
-                    redirectToDashboard(userSubscription);
+                    // Redirect to free dashboard for new registrations
+                    window.location.replace('dashboards/free/dashboard.html');
                 }, 1000);
                 
             } catch (error) {
