@@ -629,6 +629,24 @@
         </aside>
         
         <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="user-actions">
+                    <div class="user-profile" id="userProfile">
+                        <div class="avatar-initials" id="userInitials">L</div>
+                        <span class="user-name" id="loggedInUserName">Loading...</span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="help.html" class="dropdown-item"><i class="fas fa-question-circle"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
             <div class="dashboard-content">
                 <div class="pyq-section">
                     <div class="section-header">
@@ -723,10 +741,46 @@
         // Always show exam selection on page load
         window.addEventListener('load', function() {
             loadUserPreferences();
+            loadUserInfo();
             localStorage.removeItem('selectedExam');
             localStorage.removeItem('selectedSubject');
             localStorage.removeItem('selectedChapter');
         });
+        
+        // Load logged-in user info
+        async function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || userData.email || 'User';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('loggedInUserName').textContent = userName;
+                document.getElementById('userInitials').textContent = initials;
+                
+                // Load photo from Firebase
+                try {
+                    const userId = userData.email || 'default-user';
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        const avatar = document.getElementById('userInitials');
+                        avatar.style.backgroundImage = `url(${doc.data().photo})`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                        avatar.textContent = '';
+                    }
+                } catch (error) {
+                    console.log('No photo found');
+                }
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = '../../login.html';
+        }
         
         // Load user preferences from Firebase
         async function loadUserPreferences() {
@@ -988,6 +1042,27 @@
             document.getElementById('questionsSection').style.display = 'none';
             document.getElementById('chapterSelection').style.display = 'block';
         }
+        
+        // Initialize dropdown functionality on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const userProfile = document.getElementById('userProfile');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (userProfile && userDropdown) {
+                userProfile.addEventListener('click', function(e) {
+                    userDropdown.style.opacity = userDropdown.style.opacity === '1' ? '0' : '1';
+                    userDropdown.style.visibility = userDropdown.style.visibility === 'visible' ? 'hidden' : 'visible';
+                    userDropdown.style.transform = userDropdown.style.transform === 'translateY(0px)' ? 'translateY(-10px)' : 'translateY(0px)';
+                    e.stopPropagation();
+                });
+                
+                document.addEventListener('click', function() {
+                    userDropdown.style.opacity = '0';
+                    userDropdown.style.visibility = 'hidden';
+                    userDropdown.style.transform = 'translateY(-10px)';
+                });
+            }
+        });
     </script>
 </body>
 </html>

@@ -566,6 +566,7 @@
         // Load chapters when page loads
         window.addEventListener('load', function() {
             loadUserPreferences();
+            loadUserInfo();
             countTotalQuestions();
             loadChapters('current'); // Default to "As per syllabus"
             
@@ -669,6 +670,41 @@
                 filterModal.style.display = 'none';
             });
         });
+        
+        // Load logged-in user info
+        async function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || userData.email || 'User';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('loggedInUserName').textContent = userName;
+                document.getElementById('userInitials').textContent = initials;
+                
+                // Load photo from Firebase
+                try {
+                    const userId = userData.email || 'default-user';
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        const avatar = document.getElementById('userInitials');
+                        avatar.style.backgroundImage = `url(${doc.data().photo})`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                        avatar.textContent = '';
+                    }
+                } catch (error) {
+                    console.log('No photo found');
+                }
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = '../../login.html';
+        }
         
         // Load user preferences from Firebase
         async function loadUserPreferences() {

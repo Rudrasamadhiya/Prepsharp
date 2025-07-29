@@ -279,16 +279,36 @@
             box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4);
         }
         .option.correct {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
+            border-color: #10b981 !important;
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
             animation: correctPulse 0.6s ease-out;
+            position: relative;
+        }
+        .option.correct::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
         }
         .option.incorrect {
-            border-color: #ef4444;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
+            border-color: #ef4444 !important;
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            color: white !important;
             animation: shake 0.5s ease-out;
+            position: relative;
+        }
+        .option.incorrect::after {
+            content: '✗';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
         }
         @keyframes correctPulse {
             0% { transform: scale(1); }
@@ -697,6 +717,42 @@
                 box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
             }
             
+            .option.correct img {
+                border-color: #10b981 !important;
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3) !important;
+            }
+            
+            .option.incorrect img {
+                border-color: #ef4444 !important;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3) !important;
+            }
+            
+            .option.correct::after {
+                top: 5px;
+                right: 10px;
+                font-size: 16px;
+                background: rgba(16, 185, 129, 0.9);
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .option.incorrect::after {
+                top: 5px;
+                right: 10px;
+                font-size: 16px;
+                background: rgba(239, 68, 68, 0.9);
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
             .option:hover {
                 border-color: #ff6b6b;
                 transform: translateY(-2px);
@@ -910,7 +966,53 @@
         let timerSeconds = 0;
         let timerInterval;
         
+        // Load logged-in user info
+        async function loadUserInfo() {
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const userData = JSON.parse(loggedInUser);
+                const userName = userData.name || userData.email || 'User';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                // Store user photo globally for solution feature
+                window.currentUserPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=4f46e5&color=fff`;
+                
+                // Load photo from Firebase
+                try {
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyCtkee-Lv8lEMestaSVJxx7yvKB-lBygPQ",
+                        authDomain: "prepsharp-c91fd.firebaseapp.com",
+                        projectId: "prepsharp-c91fd",
+                        storageBucket: "prepsharp-c91fd.firebasestorage.app",
+                        messagingSenderId: "688294848433",
+                        appId: "1:688294848433:web:dd93fc6d61d62392473f90"
+                    };
+                    
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.firestore();
+                    
+                    const userId = userData.email || 'default-user';
+                    const doc = await db.collection('users').doc(userId).get();
+                    if (doc.exists && doc.data().photo) {
+                        window.currentUserPhoto = doc.data().photo;
+                    }
+                } catch (error) {
+                    console.log('No photo found');
+                }
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            sessionStorage.removeItem('loggedInUser');
+            window.location.href = '../../login.html';
+        }
+        
         window.addEventListener('load', function() {
+            loadUserInfo();
             loadQuestion();
             startTimer();
         });
@@ -940,6 +1042,8 @@
             if (questionData) {
                 currentQuestion = JSON.parse(questionData);
                 console.log('Loaded question:', currentQuestion);
+                console.log('correctOption value:', currentQuestion.correctOption);
+                console.log('correctAnswer value:', currentQuestion.correctAnswer);
                 displayQuestion();
             } else {
                 // Load from Firebase
@@ -1146,6 +1250,10 @@
             // Pause timer
             clearInterval(timerInterval);
             
+            console.log('checkAnswer called');
+            console.log('currentQuestion:', currentQuestion);
+            console.log('selectedOption:', selectedOption);
+            
             if (answerInput && answerInput.value) {
                 // Numerical question
                 const userAnswer = parseFloat(answerInput.value);
@@ -1160,7 +1268,22 @@
             } else if (selectedOption !== null) {
                 // MCQ question
                 const options = document.querySelectorAll('.option');
-                const correctIndex = parseInt(currentQuestion.correctAnswer) || 0;
+                console.log('Options found:', options.length);
+                
+                let correctIndex = currentQuestion.correctOption || currentQuestion.correctAnswer;
+                console.log('correctOption from Firebase:', correctIndex);
+                
+                correctIndex = parseInt(correctIndex);
+                console.log('Parsed correctIndex:', correctIndex);
+                
+                // Ensure correctIndex is within bounds
+                if (isNaN(correctIndex) || correctIndex < 0 || correctIndex >= options.length) {
+                    console.log('Index out of bounds, using 0');
+                    correctIndex = 0;
+                }
+                
+                console.log('Final correctIndex to highlight:', correctIndex);
+                console.log('User selected option:', selectedOption);
                 
                 options[correctIndex].classList.add('correct');
                 if (selectedOption !== correctIndex) {
@@ -1173,7 +1296,7 @@
             
             // Display explanation if available
             const solutionContent = document.getElementById('solutionContent');
-            const explanationImage = currentQuestion.explanationImage || currentQuestion.questionImage;
+            const explanationImage = currentQuestion.explanationImage;
             console.log('Using explanation image:', explanationImage ? 'Found' : 'Not found');
             if (explanationImage) {
                 solutionContent.innerHTML = `
@@ -1269,13 +1392,18 @@
                 }
                 const db = firebase.firestore();
                 
-                const examId = currentQuestion.paperId || 'jee-main---27-jan-shift-1-2024';
-                const questionId = currentQuestion.id || 'question-1';
+                const selectedChapter = localStorage.getItem('selectedChapter') || currentQuestion.chapter || 'Mathematics in Physics';
+                const selectedSubject = localStorage.getItem('selectedSubject') || currentQuestion.subject || 'Physics';
+                const examType = currentQuestion.paperId?.includes('advanced') ? 'JEE Advanced' : 'JEE Main';
+                const subject = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
+                const globalQuestionId = currentQuestion.globalQuestionId || currentQuestion.questionId || currentQuestion.id;
                 
-                const solutionsRef = db.collection('papers')
-                    .doc(examId)
-                    .collection('questions')
-                    .doc(questionId)
+                const solutionsRef = db.collection('questions')
+                    .doc(examType)
+                    .collection(subject)
+                    .doc(selectedChapter)
+                    .collection('items')
+                    .doc(globalQuestionId)
                     .collection('community');
                 
                 const snapshot = await solutionsRef.get();
@@ -1286,17 +1414,20 @@
                 if (!snapshot.empty) {
                     snapshot.forEach(doc => {
                         const solution = doc.data();
-                        const solutionHtml = `
-                            <div class="user-solution" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5;">
-                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                                    <img src="${solution.userAvatar}" alt="User Avatar" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">
-                                    <div style="font-weight: bold; color: #4f46e5;">${solution.userName}</div>
+                        // Only show approved solutions
+                        if (solution.status === 'approved') {
+                            const solutionHtml = `
+                                <div class="user-solution" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5;">
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                        <img src="${solution.userAvatar}" alt="User Avatar" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">
+                                        <div style="font-weight: bold; color: #4f46e5;">${solution.userName}</div>
+                                    </div>
+                                    <img src="${solution.image}" alt="Community Solution" style="max-width: 100%; height: auto; border-radius: 8px;">
                                 </div>
-                                <img src="${solution.image}" alt="Community Solution" style="max-width: 100%; height: auto; border-radius: 8px;">
-                            </div>
-                        `;
-                        const addButton = communityDiv.querySelector('button');
-                        addButton.insertAdjacentHTML('beforebegin', solutionHtml);
+                            `;
+                            const addButton = communityDiv.querySelector('button');
+                            addButton.insertAdjacentHTML('beforebegin', solutionHtml);
+                        }
                     });
                 }
             } catch (error) {
@@ -1379,13 +1510,26 @@
         }
         
         async function saveCommunityImage(base64Image) {
-            const userEmail = 'user@example.com'; // Replace with actual user email
+            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
+            const userData = loggedInUser ? JSON.parse(loggedInUser) : null;
+            const userEmail = userData?.email || 'user@example.com';
+            const userName = userData?.name || userData?.email || 'Anonymous User';
             const timestamp = Date.now();
+            
+            // Use globally stored user photo
+            const userPhoto = window.currentUserPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=4f46e5&color=fff`;
             
             const solutionData = {
                 image: base64Image,
                 createdAt: timestamp,
-                userEmail: userEmail
+                userEmail: userEmail,
+                userName: userName,
+                userAvatar: userPhoto,
+                status: 'pending',
+                questionId: currentQuestion.globalQuestionId || currentQuestion.questionId || currentQuestion.id,
+                chapter: localStorage.getItem('selectedChapter') || currentQuestion.chapter,
+                subject: localStorage.getItem('selectedSubject') || currentQuestion.subject,
+                examType: currentQuestion.paperId?.includes('advanced') ? 'JEE Advanced' : 'JEE Main'
             };
             
             try {
@@ -1403,73 +1547,14 @@
                 }
                 const db = firebase.firestore();
                 
-                // Save to both locations
-                const promises = [];
+                // Save to pending solutions collection for admin approval
+                await db.collection('pendingSolutions')
+                    .doc(`${userEmail.replace(/[.#$\[\]]/g, '_')}_${timestamp}`)
+                    .set(solutionData);
                 
-                console.log('Current question data:', currentQuestion);
-                console.log('Available fields:', Object.keys(currentQuestion));
-                console.log('Chapter field value:', currentQuestion.chapter);
+                console.log('Solution saved to pending approval');
                 
-                // Get chapter from localStorage if not in question
-                const selectedChapter = localStorage.getItem('selectedChapter') || currentQuestion.chapter || 'Mathematics in Physics';
-                const selectedSubject = localStorage.getItem('selectedSubject') || currentQuestion.subject || 'Physics';
-                
-                // Location 1: papers/{examId}/questions/{questionId}/community/{userEmail}/
-                const examId = currentQuestion.paperId || 'jee-main---27-jan-shift-1-2024';
-                const questionId = currentQuestion.id || 'question-1';
-                console.log('Papers path:', `papers/${examId}/questions/${questionId}/community/${userEmail}`);
-                console.log('Current question data for path:', { paperId: currentQuestion.paperId, id: currentQuestion.id });
-                
-                promises.push(
-                    db.collection('papers')
-                      .doc(examId)
-                      .collection('questions')
-                      .doc(questionId)
-                      .collection('community')
-                      .doc(userEmail.replace(/[.#$\[\]]/g, '_'))
-                      .set(solutionData)
-                );
-                
-                // Location 2: questions/{examType}/{subject}/{chapter}/items/{globalQuestionId}/community/{userEmail}/
-                const examType = examId?.includes('advanced') ? 'JEE Advanced' : 'JEE Main';
-                const subject = selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1);
-                const chapter = selectedChapter;
-                const globalQuestionId = currentQuestion.globalQuestionId || currentQuestion.questionId || examId + '-' + questionId;
-                console.log('Questions path:', `questions/${examType}/${subject}/${chapter}/items/${globalQuestionId}/community/${userEmail}`);
-                console.log('Using chapter:', chapter, 'from localStorage or question data');
-                console.log('Using email:', userEmail);
-                
-                promises.push(
-                    db.collection('questions')
-                      .doc(examType)
-                      .collection(subject)
-                      .doc(chapter)
-                      .collection('items')
-                      .doc(globalQuestionId)
-                      .collection('community')
-                      .doc(userEmail.replace(/[.#$\[\]]/g, '_'))
-                      .set(solutionData)
-                );
-                
-                console.log('Saving', promises.length, 'documents');
-                if (promises.length === 0) {
-                    console.error('No valid paths to save to');
-                    throw new Error('No valid document paths found');
-                }
-                await Promise.all(promises);
-                console.log('All documents saved successfully');
-                
-                // Display the solution
-                const communityDiv = document.getElementById('community-solution');
-                const solutionHtml = `
-                    <div class="user-solution" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5;">
-                        <div style="font-weight: bold; color: #4f46e5; margin-bottom: 8px;">Your Solution</div>
-                        <img src="${base64Image}" alt="Community Solution" style="max-width: 100%; height: auto; border-radius: 8px;">
-                    </div>
-                `;
-                
-                communityDiv.insertAdjacentHTML('beforeend', solutionHtml);
-                alert('Solution uploaded successfully!');
+                alert('Solution submitted for review! It will be visible to other users after admin approval.');
                 
             } catch (error) {
                 console.error('Error saving solution:', error);
