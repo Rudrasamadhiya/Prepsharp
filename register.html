@@ -440,7 +440,7 @@
                 </div>
                 
                 <button type="button" id="google-login" class="register-btn" style="background: white; color: #4285F4; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                    <img src="images/google-logo.png" alt="Google" style="width: 18px; height: 18px;">
+                    <img src="images/Google__G__logo.svg.webp" alt="Google" style="width: 18px; height: 18px;">
                     <span>Continue with Google</span>
                 </button>
                 
@@ -994,8 +994,9 @@
                 
                 // Add a small delay to ensure the user sees the success message
                 setTimeout(() => {
-                    // Redirect to dashboard
-                    window.location.replace('dashboard.html');
+                    // Redirect to appropriate dashboard based on subscription
+                    const userSubscription = userData.subscriptionPlan || 'Free';
+                    redirectToDashboard(userSubscription);
                 }, 1000);
                 
             } catch (error) {
@@ -1003,6 +1004,31 @@
                 const statusEl = document.getElementById('auth-status');
                 if (statusEl) statusEl.textContent = 'Error: ' + error.message;
                 alert('Error saving user data: ' + error.message);
+            }
+        }
+        
+        // Redirect to appropriate dashboard based on subscription
+        function redirectToDashboard(subscription) {
+            console.log('Redirecting with subscription:', subscription);
+            
+            switch(subscription) {
+                case 'premium':
+                case 'Premium':
+                    window.location.replace('dashboards/premium/dashboard.html');
+                    break;
+                case 'standard':
+                case 'Standard':
+                    window.location.replace('dashboards/standard/dashboard.html');
+                    break;
+                case 'basic':
+                case 'Basic':
+                    window.location.replace('dashboards/basic/dashboard.html');
+                    break;
+                case 'Free':
+                case 'free':
+                default:
+                    window.location.replace('dashboards/free/dashboard.html');
+                    break;
             }
         }
         
@@ -1073,9 +1099,9 @@
                 // Show success message
                 document.getElementById('successMessage').style.display = 'block';
                 
-                // Redirect to login after 2 seconds
+                // Redirect to free dashboard after 2 seconds
                 setTimeout(() => {
-                    window.location.replace('login.html');
+                    window.location.replace('dashboards/free/dashboard.html');
                 }, 2000);
                 
             } catch (error) {
