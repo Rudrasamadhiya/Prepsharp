@@ -693,7 +693,7 @@
                         subscriptionPlan: userData.subscriptionPlan || 'Free'
                     };
                     
-                    sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                    localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
                     redirectToDashboard(userInfo.subscription);
                 })
                 .catch(error => {

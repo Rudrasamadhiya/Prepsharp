@@ -992,6 +992,16 @@
                 if (statusEl) statusEl.textContent = 'Success! Redirecting to dashboard...';
                 console.log('Redirecting to dashboard...');
                 
+                // Store user info in localStorage for auto-login
+                const userInfo = {
+                    id: user.uid,
+                    email: user.email,
+                    name: user.displayName || '',
+                    subscription: 'Free',
+                    subscriptionPlan: 'Free'
+                };
+                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                
                 // Add a small delay to ensure the user sees the success message
                 setTimeout(() => {
                     // Redirect to free dashboard for new registrations
