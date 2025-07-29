@@ -378,6 +378,16 @@
                 
                 <button type="submit" class="login-btn">Login</button>
                 
+                <div style="text-align: center; margin: 20px 0; position: relative;">
+                    <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+                    <span style="position: absolute; top: -10px; background: white; padding: 0 15px; left: 50%; transform: translateX(-50%); color: #6b7280;">OR</span>
+                </div>
+                
+                <button type="button" id="google-login" class="login-btn" style="background: white; color: #4285F4; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                    <img src="images/Google__G__logo.svg.webp" alt="Google" style="width: 18px; height: 18px;">
+                    <span>Continue with Google</span>
+                </button>
+                
                 <div class="login-footer">
                     <a href="forgot-password.html">Forgot Password?</a>
                     <a href="register.html">Create Account</a>
@@ -639,6 +649,60 @@
                     break;
             }
         }
+        
+        // Google Sign In
+        document.getElementById('google-login').addEventListener('click', function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            
+            // Show loading state
+            this.textContent = 'Signing in with Google...';
+            this.disabled = true;
+            
+            auth.signInWithPopup(provider)
+                .then(async result => {
+                    const user = result.user;
+                    
+                    // Check if user exists in Firestore
+                    const userDoc = await db.collection('users').doc(user.email).get();
+                    
+                    if (!userDoc.exists) {
+                        // Create new user
+                        await db.collection('users').doc(user.email).set({
+                            name: user.displayName,
+                            email: user.email,
+                            mobile: user.phoneNumber || '',
+                            subscriptionPlan: 'Free',
+                            createdAt: new Date(),
+                            class: '',
+                            schoolCollege: '',
+                            targetYear: '',
+                            phoneVerified: false,
+                            authProvider: 'google'
+                        });
+                    }
+                    
+                    const userData = userDoc.exists ? userDoc.data() : { subscriptionPlan: 'Free' };
+                    
+                    const userInfo = {
+                        id: user.uid,
+                        email: user.email,
+                        name: user.displayName || '',
+                        subscription: userData.subscriptionPlan || 'Free',
+                        subscriptionPlan: userData.subscriptionPlan || 'Free'
+                    };
+                    
+                    sessionStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                    redirectToDashboard(userInfo.subscription);
+                })
+                .catch(error => {
+                    console.error('Google sign-in error:', error);
+                    alert('Google sign-in failed: ' + error.message);
+                    this.textContent = 'Continue with Google';
+                    this.disabled = false;
+                });
+        });
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', async function() {
