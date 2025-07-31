@@ -240,8 +240,28 @@ input, textarea, select {
     }
 }
 
-/* Mobile Landscape (up to 880px) */
-@media (max-width: 880px) and (orientation: landscape) {
+/* Landscape 770px and below - question palette fix */
+@media (max-width: 770px) and (orientation: landscape) {
+    .right-container {
+        width: 200px;
+    }
+    
+    .question-palette {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        padding: 3px;
+    }
+    
+    .question-btn {
+        width: 30px;
+        height: 24px;
+        font-size: 8px;
+        line-height: 24px;
+    }
+}
+
+/* Mobile Landscape (up to 951px) */
+@media (max-width: 951px) and (orientation: landscape) {
     body {
         font-size: 12px;
         margin: 0;
@@ -263,6 +283,7 @@ input, textarea, select {
         padding: 2px 6px;
         height: 35px;
         flex-shrink: 0;
+        transition: transform 0.3s ease;
     }
     
     .nta-logo {
@@ -286,6 +307,10 @@ input, textarea, select {
         font-size: 10px;
         height: 25px;
         flex-shrink: 0;
+    }
+    
+    .purple-strip {
+        transition: transform 0.3s ease;
     }
     
     .strip-buttons {
@@ -348,10 +373,10 @@ input, textarea, select {
     }
     
     .question-btn {
-        width: 30px;
-        height: 28px;
+        width: 34px;
+        height: 30px;
         font-size: 10px;
-        line-height: 28px;
+        line-height: 30px;
     }
     
     .right-footer {
@@ -714,7 +739,7 @@ input, textarea, select {
 }
 
 /* Landscape-specific improvements */
-@media (max-width: 880px) and (orientation: landscape) {
+@media (max-width: 951px) and (orientation: landscape) {
     /* Hide watermark in landscape for more space */
     .watermark {
         opacity: 0.1;
@@ -814,7 +839,7 @@ input, textarea, select {
 }
 
 /* Landscape-specific scrolling improvements */
-@media (max-width: 880px) and (orientation: landscape) {
+@media (max-width: 951px) and (orientation: landscape) {
     .sections-strip {
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -866,7 +891,7 @@ input, textarea, select {
 }
 
 /* Landscape modal optimization */
-@media (max-width: 880px) and (orientation: landscape) {
+@media (max-width: 951px) and (orientation: landscape) {
     .modal-content {
         width: 90%;
         max-width: 600px;
@@ -886,7 +911,7 @@ input, textarea, select {
 }
 
 /* Performance optimizations for landscape */
-@media (max-width: 880px) and (orientation: landscape) {
+@media (max-width: 951px) and (orientation: landscape) {
     /* Reduce animations on landscape for better performance */
     * {
         transition-duration: 0.1s !important;
