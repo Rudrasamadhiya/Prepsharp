@@ -651,57 +651,119 @@
         }
         
         // Google Sign In
-        document.getElementById('google-login').addEventListener('click', function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.addScope('profile');
-            provider.addScope('email');
-            
-            // Show loading state
-            this.textContent = 'Signing in with Google...';
-            this.disabled = true;
-            
-            auth.signInWithPopup(provider)
-                .then(async result => {
-                    const user = result.user;
-                    
-                    // Check if user exists in Firestore
-                    const userDoc = await db.collection('users').doc(user.email).get();
-                    
-                    if (!userDoc.exists) {
-                        // Create new user
-                        await db.collection('users').doc(user.email).set({
-                            name: user.displayName,
-                            email: user.email,
-                            mobile: user.phoneNumber || '',
-                            subscriptionPlan: 'Free',
-                            createdAt: new Date(),
-                            class: '',
-                            schoolCollege: '',
-                            targetYear: '',
-                            phoneVerified: false,
-                            authProvider: 'google'
-                        });
-                    }
-                    
-                    const userData = userDoc.exists ? userDoc.data() : { subscriptionPlan: 'Free' };
-                    
-                    const userInfo = {
-                        id: user.uid,
-                        email: user.email,
-                        name: user.displayName || '',
-                        subscription: userData.subscriptionPlan || 'Free',
-                        subscriptionPlan: userData.subscriptionPlan || 'Free'
-                    };
-                    
-                    localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-                    redirectToDashboard(userInfo.subscription);
-                })
-                .catch(error => {
-                    console.error('Google sign-in error:', error);
-                    alert('Google sign-in failed: ' + error.message);
-                    this.textContent = 'Continue with Google';
-                    this.disabled = false;
+        document.getElementById('google-login').addEventListener('click', async function() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+                provider.setCustomParameters({
+                    prompt: 'select_account'
                 });
+                
+                // Show loading state
+                this.innerHTML = '<span>Signing in...</span>';
+                this.disabled = true;
+                
+                // Force redirect method for mobile apps
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isApp = window.location.protocol === 'file:' || window.navigator.standalone;
+                
+                if (isMobile || isApp) {
+                    await auth.signInWithRedirect(provider);
+                    return;
+                }
+                
+                let result;
+                try {
+                    // Try popup for desktop
+                    result = await auth.signInWithPopup(provider);
+                } catch (popupError) {
+                    console.log('Popup failed, trying redirect:', popupError);
+                    await auth.signInWithRedirect(provider);
+                    return;
+                }
+                
+                const user = result.user;
+                
+                // Check if user exists in Firestore
+                const userDoc = await db.collection('users').doc(user.email).get();
+                
+                if (!userDoc.exists) {
+                    // Create new user
+                    await db.collection('users').doc(user.email).set({
+                        name: user.displayName,
+                        email: user.email,
+                        mobile: user.phoneNumber || '',
+                        subscriptionPlan: 'Free',
+                        createdAt: new Date(),
+                        class: '',
+                        schoolCollege: '',
+                        targetYear: '',
+                        phoneVerified: false,
+                        authProvider: 'google'
+                    });
+                }
+                
+                const userData = userDoc.exists ? userDoc.data() : { subscriptionPlan: 'Free' };
+                
+                const userInfo = {
+                    id: user.uid,
+                    email: user.email,
+                    name: user.displayName || '',
+                    subscription: userData.subscriptionPlan || 'Free',
+                    subscriptionPlan: userData.subscriptionPlan || 'Free'
+                };
+                
+                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                redirectToDashboard(userInfo.subscription);
+                
+            } catch (error) {
+                console.error('Google sign-in error:', error);
+                alert('Google sign-in failed: ' + error.message);
+                this.innerHTML = '<img src="images/Google__G__logo.svg.webp" alt="Google" style="width: 18px; height: 18px;"><span>Continue with Google</span>';
+                this.disabled = false;
+            }
+        });
+        
+        // Handle redirect result
+        auth.getRedirectResult().then(async (result) => {
+            if (result.user) {
+                const user = result.user;
+                
+                // Check if user exists in Firestore
+                const userDoc = await db.collection('users').doc(user.email).get();
+                
+                if (!userDoc.exists) {
+                    // Create new user
+                    await db.collection('users').doc(user.email).set({
+                        name: user.displayName,
+                        email: user.email,
+                        mobile: user.phoneNumber || '',
+                        subscriptionPlan: 'Free',
+                        createdAt: new Date(),
+                        class: '',
+                        schoolCollege: '',
+                        targetYear: '',
+                        phoneVerified: false,
+                        authProvider: 'google'
+                    });
+                }
+                
+                const userData = userDoc.exists ? userDoc.data() : { subscriptionPlan: 'Free' };
+                
+                const userInfo = {
+                    id: user.uid,
+                    email: user.email,
+                    name: user.displayName || '',
+                    subscription: userData.subscriptionPlan || 'Free',
+                    subscriptionPlan: userData.subscriptionPlan || 'Free'
+                };
+                
+                localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                redirectToDashboard(userInfo.subscription);
+            }
+        }).catch((error) => {
+            console.error('Redirect result error:', error);
         });
         
         // Initialize on page load
