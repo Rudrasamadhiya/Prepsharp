@@ -568,31 +568,6 @@
             const questionArea = document.querySelector('.question-area');
             if (questionArea) {
                 questionArea.addEventListener('click', hideViewInstructions);
-                
-                // Hide header on scroll in mobile landscape only
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                const isLandscape = window.innerWidth > window.innerHeight;
-                const isMobileLandscape = isMobile && isLandscape && window.innerWidth <= 880;
-                
-                if (isMobileLandscape) {
-                    let lastScrollTop = 0;
-                    questionArea.addEventListener('scroll', function() {
-                        const scrollTop = this.scrollTop;
-                        const topStrip = document.querySelector('.top-strip');
-                        const purpleStrip = document.querySelector('.purple-strip');
-                        
-                        if (scrollTop > lastScrollTop && scrollTop > 50) {
-                            // Scrolling down - hide header
-                            topStrip.style.transform = 'translateY(-100%)';
-                            purpleStrip.style.transform = 'translateY(-100%)';
-                        } else {
-                            // Scrolling up - show header
-                            topStrip.style.transform = 'translateY(0)';
-                            purpleStrip.style.transform = 'translateY(0)';
-                        }
-                        lastScrollTop = scrollTop;
-                    });
-                }
             }
             
             // Mobile-specific initialization

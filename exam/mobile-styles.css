@@ -263,7 +263,6 @@ input, textarea, select {
         padding: 2px 6px;
         height: 35px;
         flex-shrink: 0;
-        transition: transform 0.3s ease;
     }
     
     .nta-logo {
@@ -287,10 +286,6 @@ input, textarea, select {
         font-size: 10px;
         height: 25px;
         flex-shrink: 0;
-    }
-    
-    .purple-strip {
-        transition: transform 0.3s ease;
     }
     
     .strip-buttons {
