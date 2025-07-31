@@ -420,6 +420,10 @@
             }
             db = firebase.firestore();
             auth = firebase.auth();
+            
+            // Set auth persistence to LOCAL
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization error:", error);
@@ -809,14 +813,35 @@
                 loginForm.addEventListener('submit', handleLogin);
             }
             
-            // Check if already logged in
-            const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                const userData = JSON.parse(loggedInUser);
-                // Use subscriptionPlan if subscription is not available
-                const userSubscription = userData.subscription || userData.subscriptionPlan || 'Free';
-                redirectToDashboard(userSubscription);
-            }
+            // Check Firebase auth state first
+            auth.onAuthStateChanged(async function(user) {
+                if (user) {
+                    console.log('User is signed in:', user.email);
+                    
+                    // Get user data from Firestore
+                    const userDoc = await db.collection('users').doc(user.email).get();
+                    const userData = userDoc.exists ? userDoc.data() : { subscriptionPlan: 'Free' };
+                    
+                    const userInfo = {
+                        id: user.uid,
+                        email: user.email,
+                        name: user.displayName || userData.name || '',
+                        subscription: userData.subscriptionPlan || 'Free',
+                        subscriptionPlan: userData.subscriptionPlan || 'Free'
+                    };
+                    
+                    localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
+                    redirectToDashboard(userInfo.subscription);
+                } else {
+                    // Check localStorage as fallback
+                    const loggedInUser = localStorage.getItem('loggedInUser');
+                    if (loggedInUser) {
+                        const userData = JSON.parse(loggedInUser);
+                        const userSubscription = userData.subscription || userData.subscriptionPlan || 'Free';
+                        redirectToDashboard(userSubscription);
+                    }
+                }
+            });
             
             // Check if admin is logged in
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {

@@ -109,7 +109,7 @@
                             
                             <div class="options" id="optionsList">
                                 <!-- For MCQ questions -->
-                                <div class="mcq-options" id="mcqOptions" style="display: none;">
+                                <div class="mcq-options" id="mcqOptions">
                                     <div class="option" style="display: block;">
                                         <input type="radio" name="q3" id="q3-a" class="option-radio">
                                         <label for="q3-a" class="option-label">
@@ -150,7 +150,7 @@
                                 
                                 <div style="margin-bottom: 15px;">
                                     <label for="numerical-answer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #f57f17;">Your Answer:</label>
-                                    <input type="number" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);">
+                                    <input type="text" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);" readonly>
                                 </div>
                                 
                                 <!-- On-screen keyboard -->
@@ -290,17 +290,6 @@
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
             if (isMobile) {
-                // Force landscape on page load (iOS and Android)
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(() => {});
-                } else if (screen.lockOrientation) {
-                    screen.lockOrientation('landscape');
-                } else if (screen.mozLockOrientation) {
-                    screen.mozLockOrientation('landscape');
-                } else if (screen.msLockOrientation) {
-                    screen.msLockOrientation('landscape');
-                }
-                
                 // Prevent zoom on input focus
                 document.addEventListener('touchstart', function() {}, {passive: true});
                 
@@ -523,20 +512,6 @@
                 document.getElementById('confirmSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
                 document.getElementById('confirmSubmit').disabled = true;
                 
-                // Switch to portrait before submitting on mobile (iOS and Android)
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                if (isMobile) {
-                    if (screen.orientation && screen.orientation.lock) {
-                        screen.orientation.lock('portrait').catch(() => {});
-                    } else if (screen.lockOrientation) {
-                        screen.lockOrientation('portrait');
-                    } else if (screen.mozLockOrientation) {
-                        screen.mozLockOrientation('portrait');
-                    } else if (screen.msLockOrientation) {
-                        screen.msLockOrientation('portrait');
-                    }
-                }
-                
                 // Save results to Firebase
                 const results = await saveExamResults();
                 
@@ -593,6 +568,31 @@
             const questionArea = document.querySelector('.question-area');
             if (questionArea) {
                 questionArea.addEventListener('click', hideViewInstructions);
+                
+                // Hide header on scroll in mobile landscape only
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isLandscape = window.innerWidth > window.innerHeight;
+                const isMobileLandscape = isMobile && isLandscape && window.innerWidth <= 880;
+                
+                if (isMobileLandscape) {
+                    let lastScrollTop = 0;
+                    questionArea.addEventListener('scroll', function() {
+                        const scrollTop = this.scrollTop;
+                        const topStrip = document.querySelector('.top-strip');
+                        const purpleStrip = document.querySelector('.purple-strip');
+                        
+                        if (scrollTop > lastScrollTop && scrollTop > 50) {
+                            // Scrolling down - hide header
+                            topStrip.style.transform = 'translateY(-100%)';
+                            purpleStrip.style.transform = 'translateY(-100%)';
+                        } else {
+                            // Scrolling up - show header
+                            topStrip.style.transform = 'translateY(0)';
+                            purpleStrip.style.transform = 'translateY(0)';
+                        }
+                        lastScrollTop = scrollTop;
+                    });
+                }
             }
             
             // Mobile-specific initialization
