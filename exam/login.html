@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - NTA</title>
+    <link rel="stylesheet" href="login-style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-section">
+            <img src="../images/nta logo.png" alt="NTA Logo" class="nta-logo">
+            <div class="system-info-inline">
+                <div>System No.: <span><span class="big-c">C</span><span id="systemNum">32</span></span></div>
+                <div>Lab No.: <span id="labNum">LAB-A</span></div>
+            </div>
+        </div>
+        <div class="avatar-section">
+            <div class="images-container">
+                <div class="candidate-avatar">JS</div>
+                <div class="biometric-placeholder">Biometric Image</div>
+            </div>
+            <div class="candidate-details">
+                <div>Candidate Name: <span>John Smith</span></div>
+                <div>Candidate ID: <span>JEE2024123456</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="login-container">
+        <div class="login-box">
+            <div class="field">
+                <label>Username</label>
+                <input type="text" id="username" readonly>
+            </div>
+            
+            <div class="field">
+                <label>Date of Birth</label>
+                <input type="text" id="password" placeholder="DDMMYYYY" maxlength="8">
+            </div>
+            
+            <button class="login-btn" onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate random candidate ID on page load
+        window.onload = function() {
+            const paperYear = '2024'; // Change this based on paper year
+            const randomNum = Math.floor(Math.random() * 900000) + 100000;
+            const candidateId = 'JEE' + paperYear + randomNum;
+            document.getElementById('username').value = candidateId;
+            
+            // Generate random system and lab numbers
+            const systemNum = Math.floor(Math.random() * 99) + 1;
+            const labOptions = ['A', 'B', 'C', 'A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3'];
+            const randomLab = labOptions[Math.floor(Math.random() * labOptions.length)];
+            
+            document.getElementById('systemNum').textContent = systemNum;
+            document.getElementById('labNum').textContent = 'LAB-' + randomLab;
+            
+            // Store details in localStorage for instructions page
+            localStorage.setItem('candidateId', candidateId);
+            localStorage.setItem('systemNum', systemNum);
+            localStorage.setItem('labNum', 'LAB-' + randomLab);
+            localStorage.setItem('candidateName', 'John Smith');
+            
+            // Update candidate details in header
+            document.querySelector('.candidate-details').innerHTML = `
+                <div>Candidate Name: <span>John Smith</span></div>
+                <div>Candidate ID: <span>${candidateId}</span></div>
+            `;
+        }
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username && password) {
+                localStorage.setItem('loggedInUser', JSON.stringify({
+                    email: username,
+                    name: username
+                }));
+                window.location.href = 'instructions.html';
+            } else {
+                alert('Please enter username and password');
+            }
+        }
+    </script>
+</body>
+</html>

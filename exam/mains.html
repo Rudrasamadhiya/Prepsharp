@@ -2,64 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>JEE Main 2024 27 Jan Shift 1 - PrepSharp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="exam-style.css">
-    <style>
-        /* Styles for numerical input */
-        .numerical-input {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 10px;
-            border: 1px solid rgba(79, 70, 229, 0.2);
-        }
-        
-        .numerical-field {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-        }
-        
-        .numerical-label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #4f46e5;
-        }
-        
-        .numerical-textbox {
-            padding: 12px 15px;
-            border: 2px solid rgba(79, 70, 229, 0.3);
-            border-radius: 8px;
-            font-size: 16px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .numerical-textbox:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-            outline: none;
-        }
-        
-        .numerical-instructions {
-            font-size: 14px;
-            color: #6b7280;
-            background: rgba(79, 70, 229, 0.05);
-            padding: 10px 15px;
-            border-radius: 8px;
-            border-left: 3px solid #4f46e5;
-        }
-        
-        .numerical-instructions p {
-            margin: 5px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="mobile-styles.css">
+
 </head>
-<body onload="goFullScreen()">
+<body onload="initMobile()">
     <div class="exam-container">
         <!-- Top strip with NTA logo and user info -->
         <div class="top-strip">
@@ -157,8 +109,8 @@
                             
                             <div class="options" id="optionsList">
                                 <!-- For MCQ questions -->
-                                <div class="mcq-options" id="mcqOptions">
-                                    <div class="option">
+                                <div class="mcq-options" id="mcqOptions" style="display: none;">
+                                    <div class="option" style="display: block;">
                                         <input type="radio" name="q3" id="q3-a" class="option-radio">
                                         <label for="q3-a" class="option-label">
                                             <div class="option-letter">a)</div>
@@ -166,7 +118,7 @@
                                         </label>
                                     </div>
                                     
-                                    <div class="option">
+                                    <div class="option" style="display: block;">
                                         <input type="radio" name="q3" id="q3-b" class="option-radio">
                                         <label for="q3-b" class="option-label">
                                             <div class="option-letter">b)</div>
@@ -174,7 +126,7 @@
                                         </label>
                                     </div>
                                     
-                                    <div class="option">
+                                    <div class="option" style="display: block;">
                                         <input type="radio" name="q3" id="q3-c" class="option-radio">
                                         <label for="q3-c" class="option-label">
                                             <div class="option-letter">c)</div>
@@ -182,7 +134,7 @@
                                         </label>
                                     </div>
                                     
-                                    <div class="option">
+                                    <div class="option" style="display: block;">
                                         <input type="radio" name="q3" id="q3-d" class="option-radio" checked>
                                         <label for="q3-d" class="option-label">
                                             <div class="option-letter">d)</div>
@@ -193,31 +145,31 @@
                             </div>
                             
                             <!-- Numerical Answer Section (for Section 2) -->
-                            <div id="numericalSection" style="display: none; margin-top: 20px; background: #fffde7; border-radius: 12px; padding: 20px; border: 2px solid #f9a825; box-shadow: 0 4px 8px rgba(249, 168, 37, 0.15);">
+                            <div id="numericalSection" style="display: block; margin-top: 20px; background: #fffde7; border-radius: 12px; padding: 20px; border: 2px solid #f9a825; box-shadow: 0 4px 8px rgba(249, 168, 37, 0.15);">
                                 <h3 style="margin-top: 0; color: #f9a825; font-size: 18px; text-align: center;">Numerical Answer</h3>
                                 
                                 <div style="margin-bottom: 15px;">
                                     <label for="numerical-answer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #f57f17;">Your Answer:</label>
-                                    <input type="text" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);" readonly>
+                                    <input type="number" id="numerical-answer" style="width: 100%; padding: 12px; font-size: 18px; border: 2px solid #f9a825; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 6px rgba(249, 168, 37, 0.1);">
                                 </div>
                                 
                                 <!-- On-screen keyboard -->
-                                <div class="virtual-keyboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; max-width: 300px; margin: 0 auto 15px;">
-                                    <button class="num-key" data-value="1" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">1</button>
-                                    <button class="num-key" data-value="2" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">2</button>
-                                    <button class="num-key" data-value="3" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">3</button>
-                                    <button class="num-key" data-value="+" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">+</button>
-                                    <button class="num-key" data-value="4" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">4</button>
-                                    <button class="num-key" data-value="5" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">5</button>
-                                    <button class="num-key" data-value="6" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">6</button>
-                                    <button class="num-key" data-value="-" style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">-</button>
-                                    <button class="num-key" data-value="7" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">7</button>
-                                    <button class="num-key" data-value="8" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">8</button>
-                                    <button class="num-key" data-value="9" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">9</button>
-                                    <button class="num-key" data-value="." style="padding: 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">.</button>
-                                    <button class="num-key" data-value="0" style="padding: 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;">0</button>
-                                    <button id="backspace" style="padding: 8px; font-size: 16px; background: #fff59d; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2;"><i class="fas fa-backspace"></i></button>
-                                    <button id="clear-all" style="padding: 8px; font-size: 16px; background: #ffee58; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 4; margin-top: 6px;">Clear</button>
+                                <div class="virtual-keyboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; max-width: 300px; margin: 0 auto 15px; touch-action: manipulation;">
+                                    <button class="num-key" data-value="1" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">1</button>
+                                    <button class="num-key" data-value="2" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">2</button>
+                                    <button class="num-key" data-value="3" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">3</button>
+                                    <button class="num-key" data-value="+" style="padding: 12px 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">+</button>
+                                    <button class="num-key" data-value="4" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">4</button>
+                                    <button class="num-key" data-value="5" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">5</button>
+                                    <button class="num-key" data-value="6" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">6</button>
+                                    <button class="num-key" data-value="-" style="padding: 12px 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">-</button>
+                                    <button class="num-key" data-value="7" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">7</button>
+                                    <button class="num-key" data-value="8" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">8</button>
+                                    <button class="num-key" data-value="9" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">9</button>
+                                    <button class="num-key" data-value="." style="padding: 12px 8px; font-size: 16px; background: #fffde7; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; touch-action: manipulation;">.</button>
+                                    <button class="num-key" data-value="0" style="padding: 12px 8px; font-size: 16px; background: #fff9c4; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2; touch-action: manipulation;">0</button>
+                                    <button id="backspace" style="padding: 12px 8px; font-size: 16px; background: #fff59d; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 2; touch-action: manipulation;"><i class="fas fa-backspace"></i></button>
+                                    <button id="clear-all" style="padding: 12px 8px; font-size: 16px; background: #ffee58; border: 1px solid #f0e68c; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; grid-column: span 4; margin-top: 6px; touch-action: manipulation;">Clear</button>
                                 </div>
                                 
                                 <div style="background: #fff8e1; padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ffca28;">
@@ -331,33 +283,36 @@
         </div>
     </div>
     
-    <!-- Full Screen Function -->
+    <!-- Mobile initialization -->
     <script>
-        function goFullScreen() {
-            const elem = document.documentElement;
+        function initMobile() {
+            // Check if mobile device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-            
-            // Also try F11 key simulation
-            try {
-                const event = new KeyboardEvent('keydown', {
-                    key: 'F11',
-                    keyCode: 122,
-                    which: 122,
-                    code: 'F11',
-                    bubbles: true
+            if (isMobile) {
+                // Force landscape on page load
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => {});
+                }
+                
+                // Prevent zoom on input focus
+                document.addEventListener('touchstart', function() {}, {passive: true});
+                
+                // Handle orientation changes
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(function() {
+                        window.scrollTo(0, 0);
+                    }, 100);
                 });
-                document.dispatchEvent(event);
-            } catch (e) {
-                console.log('F11 simulation failed:', e);
+                
+                // Prevent pull-to-refresh
+                document.body.style.overscrollBehavior = 'none';
+            } else {
+                // Desktop - try fullscreen
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen().catch(() => {});
+                }
             }
         }
     </script>
@@ -392,9 +347,10 @@
         
         // Sample questions data (in real app, load from database)
         const questionsData = {
-            1: { subject: 'physics', chapter: 'kinematics', correctAnswer: 'B', difficulty: 'easy', type: 'mcq', marks: 4 },
-            2: { subject: 'physics', chapter: 'mechanics', correctAnswer: 'A', difficulty: 'moderate', type: 'mcq', marks: 4 },
-            3: { subject: 'physics', chapter: 'thermodynamics', correctAnswer: 'C', difficulty: 'hard', type: 'mcq', marks: 4 },
+            1: { subject: 'physics', chapter: 'kinematics', correctAnswer: 'B', difficulty: 'easy', type: 'mcq', marks: 4, needsOnScreenKeyboard: 'no' },
+            2: { subject: 'physics', chapter: 'mechanics', correctAnswer: 'A', difficulty: 'moderate', type: 'mcq', marks: 4, needsOnScreenKeyboard: 'no' },
+            3: { subject: 'physics', chapter: 'thermodynamics', correctAnswer: 'C', difficulty: 'hard', type: 'mcq', marks: 4, needsOnScreenKeyboard: 'no' },
+            22: { subject: 'physics', chapter: 'numerical', correctAnswer: '15', difficulty: 'hard', type: 'numerical', marks: 4, needsOnScreenKeyboard: 'yes' },
             // Add more questions as needed
         };
         
@@ -407,14 +363,12 @@
                 examData.studentName = userData.name || userData.email;
                 examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
                 
-                // Get exam ID from URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                const examId = urlParams.get('examId');
+                // Get exam ID from localStorage
+                const examId = localStorage.getItem('examId');
+                const examName = localStorage.getItem('examName');
                 if (examId) {
                     examData.examId = examId;
-                    // Update exam name based on exam ID if needed
-                    // This is a placeholder - you may want to fetch the actual name from your database
-                    examData.examName = examId.replace(/_/g, ' ');
+                    examData.examName = examName || examId.replace(/_/g, ' ');
                 }
                 
                 // Update UI
@@ -444,11 +398,11 @@
             return response;
         }
         
-        // Update question display based on section type
+        // Update question display based on Firebase data
         function updateQuestionDisplay() {
             const questionId = examData.currentQuestion;
             
-            if (isCurrentSectionNumerical()) {
+            if (needsOnScreenKeyboard()) {
                 setQuestionType('numerical');
                 
                 // Clear any selected MCQ options if switching to numerical
@@ -563,6 +517,12 @@
                 document.getElementById('confirmSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
                 document.getElementById('confirmSubmit').disabled = true;
                 
+                // Switch to portrait before submitting on mobile
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                if (isMobile && screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('portrait').catch(() => {});
+                }
+                
                 // Save results to Firebase
                 const results = await saveExamResults();
                 
@@ -583,25 +543,73 @@
         function setQuestionType(type) {
             const mcqOptions = document.getElementById('mcqOptions');
             const numericalSection = document.getElementById('numericalSection');
+            const virtualKeyboard = document.querySelector('.virtual-keyboard');
             
             if (type === 'numerical') {
                 mcqOptions.style.display = 'none';
                 numericalSection.style.display = 'block';
+                virtualKeyboard.style.display = 'grid';
             } else { // 'mcq'
                 mcqOptions.style.display = 'block';
                 numericalSection.style.display = 'none';
+                virtualKeyboard.style.display = 'none';
             }
         }
         
-        // Function to check if current section is a Section 2 (numerical)
-        function isCurrentSectionNumerical() {
-            const currentSection = document.querySelector('.section-tab.active').textContent;
-            return currentSection.includes('Section 2');
+        // Function to check if current question needs on-screen keyboard
+        function needsOnScreenKeyboard() {
+            const questionNum = examData.currentQuestion;
+            const questionData = questionsData[questionNum];
+            return questionData && questionData.needsOnScreenKeyboard === 'yes';
+        }
+        
+        // Hide view instructions on question area click
+        function hideViewInstructions() {
+            const viewInstructions = document.getElementById('viewInstructions');
+            if (viewInstructions) {
+                viewInstructions.style.display = 'none';
+            }
         }
         
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeExam();
+            
+            // Hide view instructions when question area is clicked
+            const questionArea = document.querySelector('.question-area');
+            if (questionArea) {
+                questionArea.addEventListener('click', hideViewInstructions);
+            }
+            
+            // Mobile-specific initialization
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // Add mobile class to body
+                document.body.classList.add('mobile-device');
+                
+                // Prevent zoom on double tap
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+                
+                // Handle orientation change
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(function() {
+                        // Recalculate layout after orientation change
+                        window.scrollTo(0, 0);
+                        
+                        // Trigger resize event to adjust layouts
+                        window.dispatchEvent(new Event('resize'));
+                    }, 100);
+                });
+                
+                // Improve touch scrolling
+                document.body.style.webkitOverflowScrolling = 'touch';
+            }
             
             // Handle submit button click
             document.getElementById('confirmSubmit').addEventListener('click', handleExamSubmission);
@@ -609,18 +617,10 @@
             // Set up on-screen keyboard functionality
             setupVirtualKeyboard();
             
-            // Force show numerical input for testing
-            setQuestionType('numerical');
-            
-            // Uncomment this when done testing
-            /*
-            // Set initial question type based on current section
-            if (isCurrentSectionNumerical()) {
-                setQuestionType('numerical');
-            } else {
-                setQuestionType('mcq');
-            }
-            */
+            // Show numerical keyboard for testing
+            examData.currentQuestion = 22;
+            document.getElementById('mcqOptions').style.display = 'none';
+            document.getElementById('numericalSection').style.display = 'block';
             
             // Function to set up the virtual keyboard
             function setupVirtualKeyboard() {
@@ -629,25 +629,64 @@
                 const backspace = document.getElementById('backspace');
                 const clearAll = document.getElementById('clear-all');
                 
-                // Add click handlers for number keys
+                // Add touch and click handlers for number keys
                 numKeys.forEach(key => {
-                    key.addEventListener('click', function() {
+                    // Prevent double-tap zoom
+                    key.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                    }, {passive: false});
+                    
+                    key.addEventListener('click', function(e) {
+                        e.preventDefault();
                         const value = this.getAttribute('data-value');
                         numericInput.value += value;
                         saveNumericalResponse();
+                        
+                        // Visual feedback
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = 'scale(1)';
+                        }, 100);
                     });
                 });
                 
-                // Add click handler for backspace
-                backspace.addEventListener('click', function() {
+                // Add touch and click handler for backspace
+                backspace.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                backspace.addEventListener('click', function(e) {
+                    e.preventDefault();
                     numericInput.value = numericInput.value.slice(0, -1);
                     saveNumericalResponse();
+                    
+                    // Visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
                 });
                 
-                // Add click handler for clear all
-                clearAll.addEventListener('click', function() {
+                // Add touch and click handler for clear all
+                clearAll.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                clearAll.addEventListener('click', function(e) {
+                    e.preventDefault();
                     numericInput.value = '';
                     saveNumericalResponse();
+                    
+                    // Visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+                
+                // Prevent native keyboard on mobile
+                numericInput.addEventListener('focus', function() {
+                    this.blur();
                 });
                 
                 // Function to save the numerical response
@@ -666,11 +705,11 @@
             // Add click handlers for section tabs
             document.querySelectorAll('.section-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    // First handle the active tab UI (this should be in your existing code)
+                    // First handle the active tab UI
                     document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Update question display based on section
+                    // Update display based on current question number
                     updateQuestionDisplay();
                 });
             });
@@ -686,8 +725,8 @@
                 // Save the current answer before moving to next question
                 const questionId = examData.currentQuestion;
                 
-                // Check if we're in a numerical section
-                if (isCurrentSectionNumerical()) {
+                // Check if current question needs keyboard
+                if (needsOnScreenKeyboard()) {
                     const numericalAnswer = document.getElementById('numerical-answer').value;
                     if (numericalAnswer.trim() !== '') {
                         saveResponse(questionId, numericalAnswer, 30, true);
@@ -710,8 +749,8 @@
                 // Save the current answer and mark for review
                 const questionId = examData.currentQuestion;
                 
-                // Check if we're in a numerical section
-                if (isCurrentSectionNumerical()) {
+                // Check if current question needs keyboard
+                if (needsOnScreenKeyboard()) {
                     const numericalAnswer = document.getElementById('numerical-answer').value;
                     if (numericalAnswer.trim() !== '') {
                         // Save response and mark for review
@@ -730,6 +769,13 @@
                 // Your existing mark for review logic would be here
                 // After changing the question, update display:
                 updateQuestionDisplay();
+            });
+            
+            // Also hide on any interaction with question elements
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.question-area, .option, .virtual-keyboard')) {
+                    hideViewInstructions();
+                }
             });
             
             // Track question changes and responses
