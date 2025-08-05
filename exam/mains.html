@@ -340,6 +340,43 @@
             totalQuestions: 75
         };
         
+        // Time tracking variables
+        let questionStartTime = Date.now();
+        let currentQuestionId = 1;
+        
+        // Start time tracking for a question
+        function startQuestionTimer(questionId) {
+            // Save time for previous question if different
+            if (currentQuestionId !== questionId) {
+                saveCurrentQuestionTime();
+            }
+            
+            currentQuestionId = questionId;
+            questionStartTime = Date.now();
+            
+            // Initialize question time if not exists
+            if (!examData.questionTimes[questionId]) {
+                examData.questionTimes[questionId] = 0;
+            }
+            
+            examData.currentQuestion = questionId;
+            saveToLocalStorage();
+        }
+        
+        // Save accumulated time for current question
+        function saveCurrentQuestionTime() {
+            if (questionStartTime && currentQuestionId) {
+                const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+                examData.questionTimes[currentQuestionId] = (examData.questionTimes[currentQuestionId] || 0) + timeSpent;
+                saveToLocalStorage();
+            }
+        }
+        
+        // Get total time spent on a question
+        function getQuestionTime(questionId) {
+            return examData.questionTimes[questionId] || 0;
+        }
+        
         // Sample questions data (in real app, load from database)
         const questionsData = {
             1: { subject: 'physics', chapter: 'kinematics', correctAnswer: 'B', difficulty: 'easy', type: 'mcq', marks: 4, needsOnScreenKeyboard: 'no' },
@@ -351,19 +388,28 @@
         
         // Initialize exam data
         function initializeExam() {
+            // Load from localStorage first
+            loadFromLocalStorage();
+            
             const loggedInUser = localStorage.getItem('loggedInUser') || sessionStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 const userData = JSON.parse(loggedInUser);
-                examData.email = userData.email;
-                examData.studentName = userData.name || userData.email;
-                examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
                 
-                // Get exam ID from localStorage
-                const examId = localStorage.getItem('examId');
-                const examName = localStorage.getItem('examName');
-                if (examId) {
-                    examData.examId = examId;
-                    examData.examName = examName || examId.replace(/_/g, ' ');
+                // Only set if not already loaded from localStorage
+                if (!examData.email) {
+                    examData.email = userData.email;
+                    examData.studentName = userData.name || userData.email;
+                    examData.studentId = 'JEE2024' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                    
+                    // Get exam ID from localStorage
+                    const examId = localStorage.getItem('examId');
+                    const examName = localStorage.getItem('examName');
+                    if (examId) {
+                        examData.examId = examId;
+                        examData.examName = examName || examId.replace(/_/g, ' ');
+                    }
+                    
+                    saveToLocalStorage();
                 }
                 
                 // Update UI
@@ -377,12 +423,28 @@
             }
         }
         
+        // Save exam data to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('examData', JSON.stringify(examData));
+        }
+        
+        // Load exam data from localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('examData');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                examData = { ...examData, ...savedData };
+            }
+        }
+        
         // Track question response
-        function saveResponse(questionId, answer, timeSpent, isNumerical = false) {
+        function saveResponse(questionId, answer, isNumerical = false) {
+            saveCurrentQuestionTime(); // Save time before creating response
+            
             const response = {
                 questionId: questionId,
                 userAnswer: answer,
-                timeSpent: timeSpent,
+                timeSpent: getQuestionTime(questionId),
                 timestamp: new Date().toISOString(),
                 isAttempted: answer !== null,
                 isMarkedForReview: false,
@@ -390,6 +452,7 @@
             };
             
             examData.responses[questionId] = response;
+            saveToLocalStorage(); // Save to localStorage after each response
             return response;
         }
         
@@ -428,14 +491,105 @@
             }
         }
         
+        // Percentile lookup table
+        const percentileTable = {
+            hard: {
+                '291-300': [100, 99.97], '281-290': [99.97, 99.92], '271-280': [99.92, 99.87], '261-270': [99.87, 99.8],
+                '251-260': [99.8, 99.7], '241-250': [99.7, 99.5], '231-240': [99.5, 99.3], '221-230': [99.3, 99.1],
+                '211-220': [99.1, 98.7], '201-210': [98.7, 98.3], '191-200': [98.3, 98.0], '181-190': [99.0, 98.3],
+                '171-180': [97.8, 97.0], '161-170': [97.0, 96.0], '151-160': [96.0, 95.0], '141-150': [95.0, 94.0],
+                '131-140': [94.0, 93.0], '121-130': [93.0, 91.5], '111-120': [91.5, 90.0], '101-110': [90.0, 88.0],
+                '91-100': [88.0, 86.0], '81-90': [86.0, 83.0], '71-80': [83.0, 80.0], '61-70': [80.0, 76.0],
+                '51-60': [76.0, 71.0], '41-50': [71.0, 65.0], '31-40': [65.0, 58.0], '21-30': [58.0, 50.0],
+                '11-20': [50.0, 40.0], '1-10': [40.0, 15.0], '0': 15.0, '-1--10': [15.0, 8.0],
+                '-11--20': [8.0, 6.0], '-21--30': [6.0, 4.0], '-31--40': [4.0, 3.0], '-41--50': [3.0, 2.0],
+                '-51--60': [2.0, 1.0], '-61--75': [1.0, 0.0]
+            },
+            moderate: {
+                '291-300': [100, 99.95], '281-290': [99.95, 99.9], '271-280': [99.9, 99.85], '261-270': [99.85, 99.75],
+                '251-260': [99.75, 99.65], '241-250': [99.65, 99.4], '231-240': [99.4, 99.1], '221-230': [99.1, 98.7],
+                '211-220': [98.7, 98.3], '201-210': [98.3, 97.5], '191-200': [97.5, 97.0], '181-190': [98.0, 97.5],
+                '171-180': [96.8, 96.0], '161-170': [96.0, 94.8], '151-160': [94.8, 93.5], '141-150': [93.5, 92.0],
+                '131-140': [92.0, 90.5], '121-130': [90.5, 89.0], '111-120': [89.0, 87.0], '101-110': [87.0, 85.0],
+                '91-100': [85.0, 82.0], '81-90': [82.0, 79.0], '71-80': [79.0, 75.0], '61-70': [75.0, 70.0],
+                '51-60': [70.0, 65.0], '41-50': [65.0, 60.0], '31-40': [60.0, 52.0], '21-30': [52.0, 45.0],
+                '11-20': [45.0, 35.0], '1-10': [35.0, 12.0], '0': 12.0, '-1--10': [12.0, 6.0],
+                '-11--20': [6.0, 4.0], '-21--30': [4.0, 2.5], '-31--40': [2.5, 2.0], '-41--50': [2.0, 1.0],
+                '-51--60': [1.0, 0.5], '-61--75': [0.5, 0.0]
+            },
+            easy: {
+                '291-300': [100, 99.9], '281-290': [99.9, 99.85], '271-280': [99.85, 99.75], '261-270': [99.75, 99.65],
+                '251-260': [99.65, 99.5], '241-250': [99.5, 99.2], '231-240': [99.2, 98.9], '221-230': [98.9, 98.5],
+                '211-220': [98.5, 97.8], '201-210': [97.8, 97.0], '191-200': [97.0, 96.0], '181-190': [97.0, 96.0],
+                '171-180': [95.8, 94.8], '161-170': [94.8, 93.5], '151-160': [93.5, 92.0], '141-150': [92.0, 90.0],
+                '131-140': [90.0, 88.0], '121-130': [88.0, 86.0], '111-120': [86.0, 84.0], '101-110': [84.0, 82.0],
+                '91-100': [82.0, 79.0], '81-90': [79.0, 76.0], '71-80': [76.0, 72.0], '61-70': [72.0, 67.0],
+                '51-60': [67.0, 62.0], '41-50': [62.0, 55.0], '31-40': [55.0, 48.0], '21-30': [48.0, 40.0],
+                '11-20': [40.0, 30.0], '1-10': [30.0, 8.0], '0': 8.0, '-1--10': [8.0, 4.0],
+                '-11--20': [4.0, 2.5], '-21--30': [2.5, 1.5], '-31--40': [1.5, 1.0], '-41--50': [1.0, 0.8],
+                '-51--60': [0.8, 0.5], '-61--75': [0.5, 0.0]
+            }
+        };
+        
+        // Calculate percentile based on marks and difficulty
+        function calculatePercentile(marks, difficulty) {
+            const table = percentileTable[difficulty];
+            
+            for (const [range, percentile] of Object.entries(table)) {
+                if (range === '0' && marks === 0) return percentile;
+                
+                const [min, max] = range.includes('-') && !range.startsWith('-') ? 
+                    range.split('-').map(Number) : 
+                    range.startsWith('-') ? 
+                        range.split('--').map(n => parseInt(n)) : 
+                        [parseInt(range.split('-')[0]), parseInt(range.split('-')[1])];
+                
+                if (marks >= min && marks <= max) {
+                    return Array.isArray(percentile) ? 
+                        (percentile[0] + percentile[1]) / 2 : percentile;
+                }
+            }
+            return 0;
+        }
+        
+        // Determine paper difficulty based on question distribution
+        function determinePaperDifficulty() {
+            let easy = 0, moderate = 0, hard = 0;
+            
+            for (let i = 1; i <= examData.totalQuestions; i++) {
+                const question = questionsData[i];
+                if (question) {
+                    if (question.difficulty === 'easy') easy++;
+                    else if (question.difficulty === 'moderate') moderate++;
+                    else if (question.difficulty === 'hard') hard++;
+                }
+            }
+            
+            if (hard >= 30) return 'hard';
+            if (easy >= 40) return 'easy';
+            return 'moderate';
+        }
+        
         // Calculate results
         function calculateResults() {
             let correct = 0, incorrect = 0, attempted = 0, unattempted = 0;
-            let totalMarks = 0;
+            let totalMarks = 0, positiveMarks = 0, negativeMarks = 0;
             let subjectStats = {
-                physics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
-                chemistry: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 },
-                mathematics: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0 }
+                physics: { 
+                    correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0,
+                    section1: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 },
+                    section2: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 }
+                },
+                chemistry: { 
+                    correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0,
+                    section1: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 },
+                    section2: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 }
+                },
+                mathematics: { 
+                    correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0,
+                    section1: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 },
+                    section2: { correct: 0, incorrect: 0, attempted: 0, unattempted: 0, marks: 0, positiveMarks: 0, negativeMarks: 0 }
+                }
             };
             
             for (let i = 1; i <= examData.totalQuestions; i++) {
@@ -444,27 +598,46 @@
                 
                 if (!question) continue;
                 
+                // Determine section (1-20: section1, 21-25: section2 for each subject)
+                const section = (i <= 20) ? 'section1' : 'section2';
+                
                 if (response && response.isAttempted) {
                     attempted++;
                     subjectStats[question.subject].attempted++;
+                    subjectStats[question.subject][section].attempted++;
                     
                     if (response.userAnswer === question.correctAnswer) {
                         correct++;
                         subjectStats[question.subject].correct++;
-                        totalMarks += question.marks;
-                        subjectStats[question.subject].marks += question.marks;
+                        subjectStats[question.subject][section].correct++;
+                        const marks = question.marks || 4;
+                        totalMarks += marks;
+                        positiveMarks += marks;
+                        subjectStats[question.subject].marks += marks;
+                        subjectStats[question.subject].positiveMarks += marks;
+                        subjectStats[question.subject][section].marks += marks;
+                        subjectStats[question.subject][section].positiveMarks += marks;
                     } else {
                         incorrect++;
                         subjectStats[question.subject].incorrect++;
+                        subjectStats[question.subject][section].incorrect++;
                         // Negative marking: -1 for wrong answer
                         totalMarks -= 1;
+                        negativeMarks += 1;
                         subjectStats[question.subject].marks -= 1;
+                        subjectStats[question.subject].negativeMarks += 1;
+                        subjectStats[question.subject][section].marks -= 1;
+                        subjectStats[question.subject][section].negativeMarks += 1;
                     }
                 } else {
                     unattempted++;
                     subjectStats[question.subject].unattempted++;
+                    subjectStats[question.subject][section].unattempted++;
                 }
             }
+            
+            const paperDifficulty = determinePaperDifficulty();
+            const percentile = calculatePercentile(totalMarks, paperDifficulty);
             
             return {
                 totalQuestions: examData.totalQuestions,
@@ -473,10 +646,108 @@
                 incorrect,
                 unattempted,
                 totalMarks: Math.max(0, totalMarks),
+                positiveMarks,
+                negativeMarks,
                 maxMarks: examData.totalQuestions * 4,
                 accuracy: attempted > 0 ? (correct / attempted * 100).toFixed(1) : 0,
+                paperDifficulty,
+                percentile: parseFloat(percentile.toFixed(2)),
                 subjects: subjectStats
             };
+        }
+        
+        // High Output Low Input chapters
+        const highOutputLowInputChapters = [
+            // Chemistry
+            "Thermodynamics (C)", "Hydrogen", "s Block Elements", "Environmental Chemistry",
+            "Solutions", "Electrochemistry", "Chemical Kinetics", "Surface Chemistry",
+            "General Principles and Processes of Isolation of Metals", "Coordination Compounds",
+            "Amines", "Biomolecules",
+            // Mathematics
+            "Limits", "Mathematical Reasoning", "Matrices", "Differential Equations", "Vector Algebra",
+            // Physics
+            "Units and Dimensions", "Motion In One Dimension", "Gravitation", "Thermodynamics",
+            "Kinetic Theory of Gases", "Oscillations", "Waves and Sound", "Alternating Current",
+            "Electromagnetic Waves", "Dual Nature of Matter", "Nuclear Physics", "Semiconductors",
+            "Communication System"
+        ];
+        
+        // Calculate first priority chapters
+        function calculateFirstPriorityChapters() {
+            const chapterStats = {};
+            
+            for (let i = 1; i <= 75; i++) {
+                const response = examData.responses[i];
+                const question = questionsData[i] || {};
+                
+                if (question.chapter && highOutputLowInputChapters.includes(question.chapter)) {
+                    if (!chapterStats[question.chapter]) {
+                        chapterStats[question.chapter] = { total: 0, unattempted: 0, incorrect: 0, easy: 0, medium: 0 };
+                    }
+                    chapterStats[question.chapter].total++;
+                    
+                    if (question.difficulty === 'easy') chapterStats[question.chapter].easy++;
+                    if (question.difficulty === 'moderate') chapterStats[question.chapter].medium++;
+                    
+                    if (!response || !response.isAttempted) {
+                        chapterStats[question.chapter].unattempted++;
+                    } else if (response.userAnswer !== question.correctAnswer) {
+                        chapterStats[question.chapter].incorrect++;
+                    }
+                }
+            }
+            
+            const firstPriority = [];
+            for (const [chapter, stats] of Object.entries(chapterStats)) {
+                if (stats.total === 1 && (stats.unattempted === 1 || stats.incorrect === 1) && (stats.easy > 0 || stats.medium > 0)) {
+                    firstPriority.push(chapter);
+                } else if (stats.total >= 2 && ((stats.unattempted >= 2) || (stats.unattempted >= 1 && stats.incorrect >= 1)) && (stats.easy > 0 || stats.medium > 0)) {
+                    firstPriority.push(chapter);
+                }
+            }
+            
+            return firstPriority;
+        }
+        
+        // Calculate focus areas
+        function calculateFocusAreas() {
+            const chapterStats = {};
+            
+            for (let i = 1; i <= 75; i++) {
+                const response = examData.responses[i];
+                const question = questionsData[i] || {};
+                
+                if (question.chapter) {
+                    if (!chapterStats[question.chapter]) {
+                        chapterStats[question.chapter] = { total: 0, wrong: 0 };
+                    }
+                    
+                    if (response && response.isAttempted) {
+                        chapterStats[question.chapter].total++;
+                        if (response.userAnswer !== question.correctAnswer) {
+                            chapterStats[question.chapter].wrong++;
+                        }
+                    }
+                    
+                    // Add single easy question incorrect to focus areas
+                    if (highOutputLowInputChapters.includes(question.chapter) && 
+                        question.difficulty === 'easy' && response && response.isAttempted && 
+                        response.userAnswer !== question.correctAnswer) {
+                        if (!chapterStats[question.chapter].singleEasyIncorrect) {
+                            chapterStats[question.chapter].singleEasyIncorrect = true;
+                        }
+                    }
+                }
+            }
+            
+            const focusAreas = [];
+            for (const [chapter, stats] of Object.entries(chapterStats)) {
+                if ((stats.total >= 3 && stats.wrong >= 2) || (stats.total === 2 && stats.wrong === 2) || stats.singleEasyIncorrect) {
+                    focusAreas.push(chapter);
+                }
+            }
+            
+            return focusAreas;
         }
         
         // Save to Firebase
@@ -485,17 +756,71 @@
                 const results = calculateResults();
                 examData.endTime = new Date().toISOString();
                 
+                // Create 2D array: [questionNo, markedAnswer, correctAnswer, chapter, timeSpent, type, difficulty, questionId, correctIncorrect, status]
+                const responsesArray = [];
+                for (let i = 1; i <= 75; i++) {
+                    const response = examData.responses[i];
+                    const question = questionsData[i] || {};
+                    
+                    let correctIncorrect = 'unattempted';
+                    if (response && response.isAttempted) {
+                        correctIncorrect = response.userAnswer === question.correctAnswer ? 'correct' : 'incorrect';
+                    }
+                    
+                    let status = 'not visited';
+                    if (response) {
+                        if (response.isAttempted && response.isMarkedForReview) {
+                            status = 'answered and marked for review';
+                        } else if (response.isAttempted) {
+                            status = 'answered';
+                        } else if (response.isMarkedForReview) {
+                            status = 'marked for review';
+                        } else {
+                            status = 'not answered';
+                        }
+                    }
+                    
+                    responsesArray.push([
+                        i, // question number
+                        response ? response.userAnswer || null : null, // marked answer
+                        question.correctAnswer || null, // correct answer
+                        question.chapter || null, // chapter name
+                        response ? response.timeSpent || 0 : 0, // time spent
+                        question.type || 'mcq', // numerical or mcq
+                        question.difficulty || 'easy', // easy, moderate, hard
+                        i, // question id
+                        correctIncorrect, // correct/incorrect/unattempted
+                        status // answered/not answered/marked for review/answered and marked for review/not visited
+                    ]);
+                }
+                
+                const focusAreas = calculateFocusAreas();
+                const firstPriorityChapters = calculateFirstPriorityChapters();
+                
                 const examResult = {
-                    ...examData,
+                    studentId: examData.studentId,
+                    studentName: examData.studentName,
+                    email: examData.email,
+                    examId: examData.examId,
+                    examName: examData.examName,
+                    startTime: examData.startTime,
+                    endTime: examData.endTime,
+                    responses: responsesArray,
+                    focusAreas: focusAreas,
+                    firstPriorityChapters: firstPriorityChapters,
                     ...results,
-                    submittedAt: new Date().toISOString(),
-                    createdAt: examData.startTime
+                    submittedAt: new Date().toISOString()
                 };
                 
-                // Save to Firebase: /users/{email}/exams/{paperId}
+                // Get next attempt number
                 const db = firebase.firestore();
+                const userExamsRef = db.collection('users').doc(examData.email).collection('exams');
+                const snapshot = await userExamsRef.where('examId', '==', examData.examId).get();
+                const attemptNo = snapshot.size + 1;
                 
-                await db.collection('users').doc(examData.email).collection('exams').doc(examData.examId).set(examResult);
+                // Save to Firebase: /users/{email}/exams/{examId}_attempt_{attemptNo}
+                const docId = `${examData.examId}_attempt_${attemptNo}`;
+                await userExamsRef.doc(docId).set({...examResult, attemptNo});
                 
                 console.log('Exam results saved successfully');
                 return examResult;
@@ -508,12 +833,21 @@
         // Handle exam submission
         async function handleExamSubmission() {
             try {
+                // Save final question time and update localStorage
+                saveCurrentQuestionTime();
+                examData.endTime = new Date().toISOString();
+                saveToLocalStorage();
+                
                 // Show loading
                 document.getElementById('confirmSubmit').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
                 document.getElementById('confirmSubmit').disabled = true;
                 
-                // Save results to Firebase
+                // Load latest data from localStorage and save to Firebase
+                loadFromLocalStorage();
                 const results = await saveExamResults();
+                
+                // Clear localStorage after successful submission
+                localStorage.removeItem('examData');
                 
                 // Store results in sessionStorage for result page
                 sessionStorage.setItem('examResults', JSON.stringify(results));
@@ -767,6 +1101,9 @@
                 }
             });
             
+            // Start timer for initial question
+            startQuestionTimer(examData.currentQuestion);
+            
             // Track question changes and responses
             document.addEventListener('change', function(e) {
                 const questionId = examData.currentQuestion;
@@ -774,14 +1111,14 @@
                 // For MCQ options
                 if (e.target.classList.contains('option-radio')) {
                     const answer = e.target.id.split('-')[1].toUpperCase();
-                    saveResponse(questionId, answer, 30); // Mock time spent
+                    saveResponse(questionId, answer);
                 }
                 
                 // For numerical input
                 if (e.target.id === 'numerical-answer') {
                     const answer = e.target.value;
                     if (answer.trim() !== '') {
-                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                        saveResponse(questionId, answer, true);
                     }
                 }
             });
@@ -792,9 +1129,18 @@
                     const questionId = examData.currentQuestion;
                     const answer = e.target.value;
                     if (answer.trim() !== '') {
-                        saveResponse(questionId, answer, 30, true); // Mock time spent, mark as numerical
+                        saveResponse(questionId, answer, true);
                     }
                 }
+            });
+            
+            // Add question navigation handlers to track time
+            document.querySelectorAll('.question-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const questionNum = parseInt(this.textContent);
+                    examData.currentQuestion = questionNum;
+                    startQuestionTimer(questionNum);
+                });
             });
         });
     </script>
